@@ -14,8 +14,16 @@ This extension provides the following awesome capabilities:
 
 ## Installation
 
-Installation instructions coming soon :)
+To install the extension on your local machine, simply open Visual Studio Code and search for "Antlers Language for Statamic" in the Extensions panel. Once you find it, click "Install".
+
+The extension will automatically activate the next time you open an Antlers HTML file.
+
+## System PHP Configuration
+
+If your development machine has PHP7+ installed and available in the `PATH` system variable, the extension will utilize a built-in PHP analyzer to help find details about your custom tags, view models, augmentation and Composer dependencies.
+
+Having this enabled is not a requirement to use the extension's main features.
 
 ## License
 
-This parser library is open-sourced software licensed under the [MIT license](https://opensource.org/licenses/MIT).
+This language extension is open-sourced software licensed under the [MIT license](https://opensource.org/licenses/MIT).
