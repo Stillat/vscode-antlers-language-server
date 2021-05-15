@@ -1,0 +1,29 @@
+{
+	"name": "statamic-antlers-lsp",
+	"description": "Language server for Statamic Antlers.",
+	"version": "1.0.0",
+	"author": "John Koster",
+	"license": "MIT",
+	"engines": {
+		"node": "*"
+	},
+	"repository": {
+		"type": "git",
+		"url": "https://github.com/Stillat/vscode-antlers"
+	},
+	"dependencies": {
+		"file-uri-to-path": "^2.0.0",
+		"js-beautify": "^1.13.13",
+		"lru-cache": "^4.1.5",
+		"semver": "^5.7.1",
+		"ts-debounce": "^3.0.0",
+		"vscode-languageserver": "^7.0.0",
+		"vscode-languageserver-textdocument": "^1.0.1",
+		"yaml": "^1.10.2"
+	},
+	"scripts": {},
+	"devDependencies": {
+		"@types/semver": "^7.3.5",
+		"@types/uuid": "^8.3.0"
+	}
+}

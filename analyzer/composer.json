@@ -1,0 +1,15 @@
+{
+	"name": "stillat/statamic-project-analyzer",
+	"description": "Statamic Project Analyzer",
+	"autoload": {
+		"psr-4": {
+			"Stillat\\StatamicAnalyzer\\": "src"
+		}
+	},
+	"require": {
+		"nikic/php-parser": "^4.10.3",
+		"spatie/ray": "^1.20",
+		"ext-json": "*",
+		"illuminate/support": "^8.40"
+	}
+}

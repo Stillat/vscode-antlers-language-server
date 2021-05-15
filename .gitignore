@@ -1,0 +1,7 @@
+out
+node_modules
+client/server
+analyzer/vendor
+.vscode-test
+analyzer.phar
+analyzer/.idea

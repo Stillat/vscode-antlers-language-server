@@ -1,0 +1,63 @@
+{
+    "name": "antlers-statamic",
+    "description": "Provides Antlers syntax highlighting, and robust language features.",
+    "author": "John Koster",
+    "license": "MIT",
+    "version": "0.0.1",
+    "publisher": "stillat",
+    "engines": {
+        "vscode": "^1.52.0"
+    },
+    "repository": {
+        "type": "git",
+        "url": "https://github.com/Stillat/vscode-antlers"
+    },
+    "keywords": [
+        "statamic",
+        "intellisense",
+        "antlers",
+        "template"
+    ],
+    "categories": [
+        "Programming Languages"
+    ],
+    "contributes": {
+        "languages": [
+            {
+                "id": "html",
+                "aliases": [
+                    "HTML (Statamic Antlers)",
+                    "antlers"
+                ],
+                "extensions": [
+                    ".html",
+                    ".htm",
+                    ".xhtml"
+                ],
+                "configuration": "./antlers.configuration.json"
+            }
+        ],
+        "grammars": [
+            {
+                "language": "html",
+                "scopeName": "text.html.statamic",
+                "path": "./syntaxes/antlers.json"
+            }
+        ]
+    },
+    "dependencies": {
+        "file-uri-to-path": "^2.0.0",
+        "js-beautify": "^1.13.13",
+        "lru-cache": "^4.1.5",
+        "ts-debounce": "^3.0.0",
+        "vscode-languageclient": "^7.0.0",
+        "vscode-languageserver": "^7.0.0",
+        "vscode-languageserver-textdocument": "^1.0.1",
+        "yaml": "^1.10.2"
+    },
+    "devDependencies": {
+        "@types/vscode": "^1.52.0",
+        "js-yaml": "^4.0.0",
+        "vscode-test": "^1.3.0"
+    }
+}

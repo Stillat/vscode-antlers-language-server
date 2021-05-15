@@ -1,0 +1,104 @@
+{
+    "name": "vscode-antlers",
+    "displayName": "Antlers Language for Statamic",
+    "description": "Provides Antlers syntax highlighting, and robust language features.",
+    "author": "John Koster",
+    "license": "MIT",
+    "version": "1.0.17",
+    "repository": {
+        "type": "git",
+        "url": "https://github.com/Stillat/vscode-antlers"
+    },
+    "publisher": "stillat",
+    "icon": "icon.png",
+    "keywords": [
+        "statamic",
+        "intellisense",
+        "snippet",
+        "highlighter",
+        "beautify",
+        "antlers",
+        "template"
+    ],
+    "categories": [
+        "Programming Languages",
+        "Snippets",
+        "Formatters"
+    ],
+    "engines": {
+        "vscode": "^1.43.0"
+    },
+    "activationEvents": [
+        "onLanguage:html"
+    ],
+    "main": "./client/out/extension",
+    "contributes": {
+        "languages": [
+            {
+                "id": "html",
+                "aliases": [
+                    "HTML (Statamic Antlers)",
+                    "antlers"
+                ],
+                "extensions": [
+                    ".antlers.html",
+                    ".html",
+                    ".htm",
+                    ".xhtml"
+                ],
+                "configuration": "./client/antlers.configuration.json"
+            }
+        ],
+        "grammars": [
+            {
+                "language": "html",
+                "scopeName": "text.html.statamic",
+                "path": "./client/syntaxes/antlers.json"
+            }
+        ],
+        "configuration": {
+            "type": "object",
+            "title": "Antlers configuration",
+            "properties": {
+                "antlersLanguageServer.maxNumberOfProblems": {
+                    "scope": "resource",
+                    "type": "number",
+                    "default": 100,
+                    "description": "Controls the maximum number of problems produced by the server."
+                },
+                "antlersLanguageServer.trace.server": {
+                    "scope": "window",
+                    "type": "string",
+                    "enum": [
+                        "off",
+                        "messages",
+                        "verbose"
+                    ],
+                    "default": "off",
+                    "description": "Traces the communication between VS Code and the language server."
+                }
+            }
+        }
+    },
+    "scripts": {
+        "publish:grammar": "node client/syntaxes/compile.js && npx js-yaml client/syntaxes/antlers.yaml > client/syntaxes/antlers.json",
+        "vscode:prepublish": "npm run compile && php buildAnalyzer.php",
+        "compile": "tsc -b",
+        "watch": "tsc -b -w",
+        "postinstall": "cd client && npm install && cd ../server && npm install && cd ../analyzer && composer install && cd ..",
+        "test:server": "npm run compile && mocha ./server/out/test/*.js -- -u tdd"
+    },
+    "devDependencies": {
+        "@types/mocha": "^8.2.2",
+        "@types/node": "^12.20.10",
+        "@typescript-eslint/eslint-plugin": "^4.22.0",
+        "@typescript-eslint/parser": "^4.14.0",
+        "eslint": "^7.24.0",
+        "mocha": "^8.3.2",
+        "typescript": "^4.2.4"
+    },
+    "dependencies": {
+        "semver": "^7.3.2",
+        "uuid": "^8.3.2"
+    }
+}

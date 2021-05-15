@@ -1,0 +1,80 @@
+import { CompletionItem, CompletionItemKind } from 'vscode-languageserver-types';
+import { PermissionsManager } from '../antlers/permissions/permissionManager';
+import { ISuggestionRequest } from './suggestionManager';
+
+export function getPermissionSuggestions(currentValue: string, params: ISuggestionRequest): CompletionItem[] {
+	const items: CompletionItem[] = [];
+
+	if (currentValue.trim().length == 0) {
+		const baseTriggerNames = PermissionsManager.getTriggerNames();
+
+		for (let i = 0; i < baseTriggerNames.length; i++) {
+			items.push({
+				label: baseTriggerNames[i],
+				kind: CompletionItemKind.Value
+			});
+		}
+	} else {
+		const currentParts = currentValue.split(' ').filter(n => n.trim().length > 0),
+			currentTrigger = currentParts[0],
+			allContextualItems = PermissionsManager.getTriggerContextItems(currentTrigger),
+			isCollectionTrigger = PermissionsManager.isCollectionTrigger(currentTrigger),
+			isGlobalTrigger = PermissionsManager.isGlobalTrigger(currentTrigger),
+			isFormTrigger = PermissionsManager.isFormTrigger(currentTrigger),
+			isStructureTrigger = PermissionsManager.isStructureTrigger(currentTrigger),
+			isAssetTrigger = PermissionsManager.isAssetTrigger(currentTrigger);
+		let candidateItems: string[] = [];
+
+		if (currentParts.length <= 2) {
+			if (isCollectionTrigger) {
+				candidateItems = candidateItems.concat(params.project.getUniqueCollectionNames());
+			} else if (isGlobalTrigger) {
+				candidateItems = candidateItems.concat(params.project.getUniqueGlobalsNames());
+			} else if (isFormTrigger) {
+				candidateItems = candidateItems.concat(params.project.getUniqueFormNames());
+			} else if (isStructureTrigger) {
+				candidateItems = candidateItems.concat(params.project.getUniqueNavigationMenuNames());
+			} else if (isAssetTrigger) {
+				candidateItems = candidateItems.concat(params.project.getUniqueAssetNames());
+			}
+
+			if (allContextualItems.length > 0) {
+				candidateItems = candidateItems.concat(allContextualItems);
+			}
+
+			candidateItems = [...new Set(candidateItems)];
+
+			for (let i = 0; i < candidateItems.length; i++) {
+				items.push({
+					label: candidateItems[i],
+					kind: CompletionItemKind.Value
+				});
+			}
+		} else {
+			let capCandidates: string[] = [];
+
+			if (isCollectionTrigger) {
+				capCandidates = capCandidates.concat(PermissionsManager.collectionTriggerCaps);
+			} else if (isGlobalTrigger) {
+				capCandidates = capCandidates.concat(PermissionsManager.globalTriggerCaps);
+			} else if (isFormTrigger) {
+				capCandidates = capCandidates.concat(PermissionsManager.formTriggerCaps);
+			} else if (isStructureTrigger) {
+				capCandidates = capCandidates.concat(PermissionsManager.structureTriggerCaps);
+			} else if (isAssetTrigger) {
+				capCandidates = capCandidates.concat(PermissionsManager.assetTriggerCaps);
+			}
+
+			capCandidates = [...new Set(capCandidates)];
+
+			for (let i = 0; i < capCandidates.length; i++) {
+				items.push({
+					label: capCandidates[i],
+					kind: CompletionItemKind.Value
+				});
+			}
+		}
+	}
+
+	return items;
+}
