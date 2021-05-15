@@ -7,9 +7,9 @@
     "version": "1.0.17",
     "repository": {
         "type": "git",
-        "url": "https://github.com/Stillat/vscode-antlers"
+        "url": "https://github.com/Stillat/vscode-antlers-language-server"
     },
-    "publisher": "stillat",
+    "publisher": "stillat-llc",
     "icon": "icon.png",
     "keywords": [
         "statamic",
