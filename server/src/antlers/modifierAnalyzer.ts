@@ -5,7 +5,7 @@ import { IScopeVariable } from './scope/engine';
 import { getParameters } from './tags/parameterFetcher';
 import { getParameter, ISymbol } from './types';
 
-const modifierRegex = /\|([\sA-z][^|"}]*)/gm;
+const modifierRegex = /(?<!\|)\|([\sA-z][^|"}]*)/gm;
 
 export interface ISymbolModifierCollection {
 	/**
@@ -393,6 +393,10 @@ export function analyzeModifiers(symbol: ISymbol): ISymbolModifierCollection {
 	// string, we will fill their ranges with new spaces.
 	for (let i = 0; i < paramsInContext.length; i++) {
 		const param = paramsInContext[i];
+
+		if (param.value == param.name) {
+			continue;
+		}
 
 		for (let j = param.startOffset; j <= param.endOffset; j++) {
 			contentChars[j] = ' ';
