@@ -62,7 +62,7 @@ const stringModifiers: IModifier[] = [
 		name: 'collapse_whitespace',
 		acceptsType: ['string'],
 		returnsType: ['string'],
-		description: 'Trims a string and replaces consecutive whitepsace characters with a single space.',
+		description: 'Trims a string and replaces consecutive whitespace characters with a single space.',
 		docLink: 'https://statamic.dev/modifiers/collapse_whitespace',
 		parameters: [],
 		canBeParameter: false
@@ -85,7 +85,7 @@ const stringModifiers: IModifier[] = [
 		name: 'dashify',
 		acceptsType: ['string'],
 		returnsType: ['string'],
-		description: 'Returns a lowercased and trimmed string, separated by dashes.',
+		description: 'Returns a lower-cased and trimmed string, separated by dashes.',
 		docLink: 'https://statamic.dev/modifiers/dashify',
 		parameters: [],
 		canBeParameter: false
@@ -177,7 +177,7 @@ const stringModifiers: IModifier[] = [
 		name: 'gravatar',
 		acceptsType: ['string'],
 		returnsType: ['string'],
-		description: 'Converts an email tring to a Gravatar image URL.',
+		description: 'Converts an email string to a Gravatar image URL.',
 		docLink: 'https://statamic.dev/modifiers/gravatar',
 		parameters: [
 			{
@@ -550,7 +550,7 @@ const stringModifiers: IModifier[] = [
 		name: 'underscored',
 		acceptsType: ['string'],
 		returnsType: ['string'],
-		description: 'Returns a lowercased and trimmed version of the string, separated by underscores.',
+		description: 'Returns a lower-cased and trimmed version of the string, separated by underscores.',
 		docLink: 'https://statamic.dev/modifiers/underscored',
 		parameters: [],
 		canBeParameter: false

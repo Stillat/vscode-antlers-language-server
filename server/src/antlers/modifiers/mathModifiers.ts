@@ -77,7 +77,7 @@ const mathModifiers: IModifier[] = [
 				description: 'The decimal separator (defaults to `.`).'
 			},
 			{
-				name: 'tbousands_seprator',
+				name: 'thousands_separator',
 				description: 'The thousands separator (default `,`).'
 			}
 		],

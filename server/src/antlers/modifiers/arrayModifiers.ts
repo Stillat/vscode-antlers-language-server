@@ -83,7 +83,7 @@ const arrayModifiers: IModifier[] = [
 		name: 'flatten',
 		acceptsType: ['array'],
 		returnsType: ['array'],
-		description: 'Flattens a mutli-dimensional array.',
+		description: 'Flattens a multi-dimensional array.',
 		docLink: 'https://statamic.dev/modifiers/flatten',
 		parameters: [],
 		canBeParameter: false
@@ -166,7 +166,7 @@ const arrayModifiers: IModifier[] = [
 		name: 'list',
 		acceptsType: ['array'],
 		returnsType: ['string'],
-		description: 'Converts the array into a comma-seprated string.',
+		description: 'Converts the array into a comma-separated string.',
 		docLink: 'https://statamic.dev/modifiers/list',
 		parameters: [],
 		canBeParameter: false
@@ -180,7 +180,7 @@ const arrayModifiers: IModifier[] = [
 		parameters: [
 			{
 				name: 'offset',
-				description: 'The one-based index to start retreiving items.'
+				description: 'The one-based index to start retrieving items.'
 			}
 		],
 		canBeParameter: true
