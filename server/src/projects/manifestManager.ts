@@ -168,13 +168,24 @@ export class ManifestManager {
 			for (let i = 0; i < parsedManifest.modifiers.length; i++) {
 				const manifestModifier = parsedManifest.modifiers[i];
 
+				let newAcceptedTypes = manifestModifier.expectsTypes,
+					newReturnTypes = manifestModifier.returnsTypes;
+
+				if (newAcceptedTypes == null || newAcceptedTypes.length == 0) {
+					newAcceptedTypes = ['*'];
+				}
+
+				if (newReturnTypes == null || newReturnTypes.length == 0) {
+					newReturnTypes = ['*'];
+				}
+
 				ModifierManager.registerModifier({
-					acceptsType: manifestModifier.expectsTypes,
+					acceptsType: newAcceptedTypes,
 					canBeParameter: true,
 					description: manifestModifier.description,
 					docLink: '',
 					name: manifestModifier.name,
-					returnsType: manifestModifier.returnsTypes,
+					returnsType: newReturnTypes,
 					parameters: getRuntimeModifierParamters(manifestModifier)
 				});
 			}
@@ -195,13 +206,24 @@ export class ManifestManager {
 				for (let i = 0; i < parsedManifest.modifiers.length; i++) {
 					const manifestModifier = parsedManifest.packageManifests[p].modifiers[i];
 
+					let newAcceptedTypes = manifestModifier.expectsTypes,
+						newReturnTypes = manifestModifier.returnsTypes;
+	
+					if (newAcceptedTypes == null || newAcceptedTypes.length == 0) {
+						newAcceptedTypes = ['*'];
+					}
+	
+					if (newReturnTypes == null || newReturnTypes.length == 0) {
+						newReturnTypes = ['*'];
+					}
+
 					ModifierManager.registerModifier({
-						acceptsType: manifestModifier.expectsTypes,
+						acceptsType: newAcceptedTypes,
 						canBeParameter: true,
 						description: manifestModifier.description,
 						docLink: '',
 						name: manifestModifier.name,
-						returnsType: manifestModifier.returnsTypes,
+						returnsType: newReturnTypes,
 						parameters: getRuntimeModifierParamters(manifestModifier)
 					});
 				}
