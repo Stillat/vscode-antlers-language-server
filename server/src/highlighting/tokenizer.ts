@@ -170,6 +170,8 @@ export class Tokenizer {
 					});
 
 					if (modifier.args.length > 0) {
+						let lastModifierContent = '';
+
 						for (let k = 0; k < modifier.args.length; k++) {
 							const arg = modifier.args[k];
 							let argType = 'string';
@@ -179,17 +181,23 @@ export class Tokenizer {
 								arg.scopeVariable = symb.currentScope.findReference(arg.content.trim());
 							}
 
-							if (arg.scopeVariable != null) {
+							if (arg.scopeVariable != null || lastModifierContent == '??') {
 								argType = 'variable';
+							}
+
+							if (arg.content.trim() == '??') {
+								argType = 'keyword';
 							}
 
 							allTokens.push({
 								line: arg.line,
-								startCharacter: arg.startOffset,
-								length: arg.content.length,
+								startCharacter: arg.startOffset - 1,
+								length: arg.content.trim().length,
 								tokenType: argType,
 								tokenModifiers: []
 							});
+
+							lastModifierContent = arg.content.trim();
 						}
 					}
 				}

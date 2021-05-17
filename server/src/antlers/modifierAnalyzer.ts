@@ -204,6 +204,12 @@ function analyzeContentForModifiers(symbol: ISymbol, contentToAnalyze: string, s
 			continue;
 		}
 
+		if (match.index != null) {
+			if (contentToAnalyze.charAt(match.index - 1) == '|') {
+				continue;
+			}
+		}
+
 		const modifierStart = (match.index ?? 0) + startOffset,
 			matchContent = match[1],
 			chars = matchContent.split(''),

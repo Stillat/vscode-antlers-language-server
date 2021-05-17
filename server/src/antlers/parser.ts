@@ -500,8 +500,17 @@ export class AntlersParser {
 					const modifierChar = this.nextNonWhiteSpace();
 
 					if (modifierChar.char == '|') {
-						hasModifier = true;
-						modifierOffset = modifierChar.offset;
+						if (modifierChar.index + 1 < this.inputLength) {
+							const peekChar = this.inputChars[modifierChar.index + 1];
+
+							if (peekChar != '|') {
+								hasModifier = true;
+								modifierOffset = modifierChar.offset;
+							}
+						} else {
+							hasModifier = true;
+							modifierOffset = modifierChar.offset;
+						}
 					}
 				} else {
 					if (this.current == '"' || this.current == "'") {
