@@ -18,6 +18,8 @@ To install the extension on your local machine, simply open Visual Studio Code a
 
 The extension will automatically activate the next time you open an Antlers HTML file.
 
+Want to take your install even further? Consider checking out the documentation at [https://antlers.dev/](https://antlers.dev/).
+
 ## System PHP Configuration
 
 If your development machine has PHP7+ installed and available in the `PATH` system variable, the extension will utilize a built-in PHP analyzer to help find details about your custom tags, view models, augmentation and Composer dependencies.
