@@ -4,7 +4,9 @@ const beautify = require('js-beautify').html;
 import { DocumentFormattingParams, Position } from 'vscode-languageserver-protocol';
 import { Range, TextDocument, TextEdit } from 'vscode-languageserver-textdocument';
 import { AntlersParser } from '../antlers/parser';
+import { htmlFormatterSettings } from '../server';
 import { documentMap, parserInstances } from '../session';
+import { getFormatOption, getTagsFormatOption, IHTMLFormatConfiguration } from './htmlCompat';
 
 const Conditionals: string[] = ['if', 'elseif', 'else', '/if', 'unless', 'elseunless', '/unless'];
 
@@ -86,6 +88,7 @@ function padTags(content: string): string {
 
 export function formatAntlersDocument(params: DocumentFormattingParams): TextEdit[] | null {
 	const documentPath = decodeURIComponent(params.textDocument.uri);
+	const options = htmlFormatterSettings.format as IHTMLFormatConfiguration;
 
 	if (documentMap.has(documentPath)) {
 		const document = documentMap.get(documentPath) as TextDocument,
@@ -146,9 +149,27 @@ export function formatAntlersDocument(params: DocumentFormattingParams): TextEdi
 			replaceMapping.set(formatTag, content);
 		}
 
+		const includesEnd = docText.endsWith("\n");
+
 		let formattingResults = beautify(docText, {
 			indent_size: params.options.tabSize,
-			indent_char: params.options.insertSpaces ? ' ' : '\t',
+			indent_char: params.options.insertSpaces ? ' ' : '\t',			
+			indent_empty_lines: getFormatOption(options, 'indentEmptyLines', false),
+			wrap_line_length: getFormatOption(options, 'wrapLineLength', 120),
+			//unformatted: getTagsFormatOption(options, 'unformatted', void 0),
+			content_unformatted: getTagsFormatOption(options, 'contentUnformatted', void 0),
+			indent_inner_html: getFormatOption(options, 'indentInnerHtml', false),
+			preserve_newlines: getFormatOption(options, 'preserveNewLines', true),
+			max_preserve_newlines: getFormatOption(options, 'maxPreserveNewLines', 32786),
+			indent_handlebars: getFormatOption(options, 'indentHandlebars', false),
+			end_with_newline: includesEnd && getFormatOption(options, 'endWithNewline', false),
+			extra_liners: getTagsFormatOption(options, 'extraLiners', void 0),
+			wrap_attributes: getFormatOption(options, 'wrapAttributes', 'auto'),
+			wrap_attributes_indent_size: getFormatOption(options, 'wrapAttributesIndentSize', void 0),
+			eol: '\n',
+			indent_scripts: getFormatOption(options, 'indentScripts', 'normal'),
+			/*templating: getTemplatingFormatOption(options, 'all'),*/
+			unformatted_content_delimiter: getFormatOption(options, 'unformattedContentDelimiter', ''),
 		});
 
 		replaceMapping.forEach((content: string, formatTag: string) => {

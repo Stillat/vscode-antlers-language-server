@@ -41,6 +41,10 @@ let globalSettings: ExampleSettings = defaultSettings;
 // Cache the settings of all open documents
 const documentSettings: Map<string, Thenable<ExampleSettings>> = new Map();
 
+let htmlFormatterSettings:any = null;
+
+export {htmlFormatterSettings};
+
 export { defaultSettings, globalSettings, documentSettings };
 export { hasConfigurationCapability, connection };
 
@@ -158,6 +162,10 @@ connection.onInitialized(() => {
 		// Register for all configuration changes.
 		connection.client.register(DidChangeConfigurationNotification.type, undefined);
 	}
+
+	const htmlResult = connection.workspace.getConfiguration('html').then(function (value) {
+		htmlFormatterSettings = value;
+	});
 });
 
 export function getDocumentSettings(resource: string): Thenable<ExampleSettings> {
@@ -170,6 +178,7 @@ export function getDocumentSettings(resource: string): Thenable<ExampleSettings>
 			scopeUri: resource,
 			section: 'antlers'
 		});
+		
 		documentSettings.set(resource, result);
 	}
 	return result;
@@ -184,6 +193,10 @@ connection.onDidChangeConfiguration(change => {
 			(change.settings.languageServerExample || defaultSettings)
 		);
 	}
+
+	const htmlResult = connection.workspace.getConfiguration('html').then(function (value) {
+		htmlFormatterSettings = value;
+	});
 
 	// Revalidate all open text documents
 	documents.all().forEach(collectProjectDetails);
