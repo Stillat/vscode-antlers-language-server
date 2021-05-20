@@ -1,4 +1,6 @@
+import { IAntlersParameter } from '../antlers/tagManager';
 import { ISymbol } from '../antlers/types';
+import { currentStructure } from '../projects/statamicProject';
 import { DocumentDetailsManager } from './documentDetailsManager';
 
 export interface IEnvironmentHelper {
@@ -6,7 +8,9 @@ export interface IEnvironmentHelper {
 	documentDescription: string,
 	collectionInjections: string[],
 	blueprints: string[],
-	variableHelper: IVariableHelper | null
+	variableHelper: IVariableHelper | null,
+	injectsParameters:IAntlersParameter[],
+	varReferenceNames: Map<string, string>
 }
 
 export interface IVariableHelper {
@@ -21,7 +25,9 @@ const EmptyEnvironmentHelper: IEnvironmentHelper = {
 	documentName: '',
 	collectionInjections: [],
 	blueprints: [],
-	variableHelper: null
+	variableHelper: null,
+	injectsParameters: [],
+	varReferenceNames: new Map()
 };
 
 export { EmptyEnvironmentHelper };
@@ -34,13 +40,18 @@ const CollectionPrefix = '@collection';
 const BlueprintPrefix = '@blueprint';
 const VariablePrefix = '@var';
 const SetPrefix = '@set';
+const ParamPrefix = '@param';
+const RequiredParamPrefix = '@param*';
+const ParamFromViewDataDirective = '@front';
 
 export function parseIdeHelper(documentUri: string, symbol: ISymbol): IEnvironmentHelper {
 	if (symbol == null || symbol.isComment == false) {
 		return EmptyEnvironmentHelper;
 	}
 
-	const commentLines: string[] = symbol.content.replace(/(\r\n|\n|\r)/gm, "\n").split("\n").map(r => r.trim());
+	const commentLines: string[] = symbol.content.replace(/(\r\n|\n|\r)/gm, "\n").split("\n").map(r => r.trim()),
+		injectsParameters:IAntlersParameter[] = [],
+		varReferenceNames:Map<string, string> = new Map();
 
 	let documentName = '',
 		documentDescription = '',
@@ -77,6 +88,41 @@ export function parseIdeHelper(documentUri: string, symbol: ISymbol): IEnvironme
 		} else if (thisLine.startsWith(SetPrefix)) {
 			varReference = '@page ' + thisLine.slice(SetPrefix.length).trim();
 			isParsingDescription = false;
+		} else if (thisLine.startsWith(ParamPrefix)) {
+			let sliceLen = ParamPrefix.length,
+				paramRequired = false;
+
+			if (thisLine.startsWith(RequiredParamPrefix)) {
+				sliceLen = RequiredParamPrefix.length;
+				paramRequired = true;
+			}
+
+			const directiveDetails = thisLine.slice(sliceLen).trim();
+			
+			const directiveParts = directiveDetails.split(' ');
+
+			if (directiveParts.length > 0) {
+				if (directiveParts[0] == ParamFromViewDataDirective && directiveParts.length >= 4) {
+					directiveParts.shift();
+
+					const varName = directiveParts.shift() as string,
+						paramName = directiveParts.shift() as string,
+						paramDesc = directiveParts.join(' ') as string;
+
+					injectsParameters.push({
+						acceptsVariableInterpolation: true,
+						aliases: [],
+						allowsVariableReference: true,
+						description: paramDesc,
+						expectsTypes: ['*'],
+						isDynamic: true,
+						isRequired: paramRequired,
+						name: paramName
+					});
+
+					varReferenceNames.set(paramName, varName);
+				}
+			}
 		} else {
 			if (isParsingDescription) {
 				documentDescription += "\n" + thisLine.trim();
@@ -127,15 +173,26 @@ export function parseIdeHelper(documentUri: string, symbol: ISymbol): IEnvironme
 		}
 	}
 
+	if (currentStructure != null) {
+		const projectView = currentStructure.findView(documentUri);
+
+		if (projectView != null) {
+			projectView.injectsParameters = injectsParameters;
+			projectView.varReferenceNames = varReferenceNames;
+		}
+	}
+
 	const ideHelper: IEnvironmentHelper = {
 		documentName: documentName,
 		documentDescription: documentDescription,
 		collectionInjections: collectionNames,
 		blueprints: blueprintNames,
-		variableHelper: variableHelper
+		variableHelper: variableHelper,
+		injectsParameters: injectsParameters,
+		varReferenceNames: varReferenceNames
 	};
 
-	if (symbol.startLine == 0) {
+	if (symbol.startLine == 0 || symbol.index == 1) {
 		DocumentDetailsManager.registerDetails(documentUri, ideHelper);
 	}
 

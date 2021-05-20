@@ -2,7 +2,7 @@ import { Position } from 'vscode-languageserver-textdocument';
 import { CompletionItem, CompletionItemKind } from 'vscode-languageserver-types';
 import { ExtensionManager } from '../extensibility/extensionManager';
 import { IBlueprintField } from '../projects/blueprints';
-import { StatamicProject } from '../projects/statamicProject';
+import { currentStructure, StatamicProject } from '../projects/statamicProject';
 import { makeTagParameterSuggestions } from '../suggestions/attributeSuggestions';
 import { formatSuggestion, makeModifierSuggest } from '../suggestions/fieldFormatter';
 import { ISuggestionRequest } from '../suggestions/suggestionManager';
@@ -218,6 +218,19 @@ export interface ICompletionResult {
 	 * Internal property.
 	 */
 	analyzeDefaults: boolean
+}
+
+export function resultList(items: string[]): ICompletionResult {
+	const completionItems: CompletionItem[] = [];
+
+	for (let i = 0; i < items.length; i++) {
+		completionItems.push({
+			label: items[i],
+			kind: CompletionItemKind.Field
+		});
+	}
+
+	return exclusiveResult(completionItems);
 }
 
 export function exclusiveResultList(items: string[]): ICompletionResult {
@@ -549,7 +562,24 @@ export class TagManager {
 					// Here we will gather the declared parameters and add them to make things easier.
 					if (params.isCaretInTag == true && tagReference.parameters.length > 0) {
 						resolvedParams = resolvedParams.concat(makeTagParameterSuggestions(params, tagReference.parameters));
-					}
+
+						if (tagReference.tagName == 'partial') {
+							if (lastScopeItem != null && lastScopeItem.methodName != null) {
+								if (lastScopeItem.methodName.trim().length > 0) {
+									if (currentStructure != null) {
+										const projectView = currentStructure.findPartial(lastScopeItem.methodName);
+
+										if (projectView != null && projectView.injectsParameters.length > 0) {
+											resolvedParams = resolvedParams.concat(makeTagParameterSuggestions(
+												params,
+												projectView.injectsParameters
+											));
+										}
+									}
+								}
+							}
+						}
+					}					
 
 					for (let i = 0; i < params.symbolsInScope.length; i++) {
 						if (params.symbolsInScope[i].runtimeType !== null) {

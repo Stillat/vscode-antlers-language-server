@@ -18,6 +18,7 @@ import { IComposerPackage, LockFileParser } from '../composer/lockFileParser';
 import { LoadedManifest } from './manifestManager';
 import { AugmentationManager } from './augmentationManager';
 import { ViewModelManager } from './viewModelManager';
+import { IAntlersParameter } from '../antlers/tagManager';
 
 let currentStructure: StatamicProject | null = null;
 
@@ -689,6 +690,7 @@ export interface IView {
      * @see https://statamic.dev/template-engines#view-data
      */
     viewDataVariables: string[],
+    viewDataDocument: any,
     /**
      * The normalizerd relative path to the file.
      */
@@ -724,7 +726,9 @@ export interface IView {
     /**
      * Indicates if the template is a Blade file.
      */
-    isBlade: boolean
+    isBlade: boolean,
+	injectsParameters:IAntlersParameter[],
+	varReferenceNames: Map<string, string>
 }
 
 const MockStructure: IStatamicStructure = {
@@ -941,7 +945,8 @@ function getProjectViews(viewPath: string): IView[] {
             isAntlers = false,
             isBlade = false,
             displayName = '',
-            viewDataVariables: string[] = [];
+            viewDataVariables: string[] = [],
+            viewDataDoc: any = null;
 
         // Allows non .antlers.html files to be flagged as partials.
         if (fileName.startsWith('_')) {
@@ -964,6 +969,7 @@ function getProjectViews(viewPath: string): IView[] {
                         if (parsedDocument.length > 0) {
                             const frontMatter = parsedDocument[0];
                             const docVars = frontMatter.toJSON();
+                            viewDataDoc = docVars;
                             viewDataVariables = Object.keys(docVars);
                         }
                     }
@@ -999,7 +1005,10 @@ function getProjectViews(viewPath: string): IView[] {
             relativeFileName: fileName,
             relativePath: relativePath,
             viewDataVariables: viewDataVariables,
-            injectsCollections: []
+            injectsCollections: [],
+            injectsParameters: [],
+            varReferenceNames: new Map(),
+            viewDataDocument: viewDataDoc
         });
     }
 

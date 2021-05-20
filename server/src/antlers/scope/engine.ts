@@ -559,9 +559,10 @@ export class ScopeEngine {
 
 	constructor(project: StatamicProject, documentUri: string) {
 		this.statamicProject = project;
+		this.documentUri = documentUri;
+
 		this.makePageScope();
 		this.makeViewDataScope();
-		this.documentUri = documentUri;
 	}
 
 	private makeViewDataScope() {

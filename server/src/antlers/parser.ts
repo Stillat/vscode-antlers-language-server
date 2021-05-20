@@ -609,6 +609,7 @@ export class AntlersParser {
 
 			const newSymbol: ISymbol = {
 				id: uuidv4(),
+				index: this.symbols.length + 1,
 				isComment: isComment,
 				tagPart: tagName.trim(),
 				currentScope: null,
@@ -698,6 +699,7 @@ export class AntlersParser {
 
 			this.symbols.push({
 				id: uuidv4(),
+				index: this.symbols.length + 1,
 				isComment: false,
 				tagPart: '',
 				currentScope: null,

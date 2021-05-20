@@ -1,9 +1,9 @@
-import { CompletionItem, CompletionItemKind, MarkupKind } from 'vscode-languageserver';
+import { CompletionItem, CompletionItemKind, MarkupKind, ParameterStructures } from 'vscode-languageserver';
 import { DocumentDetailsManager } from '../../../idehelper/documentDetailsManager';
 import { IEnvironmentHelper } from '../../../idehelper/parser';
-import { IView } from '../../../projects/statamicProject';
+import { currentStructure, IView } from '../../../projects/statamicProject';
 import { ISuggestionRequest } from '../../../suggestions/suggestionManager';
-import { IAntlersTag } from '../../tagManager';
+import { IAntlersParameter, IAntlersTag, resultList } from '../../tagManager';
 import { returnDynamicParameter } from '../dynamicParameterResolver';
 
 const Partial: IAntlersTag = {
@@ -26,6 +26,29 @@ const Partial: IAntlersTag = {
 	requiresClose: false,
 	allowsContentClose: true,
 	resolveDynamicParameter: returnDynamicParameter,
+	resovleParameterCompletionItems: (parameter:IAntlersParameter, params:ISuggestionRequest) => {
+		if (parameter.isDynamic) {
+			if (params.currentSymbol != null && params.currentSymbol.name == 'partial' && params.currentSymbol.methodName != null) {
+				if (params.currentSymbol.methodName.trim().length > 0) {
+					if (currentStructure != null) {
+						const projectView = currentStructure.findPartial(params.currentSymbol.methodName);
+
+						if (projectView != null && projectView.varReferenceNames.has(parameter.name)) {
+							const viewDataRef = projectView.varReferenceNames.get(parameter.name) as string;
+
+							if (projectView.viewDataDocument != null && typeof projectView.viewDataDocument[viewDataRef] !== 'undefined') {
+								const viewDataItems = Object.keys(projectView.viewDataDocument[viewDataRef]) as string[];
+
+								return resultList(viewDataItems);
+							}
+						}
+					}
+				}
+			}
+		}
+
+		return null;
+	},
 	resolveCompletionItems: (params: ISuggestionRequest) => {
 		const items: CompletionItem[] = [];
 

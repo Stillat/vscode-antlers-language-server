@@ -40,6 +40,7 @@ export interface ISymbol {
 	 * and must not be relied upon to be consistent.
 	 */
 	id: string,
+	index: number,
 	/**
 	 * Indicates if the symbol represents an Antlers comment.
 	 */
@@ -175,6 +176,7 @@ export interface ISymbol {
 
 const EmptySymbol: ISymbol = {
 	id: '',
+	index: 0,
 	isComment: false,
 	tagPart: '',
 	methodName: '',
@@ -214,6 +216,7 @@ export { EmptySymbol };
 export function createSymbol(startLine: number, endLine: number, startOffset: number, endOffset: number, content: string): ISymbol {
 	return {
 		id: '',
+		index: 0,
 		isComment: false,
 		tagPart: '',
 		methodName: '',
@@ -250,13 +253,13 @@ export function createSymbol(startLine: number, endLine: number, startOffset: nu
 }
 
 export function getMethodNameValue(symbol: ISymbol): string {
-	let valueToReturnn = '';
+	let valueToReturn = '';
 
 	if (symbol.methodName != null && symbol.methodName.trim().length > 0) {
-		valueToReturnn = symbol.methodName;
+		valueToReturn = symbol.methodName;
 	}
 
-	return valueToReturnn;
+	return valueToReturn;
 }
 
 export function hasParamAndMatches(symbol: ISymbol, paramName: string, expected: string): boolean {
