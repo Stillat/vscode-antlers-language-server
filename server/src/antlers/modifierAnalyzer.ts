@@ -195,6 +195,14 @@ export function getActiveModifier(symbol: ISymbol, position: Position): IActiveM
 }
 
 function analyzeContentForModifiers(symbol: ISymbol, contentToAnalyze: string, startOffset: number, source: string): ISymbolModifier[] {
+
+	// TODO: At some point we will want to refactor this modifier
+	// parser. Possibly move away from the RegEx one to more
+	// easily avoid sneaky recursive situations.
+	if (['if', '/if', 'else', 'elseif', 'unless', 'endunless', 'elseunless'].includes(symbol.name)) {
+		return [];
+	}
+
 	const modifiers: ISymbolModifier[] = [];
 	let match: RegExpMatchArray | null = null,
 		modifierOrder = 0;
