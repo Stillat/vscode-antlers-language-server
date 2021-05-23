@@ -86,6 +86,54 @@ function padTags(content: string): string {
 	return newContent.join('');
 }
 
+interface IExtractedFrontMatter {
+	frontMatter: string,
+	documentContents: string
+}
+
+function extractFrontMatter(contents: string): IExtractedFrontMatter {
+	if (contents.trim().length == 0) {
+		return {
+			documentContents: contents,
+			frontMatter: ''
+		};
+	}
+	const analysisDocument = contents.trim();
+		
+	let lines = analysisDocument.replace(/(\r\n|\n|\r)/gm, "\n").split("\n");
+
+	if (lines.length <= 1) {
+		return {
+			documentContents: contents,
+			frontMatter: ''
+		};
+	}
+
+	if (lines[0].trim().startsWith('---') == false) {
+		return {
+			documentContents: contents,
+			frontMatter: ''
+		};
+	}
+
+	let breakAtIndex = 0;
+	for (let i = 1; i < lines.length; i++) {
+		if (lines[i].trim().startsWith('---')) {
+			breakAtIndex = i;
+			break;
+		}
+	}
+
+	const frontMatterLines = lines.slice(0, breakAtIndex + 1);
+		
+	lines = lines.slice(breakAtIndex + 1);
+	
+	return {
+		documentContents: lines.join("\n"),
+		frontMatter: frontMatterLines.join("\n")
+	};
+}
+
 export function formatAntlersDocument(params: DocumentFormattingParams): TextEdit[] | null {
 	const documentPath = decodeURIComponent(params.textDocument.uri);
 	const options = htmlFormatterSettings.format as IHTMLFormatConfiguration;
@@ -93,7 +141,12 @@ export function formatAntlersDocument(params: DocumentFormattingParams): TextEdi
 	if (documentMap.has(documentPath)) {
 		const document = documentMap.get(documentPath) as TextDocument,
 			parser = parserInstances.get(documentPath) as AntlersParser;
+
 		let docText = document.getText().replace(/(\r\n|\n|\r)/gm, "\n");
+		const extractedDocument = extractFrontMatter(docText);
+
+		docText = extractedDocument.documentContents;
+		const replaceEndPosition = document.positionAt(document.getText().length);
 
 		const symbols = parser.getSymbols(),
 			replaceMapping: Map<string, string> = new Map(),
@@ -151,13 +204,21 @@ export function formatAntlersDocument(params: DocumentFormattingParams): TextEdi
 
 		const includesEnd = docText.endsWith("\n");
 
+		let content_unformatted = getTagsFormatOption(options, 'contentUnformatted', void 0);
+
+		if (typeof content_unformatted === 'undefined' || content_unformatted === null) {
+			content_unformatted = [];
+		}
+
+		content_unformatted.push('IF', 'ANTLR');
+
 		let formattingResults = beautify(docText, {
 			indent_size: params.options.tabSize,
-			indent_char: params.options.insertSpaces ? ' ' : '\t',			
+			indent_char: params.options.insertSpaces ? ' ' : '\t',
 			indent_empty_lines: getFormatOption(options, 'indentEmptyLines', false),
 			wrap_line_length: getFormatOption(options, 'wrapLineLength', 120),
 			unformatted: getTagsFormatOption(options, 'unformatted', void 0),
-			content_unformatted: getTagsFormatOption(options, 'contentUnformatted', void 0),
+			content_unformatted: content_unformatted,
 			indent_inner_html: getFormatOption(options, 'indentInnerHtml', false),
 			preserve_newlines: getFormatOption(options, 'preserveNewLines', true),
 			max_preserve_newlines: getFormatOption(options, 'maxPreserveNewLines', 32786),
@@ -170,7 +231,7 @@ export function formatAntlersDocument(params: DocumentFormattingParams): TextEdi
 			indent_scripts: getFormatOption(options, 'indentScripts', 'normal'),
 			/*templating: getTemplatingFormatOption(options, 'all'),*/
 			unformatted_content_delimiter: getFormatOption(options, 'unformattedContentDelimiter', ''),
-		});
+		}) as string;
 
 		replaceMapping.forEach((content: string, formatTag: string) => {
 			formattingResults = formattingResults.replace(formatTag, content);
@@ -189,15 +250,19 @@ export function formatAntlersDocument(params: DocumentFormattingParams): TextEdi
 
 		newLines = balanceIfStatements(newLines);
 
-		formattingResults = newLines.join("\n");
+		formattingResults = newLines.join("\n") as string;
 
 		dumpMapping.forEach((content: string, format: string) => {
 			formattingResults = formattingResults.replace(format, content);
 		});
 
+		if (extractedDocument.frontMatter.trim().length > 0) {
+			formattingResults = extractedDocument.frontMatter + "\n\n" + formattingResults;	
+		}
+
 		const range: Range = {
 			start: Position.create(0, 0),
-			end: document.positionAt(docText.length)
+			end: replaceEndPosition
 		};
 
 		return [{
