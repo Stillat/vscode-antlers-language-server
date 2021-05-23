@@ -156,7 +156,7 @@ export function formatAntlersDocument(params: DocumentFormattingParams): TextEdi
 			indent_char: params.options.insertSpaces ? ' ' : '\t',			
 			indent_empty_lines: getFormatOption(options, 'indentEmptyLines', false),
 			wrap_line_length: getFormatOption(options, 'wrapLineLength', 120),
-			//unformatted: getTagsFormatOption(options, 'unformatted', void 0),
+			unformatted: getTagsFormatOption(options, 'unformatted', void 0),
 			content_unformatted: getTagsFormatOption(options, 'contentUnformatted', void 0),
 			indent_inner_html: getFormatOption(options, 'indentInnerHtml', false),
 			preserve_newlines: getFormatOption(options, 'preserveNewLines', true),
