@@ -20,6 +20,51 @@ const UserTagCompletionItems: CompletionItem[] = [
 	{ label: 'reset_password_form', kind: CompletionItemKind.Text },
 ];
 
+const UserProfileParameters:IAntlersParameter[] = [
+	{
+		isRequired: false,
+		acceptsVariableInterpolation: false,
+		allowsVariableReference: true,
+		aliases: [],
+		name: 'id',
+		description: 'The user ID to fetch',
+		expectsTypes: ['string'],
+		isDynamic: false
+	},
+	{
+		isRequired: false,
+		acceptsVariableInterpolation: false,
+		allowsVariableReference: true,
+		aliases: [],
+		name: 'email',
+		description: 'The email address to find the user by',
+		expectsTypes: ['string'],
+		isDynamic: false
+	},
+	{
+		isRequired: false,
+		acceptsVariableInterpolation: false,
+		allowsVariableReference: true,
+		aliases: [],
+		name: 'field',
+		description: 'The field to fetch the user by',
+		expectsTypes: ['string'],
+		isDynamic: false
+	},
+	{
+		isRequired: false,
+		acceptsVariableInterpolation: false,
+		allowsVariableReference: true,
+		aliases: [],
+		name: 'value',
+		description: 'The value to search for',
+		expectsTypes: ['string'],
+		isDynamic: false
+	}
+];
+
+export {UserProfileParameters};
+
 const User: IAntlersTag = {
 	tagName: 'user',
 	hideFromCompletions: false,
@@ -27,7 +72,7 @@ const User: IAntlersTag = {
 	injectParentScope: false,
 	allowsContentClose: false,
 	allowsArbitraryParameters: false,
-	parameters: [],
+	parameters: UserProfileParameters,
 	resovleParameterCompletionItems: (parameter: IAntlersParameter, params: ISuggestionRequest) => {
 		if (params.isPastTagPart == false && params.currentSymbol != null && params.currentSymbol.methodName != null && params.currentSymbol.methodName == 'profile') {
 			if (parameter.name == 'field') {
