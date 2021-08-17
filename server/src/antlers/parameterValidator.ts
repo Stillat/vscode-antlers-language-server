@@ -1,4 +1,5 @@
 import { DiagnosticSeverity } from 'vscode-languageserver-types';
+import { GlobalFeatureConfiguration } from '../featureConfiguration';
 import { trimLeft } from '../utils/strings';
 import { IAntlersParameter, IAntlersTag, IParameterAttribute, TagManager } from './tagManager';
 import { IReportableError, ISymbol } from './types';
@@ -65,26 +66,28 @@ export function validateSymbolParameters(symbols: ISymbol[]): IReportableError[]
 					}
 
 					if (registeredParam == null) {
-						let suggestionSuffix = '';
+						if (GlobalFeatureConfiguration.warnUnknownParameters) {
+							let suggestionSuffix = '';
 
-						if (tagReference.suggestAlternativeParams != null) {
-							const alternatives = tagReference.suggestAlternativeParams(paramName);
+							if (tagReference.suggestAlternativeParams != null) {
+								const alternatives = tagReference.suggestAlternativeParams(paramName);
 
-							if (alternatives.length == 1) {
-								suggestionSuffix = '. Did you mean "' + alternatives[0] + '"?';
-							} else if (alternatives.length > 1) {
-								suggestionSuffix = '. Try one of the following: ' + alternatives.join(', ');
+								if (alternatives.length == 1) {
+									suggestionSuffix = '. Did you mean "' + alternatives[0] + '"?';
+								} else if (alternatives.length > 1) {
+									suggestionSuffix = '. Try one of the following: ' + alternatives.join(', ');
+								}
 							}
-						}
 
-						errors.push({
-							startLine: curSymb.startLine,
-							endLine: curSymb.startLine,
-							endPos: paramToAnalyze.endOffset,
-							startPos: paramToAnalyze.startOffset,
-							severity: DiagnosticSeverity.Warning,
-							message: 'Unknown parameter name: "' + paramName + '"' + suggestionSuffix
-						});
+							errors.push({
+								startLine: curSymb.startLine,
+								endLine: curSymb.startLine,
+								endPos: paramToAnalyze.endOffset,
+								startPos: paramToAnalyze.startOffset,
+								severity: DiagnosticSeverity.Warning,
+								message: 'Unknown parameter name: "' + paramName + '"' + suggestionSuffix
+							});
+						}
 					} else {
 						if (registeredParam.validate != null) {
 							const paramResults = registeredParam.validate(curSymb, paramToAnalyze);

@@ -1,9 +1,14 @@
-import { CompletionItem, CompletionItemKind, MarkupKind, ParameterStructures } from 'vscode-languageserver';
+import { CompletionItem, CompletionItemKind, InsertTextFormat, MarkupKind, TextEdit } from 'vscode-languageserver';
+import { Range } from 'vscode-languageserver-textdocument';
+import { getViewName } from '../../../analyzers/partialAnalyzer';
+import { getVariableNames } from '../../../analyzers/variableAnalyzer';
 import { DocumentDetailsManager } from '../../../idehelper/documentDetailsManager';
 import { IEnvironmentHelper } from '../../../idehelper/parser';
 import { currentStructure, IView } from '../../../projects/statamicProject';
+import { parserInstances } from '../../../session';
 import { ISuggestionRequest } from '../../../suggestions/suggestionManager';
-import { IAntlersParameter, IAntlersTag, resultList } from '../../tagManager';
+import { AntlersParser } from '../../parser';
+import { IAntlersParameter, IAntlersTag, nonExclusiveResult, resultList } from '../../tagManager';
 import { returnDynamicParameter } from '../dynamicParameterResolver';
 
 const Partial: IAntlersTag = {
@@ -91,6 +96,53 @@ const Partial: IAntlersTag = {
 				isExclusiveResult: true,
 				items
 			};
+		}
+
+		if (params.currentSymbol != null && params.project != null) {
+			const viewName = getViewName(params.currentSymbol);
+
+			if (viewName != null && viewName.trim().length > 0) {
+				const viewRef = params.project.findPartial(viewName);
+
+				if (viewRef != null) {
+					if (parserInstances.has(viewRef.documentUri)) {
+						const docInstance = parserInstances.get(viewRef.documentUri) as AntlersParser;
+
+						if (docInstance != null) {
+							const symbols = docInstance.getSymbols(),
+								variableNames = getVariableNames(symbols);
+
+							if (variableNames.length > 0) {
+								const completionItems:CompletionItem[] = [];
+								const range: Range = {
+									start: {
+										line: params.position.line,
+										character: params.position.character - 0
+									},
+									end: params.position
+								};
+
+								variableNames.forEach((variableName: string) => {
+									const paramSnippet = variableName + '="$1"';
+
+									completionItems.push({
+										label: variableName,
+										kind: CompletionItemKind.Value,
+										insertTextFormat: InsertTextFormat.Snippet,
+										textEdit: TextEdit.replace(range, paramSnippet),
+										command: {
+											title: 'Suggest',
+											command: 'editor.action.triggerSuggest'
+										}
+									});
+								});
+
+								return nonExclusiveResult(completionItems);
+							}
+						}
+					}
+				}
+			}
 		}
 
 		return {

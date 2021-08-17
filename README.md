@@ -20,6 +20,17 @@ The extension will automatically activate the next time you open an Antlers HTML
 
 Want to take your install even further? Consider checking out the documentation at [https://antlers.dev/](https://antlers.dev/).
 
+## Change Log
+
+Bugs fixed, what's new, and more! :)
+
+### v1.0.23
+
+* The extension will no longer display warnings for unknown parameters (based on user feedback)
+* Adds support for the field set prefixes when importing field-sets in auto-completion
+* Adds support for the `installed` tag, with composer package autocompletions
+* Automatically detects variable names within partials and adds them to the tag's parameter auto complete list.
+
 ## System PHP Configuration
 
 If your development machine has PHP7+ installed and available in the `PATH` system variable, the extension will utilize a built-in PHP analyzer to help find details about your custom tags, view models, augmentation and Composer dependencies.

@@ -84,6 +84,7 @@ import { MemberRegister, UserRegister } from './core/userRegister';
 import NoParse from './core/noParse';
 import Unless from './core/conditions/unless';
 import ElseUnless from './core/conditions/elseUnless';
+import { InstalledTag } from './core/installed';
 
 const coreTags = [
 	If,
@@ -143,6 +144,8 @@ const coreTags = [
 	UserNotIn,
 	UserIs,
 	Is,
+
+	InstalledTag,
 
 	User,
 	UserIsnt,

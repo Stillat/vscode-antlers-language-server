@@ -355,6 +355,10 @@ export class StatamicProject {
         return null;
     }
 
+    getComposerPackages(): Map<string, IComposerPackage> {
+        return this.packageMapping;
+    }
+
     getComposerPackageDetails(packageName: string): IComposerPackage | null {
         if (this.hasComposerPackage(packageName)) {
             return this.packageMapping.get(packageName) as IComposerPackage;

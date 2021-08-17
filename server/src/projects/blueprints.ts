@@ -87,13 +87,13 @@ export function variablesToBlueprintFields(variables: IScopeVariable[]): IBluepr
 	return fields;
 }
 
-function blueprintFieldFromFieldSet(field: IFieldsetField): IBlueprintField {
+function blueprintFieldFromFieldSet(field: IFieldsetField, prefix = ''): IBlueprintField {
 	const fieldToReturn: IBlueprintField = {
 		blueprintName: 'fieldset',
-		displayName: field.name,
-		instructionText: field.instructionText,
+		displayName: prefix + field.name,
+		instructionText: field.instructionText, 
 		maxItems: field.maxItems,
-		name: field.handle,
+		name: prefix + field.handle,
 		type: field.type,
 		refFieldSetField: field,
 		sets: field.sets,
@@ -152,9 +152,14 @@ export function getFields(container: any, outerblueprintName: string, fieldSetNa
 		let fieldType = '',
 			displayName = '',
 			instructionText = '',
+			fieldsetPrefix = '',
 			maxItems = null,
 			sets: ISet[] | null = null,
 			importFields: string | null = null;
+
+		if (typeof field.prefix !== 'undefined' && field.prefix !== null) {
+			fieldsetPrefix = field.prefix;
+		}
 
 		// Here we are going to merge in the fieldset fields.
 		if (typeof field.import !== 'undefined' && fieldsets.has(field.import)) {
@@ -162,7 +167,7 @@ export function getFields(container: any, outerblueprintName: string, fieldSetNa
 
 			for (let i = 0; i < fieldsetFields.length; i++) {
 				if (includedHandles.includes(fieldsetFields[i].handle) == false) {
-					foundFields.push(blueprintFieldFromFieldSet(fieldsetFields[i]));
+					foundFields.push(blueprintFieldFromFieldSet(fieldsetFields[i], fieldsetPrefix));
 					includedHandles.push(fieldsetFields[i].handle);
 				}
 			}
