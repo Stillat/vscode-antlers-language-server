@@ -26,6 +26,7 @@ import { handleDefinitionRequest } from './services/antlersDefinitions';
 import { newSemanticTokenProvider } from './services/semanticTokens';
 import { ExtensionManager } from './extensibility/extensionManager';
 import { checkForIndexProcessAvailability, reloadProjectManifest, safeRunIndexing } from './projects/manifest';
+import { handleDocumentSymbolRequest } from './services/documentSymbols';
 
 // The example settings
 export interface ExampleSettings {
@@ -145,6 +146,9 @@ connection.onInitialize((params: InitializeParams) => {
 			definitionProvider: {
 
 			},
+			documentSymbolProvider: {
+
+			}
 		}
 	};
 	if (hasWorkspaceFolderCapability) {
@@ -233,6 +237,10 @@ connection.onDidChangeWatchedFiles(_change => {
 
 connection.onHover((_params) => {
 	return handleDocumentHover(_params);
+});
+
+connection.onDocumentSymbol((_params) => {
+	return handleDocumentSymbolRequest(_params);
 });
 
 connection.onDefinition(handleDefinitionRequest);
