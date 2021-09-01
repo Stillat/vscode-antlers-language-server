@@ -14,11 +14,6 @@ export function parseDocument(textDocument: TextDocument) {
 	if (parserInstances.has(documentPath) == false) {
 		parserInstances.set(documentPath, new AntlersParser());
 	}
-
-	if (currentStructure != null && currentStructure.isMocked == false) {
-		currentStructure.findView(documentPath);
-	}
-
 	documentMap.set(documentPath, textDocument);
 
 	const parser = parserInstances.get(documentPath) as AntlersParser;
@@ -39,10 +34,6 @@ export async function validateTextDocument(textDocument: TextDocument): Promise<
 
 	if (parserInstances.has(documentPath) == false) {
 		parserInstances.set(documentPath, new AntlersParser());
-	}
-
-	if (currentStructure != null && currentStructure.isMocked == false) {
-		currentStructure.findView(documentPath);
 	}
 
 	documentMap.set(documentPath, textDocument);

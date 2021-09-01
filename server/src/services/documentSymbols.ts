@@ -36,7 +36,7 @@ export function handleDocumentSymbolRequest(params: DocumentSymbolParams): Docum
 				},
 				end: {
 					character: symb.endOffset,
-					line: symb.endOffset
+					line: symb.endLine
 				}
 			};
 

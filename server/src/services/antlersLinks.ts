@@ -30,7 +30,8 @@ export class DocumentLinkManager {
 								},
 							},
 							tooltip: 'Partial: ' + projectPartial.displayName,
-							target: projectPartial.documentUri
+							target: decodeURIComponent(projectPartial.documentUri),
+							
 						});
 					}
 				}

@@ -627,7 +627,7 @@ export class StatamicProject {
 
     findPartial(partialName: string): IView | null {
         for (let i = 0; i < this.views.length; i++) {
-            if (this.views[i].isPartial && this.views[i].displayName == partialName) {
+            if (this.views[i].isPartial && this.views[i].relativeDisplayName == partialName) {
                 return this.views[i];
             }
         }

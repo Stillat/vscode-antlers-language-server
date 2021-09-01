@@ -5,7 +5,7 @@ import {
 } from 'vscode-languageserver-textdocument';
 import {
 	createConnection,
-	DidChangeConfigurationNotification, DidChangeWatchedFilesNotification, HoverParams, InitializeParams,
+	DidChangeConfigurationNotification, DidChangeWatchedFilesNotification, DocumentLinkParams, HoverParams, InitializeParams,
 	InitializeResult, ProposedFeatures, RequestType, RequestType0, TextDocumentIdentifier, TextDocuments,
 	TextDocumentSyncKind
 } from 'vscode-languageserver/node';
@@ -27,6 +27,7 @@ import { newSemanticTokenProvider } from './services/semanticTokens';
 import { ExtensionManager } from './extensibility/extensionManager';
 import { checkForIndexProcessAvailability, reloadProjectManifest, safeRunIndexing } from './projects/manifest';
 import { handleDocumentSymbolRequest } from './services/documentSymbols';
+import { DocumentLinkManager } from './services/antlersLinks';
 
 // The example settings
 export interface ExampleSettings {
@@ -140,15 +141,10 @@ connection.onInitialize((params: InitializeParams) => {
 			signatureHelpProvider: {
 				triggerCharacters: [':'],
 			},
-			hoverProvider: {
-
-			},
-			definitionProvider: {
-
-			},
-			documentSymbolProvider: {
-
-			}
+			documentLinkProvider: {},
+			hoverProvider: {},
+			definitionProvider: {},
+			documentSymbolProvider: {}
 		}
 	};
 	if (hasWorkspaceFolderCapability) {
@@ -211,11 +207,11 @@ connection.onDidChangeConfiguration(change => {
 	documents.all().forEach(validateTextDocument);
 });
 
-/*connection.onDocumentLinks((params:DocumentLinkParams) => {
-	let docPath = decodeURIComponent(params.textDocument.uri);
+connection.onDocumentLinks((params:DocumentLinkParams) => {
+	const docPath = decodeURIComponent(params.textDocument.uri);
 
 	return DocumentLinkManager.getDocumentLinks(docPath);
-});*/
+});
 
 // Only keep settings for open documents
 documents.onDidClose(e => {
@@ -249,7 +245,6 @@ connection.onSignatureHelp(handleSignatureHelpRequest);
 connection.onDocumentFormatting(formatAntlersDocument);
 connection.onCompletion(handleOnCompletion);
 connection.onCompletionResolve(handleOnCompletionResolve);
-
 documents.listen(connection);
 
 connection.onRequest(SemanticTokenLegendRequest.type, token => {
