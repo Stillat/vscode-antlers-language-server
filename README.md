@@ -24,6 +24,11 @@ Want to take your install even further? Consider checking out the documentation 
 
 Bugs fixed, what's new, and more! :)
 
+### v1.0.28
+
+* Developers can now use VS Code's document links to navigate to detected partial files
+* Developers can now see an overview/outline of their Antlers document within the Outline panel
+
 ### v1.0.24
 
 * Removes `name` from the list of `statamic-tag-native-variable` to improve out-of-box syntax highlighting consistency [#11](https://github.com/Stillat/vscode-antlers-language-server/issues/11)
