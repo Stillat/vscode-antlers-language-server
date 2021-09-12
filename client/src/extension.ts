@@ -13,6 +13,9 @@ import {
 } from 'vscode';
 import { RequestType, TextDocumentIdentifier, RequestType0, Range as LspRange } from 'vscode-languageclient';
 import { debounce } from 'ts-debounce';
+import { activateAntlersDebug } from './debug/activateAntlersDebug';
+import { TimingsLensProvider } from './debug/timingsLensProvider';
+import { resetTimings } from './debug/antlersDebug';
 
 interface SemanticTokenParams {
 	textDocument: TextDocumentIdentifier;
@@ -132,7 +135,18 @@ export function activate(context: ExtensionContext) {
 		}
 	};
 
+	const clDisposable = languages.registerCodeLensProvider(
+		documentSelector,
+		new TimingsLensProvider()
+	);
+
+	toDispose.push(clDisposable);
+
 	context.subscriptions.push(commands.registerCommand(reloadAddonsCommand, reloadAddonHandler));
+
+	workspace.onDidChangeTextDocument(_e => {
+		resetTimings();
+	});
 
 	phpWatcher = workspace.createFileSystemWatcher('**/*.php');
 	composerWatcher = workspace.createFileSystemWatcher('**/composer.lock');
@@ -172,6 +186,8 @@ export function activate(context: ExtensionContext) {
 	phpWatcher.onDidDelete(() => {
 		debouncedAskForIndex();
 	});
+
+	activateAntlersDebug(context);
 
 	// Start the client. This will also launch the server
 	const disposable = client.start();

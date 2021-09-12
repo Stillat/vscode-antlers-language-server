@@ -24,6 +24,10 @@ Want to take your install even further? Consider checking out the documentation 
 
 Bugs fixed, what's new, and more! :)
 
+### v1.0.29
+
+* Background work to support an eventual Antlers Debugger
+
 ### v1.0.28
 
 * Developers can now use VS Code's document links to navigate to detected partial files

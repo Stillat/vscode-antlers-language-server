@@ -4,7 +4,7 @@
     "description": "Provides Antlers syntax highlighting, and robust language features.",
     "author": "John Koster",
     "license": "MIT",
-    "version": "1.0.28",
+    "version": "1.0.29",
     "repository": {
         "type": "git",
         "url": "https://github.com/Stillat/vscode-antlers-language-server"
@@ -74,7 +74,30 @@
                     "description": "Traces the communication between VS Code and the language server."
                 }
             }
-        }
+        },
+        "commands": [
+            {
+                "command": "extension.antlersLanguageServer.debugEditorContents",
+                "title": "Debug Antlers",
+                "category": "Antlers Debug",
+                "enablement": "!inDebugMode",
+                "icon": "$(debug-alt)"
+            }
+        ],
+        "breakpoints": [
+            {
+                "language": "antlers"
+            }
+        ],
+        "debuggers": [
+            {
+                "type": "antlers",
+                "languages": [
+                    "antlers"
+                ],
+                "label": "Antlers Debug"
+            }
+        ]
     },
     "scripts": {
         "publish:grammar": "node client/syntaxes/compile.js && npx js-yaml client/syntaxes/antlers.yaml > client/syntaxes/antlers.json",
