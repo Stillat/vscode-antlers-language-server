@@ -7,8 +7,12 @@ export function getVariableNames(symbols:ISymbol[]) : string[] {
 		if (symbol.isTag || symbol.isClosingTag) {
 			return;
 		}
-
+		
 		if (symbol.methodName != null && symbol.methodName.trim().length > 0) {
+			return;
+		}
+
+		if (symbol.tagPart.includes('[')) {
 			return;
 		}
 

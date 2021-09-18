@@ -36,7 +36,7 @@ const Partial: IAntlersTag = {
 			if (params.currentSymbol != null && params.currentSymbol.name == 'partial' && params.currentSymbol.methodName != null) {
 				if (params.currentSymbol.methodName.trim().length > 0) {
 					if (currentStructure != null) {
-						const projectView = currentStructure.findPartial(params.currentSymbol.methodName);
+						const projectView = currentStructure.findRelativeView(params.currentSymbol.methodName);
 
 						if (projectView != null && projectView.varReferenceNames.has(parameter.name)) {
 							const viewDataRef = projectView.varReferenceNames.get(parameter.name) as string;
@@ -67,7 +67,7 @@ const Partial: IAntlersTag = {
 
 		if (((params.leftWord == 'partial' || params.leftWord == '/partial') && params.leftChar == ':') ||
 			(params.leftWord == 'src="' && params.leftChar == '"')) {
-			const partials = params.project.getPartials();
+			const partials = params.project.getViews();
 
 			partials.forEach((view: IView) => {
 				if (DocumentDetailsManager.hasDetails(view.documentUri)) {
@@ -102,7 +102,7 @@ const Partial: IAntlersTag = {
 			const viewName = getViewName(params.currentSymbol);
 
 			if (viewName != null && viewName.trim().length > 0) {
-				const viewRef = params.project.findPartial(viewName);
+				const viewRef = params.project.findRelativeView(viewName);
 
 				if (viewRef != null) {
 					if (parserInstances.has(viewRef.documentUri)) {
@@ -110,7 +110,15 @@ const Partial: IAntlersTag = {
 
 						if (docInstance != null) {
 							const symbols = docInstance.getSymbols(),
-								variableNames = getVariableNames(symbols);
+								variableNames = getVariableNames(symbols),
+								addedNames:string[] = [];
+
+							if (viewRef.varReferenceNames != null) {
+
+								viewRef.varReferenceNames.forEach((val, varName) => {
+									variableNames.push(varName);
+								});
+							}
 
 							if (variableNames.length > 0) {
 								const completionItems:CompletionItem[] = [];
@@ -124,6 +132,12 @@ const Partial: IAntlersTag = {
 
 								variableNames.forEach((variableName: string) => {
 									const paramSnippet = variableName + '="$1"';
+
+									if (addedNames.includes(variableName)) {
+										return;
+									}
+
+									addedNames.push(variableName);
 
 									completionItems.push({
 										label: variableName,

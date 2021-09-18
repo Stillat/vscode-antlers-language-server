@@ -24,6 +24,10 @@ Want to take your install even further? Consider checking out the documentation 
 
 Bugs fixed, what's new, and more! :)
 
+### v1.0.30
+
+* Makes improvements to partial suggestions
+
 ### v1.0.29
 
 * Background work to support an eventual Antlers Debugger

@@ -4,7 +4,7 @@
     "description": "Provides Antlers syntax highlighting, and robust language features.",
     "author": "John Koster",
     "license": "MIT",
-    "version": "1.0.29",
+    "version": "1.0.30",
     "repository": {
         "type": "git",
         "url": "https://github.com/Stillat/vscode-antlers-language-server"
@@ -33,25 +33,29 @@
     ],
     "main": "./client/out/extension",
     "contributes": {
-        "languages": [{
-            "id": "html",
-            "aliases": [
-                "HTML (Statamic Antlers)",
-                "antlers"
-            ],
-            "extensions": [
-                ".antlers.html",
-                ".html",
-                ".htm",
-                ".xhtml"
-            ],
-            "configuration": "./client/antlers.configuration.json"
-        }],
-        "grammars": [{
-            "language": "html",
-            "scopeName": "text.html.statamic",
-            "path": "./client/syntaxes/antlers.json"
-        }],
+        "languages": [
+            {
+                "id": "html",
+                "aliases": [
+                    "HTML (Statamic Antlers)",
+                    "antlers"
+                ],
+                "extensions": [
+                    ".antlers.html",
+                    ".html",
+                    ".htm",
+                    ".xhtml"
+                ],
+                "configuration": "./client/antlers.configuration.json"
+            }
+        ],
+        "grammars": [
+            {
+                "language": "html",
+                "scopeName": "text.html.statamic",
+                "path": "./client/syntaxes/antlers.json"
+            }
+        ],
         "configuration": {
             "type": "object",
             "title": "Antlers configuration",

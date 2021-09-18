@@ -609,6 +609,10 @@ export class StatamicProject {
         return this.translationKeys;
     }
 
+    getViews() : IView[] {
+        return this.views;
+    }
+
     findView(documentUri: string): IView | null {
         if (documentUri.trim() == '') {
             return null;
@@ -618,6 +622,16 @@ export class StatamicProject {
 
         for (let i = 0; i < this.views.length; i++) {
             if (this.views[i].path == localPath) {
+                return this.views[i];
+            }
+        }
+
+        return null;
+    }
+    
+    findRelativeView(relativeName: string): IView | null {
+        for (let i = 0; i < this.views.length; i++) {
+            if (this.views[i].relativeDisplayName == relativeName) {
                 return this.views[i];
             }
         }
