@@ -24,6 +24,10 @@ Want to take your install even further? Consider checking out the documentation 
 
 Bugs fixed, what's new, and more! :)
 
+### v1.0.31
+
+* Improves validation warnings with the `glide` tag
+
 ### v1.0.30
 
 * Makes improvements to partial suggestions

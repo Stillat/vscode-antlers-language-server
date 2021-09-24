@@ -144,6 +144,10 @@ const GlideParameters: IAntlersParameter[] = [
 		validate: (symbol: ISymbol, parameter: IParameterAttribute) => {
 			const issues: IReportableError[] = [];
 
+			if (parameter.isDynamicBinding || parameter.containsInterpolation) {
+				return issues;
+			}
+
 			if (parameter.value.trim().length > 0 && !GlideOrients.includes(parameter.value)) {
 				issues.push(parameterError('Invalid orient value', symbol, parameter));
 			}
@@ -174,6 +178,10 @@ const GlideParameters: IAntlersParameter[] = [
 			const intVal = parseInt(parameter.value),
 				issues: IReportableError[] = [];
 
+			if (parameter.isDynamicBinding || parameter.containsInterpolation) {
+				return issues;
+			}
+
 			if (intVal < 1 || intVal > 8) {
 				issues.push(parameterError('dpr must be an integer between 1 and 8.', symbol, parameter));
 			}
@@ -192,6 +200,10 @@ const GlideParameters: IAntlersParameter[] = [
 		isRequired: false,
 		validate: (symbol: ISymbol, parameter: IParameterAttribute) => {
 			const issues: IReportableError[] = [];
+
+			if (parameter.isDynamicBinding || parameter.containsInterpolation) {
+				return issues;
+			}
 
 			if (parameter.value.trim().length > 0 && !GlideFormats.includes(parameter.value)) {
 				issues.push(parameterError('Format must be one of: ' + GlideFormats.join(','), symbol, parameter));
@@ -223,6 +235,10 @@ const GlideParameters: IAntlersParameter[] = [
 			const intVal = parseInt(parameter.value),
 				issues: IReportableError[] = [];
 
+			if (parameter.isDynamicBinding || parameter.containsInterpolation) {
+				return issues;
+			}
+
 			if (intVal < 0 || intVal > 100) {
 				issues.push(parameterError('blur must be a value between 0 and 100.', symbol, parameter));
 			}
@@ -242,6 +258,10 @@ const GlideParameters: IAntlersParameter[] = [
 		validate: (symbol: ISymbol, parameter: IParameterAttribute) => {
 			const intVal = parseInt(parameter.value),
 				issues: IReportableError[] = [];
+
+			if (parameter.isDynamicBinding || parameter.containsInterpolation) {
+				return issues;
+			}
 
 			if (intVal < -100 || intVal > 100) {
 				issues.push(parameterError('brightness must be a value between -100 and 100.', symbol, parameter));
@@ -263,6 +283,10 @@ const GlideParameters: IAntlersParameter[] = [
 			const intVal = parseInt(parameter.value),
 				issues: IReportableError[] = [];
 
+			if (parameter.isDynamicBinding || parameter.containsInterpolation) {
+				return issues;
+			}
+
 			if (intVal < -100 || intVal > 100) {
 				issues.push(parameterError('contrast must be a value between -100 and 100.', symbol, parameter));
 			}
@@ -282,6 +306,10 @@ const GlideParameters: IAntlersParameter[] = [
 		validate: (symbol: ISymbol, parameter: IParameterAttribute) => {
 			const floatVal = parseFloat(parameter.value),
 				issues: IReportableError[] = [];
+
+			if (parameter.isDynamicBinding || parameter.containsInterpolation) {
+				return issues;
+			}
 
 			if (floatVal < 0.1 || floatVal > 9.99) {
 				issues.push(parameterError('gamma must be a value between 0.1 and 9.99.', symbol, parameter));
@@ -303,6 +331,10 @@ const GlideParameters: IAntlersParameter[] = [
 			const intVal = parseInt(parameter.value),
 				issues: IReportableError[] = [];
 
+			if (parameter.isDynamicBinding || parameter.containsInterpolation) {
+				return issues;
+			}
+
 			if (intVal < 0 || intVal > 100) {
 				issues.push(parameterError('sharpen must be a value between 0 and 100.', symbol, parameter));
 			}
@@ -323,6 +355,10 @@ const GlideParameters: IAntlersParameter[] = [
 			const intVal = parseInt(parameter.value),
 				issues: IReportableError[] = [];
 
+			if (parameter.isDynamicBinding || parameter.containsInterpolation) {
+				return issues;
+			}
+
 			if (intVal < 0 || intVal > 100) {
 				issues.push(parameterError('pixelate must be a value between 0 and 100.', symbol, parameter));
 			}
@@ -341,6 +377,10 @@ const GlideParameters: IAntlersParameter[] = [
 		isRequired: false,
 		validate: (symbol: ISymbol, parameter: IParameterAttribute) => {
 			const issues: IReportableError[] = [];
+
+			if (parameter.isDynamicBinding || parameter.containsInterpolation) {
+				return issues;
+			}
 
 			if (parameter.value.trim().length > 0 && !GlideFilters.includes(parameter.value)) {
 				issues.push(parameterError('Filter must be one of: ' + GlideFilters.join(','), symbol, parameter));
