@@ -6,6 +6,10 @@ import { getCollectionBlueprintFields } from './utils';
 
 export function augmentCollectionScope(symbol: ISymbol, scope: Scope): Scope {
 
+	if (symbol.isClosingTag) {
+		return scope;
+	}
+
 	if (symbol.methodName != null && symbol.methodName != 'count') {
 		scope.addVariables(makeCollectionVariables(symbol));
 	}

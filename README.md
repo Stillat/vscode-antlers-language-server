@@ -24,6 +24,10 @@ Want to take your install even further? Consider checking out the documentation 
 
 Bugs fixed, what's new, and more! :)
 
+### v1.0.32
+
+* Improves internal scope resolution
+
 ### v1.0.31
 
 * Improves validation warnings with the `glide` tag

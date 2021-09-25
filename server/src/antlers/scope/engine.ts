@@ -729,7 +729,7 @@ export class ScopeEngine {
 				if (i > 0) {
 					const lastSymbol = symbols[i - 1];
 
-					if (lastSymbol.isComment && this.ideHelperMap.has(lastSymbol.id)) {
+					if (lastSymbol.isComment && this.ideHelperMap.has(lastSymbol.id) && !lastSymbol.isClosingTag && !currentSymbol.isClosingTag) {
 						const ideHelper = this.ideHelperMap.get(lastSymbol.id) as IVariableHelper;
 
 						if (ideHelper.variableName == currentSymbol.name) {
