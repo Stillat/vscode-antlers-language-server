@@ -600,6 +600,15 @@ const stringModifiers: IModifier[] = [
 		parameters: [],
 		canBeParameter: false
 	},
+	{
+		name: 'add_slashes',
+		acceptsType: ['string'],
+		returnsType: ['string'],
+		description: 'Adds slashes before characters that need to be escaped.',
+		docLink: 'https://statamic.dev/modifiers/add_slashes',
+		canBeParameter: false,
+		parameters: []
+	}
 ];
 
 export { stringModifiers };

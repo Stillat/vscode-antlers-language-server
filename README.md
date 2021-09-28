@@ -24,6 +24,16 @@ Want to take your install even further? Consider checking out the documentation 
 
 Bugs fixed, what's new, and more! :)
 
+### v1.1.0
+
+* Adds a new `antlersOverrideHtmlComments` configuration option that can be used to always use Antlers comments in HTML documents
+* Adds support for the `split` array modifier
+* Adds support for the `format_translated` date modifier
+* Adds support for the `add_slashes` string modifier
+* Adds additional scope variables for the `nav` tag
+* Adds support for `exists` and `if_exists` methods on the `partial` tag
+* Improves completions for manifested array variables when using parameter-style modifiers
+
 ### v1.0.32
 
 * Improves internal scope resolution

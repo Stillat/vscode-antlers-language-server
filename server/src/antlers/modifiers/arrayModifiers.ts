@@ -316,6 +316,20 @@ const arrayModifiers: IModifier[] = [
 		],
 		canBeParameter: true
 	},
+	{
+		name: 'split',
+		acceptsType: ['array'],
+		returnsType: ['array'],
+		description: 'Splits an array into smaller arrays with the provided size',
+		canBeParameter: true,
+		docLink: '',
+		parameters: [
+			{
+				name: 'size',
+				description: 'The size of each new array'
+			}
+		]
+	}
 ];
 
 export { arrayModifiers };

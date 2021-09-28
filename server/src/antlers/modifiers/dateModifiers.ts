@@ -11,6 +11,20 @@ const dateModifiers: IModifier[] = [
 		canBeParameter: false
 	},
 	{
+		name: 'format_translated',
+		acceptsType: ['string', 'date'],
+		returnsType: ['string', 'date'],
+		description: 'Returns a formatted Carbon datetime/string.',
+		docLink: 'https://statamic.dev/modifiers/format',
+		parameters: [
+			{
+				name: 'format',
+				description: 'The format to use.'
+			}
+		],
+		canBeParameter: true
+	},
+	{
 		name: 'format',
 		acceptsType: ['string', 'date'],
 		returnsType: ['string', 'date'],

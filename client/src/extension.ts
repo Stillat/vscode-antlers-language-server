@@ -16,6 +16,7 @@ import { debounce } from 'ts-debounce';
 import { activateAntlersDebug } from './debug/activateAntlersDebug';
 import { TimingsLensProvider } from './debug/timingsLensProvider';
 import { resetTimings } from './debug/antlersDebug';
+import *  as vscode from 'vscode';
 
 interface SemanticTokenParams {
 	textDocument: TextDocumentIdentifier;
@@ -30,6 +31,7 @@ interface ReloadAddonParams {
 interface ReindexParams {
 
 }
+
 
 namespace ReindexRequest {
 	export const type: RequestType<ReindexParams, null, any> = new RequestType('antlers/reindex');
@@ -60,6 +62,7 @@ namespace SemanticTokenLegendRequest {
 	export const type: RequestType0<{ types: string[]; modifiers: string[] } | null, any> = new RequestType0('antlers/semanticTokenLegend');
 }
 
+let didChangeHtmlComments = false;
 let client: LanguageClient;
 let phpWatcher: FileSystemWatcher | null = null,
 	composerWatcher: FileSystemWatcher | null = null,
@@ -83,6 +86,8 @@ const debouncedAskForIndex = debounce(askForIndex, 350);
 const debouncedManifestLoaded = debounce(sendManifestReloadRequest, 350);
 
 export function activate(context: ExtensionContext) {
+	const antlersOverrideHtmlComments = workspace.getConfiguration().get('antlersOverrideHtmlComments');
+
 	// The server is implemented in node
 	const serverModule = context.asAbsolutePath(
 		path.join('server', 'out', 'server.js')
@@ -108,6 +113,39 @@ export function activate(context: ExtensionContext) {
 		// Register the server for plain text documents
 		documentSelector: [{ scheme: 'file', language: 'html' }],
 	};
+
+	workspace.onDidChangeConfiguration((e) => {
+		if (e.affectsConfiguration('antlersOverrideHtmlComments')) {
+			const newHtmlCommentSetting = workspace.getConfiguration().get('antlersOverrideHtmlComments'),
+				curv = workspace.getConfiguration().inspect('antlersOverrideHtmlComments');
+
+			if (typeof newHtmlCommentSetting !== 'undefined' && newHtmlCommentSetting === true) {
+				didChangeHtmlComments = true;
+
+				vscode.languages.setLanguageConfiguration('html', {
+					comments: {
+						blockComment: ['{{#', '#}}']
+					}
+				});
+			} else {
+				didChangeHtmlComments = false;
+				vscode.languages.setLanguageConfiguration('html', {
+					comments: {
+						blockComment: ['<!--', '-->']
+					}
+				});
+			}
+		}
+	});
+
+	if (typeof antlersOverrideHtmlComments !== 'undefined' && antlersOverrideHtmlComments === true) {
+		didChangeHtmlComments = true;
+		vscode.languages.setLanguageConfiguration('html', {
+			comments: {
+				blockComment: ['{{#', '#}}']
+			}
+		});
+	}
 
 	// Create the language client and start the client.
 	client = new LanguageClient(
@@ -143,7 +181,7 @@ export function activate(context: ExtensionContext) {
 	toDispose.push(clDisposable);
 
 	context.subscriptions.push(commands.registerCommand(reloadAddonsCommand, reloadAddonHandler));
-
+		
 	workspace.onDidChangeTextDocument(_e => {
 		resetTimings();
 	});
@@ -241,6 +279,14 @@ export function activate(context: ExtensionContext) {
 export function deactivate(): Thenable<void> | undefined {
 	if (!client) {
 		return undefined;
+	}
+
+	if (didChangeHtmlComments) {
+		vscode.languages.setLanguageConfiguration('html', {
+			comments: {
+				blockComment: ['<!--', '-->']
+			}
+		});
 	}
 
 	phpWatcher?.dispose();

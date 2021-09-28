@@ -91,6 +91,17 @@ const Partial: IAntlersTag = {
 				}
 			});
 
+			if (params.leftWord != 'src="') {
+				items.push({
+					label: 'exists',
+					kind: CompletionItemKind.Text
+				});
+				items.push({
+					label: 'if_exists',
+					kind: CompletionItemKind.Text
+				});
+			}
+
 			return {
 				analyzeDefaults: false,
 				isExclusiveResult: true,

@@ -609,6 +609,14 @@ export class SuggestionManager {
 				}
 			}
 
+			if (lastScopeItem.manifestType == 'array' && lastScopeItem.isClosedBy != null) {
+				const arrayModifiers = ModifierManager.getModifiersForType('array');
+
+				arrayModifiers.forEach((modifier: IModifier) => {
+					completionItems.push(makeModifierSuggest(modifier));
+				});
+			}
+
 			return completionItems;
 		}
 

@@ -13,7 +13,11 @@ export function augmentNavScope(symbol: ISymbol, scope: Scope): Scope {
 		{ name: 'is_current', dataType: 'boolean', sourceField: null, sourceName: '*internal.nav', introducedBy: symbol },
 		{ name: 'is_external', dataType: 'boolean', sourceField: null, sourceName: '*internal.nav', introducedBy: symbol },
 		{ name: 'depth', dataType: 'number', sourceField: null, sourceName: '*internal.nav', introducedBy: symbol },
-		{ name: 'children', dataType: 'array', sourceField: null, sourceName: '*internal.nav', introducedBy: symbol }
+		{ name: 'children', dataType: 'array', sourceField: null, sourceName: '*internal.nav', introducedBy: symbol },
+		{ name: 'first', dataType: 'boolean', sourceField: null, sourceName: '*internal.nav', introducedBy: symbol },
+		{ name: 'last', dataType: 'boolean', sourceField: null, sourceName: '*internal.nav', introducedBy: symbol },
+		{ name: 'count', dataType: 'integer', sourceField: null, sourceName: '*internal.nav', introducedBy: symbol },
+		{ name: 'index', dataType: 'integer', sourceField: null, sourceName: '*internal.nav', introducedBy: symbol },
 	]);
 
 	// Check if in "nav" or "collection" mode and populate the values accordingly.

@@ -4,7 +4,7 @@
     "description": "Provides Antlers syntax highlighting, and robust language features.",
     "author": "John Koster",
     "license": "MIT",
-    "version": "1.0.32",
+    "version": "1.1.0",
     "repository": {
         "type": "git",
         "url": "https://github.com/Stillat/vscode-antlers-language-server"
@@ -60,6 +60,12 @@
             "type": "object",
             "title": "Antlers configuration",
             "properties": {
+                "antlersOverrideHtmlComments": {
+                    "scope": "resource",
+                    "type": "boolean",
+                    "default": false,
+                    "description": "When enabled Antlers style block comments will be used in HTML contexts."
+                },
                 "antlersLanguageServer.maxNumberOfProblems": {
                     "scope": "resource",
                     "type": "number",
