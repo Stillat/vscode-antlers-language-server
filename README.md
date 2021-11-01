@@ -24,6 +24,10 @@ Want to take your install even further? Consider checking out the documentation 
 
 Bugs fixed, what's new, and more! :)
 
+### v1.1.1
+
+* Adds support for the `array` when using the `foreach` and `iterate` tags
+
 ### v1.1.0
 
 * Adds a new `antlersOverrideHtmlComments` configuration option that can be used to always use Antlers comments in HTML documents

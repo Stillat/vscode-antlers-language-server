@@ -17,6 +17,16 @@ const IterateTag: IAntlersTag = {
 			expectsTypes: ['string'],
 			isDynamic: false,
 			isRequired: false
+		},
+		{
+			name: 'array',
+			acceptsVariableInterpolation: true,
+			aliases: [],
+			allowsVariableReference: true,
+			description: 'The array to iterate',
+			expectsTypes: ['array'],
+			isDynamic: false,
+			isRequired: false
 		}
 	]
 };
@@ -36,6 +46,16 @@ const ForeachTag: IAntlersTag = {
 			allowsVariableReference: false,
 			description: 'Optionally rename the key/value variables',
 			expectsTypes: ['string'],
+			isDynamic: false,
+			isRequired: false
+		},
+		{
+			name: 'array',
+			acceptsVariableInterpolation: true,
+			aliases: [],
+			allowsVariableReference: true,
+			description: 'The array to iterate',
+			expectsTypes: ['array'],
 			isDynamic: false,
 			isRequired: false
 		}
