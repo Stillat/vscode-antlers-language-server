@@ -24,6 +24,11 @@ Want to take your install even further? Consider checking out the documentation 
 
 Bugs fixed, what's new, and more! :)
 
+### v1.1.2
+
+* Adds support for the `all` and `self` locale tag parameters
+* Improves default variable support for the `locale` tag
+
 ### v1.1.1
 
 * Adds support for the `array` when using the `foreach` and `iterate` tags

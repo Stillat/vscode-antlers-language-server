@@ -40,10 +40,35 @@ const Locales: IAntlersTag = {
 			allowsVariableReference: false,
 			expectsTypes: ['boolean'],
 			isDynamic: false,
+		},
+		{
+			isRequired: false,
+			name: 'all',
+			description: 'When true, all locale data will be returned.',
+			acceptsVariableInterpolation: true,
+			aliases: [],
+			allowsVariableReference: true,
+			expectsTypes: ['boolean'],
+			isDynamic: false
+		},
+		{
+			isRequired: true,
+			name: 'self',
+			description: 'When true, the current locale will be included.',
+			acceptsVariableInterpolation: true,
+			aliases: [],
+			allowsVariableReference: true,
+			expectsTypes: ['boolean'],
+			isDynamic: false
 		}
 	],
 	augmentScope: (symbol: ISymbol, scope: Scope) => {
 		scope.addVariableArray('locale', makeLocaleVariables(symbol));
+
+		scope.addVariable({ name: 'current', dataType: 'string', sourceField: null, sourceName: '*internal.locale', introducedBy: symbol });
+		scope.addVariable({ name: 'is_current', dataType: 'boolean', sourceField: null, sourceName: '*internal.locale', introducedBy: symbol });
+		scope.addVariable({ name: 'exists', dataType: 'boolean', sourceField: null, sourceName: '*internal.locale', introducedBy: symbol });
+		scope.addVariable({ name: 'permalink', dataType: 'string', sourceField: null, sourceName: '*internal.locale', introducedBy: symbol });
 
 		return scope;
 	}
