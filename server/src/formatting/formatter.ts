@@ -9,6 +9,7 @@ import { documentMap, parserInstances } from '../session';
 import { getFormatOption, getTagsFormatOption, IHTMLFormatConfiguration } from './htmlCompat';
 
 const Conditionals: string[] = ['if', 'elseif', 'else', '/if', 'unless', 'elseunless', '/unless'];
+const NormalConditionals: string[] = ['if', 'elseif', 'else', '/if'];
 
 function balanceIfStatements(lines: string[]): string[] {
 	const newLines: string[] = [],
@@ -26,6 +27,30 @@ function balanceIfStatements(lines: string[]): string[] {
 			leads.push(lines[i].substr(0, startsAt));
 
 			continue;
+		} else if (trimmedLine.startsWith('{{if')) {
+			const startsAt = lines[i].indexOf('{{if');
+
+			lineOffsets.push(startsAt);
+			newLines.push(lines[i]);
+			leads.push(lines[i].substr(0, startsAt));
+
+			continue;
+		} else if (trimmedLine.startsWith('{{unless')) {
+			const startsAt = lines[i].indexOf('{{unless');
+
+			lineOffsets.push(startsAt);
+			newLines.push(lines[i]);
+			leads.push(lines[i].substr(0, startsAt));
+
+			continue;
+		} else if (trimmedLine.startsWith('{{ unless')) {
+			const startsAt = lines[i].indexOf('{{ unless');
+
+			lineOffsets.push(startsAt);
+			newLines.push(lines[i]);
+			leads.push(lines[i].substr(0, startsAt));
+
+			continue;
 		} else if (trimmedLine.startsWith('{{ elseif')) {
 			const startsAt = lines[i].indexOf('{{ elseif'),
 				adjustLine = lines[i].substr(startsAt),
@@ -34,8 +59,40 @@ function balanceIfStatements(lines: string[]): string[] {
 			newLines.push(lead + adjustLine);
 
 			continue;
+		} else if (trimmedLine.startsWith('{{elseif')) {
+			const startsAt = lines[i].indexOf('{{elseif'),
+				adjustLine = lines[i].substr(startsAt),
+				lead = leads[leads.length - 1];
+
+			newLines.push(lead + adjustLine);
+
+			continue;
+		} else if (trimmedLine.startsWith('{{ elseunless')) {
+			const startsAt = lines[i].indexOf('{{ elseunless'),
+				adjustLine = lines[i].substr(startsAt),
+				lead = leads[leads.length - 1];
+
+			newLines.push(lead + adjustLine);
+
+			continue;
+		} else if (trimmedLine.startsWith('{{elseunless')) {
+			const startsAt = lines[i].indexOf('{{elseunless'),
+				adjustLine = lines[i].substr(startsAt),
+				lead = leads[leads.length - 1];
+
+			newLines.push(lead + adjustLine);
+
+			continue;
 		} else if (trimmedLine.startsWith('{{ else')) {
 			const startsAt = lines[i].indexOf('{{ else'),
+				adjustLine = lines[i].substr(startsAt),
+				lead = leads[leads.length - 1];
+
+			newLines.push(lead + adjustLine);
+
+			continue;
+		} else if (trimmedLine.startsWith('{{else')) {
+			const startsAt = lines[i].indexOf('{{else'),
 				adjustLine = lines[i].substr(startsAt),
 				lead = leads[leads.length - 1];
 
@@ -52,7 +109,77 @@ function balanceIfStatements(lines: string[]): string[] {
 			lineOffsets.pop();
 			leads.pop();
 			continue;
-		} else {
+		} else if (trimmedLine.startsWith('{{/if')) {
+			const startsAt = lines[i].indexOf('{{/if'),
+				adjustLine = lines[i].substr(startsAt),
+				lead = leads[leads.length - 1];
+
+			newLines.push(lead + adjustLine);
+
+			lineOffsets.pop();
+			leads.pop();
+			continue;
+		} else if (trimmedLine.startsWith('{{/endunless')) {
+			const startsAt = lines[i].indexOf('{{/endunless'),
+				adjustLine = lines[i].substr(startsAt),
+				lead = leads[leads.length - 1];
+
+			newLines.push(lead + adjustLine);
+
+			lineOffsets.pop();
+			leads.pop();
+			continue;
+		} else if (trimmedLine.startsWith('{{ /endunless')) {
+			const startsAt = lines[i].indexOf('{{ /endunless'),
+				adjustLine = lines[i].substr(startsAt),
+				lead = leads[leads.length - 1];
+
+			newLines.push(lead + adjustLine);
+
+			lineOffsets.pop();
+			leads.pop();
+			continue;
+		} else if (trimmedLine.startsWith('{{/unless')) {
+			const startsAt = lines[i].indexOf('{{/unless'),
+				adjustLine = lines[i].substr(startsAt),
+				lead = leads[leads.length - 1];
+
+			newLines.push(lead + adjustLine);
+
+			lineOffsets.pop();
+			leads.pop();
+			continue;
+		} else if (trimmedLine.startsWith('{{ /unless')) {
+			const startsAt = lines[i].indexOf('{{ /unless'),
+				adjustLine = lines[i].substr(startsAt),
+				lead = leads[leads.length - 1];
+
+			newLines.push(lead + adjustLine);
+
+			lineOffsets.pop();
+			leads.pop();
+			continue;
+		} else if (trimmedLine.startsWith('{{/endif')) {
+			const startsAt = lines[i].indexOf('{{/endif'),
+				adjustLine = lines[i].substr(startsAt),
+				lead = leads[leads.length - 1];
+
+			newLines.push(lead + adjustLine);
+
+			lineOffsets.pop();
+			leads.pop();
+			continue;
+		} else if (trimmedLine.startsWith('{{ /endif')) {
+			const startsAt = lines[i].indexOf('{{ /endif'),
+				adjustLine = lines[i].substr(startsAt),
+				lead = leads[leads.length - 1];
+
+			newLines.push(lead + adjustLine);
+
+			lineOffsets.pop();
+			leads.pop();
+			continue;
+		}  else {
 			newLines.push(lines[i]);
 		}
 	}
@@ -151,6 +278,7 @@ export function formatAntlersDocument(params: DocumentFormattingParams): TextEdi
 		const symbols = parser.getSymbols(),
 			replaceMapping: Map<string, string> = new Map(),
 			ifPrefixMapping: Map<string, string> = new Map(),
+			unlessPrefixMapping: Map<string, string> = new Map(),
 			dumpMapping: Map<string, string> = new Map();
 
 		for (let i = 0; i < symbols.length; i++) {
@@ -169,20 +297,46 @@ export function formatAntlersDocument(params: DocumentFormattingParams): TextEdi
 					} else {
 						formatTag = '</IF:' + symb.id + '>';
 					}
+				} else if (symb.name == '/unless') {
+					if (unlessPrefixMapping.has(symb.id)) {
+						const prefixId = unlessPrefixMapping.get(symb.id) as string;
+
+						formatTag = '</UNLESS:' + prefixId + '>';
+					} else {
+						formatTag = '</UNLESS:' + symb.id + '>';
+					}
 				} else {
-					if (symb.isClosedBy != null) {
+					if (NormalConditionals.includes(symb.name.trim())) {
+						if (symb.isClosedBy != null) {
 
-						ifPrefixMapping.set(symb.isClosedBy.id, symb.id);
+							ifPrefixMapping.set(symb.isClosedBy.id, symb.id);
+	
+							if (ifPrefixMapping.has(symb.id)) {
+								const prefixId = ifPrefixMapping.get(symb.id) as string;
+	
+								formatTag = '</IF:' + prefixId + '>';
+								formatTag += '<IF:' + symb.id + '>';
+								replaceMapping.set('</IF:' + prefixId + '>', content);
+								dumpMapping.set('<IF:' + symb.id + '>', '');
+							} else {
+								formatTag = '<IF:' + symb.id + '>';
+							}
+						}
+					} else {
+						if (symb.isClosedBy != null) {
 
-						if (ifPrefixMapping.has(symb.id)) {
-							const prefixId = ifPrefixMapping.get(symb.id) as string;
-
-							formatTag = '</IF:' + prefixId + '>';
-							formatTag += '<IF:' + symb.id + '>';
-							replaceMapping.set('</IF:' + prefixId + '>', content);
-							dumpMapping.set('<IF:' + symb.id + '>', '');
-						} else {
-							formatTag = '<IF:' + symb.id + '>';
+							unlessPrefixMapping.set(symb.isClosedBy.id, symb.id);
+	
+							if (unlessPrefixMapping.has(symb.id)) {
+								const prefixId = ifPrefixMapping.get(symb.id) as string;
+	
+								formatTag = '</UNLESS:' + prefixId + '>';
+								formatTag += '<UNLESS:' + symb.id + '>';
+								replaceMapping.set('</UNLESS:' + prefixId + '>', content);
+								dumpMapping.set('<UNLESS:' + symb.id + '>', '');
+							} else {
+								formatTag = '<UNLESS:' + symb.id + '>';
+							}
 						}
 					}
 				}

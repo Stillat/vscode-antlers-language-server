@@ -24,6 +24,10 @@ Want to take your install even further? Consider checking out the documentation 
 
 Bugs fixed, what's new, and more! :)
 
+### v1.1.3
+
+* Improves the formatting behavior of `unless` conditionals ([#14](https://github.com/Stillat/vscode-antlers-language-server/issues/14))
+
 ### v1.1.2
 
 * Adds support for the `all` and `self` locale tag parameters
