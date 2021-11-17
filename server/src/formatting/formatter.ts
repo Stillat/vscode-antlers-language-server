@@ -11,6 +11,14 @@ import { getFormatOption, getTagsFormatOption, IHTMLFormatConfiguration } from '
 const Conditionals: string[] = ['if', 'elseif', 'else', '/if', 'unless', 'elseunless', '/unless'];
 const NormalConditionals: string[] = ['if', 'elseif', 'else', '/if'];
 
+function getLeadText(lead:any) {
+	if (typeof lead === 'undefined' || lead === null) {
+		return '';
+	}
+
+	return lead;
+}
+
 function balanceIfStatements(lines: string[]): string[] {
 	const newLines: string[] = [],
 		lineOffsets: number[] = [],
@@ -56,7 +64,7 @@ function balanceIfStatements(lines: string[]): string[] {
 				adjustLine = lines[i].substr(startsAt),
 				lead = leads[leads.length - 1];
 
-			newLines.push(lead + adjustLine);
+			newLines.push(getLeadText(lead) + adjustLine);
 
 			continue;
 		} else if (trimmedLine.startsWith('{{elseif')) {
@@ -64,7 +72,7 @@ function balanceIfStatements(lines: string[]): string[] {
 				adjustLine = lines[i].substr(startsAt),
 				lead = leads[leads.length - 1];
 
-			newLines.push(lead + adjustLine);
+			newLines.push(getLeadText(lead) + adjustLine);
 
 			continue;
 		} else if (trimmedLine.startsWith('{{ elseunless')) {
@@ -72,7 +80,7 @@ function balanceIfStatements(lines: string[]): string[] {
 				adjustLine = lines[i].substr(startsAt),
 				lead = leads[leads.length - 1];
 
-			newLines.push(lead + adjustLine);
+			newLines.push(getLeadText(lead) + adjustLine);
 
 			continue;
 		} else if (trimmedLine.startsWith('{{elseunless')) {
@@ -80,7 +88,7 @@ function balanceIfStatements(lines: string[]): string[] {
 				adjustLine = lines[i].substr(startsAt),
 				lead = leads[leads.length - 1];
 
-			newLines.push(lead + adjustLine);
+			newLines.push(getLeadText(lead) + adjustLine);
 
 			continue;
 		} else if (trimmedLine.startsWith('{{ else')) {
@@ -88,7 +96,7 @@ function balanceIfStatements(lines: string[]): string[] {
 				adjustLine = lines[i].substr(startsAt),
 				lead = leads[leads.length - 1];
 
-			newLines.push(lead + adjustLine);
+			newLines.push(getLeadText(lead) + adjustLine);
 
 			continue;
 		} else if (trimmedLine.startsWith('{{else')) {
@@ -96,7 +104,7 @@ function balanceIfStatements(lines: string[]): string[] {
 				adjustLine = lines[i].substr(startsAt),
 				lead = leads[leads.length - 1];
 
-			newLines.push(lead + adjustLine);
+			newLines.push(getLeadText(lead) + adjustLine);
 
 			continue;
 		} else if (trimmedLine.startsWith('{{ /if')) {
@@ -104,7 +112,7 @@ function balanceIfStatements(lines: string[]): string[] {
 				adjustLine = lines[i].substr(startsAt),
 				lead = leads[leads.length - 1];
 
-			newLines.push(lead + adjustLine);
+			newLines.push(getLeadText(lead) + adjustLine);
 
 			lineOffsets.pop();
 			leads.pop();
@@ -114,7 +122,7 @@ function balanceIfStatements(lines: string[]): string[] {
 				adjustLine = lines[i].substr(startsAt),
 				lead = leads[leads.length - 1];
 
-			newLines.push(lead + adjustLine);
+			newLines.push(getLeadText(lead) + adjustLine);
 
 			lineOffsets.pop();
 			leads.pop();
@@ -124,7 +132,7 @@ function balanceIfStatements(lines: string[]): string[] {
 				adjustLine = lines[i].substr(startsAt),
 				lead = leads[leads.length - 1];
 
-			newLines.push(lead + adjustLine);
+			newLines.push(getLeadText(lead) + adjustLine);
 
 			lineOffsets.pop();
 			leads.pop();
@@ -134,7 +142,7 @@ function balanceIfStatements(lines: string[]): string[] {
 				adjustLine = lines[i].substr(startsAt),
 				lead = leads[leads.length - 1];
 
-			newLines.push(lead + adjustLine);
+			newLines.push(getLeadText(lead) + adjustLine);
 
 			lineOffsets.pop();
 			leads.pop();
@@ -144,7 +152,7 @@ function balanceIfStatements(lines: string[]): string[] {
 				adjustLine = lines[i].substr(startsAt),
 				lead = leads[leads.length - 1];
 
-			newLines.push(lead + adjustLine);
+			newLines.push(getLeadText(lead) + adjustLine);
 
 			lineOffsets.pop();
 			leads.pop();
@@ -154,7 +162,7 @@ function balanceIfStatements(lines: string[]): string[] {
 				adjustLine = lines[i].substr(startsAt),
 				lead = leads[leads.length - 1];
 
-			newLines.push(lead + adjustLine);
+			newLines.push(getLeadText(lead) + adjustLine);
 
 			lineOffsets.pop();
 			leads.pop();
@@ -164,7 +172,7 @@ function balanceIfStatements(lines: string[]): string[] {
 				adjustLine = lines[i].substr(startsAt),
 				lead = leads[leads.length - 1];
 
-			newLines.push(lead + adjustLine);
+			newLines.push(getLeadText(lead) + adjustLine);
 
 			lineOffsets.pop();
 			leads.pop();
@@ -174,7 +182,7 @@ function balanceIfStatements(lines: string[]): string[] {
 				adjustLine = lines[i].substr(startsAt),
 				lead = leads[leads.length - 1];
 
-			newLines.push(lead + adjustLine);
+			newLines.push(getLeadText(lead) + adjustLine);
 
 			lineOffsets.pop();
 			leads.pop();
