@@ -1,41 +1,45 @@
-import { DefinitionParams } from 'vscode-languageserver-protocol';
-import { Location, LocationLink } from 'vscode-languageserver-types';
-import { ISuggestionRequest } from '../suggestions/suggestionManager';
+import { DefinitionParams } from "vscode-languageserver-protocol";
+import { Location, LocationLink } from "vscode-languageserver-types";
+import { ISuggestionRequest } from '../suggestions/suggestionRequest';
+import { antlersPositionToVsCode } from '../utils/conversions';
 
 export class DefinitionManager {
+    static findLocations(
+        params: ISuggestionRequest | null,
+        definitionRequest: DefinitionParams
+    ): Location[] | LocationLink[] | null {
+        if (params == null) {
+            return null;
+        }
 
-	static findLocations(params: ISuggestionRequest, definitionRequest: DefinitionParams): Location[] | LocationLink[] | null {
-		if (params.symbolsInScope.length == 0) {
-			return null;
+        if (params.nodesInScope.length == 0) {
+            return null;
+        }
+
+        let lastSymbolInScope = params.nodesInScope[params.nodesInScope.length - 1];
+
+		if (params.context != null && params.context.node != null) {
+			lastSymbolInScope = params.context.node;
 		}
 
-		const lastSymbolInScope = params.symbolsInScope[params.symbolsInScope.length - 1];
+        if (lastSymbolInScope != null) {
+            if (lastSymbolInScope.scopeVariable != null) {
+                if (lastSymbolInScope.scopeVariable.introducedBy != null) {
+                    const locations: Location[] = [];
 
-		if (lastSymbolInScope != null) {
-			if (lastSymbolInScope.scopeVariable != null) {
-				if (lastSymbolInScope.scopeVariable.introducedBy != null) {
-					const locations: Location[] = [];
+                    locations.push({
+                        uri: definitionRequest.textDocument.uri,
+                        range: {
+                            start: antlersPositionToVsCode(lastSymbolInScope.scopeVariable.introducedBy.startPosition),
+                            end: antlersPositionToVsCode(lastSymbolInScope.scopeVariable.introducedBy.endPosition)
+                        },
+                    });
 
-					locations.push({
-						uri: definitionRequest.textDocument.uri,
-						range: {
-							start: {
-								line: lastSymbolInScope.scopeVariable.introducedBy.startLine,
-								character: lastSymbolInScope.scopeVariable.introducedBy.startOffset
-							},
-							end: {
-								line: lastSymbolInScope.scopeVariable.introducedBy.endLine,
-								character: lastSymbolInScope.scopeVariable.introducedBy.endOffset
-							}
-						}
-					});
+                    return locations;
+                }
+            }
+        }
 
-					return locations;
-				}
-			}
-		}
-
-		return null;
-	}
-
+        return null;
+    }
 }

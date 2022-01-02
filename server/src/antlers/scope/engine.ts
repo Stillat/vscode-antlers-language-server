@@ -1,563 +1,36 @@
-import { v4 as uuidv4 } from 'uuid';
 import { IEnvironmentHelper, IVariableHelper, parseIdeHelper } from '../../idehelper/parser';
-import { IBlueprintField } from '../../projects/blueprints';
-import { getFieldRuntimeType } from '../../projects/blueprintTypes';
-import { StatamicProject } from '../../projects/statamicProject';
-import { ReferenceManager } from '../../references/referenceManager';
-import { FieldtypeManager, IFieldtypeInjection } from '../fieldtypes/fieldtypeManager';
-import { IAntlersTag, TagManager } from '../tagManager';
-import { getParameter, ISymbol } from '../types';
+import { IBlueprintField } from '../../projects/blueprints/fields';
+import { getFieldRuntimeType } from '../../projects/blueprints/blueprintTypes';
+import ReferenceManager from '../../references/referenceManager';
+import {AbstractNode, AntlersNode, EqualCompOperator, StringValueNode, VariableNode} from '../../runtime/nodes/abstractNode';
+import { IAntlersTag } from '../tagManager';
+import TagManager from '../tagManagerInstance';
 import { makeArrayVariables } from '../variables/arrayVariables';
 import { makeContentVariables } from '../variables/contentVariables';
 import { makeLoopVariables } from '../variables/loopVariables';
 import { getSiteData, getSystemVariables } from '../variables/systemVariables';
-import { ConditionScopeInjections } from './conditionScopeInjections';
-import { checkSymbolForPagination } from './factories/paginationFactory';
-import { InjectionManager } from './injections';
+import { checkNodeForPagination } from './factories/paginationFactory';
+import { IProjectDetailsProvider } from '../../projects/projectDetailsProvider';
+import { blueprintFieldsToScopeVariables, blueprintFieldToScopeVariable } from './scopeUtilities';
+import { Scope } from './scope';
+import { IScopeVariable } from './types';
+import { IFieldtypeInjection } from '../../projects/fieldsets/fieldtypeInjection';
+import FieldtypeManager from '../fieldtypes/fieldtypeManager';
+import InjectionManager from './injections';
 
 const IgnoreArrayContextualData: string[] = ['collection'];
 const ChecksForFieldReferences: string[] = ['if', 'elseif', 'unless', 'elseunless'];
 
-export interface IScopeVariable {
-	/**
-	 * The name of the variable.
-	 */
-	name: string,
-	/**
-	 * The inferred runtime data type of the variable reference.
-	 */
-	dataType: string,
-	/**
-	 * The blueprint field underlying the variable, if any.
-	 */
-	sourceField: IBlueprintField | null,
-	/**
-	 * Provides a reference to where/how the variable was introduced.
-	 * 
-	 * Internal providers will be prefixed with '*internal'.
-	 */
-	sourceName: string,
-	/**
-	 * The symbol that introduced the variable.
-	 * 
-	 * An example would be the collection tag introducing a 'posts' array.
-	 */
-	introducedBy: ISymbol | null
-}
-
-interface IPristineSnapshot {
-	introducedScope: string,
-	parentCopy: Scope,
-	introducedFields: IBlueprintField[]
-}
-
-export function blueprintFieldToScopeVariable(symbol: ISymbol, field: IBlueprintField): IScopeVariable {
-	return {
-		sourceName: field.blueprintName,
-		dataType: field.type,
-		name: field.name,
-		sourceField: field,
-		introducedBy: symbol
-	};
-}
-
-export function blueprintFieldsToScopeVariables(symbol: ISymbol, blueprintFields: IBlueprintField[]): IScopeVariable[] {
-	const variables: IScopeVariable[] = [];
-
-	for (let i = 0; i < blueprintFields.length; i++) {
-		const field = blueprintFields[i];
-
-		variables.push({
-			sourceName: field.blueprintName,
-			dataType: field.type,
-			name: field.name,
-			sourceField: field,
-			introducedBy: symbol
-		});
-	}
-
-	return variables;
-}
-
-export class Scope {
-	static generationCounter = 0;
-
-	public generation = 0;
-	public statamicProject: StatamicProject;
-	public id = '';
-	public name = '';
-	public values: Map<string, IScopeVariable> = new Map();
-	public lists: Map<string, Scope> = new Map();
-	public pristine: Map<string, IPristineSnapshot> = new Map();
-	public parentScope: Scope | null = null;
-
-	constructor(statamicProject: StatamicProject) {
-		this.statamicProject = statamicProject;
-		Scope.generationCounter += 1;
-		this.generation = Scope.generationCounter;
-		this.id = uuidv4();
-	}
-
-	makeNew(): Scope {
-		return new Scope(this.statamicProject);
-	}
-
-	ancestor(): Scope {
-		if (this.parentScope != null) {
-			return this.parentScope;
-		}
-
-		return this;
-	}
-
-	canShiftScope(path: string): boolean {
-		if (this.pristine.has(path)) {
-			return true;
-		}
-
-		return false;
-	}
-
-	shiftScope(symbol: ISymbol, path: string, newScopeName: string): Scope {
-		if (this.pristine.has(path)) {
-			const pristineCopy = this.pristine.get(path) as IPristineSnapshot,
-				newScope = pristineCopy.parentCopy.copy();
-
-			newScope.introduceAliasScope(symbol, newScopeName, pristineCopy.introducedFields);
-
-			return newScope;
-		}
-
-		return this;
-	}
-
-	containsPath(path: string): boolean {
-		if (path.includes(':')) {
-			const parts: string[] = path.split(':'),
-				thisPath = parts.shift(),
-				nextPath = parts.join(':');
-
-			if (typeof thisPath === 'undefined') {
-				return false;
-			}
-
-			const nextScope = this.lists.get(thisPath) as Scope;
-
-			if (typeof nextScope === 'undefined') {
-				return false;
-			}
-
-			return nextScope.containsPath(nextPath);
-		}
-
-		if (this.lists.has(path)) {
-			return true;
-		}
-
-		return false;
-	}
-
-	findReference(path: string): IScopeVariable | null {
-		if (path.includes(':')) {
-			const parts = path.split(':'),
-				itemToFind = parts.pop() as string,
-				newPath = parts.join(':'),
-				adjustScope = this.findNestedScope(newPath);
-
-			if (adjustScope != null) {
-				return adjustScope.findReference(itemToFind);
-			}
-		}
-
-		if (this.values.has(path)) {
-			return this.values.get(path) as IScopeVariable;
-		}
-
-		return null;
-	}
-
-	containsReference(path: string): boolean {
-		const pathRef = this.findReference(path);
-
-		if (pathRef == null) {
-			return false;
-		}
-
-		return true;
-	}
-
-	findNestedScope(path: string): Scope | null {
-		if (path.includes(':')) {
-			const parts: string[] = path.split(':'),
-				thisPath = parts.shift(),
-				nextPath = parts.join(':');
-
-			if (typeof thisPath === 'undefined') {
-				return null;
-			}
-
-			const nextScope = this.lists.get(thisPath) as Scope;
-
-			if (typeof nextScope === 'undefined') {
-				return null;
-			}
-
-			return nextScope.findNestedScope(nextPath);
-		}
-
-		if (this.lists.has(path)) {
-			return this.lists.get(path) as Scope;
-		}
-
-		if (this.parentScope != null && this.parentScope != this && this.parentScope.hasList(path)) {
-			return this.parentScope.lists.get(path) as Scope;
-		}
-
-		return null;
-	}
-
-	/**
-	 * Finds a scope list, and removes it from the current scope.
-	 * @param name The list name.
-	 * @returns 
-	 */
-	liftList(name: string): Scope | null {
-
-		if (this.lists.has(name)) {
-			const list = this.lists.get(name);
-
-			if (typeof list === 'undefined' || list === null) {
-				return null;
-			}
-
-			this.lists.delete(name);
-
-			return list;
-		}
-
-		return null;
-	}
-
-	hasPristineReference(name: string): boolean {
-		if (this.pristine.has(name)) {
-			return true;
-		}
-
-		return false;
-	}
-
-	hasListInHistory(name: string): boolean {
-		if (this.hasList(name)) {
-			return true;
-		}
-
-		if (this.parentScope != null) {
-			// The root scope references itself.
-			if (this.name == '*root*') {
-				return false;
-			}
-
-			return this.parentScope.hasList(name);
-		}
-
-		return false;
-	}
-
-	hasList(name: string): boolean {
-		if (this.lists.has(name)) {
-			const list = this.lists.get(name);
-
-			if (typeof list === 'undefined' || list === null) {
-				return false;
-			}
-
-			return true;
-		}
-
-		return false;
-	}
-
-	bringListIntoMainScope(path: string): Scope {
-		if (path.includes(':')) {
-			const parts: string[] = path.split(':'),
-				thisPath = parts.shift(),
-				nextPath = parts.join(':');
-
-			if (typeof thisPath === 'undefined') {
-				return this;
-			}
-
-			const nextScope = this.lists.get(thisPath) as Scope;
-
-			if (typeof nextScope === 'undefined') {
-				return this;
-			}
-
-			return nextScope.bringListIntoMainScope(nextPath);
-		}
-
-		const nestedScope = this.lists.get(path) as Scope;
-		this.lists.delete(path);
-
-		return this.mergeScope(nestedScope);
-	}
-
-	getListNames(): string[] {
-		const listNames: string[] = [];
-
-		this.lists.forEach((value: Scope, name: string) => {
-			listNames.push(name);
-		});
-
-		return listNames;
-	}
-
-	hasValue(name: string): boolean {
-		return this.values.has(name);
-	}
-
-	findReferenceNotIntroducedBy(name: string, introducedBy: ISymbol): IScopeVariable | null {
-		if (this.hasValue(name)) {
-			const varRef = this.values.get(name) as IScopeVariable;
-
-			if (varRef.introducedBy != null && varRef.introducedBy != introducedBy) {
-				return varRef;
-			}
-		}
-
-		if (this.parentScope != null && this.parentScope != this) {
-			return this.parentScope.findReferenceNotIntroducedBy(name, introducedBy);
-		}
-
-		return null;
-	}
-
-	removeThroughIntroduction(name: string, introducedBy: ISymbol) {
-		this.values.delete(name);
-
-		// If this removal operation will re-expose a previously
-		// hidden variable with the same name, let's locate
-		// the last time the variable was introduced by
-		// any other symbol that is not the current.
-		if (this.parentScope != null) {
-			const refInSCope = this.findReferenceNotIntroducedBy(name, introducedBy);
-
-			if (refInSCope != null) {
-				this.addVariable(refInSCope);
-			}
-		}
-	}
-
-	wasIntroducedBySymbol(name: string, checkSymbol: ISymbol): boolean {
-		if (this.values.has(name) == false) {
-			return false;
-		}
-
-		const value = this.values.get(name) as IScopeVariable;
-
-		if (value.introducedBy != null) {
-			return value.introducedBy == checkSymbol;
-		}
-
-		return false;
-	}
-
-	referencesArray(name: string): boolean {
-		if (this.values.has(name) == false) {
-			return false;
-		}
-
-		const ref = this.values.get(name) as IScopeVariable;
-
-		if (ref.dataType == 'array') {
-			return true;
-		}
-
-		return false;
-	}
-
-	addScopeList(listName: string, scope: Scope): Scope {
-		this.lists.set(listName, scope);
-
-		return this;
-	}
-
-	mergeAndList(listName: string, data: IScopeVariable[]): Scope {
-		const newListScope = new Scope(this.statamicProject);
-		newListScope.values = valuesToDataMap(data);
-
-		this.lists.set(listName, newListScope);
-		this.mergeVariableScope(data);
-
-		return this;
-	}
-
-	mergeScope(scope: Scope): Scope {
-		if (scope == this || scope == null) {
-			return this;
-		}
-
-		scope.values.forEach((value: IScopeVariable, name: string) => {
-			this.values.set(name, value);
-		});
-
-		scope.lists.forEach((value: Scope, name: string) => {
-			this.lists.set(name, value);
-		});
-
-		return this;
-	}
-
-	mergeVariableScope(data: IScopeVariable[]): Scope {
-		for (let i = 0; i < data.length; i++) {
-			this.values.set(data[i].name, data[i]);
-		}
-
-		return this;
-	}
-
-	addVariable(variable: IScopeVariable) {
-		this.values.set(variable.name, variable);
-	}
-
-	addVariables(variables: IScopeVariable[]) {
-		for (let i = 0; i < variables.length; i++) {
-			this.addVariable(variables[i]);
-		}
-	}
-
-	addVariableArray(name: string, variables: IScopeVariable[]) {
-		if (this.values.has(name)) {
-			this.values.delete(name);
-		}
-
-		const array = new Scope(this.statamicProject);
-		array.addVariables(variables);
-
-		this.addScopeList(name, array);
-	}
-
-	injectAssetContainer(symbol: ISymbol, container: string) {
-		this.addBlueprintFields(symbol, this.statamicProject.getAssetBlueprintFields(container));
-	}
-
-	injectUserFields(symbol: ISymbol) {
-		this.addBlueprintFields(symbol, this.statamicProject.getUserFields());
-	}
-
-	addBlueprintField(symbol: ISymbol, field: IBlueprintField) {
-		this.addVariable({
-			dataType: field.type,
-			name: field.name,
-			sourceField: field,
-			sourceName: field.blueprintName,
-			introducedBy: symbol
-		});
-	}
-
-	introduceScopedAliasScope(symbol: ISymbol, scopeName: string, aliasName: string, fields: IBlueprintField[]): Scope {
-		this.pristine.set(aliasName, {
-			introducedFields: fields,
-			introducedScope: aliasName,
-			parentCopy: this.copy()
-		});
-
-		const newAliasScope = new Scope(this.statamicProject),
-			fieldScope = new Scope(this.statamicProject);
-
-		fieldScope.addBlueprintFields(symbol, fields);
-
-		newAliasScope.name = aliasName;
-		newAliasScope.addScopeList(scopeName, fieldScope);
-
-		this.addScopeList(aliasName, newAliasScope);
-
-		return newAliasScope;
-	}
-
-	expandScopedAliasScope(symbol: ISymbol, scopeName: string, aliasName: string, fields: IBlueprintField[]) {
-		if (this.lists.has(aliasName) == false) {
-			this.introduceScopedAliasScope(symbol, scopeName, aliasName, fields);
-		} else {
-			const listRef = this.lists.get(aliasName) as Scope;
-
-			listRef.addBlueprintFields(symbol, fields);
-		}
-	}
-
-	introduceAliasScope(symbol: ISymbol, aliasName: string, fields: IBlueprintField[]) {
-		this.pristine.set(aliasName, {
-			introducedFields: fields,
-			introducedScope: aliasName,
-			parentCopy: this.copy()
-		});
-
-		const newAliasScope = new Scope(this.statamicProject);
-		newAliasScope.addBlueprintFields(symbol, fields);
-		newAliasScope.name = aliasName;
-		this.addScopeList(aliasName, newAliasScope);
-	}
-
-	introduceDynamicScopeList(symbol: ISymbol, listName: string, fields: IBlueprintField[]) {
-		this.pristine.set(listName, {
-			introducedFields: fields,
-			introducedScope: listName,
-			parentCopy: this.copy()
-		});
-
-		const newListScope = new Scope(this.statamicProject);
-
-		newListScope.name = listName;
-		newListScope.addBlueprintFields(symbol, fields);
-
-		this.addScopeList(listName, newListScope);
-	}
-
-	addBlueprintFields(symbol: ISymbol, fields: IBlueprintField[]) {
-		for (let i = 0; i < fields.length; i++) {
-			this.addBlueprintField(symbol, fields[i]);
-		}
-	}
-
-	injectBlueprint(symbol: ISymbol, handle: string) {
-		const blueprintDetails = this.statamicProject.getBlueprintDetails(handle);
-
-		if (blueprintDetails.length > 0) {
-			this.addBlueprintFields(symbol, blueprintDetails);
-		}
-	}
-
-	copy(): Scope {
-		const newScope = new Scope(this.statamicProject);
-		newScope.pristine = new Map(this.pristine);
-		newScope.values = new Map(this.values);
-		newScope.lists = new Map(this.lists);
-		newScope.parentScope = this;
-
-		return newScope;
-	}
-}
-
-function valuesToDataMap(variables: IScopeVariable[]): Map<string, IScopeVariable> {
-	const mapToReturn: Map<string, IScopeVariable> = new Map();
-
-	for (let i = 0; i < variables.length; i++) {
-		mapToReturn.set(variables[i].name, variables[i]);
-	}
-
-	return mapToReturn;
-}
-
 export class ScopeEngine {
 
-	private statamicProject: StatamicProject;
+	private statamicProject: IProjectDetailsProvider;
 	private pageVars: IScopeVariable[] = [];
 	private viewDataVars: IScopeVariable[] = [];
 	private documentUri = '';
 	private lastSymbolId = '';
 	private ideHelperMap: Map<string, IVariableHelper> = new Map();
 
-	constructor(project: StatamicProject, documentUri: string) {
+	constructor(project: IProjectDetailsProvider, documentUri: string) {
 		this.statamicProject = project;
 		this.documentUri = documentUri;
 
@@ -589,8 +62,9 @@ export class ScopeEngine {
 	private makePageScope() {
 		const newPageVariables: IScopeVariable[] = [];
 
-		if (this.statamicProject.fields.has('pages')) {
-			const pageFields = this.statamicProject.fields.get('pages') as IBlueprintField[];
+		const projFields = this.statamicProject.getFields();
+		if (projFields.has('pages')) {
+			const pageFields = projFields.get('pages') as IBlueprintField[];
 
 			for (let i = 0; i < pageFields.length; i++) {
 				const thisField = pageFields[i];
@@ -608,7 +82,7 @@ export class ScopeEngine {
 		this.pageVars = newPageVariables;
 	}
 
-	analyzeScope(symbols: ISymbol[]) {
+	analyzeScope(nodes: AntlersNode[]) {
 		const rootScope = new Scope(this.statamicProject);
 		rootScope.name = '*root*';
 		rootScope.parentScope = rootScope;
@@ -617,7 +91,7 @@ export class ScopeEngine {
 		rootScope.addScopeList('sites', getSiteData(this.statamicProject));
 		rootScope.addVariables(getSystemVariables());
 
-		if (ReferenceManager.pageScopeDisabled(this.documentUri)) {
+		if (ReferenceManager.instance?.pageScopeDisabled(this.documentUri)) {
 			rootScope.mergeAndList('view', this.viewDataVars);
 		} else {
 			rootScope.mergeAndList('page', this.pageVars)
@@ -626,16 +100,16 @@ export class ScopeEngine {
 
 		let ideHelper: IEnvironmentHelper | null = null;
 
-		if (symbols.length > 0 && symbols[0].isComment) {
-			ideHelper = parseIdeHelper(this.documentUri, symbols[0]);
+		if (nodes.length > 0 && nodes[0].isComment) {
+			ideHelper = parseIdeHelper(this.documentUri, nodes[0]);
 		}
 
-		for (let i = 0; i < symbols.length; i++) {
-			if (symbols[i].isComment) {
-				const varIdeHelper = parseIdeHelper(this.documentUri, symbols[i]);
+		for (let i = 0; i < nodes.length; i++) {
+			if (nodes[i].isComment) {
+				const varIdeHelper = parseIdeHelper(this.documentUri, nodes[i]);
 
 				if (varIdeHelper.variableHelper != null) {
-					this.ideHelperMap.set(symbols[i].id, varIdeHelper.variableHelper);
+					this.ideHelperMap.set(nodes[i].id(), varIdeHelper.variableHelper);
 				}
 			}
 		}
@@ -660,13 +134,13 @@ export class ScopeEngine {
 							if (fieldRef.sets != null) {
 								for (let i = 0; i < fieldRef.sets.length; i++) {
 									if (fieldRef.sets[i].handle == ideHelper.variableHelper.setHandle) {
-										rootScope.addVariables(blueprintFieldsToScopeVariables(symbols[0], fieldRef.sets[i].fields));
+										rootScope.addVariables(blueprintFieldsToScopeVariables(nodes[0], fieldRef.sets[i].fields));
 										break;
 									}
 								}
 							}
 						} else {
-							rootScope.addBlueprintField(symbols[0], fieldRef);
+							rootScope.addBlueprintField(nodes[0], fieldRef);
 						}
 					}
 				}
@@ -675,14 +149,15 @@ export class ScopeEngine {
 
 		if (documentCollectionNames.length > 0) {
 			for (let i = 0; i < documentCollectionNames.length; i++) {
-				rootScope.injectBlueprint(symbols[0], documentCollectionNames[i]);
+				rootScope.injectBlueprint(nodes[0], documentCollectionNames[i]);
 			}
 
-			rootScope.addVariables(makeContentVariables(symbols[0]));
+			rootScope.addVariables(makeContentVariables(nodes[0]));
+
 		}
 
-		if (InjectionManager.hasAvailableInjections(this.documentUri)) {
-			rootScope.mergeScope(InjectionManager.getScopeInjection(this.documentUri, this.statamicProject));
+		if (InjectionManager.instance?.hasAvailableInjections(this.documentUri)) {
+			rootScope.mergeScope(InjectionManager.instance?.getScopeInjection(this.documentUri, this.statamicProject));
 		}
 
 		const currentScopeParts: string[] = [],
@@ -692,10 +167,10 @@ export class ScopeEngine {
 
 		activeScopes.push(rootScope);
 
-		for (let i = 0; i < symbols.length; i++) {
-			const currentSymbol = symbols[i];
+		for (let i = 0; i < nodes.length; i++) {
+			const currentNode = nodes[i];
 
-			if (this.lastSymbolId.length > 0 && popScopeIds.includes(currentSymbol.id)) {
+			if (this.lastSymbolId.length > 0 && popScopeIds.includes(currentNode.id())) {
 				currentScopeParts.pop();
 				activeScopes.pop();
 
@@ -708,14 +183,20 @@ export class ScopeEngine {
 
 			// If there are any interpolations, we will give them the current scope before
 			// tags have a chance to introduce any new variables into the active scope.
-			if (currentSymbol.parameterCache != null && currentSymbol.parameterCache.length > 0) {
-				for (let j = 0; j < currentSymbol.parameterCache.length; j++) {
-					if (currentSymbol.parameterCache[j].interpolations.length > 0) {
-						for (let k = 0; k < currentSymbol.parameterCache[j].interpolations.length; k++) {
-							if (currentSymbol.parameterCache[j].interpolations[k].symbols.length > 0) {
-								for (let l = 0; l < currentSymbol.parameterCache[j].interpolations[k].symbols.length; l++) {
-									currentSymbol.parameterCache[j].interpolations[k].symbols[l].currentScope = currentScope;
-								}
+			if (currentNode.hasParameters) {
+				for (let j = 0; j < currentNode.parameters.length; j++) {
+					if (currentNode.parameters[j].interpolations.length > 0) {
+						for (let k = 0; k < currentNode.parameters[j].interpolations.length; k++) {
+							const tInterpolationName = currentNode.parameters[j].interpolations[k];
+
+							if (currentNode.processedInterpolationRegions.has(tInterpolationName)) {
+								const tIntNodes = currentNode.processedInterpolationRegions.get(tInterpolationName) as AbstractNode[];
+
+								tIntNodes.forEach((node) => {
+									if (node instanceof AntlersNode) {
+										node.currentScope = currentScope;
+									}
+								});
 							}
 						}
 					}
@@ -723,131 +204,148 @@ export class ScopeEngine {
 			}
 
 			// Attempt to resolve any source types before scope adjustments take place.
-			if (TagManager.isKnownTag(currentSymbol.name) == false) {
-				currentSymbol.scopeVariable = currentScope.findReference(currentSymbol.tagPart);
+			if (TagManager.instance?.isKnownTag(currentNode.getTagName()) == false) {
+				currentNode.scopeVariable = currentScope.findReference(currentNode.runtimeName());
 
 				if (i > 0) {
-					const lastSymbol = symbols[i - 1];
+					const lastSymbol = nodes[i - 1];
 
-					if (lastSymbol.isComment && this.ideHelperMap.has(lastSymbol.id) && !lastSymbol.isClosingTag && !currentSymbol.isClosingTag) {
-						const ideHelper = this.ideHelperMap.get(lastSymbol.id) as IVariableHelper;
+					if (lastSymbol.isComment && this.ideHelperMap.has(lastSymbol.id()) && !lastSymbol.isClosingTag && !currentNode.isClosingTag) {
+						const ideHelper = this.ideHelperMap.get(lastSymbol.id()) as IVariableHelper;
 
-						if (ideHelper.variableName == currentSymbol.name) {
+						if (ideHelper.variableName == currentNode.getTagName()) {
 							const collectionFieldReference = this.statamicProject.getBlueprintField(ideHelper.collectionName, ideHelper.fieldHandle);
 
 							if (collectionFieldReference != null) {
-								currentSymbol.scopeVariable = blueprintFieldToScopeVariable(currentSymbol, collectionFieldReference);
+								currentNode.scopeVariable = blueprintFieldToScopeVariable(currentNode, collectionFieldReference);
 							}
 						}
 					}
 				}
 
-				if (currentSymbol.scopeVariable == null) {
-					if (currentScope.hasList(currentSymbol.tagPart.trim()) || currentSymbol.currentScope?.hasListInHistory(currentSymbol.tagPart.trim())) {
-						currentSymbol.sourceType = 'array';
+				if (currentNode.scopeVariable == null) {
+					const trimmedRuntimeName = currentNode.runtimeName().trim();
+
+					if (currentScope.hasList(trimmedRuntimeName) || currentNode.currentScope?.hasListInHistory(trimmedRuntimeName)) {
+						currentNode.sourceType = 'array';
+						const listReference = currentScope.getList(trimmedRuntimeName);
+
+						if (listReference != null && listReference.values.size > 0) {
+							const firstListVar = listReference.values.entries().next().value[1] as IScopeVariable;
+
+							currentNode.scopeVariable = {
+								dataType: 'array',
+								introducedBy: firstListVar.introducedBy,
+								name: trimmedRuntimeName,
+								sourceField: null,
+								sourceName: firstListVar.sourceName
+							};
+						}
+
+
 					}
 				} else {
-					currentSymbol.sourceType = getFieldRuntimeType(currentSymbol.scopeVariable.dataType);
-					if (currentSymbol.scopeVariable.sourceField != null) {
-						if (FieldtypeManager.hasFieldtype(currentSymbol.scopeVariable.sourceField.type)) {
-							const fieldTypeRef = FieldtypeManager.fieldTypes.get(currentSymbol.scopeVariable.sourceField.type) as IFieldtypeInjection;
+					currentNode.sourceType = getFieldRuntimeType(currentNode.scopeVariable.dataType);
+					if (currentNode.scopeVariable.sourceField != null) {
+						if (FieldtypeManager.instance?.hasFieldtype(currentNode.scopeVariable.sourceField.type)) {
+							const fieldTypeRef = FieldtypeManager.instance?.getFieldType(currentNode.scopeVariable.sourceField.type) as IFieldtypeInjection;
 
-							fieldTypeRef.augmentScope(currentSymbol, currentScope);
+							fieldTypeRef.augmentScope(currentNode, currentScope);
 						}
 					}
 				}
 			}
 
-			if (currentSymbol.parameterCache != null) {
-				checkSymbolForPagination(currentSymbol, currentScope);
+			if (currentNode.hasParameters) {
+				checkNodeForPagination(currentNode, currentScope);
 			}
 
 
-			if (currentSymbol.modifiers != null && currentSymbol.modifiers.hasModifiers) {
-				currentSymbol.manifestType = currentSymbol.modifiers.manifestType;
+			if (currentNode.modifiers != null && currentNode.modifiers.hasModifiers()) {
+				currentNode.manifestType = currentNode.modifiers.getLastManifestedModifierRuntimeType();
 			} else {
-				currentSymbol.manifestType = currentSymbol.sourceType;
+				currentNode.manifestType = currentNode.sourceType;
 			}
 
-			if (currentSymbol.isClosedBy != null) {
+			if (currentNode.isClosedBy != null) {
 				// Let's create a new scope.
-				currentScopeParts.push(currentSymbol.id);
-				popScopeIds.push(currentSymbol.isClosedBy.id);
+				currentScopeParts.push(currentNode.id());
+				popScopeIds.push(currentNode.isClosedBy.id());
 				currentScope = currentScope.copy();
 				activeScopes.push(currentScope);
 			}
 
 			// This assumes people close their scope tags.
-			if (currentSymbol.name == 'scope' && currentSymbol.methodName != null) {
+			if (currentNode.getTagName() == 'scope' && currentNode.hasMethodPart()) {
 				// Take a snapshot of the current scope.
 				const snapshot = activeScopes[activeScopes.length - 2].copy();
-				currentScope.addScopeList(currentSymbol.methodName, snapshot);
+				currentScope.addScopeList(currentNode.getMethodNameValue(), snapshot);
 			}
 
-			if (currentScope.containsPath(currentSymbol.tagPart)) {
-				currentScopeParts.push(currentSymbol.id);
-				// TODO: Betterfy this.
-				if (currentSymbol.isClosedBy != null) {
-					popScopeIds.push(currentSymbol.isClosedBy.id);
+			if (currentScope.containsPath(currentNode.runtimeName())) {
+				currentScopeParts.push(currentNode.id());
+
+				if (currentNode.isClosedBy != null) {
+					popScopeIds.push(currentNode.isClosedBy.id());
 				}
 
-				currentScope = currentScope.copy().bringListIntoMainScope(currentSymbol.tagPart);
+				currentScope = currentScope.copy().bringListIntoMainScope(currentNode.runtimeName());
 				activeScopes.push(currentScope);
-				currentSymbol.currentScope = currentScope;
+				currentNode.currentScope = currentScope;
 
 			} else {
-				currentSymbol.currentScope = currentScope;
+				currentNode.currentScope = currentScope;
 			}
 
 			// If we see a "scope" on already scoped values
 			// rewind to a pristine before value scope and rewrite
-			if (currentSymbol.name != 'cache') {
-				const scopeParam = getParameter('scope', currentSymbol);
+			if (currentNode.getTagName() != 'cache') {
+				const scopeParam = currentNode.findParameter('scope');
 
-				if (scopeParam != null && currentScope.canShiftScope(currentSymbol.tagPart)) {
-					currentScope = currentScope.shiftScope(currentSymbol, currentSymbol.tagPart, scopeParam.value);
-					currentSymbol.currentScope = currentScope;
+				if (scopeParam != null && currentScope.canShiftScope(currentNode.runtimeName())) {
+					currentScope = currentScope.shiftScope(currentNode, currentNode.runtimeName(), scopeParam.value);
+					currentNode.currentScope = currentScope;
 					activeScopes.pop();
 					activeScopes.push(currentScope);
 				}
 			}
 
-			if (TagManager.isKnownTag(currentSymbol.runtimeName)) {
-				const tagRef = TagManager.findTag(currentSymbol.runtimeName) as IAntlersTag;
+			if (TagManager.instance?.isKnownTag(currentNode.runtimeName())) {
+				const tagRef = TagManager.instance?.findTag(currentNode.runtimeName()) as IAntlersTag;
 
 				if (typeof tagRef !== 'undefined' && tagRef.augmentScope != null) {
 					// Augment the scope.
-					tagRef.augmentScope(currentSymbol, currentScope);
+					tagRef.augmentScope(currentNode, currentScope);
 				}
 			}
 
-			if (currentSymbol.sourceType == 'array') {
-				const chunkParam = getParameter('chunk', currentSymbol);
+			if (currentNode.sourceType == 'array') {
+				const chunkParam = currentNode.findParameter('chunk');
 				let injectContextualArrayData = true;
 
-				if (currentSymbol.belongsTo != null) {
-					if (IgnoreArrayContextualData.includes(currentSymbol.belongsTo.name)) {
+				if (currentNode.parent != null && currentNode.parent instanceof AntlersNode) {
+					if (IgnoreArrayContextualData.includes(currentNode.parent.runtimeName())) {
 						injectContextualArrayData = false;
 					}
 				}
 
 				if (typeof chunkParam !== 'undefined' && chunkParam !== null) {
-					if (currentSymbol.currentScope.parentScope != null && (currentSymbol.currentScope.parentScope.hasList(currentSymbol.tagPart) ||
-						currentScope.referencesArray(currentSymbol.tagPart))) {
-						const adjustedScope = currentSymbol.currentScope.parentScope.copy();
-						let thisArrayValues = adjustedScope.liftList(currentSymbol.tagPart) as Scope;
+					if (currentNode.currentScope.parentScope != null && (currentNode.currentScope.parentScope.hasList(currentNode.runtimeName()) ||
+						currentScope.referencesArray(currentNode.runtimeName()))) {
+						const adjustedScope = currentNode.currentScope.parentScope.copy();
+						let thisArrayValues = adjustedScope.liftList(currentNode.runtimeName()) as Scope;
 
-						if (thisArrayValues == null && currentScope.referencesArray(currentSymbol.tagPart)) {
+						if (thisArrayValues == null && currentScope.referencesArray(currentNode.runtimeName())) {
 							thisArrayValues = new Scope(currentScope.statamicProject);
 
 							if (injectContextualArrayData) {
-								const symbolArrayVariables = makeArrayVariables(currentSymbol);
+								const symbolArrayVariables = makeArrayVariables(currentNode);
 
 								for (let i = 0; i < symbolArrayVariables.length; i++) {
 									const checkVar = symbolArrayVariables[i];
 
-									if (adjustedScope.wasIntroducedBySymbol(checkVar.name, currentSymbol)) {
-										adjustedScope.removeThroughIntroduction(checkVar.name, currentSymbol);
+									if (adjustedScope.wasIntroducedBySymbol(checkVar.name, currentNode)) {
+										adjustedScope.removeThroughIntroduction(checkVar.name, currentNode);
 									}
 								}
 
@@ -855,7 +353,7 @@ export class ScopeEngine {
 							}
 						} else {
 							if (injectContextualArrayData) {
-								adjustedScope.addVariables(makeArrayVariables(currentSymbol));
+								adjustedScope.addVariables(makeArrayVariables(currentNode));
 							}
 						}
 
@@ -864,64 +362,97 @@ export class ScopeEngine {
 						currentScope = adjustedScope;
 						activeScopes.pop();
 						activeScopes.push(currentScope);
-						currentSymbol.currentScope = adjustedScope;
+						currentNode.currentScope = adjustedScope;
 					} else {
-						const scopeParam = getParameter('scope', currentSymbol);
+						const scopeParam = currentNode.findParameter('scope');
 
 						if (typeof scopeParam !== 'undefined' && scopeParam !== null) {
-							if (currentSymbol.currentScope != null && currentSymbol.currentScope.hasList(scopeParam.value) && currentSymbol.scopeName != null) {
-								const adjustedScope = currentSymbol.currentScope.copy(),
+							if (currentNode.currentScope != null && currentNode.currentScope.hasList(scopeParam.value) && currentNode.scopeName != null) {
+								const adjustedScope = currentNode.currentScope.copy(),
 									injectScope = adjustedScope.ancestor().copy(),
-									thisArrayValues = adjustedScope.liftList(currentSymbol.scopeName) as Scope;
+									thisArrayValues = adjustedScope.liftList(currentNode.scopeName) as Scope;
 
 								if (injectContextualArrayData) {
-									adjustedScope.addVariables(makeArrayVariables(currentSymbol));
+									adjustedScope.addVariables(makeArrayVariables(currentNode));
 								}
 
 								// Throw away the existing list here.
-								injectScope.liftList(currentSymbol.scopeName);
-								adjustedScope.addScopeList(currentSymbol.scopeName, thisArrayValues);
+								injectScope.liftList(currentNode.scopeName);
+								adjustedScope.addScopeList(currentNode.scopeName, thisArrayValues);
 								injectScope.addScopeList('chunk', adjustedScope);
 
 								currentScope = injectScope;
 								activeScopes.pop();
 								activeScopes.push(currentScope);
-								currentSymbol.currentScope = injectScope;
+								currentNode.currentScope = injectScope;
 							}
 						}
 					}
 				} else {
-					if (currentSymbol.scopeVariable != null && currentSymbol.scopeVariable.sourceField == null) {
+					if (currentNode.scopeVariable != null && currentNode.scopeVariable.sourceField == null) {
 						if (injectContextualArrayData) {
-							currentScope.addVariables(makeArrayVariables(currentSymbol));
-							currentScope.addVariables(makeLoopVariables(currentSymbol));
+							currentScope.addVariables(makeArrayVariables(currentNode));
+							currentScope.addVariables(makeLoopVariables(currentNode));
 						}
 					}
 				}
 			}
 
-			if (ChecksForFieldReferences.includes(currentSymbol.name)) {
-				const analysisResults = ConditionScopeInjections.analyze(currentSymbol, symbols);
+			if (popScopeIds.includes(currentNode.id())) {
+				if (currentNode.parent != null && currentNode.parent instanceof AntlersNode) {
+					currentNode.currentScope = currentNode.parent.currentScope;
+				}
+			}
 
-				if (analysisResults.length > 0) {
-					currentScope = currentScope.copy();
-					currentScope.addBlueprintFields(currentSymbol, analysisResults);
+			if (currentNode.currentScope != null && currentNode.runtimeNodes.length > 0) {
+				currentNode.runtimeNodes.forEach((runtimeNode) => {
+					if (runtimeNode instanceof VariableNode) {
+						if (currentNode.currentScope?.hasValue(runtimeNode.name)) {
+							const varRef = currentNode.currentScope.findReferenceWithField(runtimeNode.name);
 
-					if (currentSymbol.isClosedBy != null) {
-						currentScopeParts.push(currentSymbol.id);
-						popScopeIds.push(currentSymbol.isClosedBy.id);
-						activeScopes.push(currentScope);
+							runtimeNode.currentScope = currentNode.currentScope;
+							runtimeNode.scopeName = currentNode.scopeName;
+							runtimeNode.scopeVariable = varRef;
+						}
+					}
+				});
+			}
+
+			if (ChecksForFieldReferences.includes(currentNode.runtimeName())) {
+				if (currentNode.runtimeNodes.length == 3) {
+					if (currentNode.runtimeNodes[0] instanceof VariableNode &&
+						currentNode.runtimeNodes[1] instanceof EqualCompOperator &&
+						currentNode.runtimeNodes[2] instanceof StringValueNode) {
+						if (currentNode.runtimeNodes[0].scopeVariable != null &&
+							currentNode.runtimeNodes[0].scopeVariable.sourceField != null) {
+							const targetVar = currentNode.runtimeNodes[0].scopeVariable,
+								checkValue = currentNode.runtimeNodes[2].value,
+								targetField = targetVar.sourceField as IBlueprintField;
+
+							if (targetField.sets != null) {
+								for (let setIndex = 0; setIndex < targetField.sets.length; setIndex++) {
+									const thisSet = targetField.sets[setIndex];
+
+									if (thisSet.handle == checkValue && thisSet.fields != null) {
+										currentScope = currentScope.copy();
+										currentScope.addBlueprintFields(currentNode, thisSet.fields);
+
+										if (currentNode.isClosedBy != null && !currentNode.isSelfClosing) {
+											currentScopeParts.push(currentNode.id());
+											popScopeIds.push(currentNode.isClosedBy.id());
+											activeScopes.push(currentScope);
+										}
+
+										break;
+									}
+								}
+							}
+						}
 					}
 				}
 			}
 
-			if (popScopeIds.includes(currentSymbol.id)) {
-				if (currentSymbol.belongsTo != null) {
-					currentSymbol.currentScope = currentSymbol.belongsTo.currentScope;
-				}
-			}
-
-			this.lastSymbolId = currentSymbol.id;
+			this.lastSymbolId = currentNode.id();
 
 			const scopePath = currentScopeParts.join('/');
 			resolvedPaths.push(scopePath);

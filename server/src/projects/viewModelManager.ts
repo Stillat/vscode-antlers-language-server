@@ -1,61 +1,68 @@
-import { trimLeft } from '../utils/strings';
-import { IBlueprintField } from './blueprints';
-import { IManifestViewModel } from './manifestManager';
+import { trimLeft } from "../utils/strings";
+import { IBlueprintField } from './blueprints/fields';
+import { IManifestViewModel } from './manifest/manifestTypes';
 
-export class ViewModelManager {
-	static viewModels: Map<string, IManifestViewModel> = new Map();
+class ViewModelManager {
+    private viewModels: Map<string, IManifestViewModel> = new Map();
 
-	static reset() {
-		this.viewModels.clear();
-	}
+    public static instance: ViewModelManager | null = null;
 
-	static registerViewModel(viewModel: IManifestViewModel) {
-		this.viewModels.set(viewModel.fqn, viewModel);
-	}
+    reset() {
+        this.viewModels.clear();
+    }
 
-	static registerViewModels(viewModels: IManifestViewModel[]) {
-		for (let i = 0; i < viewModels.length; i++) {
-			this.registerViewModel(viewModels[i]);
-		}
-	}
+    registerViewModel(viewModel: IManifestViewModel) {
+        this.viewModels.set(viewModel.fqn, viewModel);
+    }
 
-	static hasViewModel(qualifiedName: string): boolean {
-		const checkName = trimLeft(qualifiedName, '\\');
+    registerViewModels(viewModels: IManifestViewModel[]) {
+        for (let i = 0; i < viewModels.length; i++) {
+            this.registerViewModel(viewModels[i]);
+        }
+    }
 
-		return this.viewModels.has(checkName);
-	}
+    hasViewModel(qualifiedName: string): boolean {
+        const checkName = trimLeft(qualifiedName, "\\");
 
-	static getViewModelFields(qualifiedName: string): IBlueprintField[] {
-		let checkName = qualifiedName;
+        return this.viewModels.has(checkName);
+    }
 
-		if (checkName.startsWith('\\')) {
-			checkName = checkName.substr(1);
-		}
+    getViewModelFields(qualifiedName: string): IBlueprintField[] {
+        let checkName = qualifiedName;
 
-		checkName = checkName.replace('\\\\', '\\');
+        if (checkName.startsWith("\\")) {
+            checkName = checkName.substr(1);
+        }
 
-		if (this.viewModels.has(checkName) == false) {
-			return [];
-		}
+        checkName = checkName.replace("\\\\", "\\");
 
-		const fields: IBlueprintField[] = [],
-			viewModel = this.viewModels.get(checkName) as IManifestViewModel;
+        if (this.viewModels.has(checkName) == false) {
+            return [];
+        }
 
-		for (let i = 0; i < viewModel.fields.length; i++) {
-			fields.push({
-				blueprintName: checkName,
-				displayName: viewModel.fields[i],
-				import: null,
-				instructionText: null,
-				maxItems: null,
-				name: viewModel.fields[i],
-				refFieldSetField: null,
-				sets: null,
-				type: '*'
-			});
-		}
+        const fields: IBlueprintField[] = [],
+            viewModel = this.viewModels.get(checkName) as IManifestViewModel;
 
-		return fields;
-	}
+        for (let i = 0; i < viewModel.fields.length; i++) {
+            fields.push({
+                blueprintName: checkName,
+                displayName: viewModel.fields[i],
+                import: null,
+                instructionText: null,
+                maxItems: null,
+                name: viewModel.fields[i],
+                refFieldSetField: null,
+                sets: null,
+                type: "*",
+            });
+        }
 
+        return fields;
+    }
 }
+
+if (typeof ViewModelManager.instance == 'undefined' || ViewModelManager.instance == null) {
+    ViewModelManager.instance = new ViewModelManager();
+}
+
+export default ViewModelManager;

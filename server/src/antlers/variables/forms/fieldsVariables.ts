@@ -1,14 +1,14 @@
-import { IScopeVariable } from '../../scope/engine';
-import { ISymbol } from '../../types';
+import { AntlersNode } from '../../../runtime/nodes/abstractNode';
+import { IScopeVariable } from '../../scope/types';
 
-export function makeFieldsVariables(symbol: ISymbol): IScopeVariable[] {
-	return [
-		{ name: 'handle', dataType: 'string', sourceName: '*internal.forms.fields', sourceField: null, introducedBy: symbol },
-		{ name: 'display', dataType: 'string', sourceName: '*internal.forms.fields', sourceField: null, introducedBy: symbol },
-		{ name: 'type', dataType: 'string', sourceName: '*internal.forms.fields', sourceField: null, introducedBy: symbol },
-		{ name: 'field', dataType: 'string', sourceName: '*internal.forms.fields', sourceField: null, introducedBy: symbol },
-		{ name: 'error', dataType: 'string', sourceName: '*internal.forms.fields', sourceField: null, introducedBy: symbol },
-		{ name: 'instructions', dataType: 'string', sourceName: '*internal.forms.fields', sourceField: null, introducedBy: symbol },
-		{ name: 'old', dataType: 'string', sourceName: '*internal.forms.fields', sourceField: null, introducedBy: symbol },
-	];
+export function makeFieldsVariables(node: AntlersNode): IScopeVariable[] {
+    return [
+        { name: 'handle', dataType: 'string', sourceName: '*internal.forms.fields', sourceField: null, introducedBy: node },
+        { name: 'display', dataType: 'string', sourceName: '*internal.forms.fields', sourceField: null, introducedBy: node },
+        { name: 'type', dataType: 'string', sourceName: '*internal.forms.fields', sourceField: null, introducedBy: node },
+        { name: 'field', dataType: 'string', sourceName: '*internal.forms.fields', sourceField: null, introducedBy: node },
+        { name: 'error', dataType: 'string', sourceName: '*internal.forms.fields', sourceField: null, introducedBy: node },
+        { name: 'instructions', dataType: 'string', sourceName: '*internal.forms.fields', sourceField: null, introducedBy: node },
+        { name: 'old', dataType: 'string', sourceName: '*internal.forms.fields', sourceField: null, introducedBy: node },
+    ];
 }

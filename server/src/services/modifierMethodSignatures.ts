@@ -1,65 +1,67 @@
-import { MarkupKind, ParameterInformation, SignatureHelp, SignatureHelpParams, SignatureInformation } from 'vscode-languageserver-protocol';
-import { getActiveModifier } from '../antlers/modifierAnalyzer';
-import { makeProviderRequest } from '../providers/providerParameters';
+import {
+    MarkupKind,
+    ParameterInformation,
+    SignatureHelp,
+    SignatureHelpParams
+} from "vscode-languageserver-protocol";
+import ModifierManager from '../antlers/modifierManager';
+import { IModifier } from '../antlers/modifierTypes';
+import { makeProviderRequest } from "../providers/providerParameters";
 
 const EmptySignatureHelp: SignatureHelp = {
-	activeSignature: null,
-	activeParameter: null,
-	signatures: []
+    activeSignature: null,
+    activeParameter: null,
+    signatures: [],
 };
 
 export function handleSignatureHelpRequest(params: SignatureHelpParams): SignatureHelp {
-	const docPath = decodeURIComponent(params.textDocument.uri),
-		providerRequest = makeProviderRequest(params.position, docPath);
+    const docPath = decodeURIComponent(params.textDocument.uri),
+        providerRequest = makeProviderRequest(params.position, docPath);
 
-	if (providerRequest.symbolsInScope.length > 0) {
-		const lastSymbolInScope = providerRequest.symbolsInScope[providerRequest.symbolsInScope.length - 1];
+    if (providerRequest != null && providerRequest.context != null) {
+        if (providerRequest.context.modifierContext != null) {
+            if (ModifierManager.instance?.hasModifier(providerRequest.context.modifierContext.name)) {
+                const modifierName = providerRequest.context.modifierContext.name,
+                    modifierRef = ModifierManager.instance.getModifier(modifierName) as IModifier,
+                    sigParameters: ParameterInformation[] = [];
 
-		if (lastSymbolInScope.modifiers != null) {
-			const activeModifer = getActiveModifier(lastSymbolInScope, params.position);
+                if (modifierRef != null) {
+                    modifierRef.parameters.forEach((param) => {
+                        sigParameters.push({
+                            label: param.name,
+                            documentation: param.description
+                        });
+                    });
+                }
 
-			if (activeModifer != null && activeModifer.modifier.modifier != null) {
-				const modifierParameters: ParameterInformation[] = [];
-				let activeParam: number | null = activeModifer.activeParam ?? 0;
+                let modifierParamIndex = providerRequest.context.modifierContext.activeValueIndex;
 
-				for (let i = 0; i < activeModifer.modifier.modifier.parameters.length; i++) {
-					const thisParam = activeModifer.modifier.modifier.parameters[i];
+                if (modifierParamIndex > sigParameters.length) {
+                    modifierParamIndex = sigParameters.length - 1;
+                }
 
-					modifierParameters.push({
-						label: thisParam.name,
-						documentation: thisParam.description
-					});
-				}
+                if (modifierParamIndex < 0 || sigParameters.length == 0) {
+                    modifierParamIndex = 0;
+                }
 
-				if (activeParam > modifierParameters.length) {
-					activeParam = modifierParameters.length - 1;
-				}
+                return {
+                    signatures: [
+                        {
+                            label: modifierRef.name,
+                            documentation: {
+                                kind: MarkupKind.Markdown,
+                                value: modifierRef.description,
+                            },
+                            parameters: sigParameters,
+                            activeParameter: modifierParamIndex,
+                        },
+                    ],
+                    activeParameter: modifierParamIndex,
+                    activeSignature: 0,
+                };
+            }
+        }
+    }
 
-				if (activeParam < 0 || modifierParameters.length == 0) {
-					activeParam = null;
-				}
-
-				const sigActiveParam: number | undefined = activeParam as any as number | undefined;
-
-				return {
-					signatures: [
-						{
-							label: activeModifer.modifier.modifier.name,
-							documentation: {
-								kind: MarkupKind.Markdown,
-								value: activeModifer.modifier.modifier.description
-							},
-							parameters: modifierParameters,
-							activeParameter: sigActiveParam
-						}
-					],
-					activeParameter: activeParam,
-					activeSignature: 0
-				};
-
-			}
-		}
-	}
-
-	return EmptySignatureHelp;
+    return EmptySignatureHelp;
 }

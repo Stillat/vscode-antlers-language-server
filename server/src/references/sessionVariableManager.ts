@@ -1,41 +1,57 @@
-import { SessionVariableContext } from '../antlers/tags/core/session';
+import { SessionVariableContext } from "../antlers/tags/core/session";
 
-export class SessionVariableManager {
-	static knownVariables: Map<string, Map<string, SessionVariableContext>> = new Map();
+class SessionVariableManager {
+    private knownVariables: Map<string, Map<string, SessionVariableContext>> =
+        new Map();
 
-	static registerDocumentSessionVariables(fileContext: string, contexts: SessionVariableContext[]) {
-		if (!this.knownVariables.has(fileContext)) {
-			this.knownVariables.set(fileContext, new Map());
-		}
+    public static instance: SessionVariableManager | null = null;
 
-		const fileVars = this.knownVariables.get(fileContext) as Map<string, SessionVariableContext>;
-		fileVars.clear();
+    registerDocumentSessionVariables(
+        fileContext: string,
+        contexts: SessionVariableContext[]
+    ) {
+        if (!this.knownVariables.has(fileContext)) {
+            this.knownVariables.set(fileContext, new Map());
+        }
 
-		for (let i = 0; i < contexts.length; i++) {
-			const symbol = contexts[i].symbol;
+        const fileVars = this.knownVariables.get(fileContext) as Map<
+            string,
+            SessionVariableContext
+        >;
+        fileVars.clear();
 
-			if (symbol.parameterCache != null) {
-				for (let j = 0; j < symbol.parameterCache.length; j++) {
-					const thisParam = symbol.parameterCache[j];
+        for (let i = 0; i < contexts.length; i++) {
+            const node = contexts[i].node;
 
-					fileVars.set(thisParam.name, contexts[i]);
-				}
-			}
-		}
-	}
+            if (node.hasParameters) {
+                for (let j = 0; j < node.parameters.length; j++) {
+                    const thisParam = node.parameters[j];
 
-	static getKnownSessionVariableNames(): string[] {
-		const variableNames: string[] = [];
+                    fileVars.set(thisParam.name, contexts[i]);
+                }
+            }
+        }
+    }
 
-		this.knownVariables.forEach((mapping: Map<string, SessionVariableContext>) => {
-			mapping.forEach((val: SessionVariableContext, name: string) => {
-				if (variableNames.includes(name) == false) {
-					variableNames.push(name);
-				}
-			});
-		});
+    getKnownSessionVariableNames(): string[] {
+        const variableNames: string[] = [];
 
-		return variableNames;
-	}
+        this.knownVariables.forEach(
+            (mapping: Map<string, SessionVariableContext>) => {
+                mapping.forEach((val: SessionVariableContext, name: string) => {
+                    if (variableNames.includes(name) == false) {
+                        variableNames.push(name);
+                    }
+                });
+            }
+        );
 
+        return variableNames;
+    }
 }
+
+if (typeof SessionVariableManager.instance == 'undefined' || SessionVariableManager.instance == null) {
+    SessionVariableManager.instance = new SessionVariableManager();
+}
+
+export default SessionVariableManager;

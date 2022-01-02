@@ -1,95 +1,116 @@
-import { StatamicProject, currentStructure } from '../../projects/statamicProject';
-import { trimLeft } from '../../utils/strings';
-import { ISymbol } from '../types';
-import { Scope } from './engine';
+import { IProjectDetailsProvider } from '../../projects/projectDetailsProvider';
+import { AntlersNode } from '../../runtime/nodes/abstractNode';
+import { trimLeft } from "../../utils/strings";
+import { Scope } from './scope';
 
-export class InjectionManager {
-	static fileInjections: Map<string, Map<string, ISymbol[]>> = new Map();
+class InjectionManager {
+    private fileInjections: Map<string, Map<string, AntlersNode[]>> = new Map();
+    private project: IProjectDetailsProvider | null = null;
 
-	static registerInjections(fileName: string, symbols: ISymbol[]) {
-		if (symbols.length == 0) {
-			return;
-		}
+    public static instance: InjectionManager | null = null;
 
-		// Only register symbols that have items in the parameter cache.
-		const newSymbols: ISymbol[] = [];
+    updateProject(project: IProjectDetailsProvider) {
+        this.project = project;
+    }
 
-		for (let i = 0; i < symbols.length; i++) {
-			const thisSymbol = symbols[i];
+    registerInjections(fileName: string, nodes: AntlersNode[]) {
+        if (nodes.length == 0) {
+            return;
+        }
 
-			if (thisSymbol.parameterCache != null && thisSymbol.parameterCache.length > 0) {
-				newSymbols.push(thisSymbol);
-			}
-		}
+        // Only register nodes that have items in the parameter cache.
+        const newNodes: AntlersNode[] = [];
 
-		if (newSymbols.length > 0) {
-			const partialName = newSymbols[0].methodName;
+        for (let i = 0; i < nodes.length; i++) {
+            const thisNode = nodes[i];
 
-			if (partialName != null && currentStructure != null) {
-				const projectPartial = currentStructure.findPartial(partialName);
+            if (thisNode.hasParameters) {
+                newNodes.push(thisNode);
+            }
+        }
 
-				if (projectPartial != null) {
+        if (newNodes.length > 0) {
+            const partialName = newNodes[0].getMethodNameValue();
 
-					if (!this.fileInjections.has(projectPartial.documentUri)) {
-						this.fileInjections.set(projectPartial.documentUri, new Map());
-					}
+            if (partialName != null && this.project != null) {
+                const projectPartial = this.project.findPartial(partialName);
 
-					const partialFiles = this.fileInjections.get(projectPartial.documentUri) as Map<string, ISymbol[]>;
+                if (projectPartial != null) {
+                    if (!this.fileInjections.has(projectPartial.documentUri)) {
+                        this.fileInjections.set(projectPartial.documentUri, new Map());
+                    }
 
-					partialFiles.set(fileName, newSymbols);
-				}
-			}
-		}
-	}
+                    const partialFiles = this.fileInjections.get(
+                        projectPartial.documentUri
+                    ) as Map<string, AntlersNode[]>;
 
-	static hasAvailableInjections(documentUri: string): boolean {
-		return this.fileInjections.has(documentUri);
-	}
+                    partialFiles.set(fileName, newNodes);
+                }
+            }
+        }
+    }
 
-	static getScopeInjection(documentUri: string, project: StatamicProject): Scope {
-		const newScope = new Scope(project);
+    hasAvailableInjections(documentUri: string): boolean {
+        return this.fileInjections.has(documentUri);
+    }
 
-		newScope.name = '*injection*';
+    getScopeInjection(
+        documentUri: string,
+        project: IProjectDetailsProvider
+    ): Scope {
+        const newScope = new Scope(project);
 
-		const injections = this.fileInjections.get(documentUri) as Map<string, ISymbol[]>;
+        newScope.name = "*injection*";
 
-		injections.forEach((symbols: ISymbol[], file: string) => {
-			for (let i = 0; i < symbols.length; i++) {
-				const symbol = symbols[i];
+        const injections = this.fileInjections.get(documentUri) as Map<
+            string,
+            AntlersNode[]
+        >;
 
-				if (symbol.parameterCache != null && symbol.parameterCache.length > 0) {
-					for (let j = 0; j < symbol.parameterCache.length; j++) {
-						const thisParam = symbol.parameterCache[j];
+        injections.forEach((nodes: AntlersNode[], file: string) => {
+            for (let i = 0; i < nodes.length; i++) {
+                const node = nodes[i];
 
-						if (thisParam.isDynamicBinding == false && thisParam.containsInterpolation == false) {
-							newScope.addVariable({
-								dataType: 'string',
-								name: thisParam.name,
-								sourceField: null,
-								sourceName: 'scope.injection',
-								introducedBy: symbol
-							});
-						} else if (thisParam.isDynamicBinding) {
-							if (symbol.currentScope != null) {
-								if (symbol.currentScope.hasListInHistory(thisParam.value)) {
-									const injectList = symbol.currentScope.findNestedScope(thisParam.value);
+                if (node.hasParameters) {
+                    for (let j = 0; j < node.parameters.length; j++) {
+                        const thisParam = node.parameters[j];
 
-									if (injectList != null) {
-										const adjustedName = trimLeft(thisParam.name, ':'),
-											nestedInjection = injectList.copy();
+                        if (thisParam.containsSimpleValue()) {
+                            newScope.addVariable({
+                                dataType: "string",
+                                name: thisParam.name,
+                                sourceField: null,
+                                sourceName: "scope.injection",
+                                introducedBy: node,
+                            });
+                        } else if (thisParam.isVariableReference) {
+                            if (node.currentScope != null) {
+                                if (node.currentScope.hasListInHistory(thisParam.value)) {
+                                    const injectList = node.currentScope.findNestedScope(
+                                        thisParam.value
+                                    );
 
-										nestedInjection.name = adjustedName;
-										newScope.addScopeList(adjustedName, injectList);
-									}
-								}
-							}
-						}
-					}
-				}
-			}
-		});
+                                    if (injectList != null) {
+                                        const adjustedName = trimLeft(thisParam.name, ":"),
+                                            nestedInjection = injectList.copy();
 
-		return newScope;
-	}
+                                        nestedInjection.name = adjustedName;
+                                        newScope.addScopeList(adjustedName, injectList);
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        });
 
+        return newScope;
+    }
 }
+
+if (typeof InjectionManager.instance == 'undefined' || InjectionManager.instance == null) {
+    InjectionManager.instance = new InjectionManager();
+}
+
+export default InjectionManager;

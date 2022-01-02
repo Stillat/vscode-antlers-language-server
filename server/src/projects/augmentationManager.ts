@@ -1,85 +1,100 @@
-import { IBlueprintField } from './blueprints';
-import { IContributedField, IManifestAugmentationContribution } from './manifestManager';
+import { IBlueprintField } from './blueprints/fields';
+import { IManifestAugmentationContribution, IContributedField } from './manifest/manifestTypes';
 
-export class AugmentationManager {
-	static blueprintAugmentations: Map<string, IManifestAugmentationContribution[]> = new Map();
-	static collectionAugmentations: Map<string, IManifestAugmentationContribution[]> = new Map();
+class AugmentationManager {
+    private blueprintAugmentations: Map<string, IManifestAugmentationContribution[]> = new Map();
+    private collectionAugmentations: Map<string, IManifestAugmentationContribution[]> = new Map();
 
-	static reset() {
-		this.blueprintAugmentations.clear();
-		this.collectionAugmentations.clear();
-	}
+    public static instance: AugmentationManager | null = null;
 
-	static registerAugmentation(augmentation: IManifestAugmentationContribution) {
-		for (let i = 0; i < augmentation.collections.length; i++) {
-			if (this.collectionAugmentations.has(augmentation.collections[i]) == false) {
-				this.collectionAugmentations.set(augmentation.collections[i], []);
-			}
+    reset() {
+        this.blueprintAugmentations.clear();
+        this.collectionAugmentations.clear();
+    }
 
-			this.collectionAugmentations.get(augmentation.collections[i])?.push(augmentation);
-		}
+    registerAugmentation(augmentation: IManifestAugmentationContribution) {
+        for (let i = 0; i < augmentation.collections.length; i++) {
+            if (
+                this.collectionAugmentations.has(augmentation.collections[i]) == false
+            ) {
+                this.collectionAugmentations.set(augmentation.collections[i], []);
+            }
 
-		for (let i = 0; i < augmentation.blueprints.length; i++) {
-			if (this.blueprintAugmentations.has(augmentation.blueprints[i]) == false) {
-				this.blueprintAugmentations.set(augmentation.blueprints[i], []);
-			}
+            this.collectionAugmentations
+                .get(augmentation.collections[i])
+                ?.push(augmentation);
+        }
 
-			this.blueprintAugmentations.get(augmentation.blueprints[i])?.push(augmentation);
-		}
-	}
+        for (let i = 0; i < augmentation.blueprints.length; i++) {
+            if (
+                this.blueprintAugmentations.has(augmentation.blueprints[i]) == false
+            ) {
+                this.blueprintAugmentations.set(augmentation.blueprints[i], []);
+            }
 
-	static registerAugmentations(augmentations: IManifestAugmentationContribution[]) {
-		for (let i = 0; i < augmentations.length; i++) {
-			this.registerAugmentation(augmentations[i]);
-		}
-	}
+            this.blueprintAugmentations.get(augmentation.blueprints[i])?.push(augmentation);
+        }
+    }
 
-	private static getType(types: string[]): string {
-		if (types.length == 0) {
-			return '*';
-		}
+    registerAugmentations(augmentations: IManifestAugmentationContribution[]) {
+        for (let i = 0; i < augmentations.length; i++) {
+            this.registerAugmentation(augmentations[i]);
+        }
+    }
 
-		return types[0];
-	}
+    getType(types: string[]): string {
+        if (types.length == 0) {
+            return "*";
+        }
 
-	static makeFields(contributions: IManifestAugmentationContribution[]): IBlueprintField[] {
-		const fields: IBlueprintField[] = [];
+        return types[0];
+    }
 
-		for (let i = 0; i < contributions.length; i++) {
-			const thisContribution = contributions[i];
+    makeFields(contributions: IManifestAugmentationContribution[]): IBlueprintField[] {
+        const fields: IBlueprintField[] = [];
 
-			for (let j = 0; j < thisContribution.fields.length; j++) {
-				const thisField = thisContribution.fields[j];
+        for (let i = 0; i < contributions.length; i++) {
+            const thisContribution = contributions[i];
 
-				fields.push(this.makeField(thisContribution.name, thisField));
-			}
-		}
+            for (let j = 0; j < thisContribution.fields.length; j++) {
+                const thisField = thisContribution.fields[j];
 
-		return fields;
-	}
+                fields.push(this.makeField(thisContribution.name, thisField));
+            }
+        }
 
-	static makeField(name: string, field: IContributedField): IBlueprintField {
-		return {
-			blueprintName: name,
-			displayName: field.name,
-			instructionText: field.description,
-			import: null,
-			maxItems: null,
-			name: field.name,
-			refFieldSetField: null,
-			sets: null,
-			type: this.getType(field.returnTypes)
-		};
-	}
+        return fields;
+    }
 
-	static getCollectionFields(collectionName: string): IBlueprintField[] {
-		if (this.collectionAugmentations.has(collectionName) == false) {
-			return [];
-		}
+    makeField(name: string, field: IContributedField): IBlueprintField {
+        return {
+            blueprintName: name,
+            displayName: field.name,
+            instructionText: field.description,
+            import: null,
+            maxItems: null,
+            name: field.name,
+            refFieldSetField: null,
+            sets: null,
+            type: this.getType(field.returnTypes),
+        };
+    }
 
-		const contributions = this.collectionAugmentations.get(collectionName) as IManifestAugmentationContribution[];
+    getCollectionFields(collectionName: string): IBlueprintField[] {
+        if (this.collectionAugmentations.has(collectionName) == false) {
+            return [];
+        }
 
-		return this.makeFields(contributions);
-	}
+        const contributions = this.collectionAugmentations.get(
+            collectionName
+        ) as IManifestAugmentationContribution[];
 
+        return this.makeFields(contributions);
+    }
 }
+
+if (typeof AugmentationManager.instance == 'undefined' || AugmentationManager.instance == null) {
+    AugmentationManager.instance = new AugmentationManager();
+}
+
+export default AugmentationManager;

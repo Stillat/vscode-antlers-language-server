@@ -1,17 +1,23 @@
-import { IReportableError, ISymbol } from '../../antlers/types';
-import { IDiagnosticsHandler } from '../diagnosticsManager';
-import { symbolError } from '../utils';
+import { AntlersError, ErrrorLevel } from '../../runtime/errors/antlersError';
+import { AntlersErrorCodes } from '../../runtime/errors/antlersErrorCodes';
+import { AntlersNode } from '../../runtime/nodes/abstractNode';
+import { IDiagnosticsHandler } from '../diagnosticsHandler';
 
 const DoubleColonHandler: IDiagnosticsHandler = {
-	checkSymbol(symbol: ISymbol) {
-		const errors: IReportableError[] = [];
+    checkNode(node: AntlersNode) {
+        const errors: AntlersError[] = [];
 
-		if (symbol.runtimeName.includes('::')) {
-			errors.push(symbolError(':: in tag part leads to ErrorException call_user_func() runtime exception.', symbol));
-		}
+        if (node.runtimeName().includes('::')) {
+            errors.push(AntlersError.makeSyntaxError(
+                AntlersErrorCodes.LINT_DOUBLE_COLON_IN_TAG_IDENTIFIER,
+                node,
+                ':: in tag part leads to ErrorException call_user_func() runtime exception.',
+                ErrrorLevel.Warning
+            ));
+        }
 
-		return errors;
-	}
+        return errors;
+    }
 };
 
 export default DoubleColonHandler;

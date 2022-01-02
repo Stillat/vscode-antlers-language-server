@@ -1,31 +1,40 @@
-import { CompletionItem } from 'vscode-languageserver-types';
-import { IBlueprintField } from '../../projects/blueprints';
-import { ISuggestionRequest } from '../../suggestions/suggestionManager';
-import { Scope } from '../scope/engine';
-import { ISymbol } from '../types';
-import CoreFieldtypes from './core/coreFieldtypes';
+import { IFieldtypeInjection } from "../../projects/fieldsets/fieldtypeInjection";
+import CoreFieldtypes from "./core/coreFieldtypes";
 
-export interface IFieldtypeInjection {
-	name: string,
-	augmentScope(symbol: ISymbol, scope: Scope): void,
-	injectCompletions?(params: ISuggestionRequest, blueprintField: IBlueprintField, symbol: ISymbol): CompletionItem[]
+class FieldtypeManager {
+    private fieldTypes: Map<string, IFieldtypeInjection> = new Map();
+
+    public static instance: FieldtypeManager | null = null;
+
+    getFieldTypes(): Map<string, IFieldtypeInjection> {
+        return this.fieldTypes;
+    }
+
+    getFieldType(name: string): IFieldtypeInjection | undefined | null {
+        return this.fieldTypes.get(name);
+    }
+
+    registerFieldtypes(types: IFieldtypeInjection[]) {
+        for (let i = 0; i < types.length; i++) {
+            this.fieldTypes.set(types[i].name, types[i]);
+        }
+    }
+
+    loadCoreFieldtypes() {
+        this.registerFieldtypes(CoreFieldtypes);
+    }
+
+    hasFieldtype(name: string): boolean {
+        return this.fieldTypes.has(name);
+    }
 }
 
-export class FieldtypeManager {
-	static fieldTypes: Map<string, IFieldtypeInjection> = new Map();
-
-	static registerFieldtypes(types: IFieldtypeInjection[]) {
-		for (let i = 0; i < types.length; i++) {
-			this.fieldTypes.set(types[i].name, types[i]);
-		}
-	}
-
-	static loadCoreFieldtypes() {
-		this.registerFieldtypes(CoreFieldtypes);
-	}
-
-	static hasFieldtype(name: string): boolean {
-		return this.fieldTypes.has(name);
-	}
-
+if (
+    typeof FieldtypeManager.instance == "undefined" ||
+    FieldtypeManager.instance == null
+) {
+    FieldtypeManager.instance = new FieldtypeManager();
+    FieldtypeManager.instance.loadCoreFieldtypes();
 }
+
+export default FieldtypeManager;

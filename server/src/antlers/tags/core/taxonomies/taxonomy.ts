@@ -6,17 +6,17 @@ import { resolveTaxonomyCompletions } from './resolveCompletionItems';
 import { resolveTaxonomyParameterCompletions } from './resolveTaxonomyParameterCompletions';
 
 const TaxonomyTag: IAntlersTag = {
-	tagName: 'taxonomy',
-	allowsArbitraryParameters: true,
-	allowsContentClose: false,
-	requiresClose: true,
-	hideFromCompletions: false,
-	injectParentScope: false,
-	parameters: TaxonomyParameters,
-	resolveDynamicParameter: returnDynamicParameter,
-	resolveCompletionItems: resolveTaxonomyCompletions,
-	resovleParameterCompletionItems: resolveTaxonomyParameterCompletions,
-	augmentScope: augmentTaxonomyScope
+    tagName: 'taxonomy',
+    allowsArbitraryParameters: true,
+    allowsContentClose: false,
+    requiresClose: true,
+    hideFromCompletions: false,
+    injectParentScope: false,
+    parameters: TaxonomyParameters,
+    resolveDynamicParameter: returnDynamicParameter,
+    resolveCompletionItems: resolveTaxonomyCompletions,
+    resovleParameterCompletionItems: resolveTaxonomyParameterCompletions,
+    augmentScope: augmentTaxonomyScope
 };
 
 export default TaxonomyTag;

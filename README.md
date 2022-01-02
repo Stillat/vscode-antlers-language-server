@@ -9,7 +9,6 @@ This extension provides the following awesome capabilities:
 * Basic syntax highlighting, *and* parser-driving semantic highlighting
 * Modifier signature suggestions
 * Intelligent suggestions based on your unique project's blueprints, collections, and more!
-* An extensive add-on system
 * Support for core Statamic 3 tags, modifiers, and more!
 
 ## Installation
@@ -23,6 +22,36 @@ Want to take your install even further? Consider checking out the documentation 
 ## Change Log
 
 Bugs fixed, what's new, and more! :)
+
+### v1.2.0
+
+#### User Experience Updates
+
+* Dramatically improves accuracy of the out-of-box syntax highlighting experience
+  * Antlers is now highlighted within HTML attributes
+  * Modifier value colors now longer "flow" into the next token type
+  * All default Statamic variables are no longer given any special preference over user variables for consistency
+  * The default style for tag names has been subtly adjusted, to make them more distinct from method names
+* Adds support for Front Matter YAML syntax highlighting
+* Adds support for inline PHP syntax highlighting
+* The Antlers Outline panel was completely rewritten to provide better accuracy, and provide a more thorough overview of your Antlers template
+* Antlers code folding engine has been greatly improved
+* Pagination parameter analysis will now apply to numeric values in addition to boolean values
+* Document diagnostics analysis for debug tags and modifiers are now more reactive
+* Improved detection of partial document links
+* Improves partial document link generation such that partial tag parameters are no longer links
+
+#### Technical Updates
+
+* Removed the extensibility API until the new parser is fully implemented
+* The TextMate grammar was rewritten from the ground up, to provide better interoperability with tools like TorchLight
+  * The Semantic Tokens service was also rewritten, and simplified. The Semantic Tokens service now handles the following cases (instead of most things like before):
+    * Resolving modifier names in more complicated scenarios
+    * Resolving user-provided tag names
+    * Resolving numeric values
+* A new backend parser and reflection API
+* The backend services are now capable of handling more complex fault scenarios such as incomplete Antlers tags, incorrectly paired tags, etc. while continuing to provide document analysis
+* The project's `publish:grammar` NPM script has been removed in favor of editing the `antlers.json` syntax file directly
 
 ### v1.1.4
 

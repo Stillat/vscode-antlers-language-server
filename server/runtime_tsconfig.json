@@ -1,0 +1,22 @@
+{
+	"compilerOptions": {
+		"target": "es5",
+		"lib": [
+			"ES2019",
+			"ES2020.String"
+		],
+		"module": "commonjs",
+		"moduleResolution": "node",
+		"sourceMap": true,
+		"strict": true,
+		"outDir": "runtimeout",
+		"rootDir": "src/runtime"
+	},
+	"include": [
+		"src/runtime"
+	],
+	"exclude": [
+		"node_modules",
+		".vscode-test"
+	]
+}

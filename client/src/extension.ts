@@ -9,7 +9,7 @@ import {
 } from 'vscode-languageclient/node';
 import {
 	languages, SemanticTokensLegend,
-	DocumentSemanticTokensProvider, DocumentRangeSemanticTokensProvider, SemanticTokens, extensions, commands
+	DocumentSemanticTokensProvider, DocumentRangeSemanticTokensProvider, SemanticTokens
 } from 'vscode';
 import { RequestType, TextDocumentIdentifier, RequestType0, Range as LspRange } from 'vscode-languageclient';
 import { debounce } from 'ts-debounce';
@@ -23,18 +23,18 @@ interface SemanticTokenParams {
 	ranges?: LspRange[];
 }
 
-interface ReloadAddonParams {
-	extensionPath: string | null
-}
+// eslint-disable-next-line @typescript-eslint/no-empty-interface
+interface ReindexParams { }
 
 // eslint-disable-next-line @typescript-eslint/no-empty-interface
-interface ReindexParams {
-
-}
-
+interface ProjectUpdateParams { }
 
 namespace ReindexRequest {
 	export const type: RequestType<ReindexParams, null, any> = new RequestType('antlers/reindex');
+}
+
+namespace ProjectUpdateRequest {
+	export const type: RequestType<ProjectUpdateParams, null, any> = new RequestType('antlers/projectUpdate');
 }
 
 // eslint-disable-next-line @typescript-eslint/no-empty-interface
@@ -45,14 +45,6 @@ interface ManifestAvailableParams {
 namespace ManifestAvailableRequest {
 	export const type: RequestType<ReindexParams, null, any> = new RequestType('antlers/loadManifest');
 }
-
-namespace ReloadAddonRequest {
-	export const type: RequestType<ReloadAddonParams, null, any> = new RequestType('antlers/reloadAddons');
-}
-
-const EmptyAddonParms: ReloadAddonParams = {
-	extensionPath: null
-};
 
 namespace SemanticTokenRequest {
 	export const type: RequestType<SemanticTokenParams, number[] | null, any> = new RequestType('antlers/semanticTokens');
@@ -66,9 +58,16 @@ let didChangeHtmlComments = false;
 let client: LanguageClient;
 let phpWatcher: FileSystemWatcher | null = null,
 	composerWatcher: FileSystemWatcher | null = null,
-	manifestWatcher: FileSystemWatcher | null = null;
+	manifestWatcher: FileSystemWatcher | null = null,
+	projectWatcher: FileSystemWatcher | null = null;
 
 let isClientReady = false;
+
+function askForProjectUpdate() {
+	if (isClientReady) {
+		client.sendRequest(ProjectUpdateRequest.type, {});
+	}
+}
 
 function askForIndex() {
 	if (isClientReady) {
@@ -83,6 +82,7 @@ function sendManifestReloadRequest() {
 }
 
 const debouncedAskForIndex = debounce(askForIndex, 350);
+const debounceAskForProjectUpdate = debounce(askForProjectUpdate, 350);
 const debouncedManifestLoaded = debounce(sendManifestReloadRequest, 350);
 
 export function activate(context: ExtensionContext) {
@@ -157,21 +157,6 @@ export function activate(context: ExtensionContext) {
 
 	const toDispose = context.subscriptions,
 		documentSelector = ['html', 'antlers'];
-	let addonQueue: ReloadAddonParams[] = [];
-	const reloadAddonsCommand = 'vscodeAntlers.reloadAddons';
-	const reloadAddonHandler = (path: string | null = null) => {
-		const params: ReloadAddonParams = {
-			extensionPath: path
-		};
-
-		if (client != null) {
-			if (client.needsStart() || isClientReady == false) {
-				addonQueue.push(params);
-			} else {
-				client.sendRequest(ReloadAddonRequest.type, params);
-			}
-		}
-	};
 
 	const clDisposable = languages.registerCodeLensProvider(
 		documentSelector,
@@ -180,8 +165,6 @@ export function activate(context: ExtensionContext) {
 
 	toDispose.push(clDisposable);
 
-	context.subscriptions.push(commands.registerCommand(reloadAddonsCommand, reloadAddonHandler));
-		
 	workspace.onDidChangeTextDocument(_e => {
 		resetTimings();
 	});
@@ -189,41 +172,23 @@ export function activate(context: ExtensionContext) {
 	phpWatcher = workspace.createFileSystemWatcher('**/*.php');
 	composerWatcher = workspace.createFileSystemWatcher('**/composer.lock');
 	manifestWatcher = workspace.createFileSystemWatcher('**/.antlers.json');
+	projectWatcher = workspace.createFileSystemWatcher('**/*.yaml');
 
-	manifestWatcher.onDidDelete(() => {
-		debouncedManifestLoaded();
-	});
+	projectWatcher.onDidDelete(() => { debounceAskForProjectUpdate(); });
+	projectWatcher.onDidCreate(() => { debounceAskForProjectUpdate(); });
+	projectWatcher.onDidChange(() => { debounceAskForProjectUpdate(); });
 
-	manifestWatcher.onDidCreate(() => {
-		debouncedManifestLoaded();
-	});
+	manifestWatcher.onDidDelete(() => { debouncedManifestLoaded(); });
+	manifestWatcher.onDidCreate(() => { debouncedManifestLoaded(); });
+	manifestWatcher.onDidChange(() => { debouncedManifestLoaded(); });
 
-	manifestWatcher.onDidChange(() => {
-		debouncedManifestLoaded();
-	});
+	composerWatcher.onDidChange(() => { debouncedAskForIndex(); });
+	composerWatcher.onDidCreate(() => { debouncedAskForIndex(); });
+	composerWatcher.onDidDelete(() => { debouncedAskForIndex(); });
 
-	composerWatcher.onDidChange(() => {
-		debouncedAskForIndex();
-	});
-
-	composerWatcher.onDidCreate(() => {
-		debouncedAskForIndex();
-	});
-
-	composerWatcher.onDidDelete(() => {
-		debouncedAskForIndex();
-	});
-
-	phpWatcher.onDidChange(() => {
-		debouncedAskForIndex();
-	});
-	phpWatcher.onDidCreate(() => {
-		debouncedAskForIndex();
-
-	});
-	phpWatcher.onDidDelete(() => {
-		debouncedAskForIndex();
-	});
+	phpWatcher.onDidChange(() => { debouncedAskForIndex(); });
+	phpWatcher.onDidCreate(() => { debouncedAskForIndex(); });
+	phpWatcher.onDidDelete(() => { debouncedAskForIndex(); });
 
 	activateAntlersDebug(context);
 
@@ -233,19 +198,7 @@ export function activate(context: ExtensionContext) {
 	client.onReady().then(() => {
 		isClientReady = true;
 
-
-		if (addonQueue.length > 0) {
-			for (let i = 0; i < addonQueue.length; i++) {
-				client.sendRequest(ReloadAddonRequest.type, addonQueue[i]);
-			}
-			addonQueue = [];
-		}
-
 		sendManifestReloadRequest();
-
-		extensions.onDidChange(() => {
-			client.sendRequest(ReloadAddonRequest.type, EmptyAddonParms);
-		});
 
 		setTimeout(() => {
 			client.sendRequest(SemanticTokenLegendRequest.type).then(legend => {

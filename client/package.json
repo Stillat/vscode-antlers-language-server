@@ -41,7 +41,20 @@
             {
                 "language": "html",
                 "scopeName": "text.html.statamic",
-                "path": "./syntaxes/antlers.json"
+                "path": "./syntaxes/antlers.json",
+                "embeddedLanguages": {
+                    "meta.embedded.block.frontmatter": "yaml",
+                    "source.php": "php"
+                }
+            }
+        ],
+        "semanticTokenScopes": [
+            {
+                "scopes": {
+                    "antlersAttribute": [
+                        "entity.other.attribute-name"
+                    ]
+                }
             }
         ]
     },

@@ -4,7 +4,7 @@
     "description": "Provides Antlers syntax highlighting, and robust language features.",
     "author": "John Koster",
     "license": "MIT",
-    "version": "1.1.4",
+    "version": "1.1.3",
     "repository": {
         "type": "git",
         "url": "https://github.com/Stillat/vscode-antlers-language-server"
@@ -53,7 +53,20 @@
             {
                 "language": "html",
                 "scopeName": "text.html.statamic",
-                "path": "./client/syntaxes/antlers.json"
+                "path": "./client/syntaxes/antlers.json",
+                "embeddedLanguages": {
+                    "meta.embedded.block.frontmatter": "yaml",
+                    "source.php": "php"
+                }
+            }
+        ],
+        "semanticTokenScopes": [
+            {
+                "scopes": {
+                    "antlersAttribute": [
+                        "entity.other.attribute-name"
+                    ]
+                }
             }
         ],
         "configuration": {
@@ -65,12 +78,6 @@
                     "type": "boolean",
                     "default": false,
                     "description": "When enabled Antlers style block comments will be used in HTML contexts."
-                },
-                "antlersLanguageServer.maxNumberOfProblems": {
-                    "scope": "resource",
-                    "type": "number",
-                    "default": 100,
-                    "description": "Controls the maximum number of problems produced by the server."
                 },
                 "antlersLanguageServer.trace.server": {
                     "scope": "window",
@@ -110,7 +117,6 @@
         ]
     },
     "scripts": {
-        "publish:grammar": "node client/syntaxes/compile.js && npx js-yaml client/syntaxes/antlers.yaml > client/syntaxes/antlers.json",
         "vscode:prepublish": "npm run compile && php buildAnalyzer.php",
         "compile": "tsc -b",
         "watch": "tsc -b -w",
@@ -127,7 +133,9 @@
         "typescript": "^4.4.2"
     },
     "dependencies": {
+        "locutus": "^2.0.15",
         "semver": "^7.3.5",
+        "ts-md5": "^1.2.9",
         "uuid": "^8.3.2"
     }
 }

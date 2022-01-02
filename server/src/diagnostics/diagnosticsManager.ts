@@ -1,69 +1,82 @@
-import { IReportableError, ISymbol } from '../antlers/types';
-import CoreHandlers from './handlers/coreHandlers';
+import { AntlersError } from '../runtime/errors/antlersError';
+import { AntlersNode } from '../runtime/nodes/abstractNode';
+import { IDiagnosticsHandler } from "./diagnosticsHandler";
+import CoreHandlers from "./handlers/coreHandlers";
 
-export interface IDiagnosticsHandler {
-	/**
-	 * Checks a symbol for any issues.
-	 * 
-	 * @param {ISymbol} symbol The symbol being analyzed.
-	 */
-	checkSymbol(symbol: ISymbol): IReportableError[]
+class DiagnosticsManager {
+    private fileDiagnostics: Map<string, AntlersError[]> = new Map();
+    private handlers: IDiagnosticsHandler[] = [];
+
+    public static instance: DiagnosticsManager | null = null;
+
+    registerHandler(handler: IDiagnosticsHandler) {
+        this.handlers.push(handler);
+    }
+
+    registerHandlers(handlers: IDiagnosticsHandler[]) {
+        for (let i = 0; i < handlers.length; i++) {
+            this.registerHandler(handlers[i]);
+        }
+    }
+
+    registerCoreHandlers() {
+        this.registerHandlers(CoreHandlers);
+    }
+
+    hasDiagnosticsIssues(documentUri: string): boolean {
+        if (this.fileDiagnostics.has(documentUri) == false) {
+            return false;
+        }
+
+        const docIssues = this.fileDiagnostics.get(
+            documentUri
+        ) as AntlersError[];
+
+        return docIssues.length > 0;
+    }
+
+    registerDiagnostics(documentUri: string, issues: AntlersError[]) {
+        this.fileDiagnostics.set(documentUri, issues);
+    }
+
+    clearIssues(documentUri: string) {
+        this.fileDiagnostics.set(documentUri, []);
+    }
+
+    getDiagnostics(documentUri: string): AntlersError[] {
+        if (this.hasDiagnosticsIssues(documentUri)) {
+            return this.fileDiagnostics.get(documentUri) as AntlersError[];
+        }
+
+        return [];
+    }
+
+    checkNode(node: AntlersNode) {
+        const errors: AntlersError[] = [];
+        this.handlers.forEach((handler) => {
+            handler.checkNode(node).forEach((error) => {
+                errors.push(error);
+            });
+        });
+        return errors;
+    }
+
+    getAllDiagnostics(): AntlersError[] {
+        const allErrors: AntlersError[] = [];
+
+        this.fileDiagnostics.forEach((value: AntlersError[], key: string) => {
+            for (let i = 0; i < value.length; i++) {
+                allErrors.push(value[i]);
+            }
+        });
+
+        return allErrors;
+    }
 }
 
-export class DiagnosticsManager {
-	static fileDiagnostics: Map<string, IReportableError[]> = new Map();
-	static handlers: IDiagnosticsHandler[] = [];
-
-	static registerHandler(handler: IDiagnosticsHandler) {
-		this.handlers.push(handler);
-	}
-
-	static registerHandlers(handlers: IDiagnosticsHandler[]) {
-		for (let i = 0; i < handlers.length; i++) {
-			this.registerHandler(handlers[i]);
-		}
-	}
-
-	static registerCoreHandlers() {
-		this.registerHandlers(CoreHandlers);
-	}
-
-	static hasDiagnosticsIssues(documentUri: string): boolean {
-		if (this.fileDiagnostics.has(documentUri) == false) {
-			return false;
-		}
-
-		const docIssues = this.fileDiagnostics.get(documentUri) as IReportableError[];
-
-		return docIssues.length > 0;
-	}
-
-	static registerDiagnostics(documentUri: string, issues: IReportableError[]) {
-		this.fileDiagnostics.set(documentUri, issues);
-	}
-
-	static clearIssues(documentUri: string) {
-		this.fileDiagnostics.set(documentUri, []);
-	}
-
-	static getDiagnostics(documentUri: string): IReportableError[] {
-		if (this.hasDiagnosticsIssues(documentUri)) {
-			return this.fileDiagnostics.get(documentUri) as IReportableError[];
-		}
-
-		return [];
-	}
-
-	static getAllDiagnostics(): IReportableError[] {
-		const allErrors: IReportableError[] = [];
-
-		this.fileDiagnostics.forEach((value: IReportableError[], key: string) => {
-			for (let i = 0; i < value.length; i++) {
-				allErrors.push(value[i]);
-			}
-		});
-
-		return allErrors;
-	}
-
+if (typeof DiagnosticsManager.instance == "undefined" || DiagnosticsManager.instance == null) {
+    DiagnosticsManager.instance = new DiagnosticsManager();
+    DiagnosticsManager.instance.registerCoreHandlers();
 }
+
+export default DiagnosticsManager;

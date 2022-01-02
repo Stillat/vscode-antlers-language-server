@@ -1,9 +1,9 @@
-import { IScopeVariable } from '../../scope/engine';
-import { ISymbol } from '../../types';
+import { AntlersNode } from '../../../runtime/nodes/abstractNode';
+import { IScopeVariable } from '../../scope/types';
 
-export function makeStandardFormVariables(symbol: ISymbol): IScopeVariable[] {
-	return [
-		{ name: 'success', dataType: 'string', sourceField: null, sourceName: '*internal.forms', introducedBy: symbol },
-		{ name: 'submission_created', dataType: 'boolean', sourceField: null, sourceName: '*internal.forms', introducedBy: symbol },
-	];
+export function makeStandardFormVariables(node: AntlersNode): IScopeVariable[] {
+    return [
+        { name: 'success', dataType: 'string', sourceField: null, sourceName: '*internal.forms', introducedBy: node },
+        { name: 'submission_created', dataType: 'boolean', sourceField: null, sourceName: '*internal.forms', introducedBy: node },
+    ];
 }

@@ -1,9 +1,6 @@
 import * as path from 'path';
 import * as fs from 'fs';
 
-// eslint-disable-next-line @typescript-eslint/no-var-requires
-const uri2path = require('file-uri-to-path');
-
 export function getFiles(startPath: string, filter: string, foundFiles: string[]): string[] {
     if (!fs.existsSync(startPath)) {
         return [];
@@ -26,15 +23,7 @@ export function getFiles(startPath: string, filter: string, foundFiles: string[]
     return [...new Set(returnFiles)];
 }
 
-export function normalizePath(path: string): string {
-    return path.split('\\').join('/');
-}
 
-export function convertUriToPath(documentUri: string): string {
-    const localPath = uri2path(decodeURIComponent(documentUri));
-
-    return normalizePath(localPath);
-}
 
 export function convertPathToUri(filePath: string): string {
     let pathName = path.resolve(filePath).replace(/\\/g, '/');

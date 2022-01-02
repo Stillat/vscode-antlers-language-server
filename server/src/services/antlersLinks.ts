@@ -1,44 +1,40 @@
-import { DocumentLink } from 'vscode-languageserver-types';
-import { ReferenceManager } from '../references/referenceManager';
-import { currentStructure } from '../session';
+import { DocumentLink } from "vscode-languageserver-types";
+import ProjectManager from '../projects/projectManager';
+import ReferenceManager from "../references/referenceManager";
+import { antlersPositionToVsCode } from '../utils/conversions';
 
 export class DocumentLinkManager {
+    static getDocumentLinks(docPath: string): DocumentLink[] {
+        const documentLinks: DocumentLink[] = [];
 
-	static getDocumentLinks(docPath: string): DocumentLink[] {
-		const documentLinks: DocumentLink[] = [];
+        if (ProjectManager.instance?.hasStructure()) {
+            const references = ReferenceManager.instance?.getPartialReferences(docPath) ?? [];
 
-		// Partial references.
-		if (currentStructure != null) {
-			const references = ReferenceManager.getPartialReferences(docPath);
+            for (let i = 0; i < references.length; i++) {
+                const thisRef = references[i];
 
-			for (let i = 0; i < references.length; i++) {
-				const thisRef = references[i];
+                if (thisRef.hasMethodPart()) {
+                    const projectPartial = ProjectManager.instance.getStructure().findRelativeView(thisRef.getMethodNameValue());
 
-				if (thisRef.methodName != null) {
-					const projectPartial = currentStructure.findPartial(thisRef.methodName);
+                    if (projectPartial != null) {
+						const end = antlersPositionToVsCode(thisRef.nameEndsOn);
 
-					if (projectPartial != null) {
-						documentLinks.push({
-							range: {
-								start: {
-									line: thisRef.startLine,
-									character: thisRef.startOffset
+                        documentLinks.push({
+                            range: {
+                                start:  antlersPositionToVsCode(thisRef.startPosition),
+                                end: {
+									character: end.character - 2,
+									line: end.line
 								},
-								end: {
-									line: thisRef.startLine,
-									character: thisRef.endOffset
-								},
-							},
-							tooltip: 'Partial: ' + projectPartial.displayName,
-							target: decodeURIComponent(projectPartial.documentUri),
-							
-						});
-					}
-				}
-			}
-		}
+                            },
+                            tooltip: "Partial: " + projectPartial.displayName,
+                            target: decodeURIComponent(projectPartial.documentUri),
+                        });
+                    }
+                }
+            }
+        }
 
-		return documentLinks;
-	}
-
+        return documentLinks;
+    }
 }

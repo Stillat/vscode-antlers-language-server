@@ -1,26 +1,27 @@
 import { getRouteCompletions } from '../../../suggestions/project/routeCompletions';
-import { getCurrentSymbolMethodNameValue, ISuggestionRequest } from '../../../suggestions/suggestionManager';
+import { getCurrentSymbolMethodNameValue } from '../../../suggestions/suggestionManager';
+import { ISuggestionRequest } from '../../../suggestions/suggestionRequest';
 import { EmptyCompletionResult, exclusiveResult, IAntlersTag, ICompletionResult } from '../../tagManager';
 import { returnDynamicParameter } from '../dynamicParameterResolver';
 
 const Route: IAntlersTag = {
-	tagName: 'route',
-	hideFromCompletions: false,
-	injectParentScope: false,
-	requiresClose: false,
-	allowsArbitraryParameters: true,
-	allowsContentClose: false,
-	parameters: [],
-	resolveDynamicParameter: returnDynamicParameter,
-	resolveCompletionItems: (params: ISuggestionRequest): ICompletionResult => {
-		if (params.leftMeaningfulWord == 'route') {
-			const existingRouteValue = getCurrentSymbolMethodNameValue(params);
+    tagName: 'route',
+    hideFromCompletions: false,
+    injectParentScope: false,
+    requiresClose: false,
+    allowsArbitraryParameters: true,
+    allowsContentClose: false,
+    parameters: [],
+    resolveDynamicParameter: returnDynamicParameter,
+    resolveCompletionItems: (params: ISuggestionRequest): ICompletionResult => {
+        if (params.leftMeaningfulWord == 'route') {
+            const existingRouteValue = getCurrentSymbolMethodNameValue(params);
 
-			return exclusiveResult(getRouteCompletions(existingRouteValue, params.project));
-		}
+            return exclusiveResult(getRouteCompletions(existingRouteValue, params.project));
+        }
 
-		return EmptyCompletionResult;
-	}
+        return EmptyCompletionResult;
+    }
 };
 
 export default Route;

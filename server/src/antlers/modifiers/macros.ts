@@ -1,64 +1,64 @@
-import { IModifier, IModifierMacro, IModifierReference, ModifierManager } from '../modifierManager';
-
 import * as fs from 'fs';
 import * as YAML from 'yaml';
+import ModifierManager from '../modifierManager';
+import { IModifier, IModifierMacro, IModifierReference } from '../modifierTypes';
 
 export function parseMacros(macroFile: string): IModifierMacro[] {
-	const contents = fs.readFileSync(macroFile, { encoding: 'utf8' }),
-		macrosToReturn: IModifierMacro[] = [];
+    const contents = fs.readFileSync(macroFile, { encoding: 'utf8' }),
+        macrosToReturn: IModifierMacro[] = [];
 
-	try {
-		const document = YAML.parse(contents);
+    try {
+        const document = YAML.parse(contents);
 
-		if (typeof document === 'undefined' || document === null) {
-			return [];
-		}
+        if (typeof document === 'undefined' || document === null) {
+            return [];
+        }
 
-		const macroNames = Object.keys(document);
+        const macroNames = Object.keys(document);
 
-		for (let i = 0; i < macroNames.length; i++) {
-			const name = macroNames[i],
-				macroModifiers = document[name],
-				modifierReferences: IModifierReference[] = [];
+        for (let i = 0; i < macroNames.length; i++) {
+            const name = macroNames[i],
+                macroModifiers = document[name],
+                modifierReferences: IModifierReference[] = [];
 
-			let macroManifestsType = '';
+            let macroManifestsType = '';
 
-			if (typeof macroModifiers !== 'undefined' && macroModifiers !== null) {
-				const macroModifierNames = Object.keys(macroModifiers);
+            if (typeof macroModifiers !== 'undefined' && macroModifiers !== null) {
+                const macroModifierNames = Object.keys(macroModifiers);
 
-				for (let j = 0; j < macroModifierNames.length; j++) {
-					const modifierName = macroModifierNames[j],
-						reference: IModifier | null = ModifierManager.getModifier(modifierName);
+                for (let j = 0; j < macroModifierNames.length; j++) {
+                    const modifierName = macroModifierNames[j],
+                        reference: IModifier | null = ModifierManager.instance?.getModifier(modifierName) ?? null;
 
-					let hasReference = false,
-						manifestsType = '';
+                    let hasReference = false,
+                        manifestsType = '';
 
-					if (reference != null) {
-						hasReference = true;
-						manifestsType = ModifierManager.getProbableReturnType(reference);
-						macroManifestsType = manifestsType;
-					} else {
-						macroManifestsType = '';
-					}
+                    if (reference != null) {
+                        hasReference = true;
+                        manifestsType = ModifierManager.instance?.getProbableReturnType(reference, false) ?? '';
+                        macroManifestsType = manifestsType;
+                    } else {
+                        macroManifestsType = '';
+                    }
 
-					modifierReferences.push({
-						hasReference: hasReference,
-						manifestsType: manifestsType,
-						name: modifierName,
-						ref: reference
-					});
-				}
-			}
+                    modifierReferences.push({
+                        hasReference: hasReference,
+                        manifestsType: manifestsType,
+                        name: modifierName,
+                        ref: reference
+                    });
+                }
+            }
 
-			macrosToReturn.push({
-				name: name,
-				manifestsType: macroManifestsType,
-				modifiers: modifierReferences
-			});
-		}
-	} catch (e) {
-		// Don't let bad YAML parsing break everything.
-	}
+            macrosToReturn.push({
+                name: name,
+                manifestsType: macroManifestsType,
+                modifiers: modifierReferences
+            });
+        }
+    } catch (e) {
+        // Don't let bad YAML parsing break everything.
+    }
 
-	return macrosToReturn;
+    return macrosToReturn;
 }

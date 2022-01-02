@@ -1,126 +1,82 @@
-import { Diagnostic } from 'vscode-languageserver';
-import { TextDocument } from 'vscode-languageserver-textdocument';
-import { AntlersParser } from '../antlers/parser';
-import { DiagnosticsManager } from '../diagnostics/diagnosticsManager';
-import { MockProject } from '../projects/statamicProject';
-import { connection, getDocumentSettings } from '../server';
-import { currentStructure, documentMap, parserInstances } from '../session';
+import { Diagnostic, _Connection } from "vscode-languageserver";
+import { TextDocument } from "vscode-languageserver-textdocument";
+import DiagnosticsManager from '../diagnostics/diagnosticsManager';
+import { documentMap, sessionDocuments } from '../languageService/documents';
+import ProjectManager from '../projects/projectManager';
+import { anltersErrorsToDiagnostics } from "../utils/conversions";
+
+export function parseDocumentText(uri: string, text: string) {
+    const documentPath = decodeURIComponent(uri);
+    sessionDocuments.createOrUpdate(
+        uri,
+        text
+    );
+}
 
 export function parseDocument(textDocument: TextDocument) {
+    const documentPath = decodeURIComponent(textDocument.uri);
 
-	const documentPath = decodeURIComponent(textDocument.uri);
-	const text = textDocument.getText();
+    sessionDocuments.createOrUpdate(
+        decodeURIComponent(textDocument.uri),
+        textDocument.getText()
+    );
 
-	if (parserInstances.has(documentPath) == false) {
-		parserInstances.set(documentPath, new AntlersParser());
-	}
-	documentMap.set(documentPath, textDocument);
-
-	const parser = parserInstances.get(documentPath) as AntlersParser;
-
-	let structureToUse = MockProject;
-
-	if (currentStructure != null) {
-		structureToUse = currentStructure;
-	}
-
-	parser.parseText(documentPath, text, structureToUse);
+    documentMap.set(documentPath, textDocument);
 }
 
-export async function validateTextDocument(textDocument: TextDocument): Promise<void> {
-	const documentPath = decodeURIComponent(textDocument.uri);
-	const settings = await getDocumentSettings(documentPath);
-	const text = textDocument.getText();
+export async function validateTextDocument(textDocument: TextDocument, connection:_Connection): Promise<void> {
+    const docPath = decodeURIComponent(textDocument.uri);
+    sessionDocuments.createOrUpdate(docPath, textDocument.getText());
 
-	if (parserInstances.has(documentPath) == false) {
-		parserInstances.set(documentPath, new AntlersParser());
-	}
+    const problems = 0;
+    const diagnostics: Diagnostic[] = [];
 
-	documentMap.set(documentPath, textDocument);
+    if (sessionDocuments.hasDocument(docPath)) {
+        const doc = sessionDocuments.getDocument(docPath);
+        const errors = doc.errors.all();
 
-	const parser = parserInstances.get(documentPath) as AntlersParser;
+        anltersErrorsToDiagnostics(doc.errors.all()).forEach((error) => {
+            diagnostics.push(error);
+        });
 
-	let structureToUse = MockProject;
+        if (DiagnosticsManager.instance?.hasDiagnosticsIssues(docPath)) {
+            anltersErrorsToDiagnostics(DiagnosticsManager.instance.getDiagnostics(docPath)).forEach((error) => {
+                diagnostics.push(error);
+            });
+        }
+    }
 
-	if (currentStructure != null) {
-		structureToUse = currentStructure;
-	}
-
-	let issues = parser.getAntlersErrors();
-
-	let problems = 0;
-	const diagnostics: Diagnostic[] = [];
-
-	issues = issues.concat(DiagnosticsManager.getDiagnostics(documentPath));
-
-	for (let i = 0; i < issues.length; i++) {
-		const foundError = issues[i];
-
-		const diagnostic: Diagnostic = {
-			severity: foundError.severity,
-			range: {
-				start: {
-					line: foundError.startLine,
-					character: foundError.startPos
-				},
-				end: {
-					line: foundError.endLine,
-					character: foundError.endPos
-				}
-			},
-			message: foundError.message,
-			source: 'antlers'
-		};
-
-		if (diagnostic.range.start.character > 0 && diagnostic.range.end.character > 0) {
-			diagnostics.push(diagnostic);
-			problems++;
-		}
-
-		if (settings !== null && problems == settings.maxNumberOfProblems) {
-			break;
-		}
-	}
-
-	// Send the computed diagnostics to VSCode.
-	connection.sendDiagnostics({ uri: textDocument.uri, diagnostics });
-	sendOtherDiagnostics(textDocument.uri);
+    // Send the computed diagnostics to VSCode.
+    connection.sendDiagnostics({ uri: textDocument.uri, diagnostics });
+    sendOtherDiagnostics(textDocument.uri, connection);
 }
 
-function sendOtherDiagnostics(currentUri: string) {
-	if (currentStructure != null) {
-		for (let i = 0; i < currentStructure.views.length; i++) {
-			if (currentStructure.views[i].documentUri != currentUri) {
-				if (DiagnosticsManager.hasDiagnosticsIssues(currentStructure.views[i].documentUri)) {
-					const diagnostics: Diagnostic[] = [],
-						issues = DiagnosticsManager.getDiagnostics(currentStructure.views[i].documentUri);
+function sendOtherDiagnostics(currentUri: string, connection:_Connection) {
+    if (ProjectManager.instance?.hasStructure()) {
+        const projViews = ProjectManager.instance.getStructure().getViews();
 
-					for (let j = 0; j < issues.length; j++) {
-						const foundError = issues[j];
+        for (let i = 0; i < projViews.length; i++) {
+            if (projViews[i].documentUri != currentUri) {
+                if (
+                    DiagnosticsManager.instance?.hasDiagnosticsIssues(
+                        projViews[i].documentUri
+                    )
+                ) {
+                    const diagnostics: Diagnostic[] = [],
+                        issues = DiagnosticsManager.instance?.getDiagnostics(
+                            projViews[i].documentUri
+                        );
 
-						diagnostics.push({
-							severity: foundError.severity,
-							range: {
-								start: {
-									line: foundError.startLine,
-									character: foundError.startPos
-								},
-								end: {
-									line: foundError.endLine,
-									character: foundError.endPos
-								}
-							},
-							message: foundError.message,
-							source: 'antlers'
-						});
-					}
+                    anltersErrorsToDiagnostics(issues).forEach((error) => {
+                        diagnostics.push(error);
+                    });
 
-					connection.sendDiagnostics({
-						uri: currentStructure.views[i].originalDocumentUri,
-						diagnostics: diagnostics
-					});
-				}
-			}
-		}
-	}
+                    connection.sendDiagnostics({
+                        uri: projViews[i].originalDocumentUri,
+                        diagnostics: diagnostics,
+                    });
+                }
+            }
+        }
+    }
 }

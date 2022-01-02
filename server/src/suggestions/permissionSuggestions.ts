@@ -1,80 +1,116 @@
-import { CompletionItem, CompletionItemKind } from 'vscode-languageserver-types';
-import { PermissionsManager } from '../antlers/permissions/permissionManager';
-import { ISuggestionRequest } from './suggestionManager';
+import {
+    CompletionItem,
+    CompletionItemKind,
+} from "vscode-languageserver-types";
+import PermissionsManager from "../antlers/permissions/permissionManager";
+import { ISuggestionRequest } from './suggestionRequest';
 
-export function getPermissionSuggestions(currentValue: string, params: ISuggestionRequest): CompletionItem[] {
-	const items: CompletionItem[] = [];
+export function getPermissionSuggestions(
+    currentValue: string,
+    params: ISuggestionRequest
+): CompletionItem[] {
+    const items: CompletionItem[] = [];
 
-	if (currentValue.trim().length == 0) {
-		const baseTriggerNames = PermissionsManager.getTriggerNames();
+    if (currentValue.trim().length == 0) {
+        const baseTriggerNames =
+            PermissionsManager.instance?.getTriggerNames() ?? [];
 
-		for (let i = 0; i < baseTriggerNames.length; i++) {
-			items.push({
-				label: baseTriggerNames[i],
-				kind: CompletionItemKind.Value
-			});
-		}
-	} else {
-		const currentParts = currentValue.split(' ').filter(n => n.trim().length > 0),
-			currentTrigger = currentParts[0],
-			allContextualItems = PermissionsManager.getTriggerContextItems(currentTrigger),
-			isCollectionTrigger = PermissionsManager.isCollectionTrigger(currentTrigger),
-			isGlobalTrigger = PermissionsManager.isGlobalTrigger(currentTrigger),
-			isFormTrigger = PermissionsManager.isFormTrigger(currentTrigger),
-			isStructureTrigger = PermissionsManager.isStructureTrigger(currentTrigger),
-			isAssetTrigger = PermissionsManager.isAssetTrigger(currentTrigger);
-		let candidateItems: string[] = [];
+        for (let i = 0; i < baseTriggerNames.length; i++) {
+            items.push({
+                label: baseTriggerNames[i],
+                kind: CompletionItemKind.Value,
+            });
+        }
+    } else {
+        const currentParts = currentValue
+            .split(" ")
+            .filter((n) => n.trim().length > 0),
+            currentTrigger = currentParts[0],
+            allContextualItems =
+                PermissionsManager.instance?.getTriggerContextItems(currentTrigger) ??
+                [],
+            isCollectionTrigger =
+                PermissionsManager.instance?.isCollectionTrigger(currentTrigger),
+            isGlobalTrigger =
+                PermissionsManager.instance?.isGlobalTrigger(currentTrigger),
+            isFormTrigger =
+                PermissionsManager.instance?.isFormTrigger(currentTrigger),
+            isStructureTrigger =
+                PermissionsManager.instance?.isStructureTrigger(currentTrigger),
+            isAssetTrigger =
+                PermissionsManager.instance?.isAssetTrigger(currentTrigger);
+        let candidateItems: string[] = [];
 
-		if (currentParts.length <= 2) {
-			if (isCollectionTrigger) {
-				candidateItems = candidateItems.concat(params.project.getUniqueCollectionNames());
-			} else if (isGlobalTrigger) {
-				candidateItems = candidateItems.concat(params.project.getUniqueGlobalsNames());
-			} else if (isFormTrigger) {
-				candidateItems = candidateItems.concat(params.project.getUniqueFormNames());
-			} else if (isStructureTrigger) {
-				candidateItems = candidateItems.concat(params.project.getUniqueNavigationMenuNames());
-			} else if (isAssetTrigger) {
-				candidateItems = candidateItems.concat(params.project.getUniqueAssetNames());
-			}
+        if (currentParts.length <= 2) {
+            if (isCollectionTrigger) {
+                candidateItems = candidateItems.concat(
+                    params.project.getUniqueCollectionNames()
+                );
+            } else if (isGlobalTrigger) {
+                candidateItems = candidateItems.concat(
+                    params.project.getUniqueGlobalsNames()
+                );
+            } else if (isFormTrigger) {
+                candidateItems = candidateItems.concat(
+                    params.project.getUniqueFormNames()
+                );
+            } else if (isStructureTrigger) {
+                candidateItems = candidateItems.concat(
+                    params.project.getUniqueNavigationMenuNames()
+                );
+            } else if (isAssetTrigger) {
+                candidateItems = candidateItems.concat(
+                    params.project.getUniqueAssetNames()
+                );
+            }
 
-			if (allContextualItems.length > 0) {
-				candidateItems = candidateItems.concat(allContextualItems);
-			}
+            if (allContextualItems.length > 0) {
+                candidateItems = candidateItems.concat(allContextualItems);
+            }
 
-			candidateItems = [...new Set(candidateItems)];
+            candidateItems = [...new Set(candidateItems)];
 
-			for (let i = 0; i < candidateItems.length; i++) {
-				items.push({
-					label: candidateItems[i],
-					kind: CompletionItemKind.Value
-				});
-			}
-		} else {
-			let capCandidates: string[] = [];
+            for (let i = 0; i < candidateItems.length; i++) {
+                items.push({
+                    label: candidateItems[i],
+                    kind: CompletionItemKind.Value,
+                });
+            }
+        } else {
+            let capCandidates: string[] = [];
 
-			if (isCollectionTrigger) {
-				capCandidates = capCandidates.concat(PermissionsManager.collectionTriggerCaps);
-			} else if (isGlobalTrigger) {
-				capCandidates = capCandidates.concat(PermissionsManager.globalTriggerCaps);
-			} else if (isFormTrigger) {
-				capCandidates = capCandidates.concat(PermissionsManager.formTriggerCaps);
-			} else if (isStructureTrigger) {
-				capCandidates = capCandidates.concat(PermissionsManager.structureTriggerCaps);
-			} else if (isAssetTrigger) {
-				capCandidates = capCandidates.concat(PermissionsManager.assetTriggerCaps);
-			}
+            if (isCollectionTrigger) {
+                capCandidates = capCandidates.concat(
+                    PermissionsManager.instance?.getCollectionTriggerCaps() ?? []
+                );
+            } else if (isGlobalTrigger) {
+                capCandidates = capCandidates.concat(
+                    PermissionsManager.instance?.getGlobalTriggerCaps() ?? []
+                );
+            } else if (isFormTrigger) {
+                capCandidates = capCandidates.concat(
+                    PermissionsManager.instance?.getFormTriggerCaps() ?? []
+                );
+            } else if (isStructureTrigger) {
+                capCandidates = capCandidates.concat(
+                    PermissionsManager.instance?.getStructureTriggerCaps() ?? []
+                );
+            } else if (isAssetTrigger) {
+                capCandidates = capCandidates.concat(
+                    PermissionsManager.instance?.getAssetTriggerCaps() ?? []
+                );
+            }
 
-			capCandidates = [...new Set(capCandidates)];
+            capCandidates = [...new Set(capCandidates)];
 
-			for (let i = 0; i < capCandidates.length; i++) {
-				items.push({
-					label: capCandidates[i],
-					kind: CompletionItemKind.Value
-				});
-			}
-		}
-	}
+            for (let i = 0; i < capCandidates.length; i++) {
+                items.push({
+                    label: capCandidates[i],
+                    kind: CompletionItemKind.Value,
+                });
+            }
+        }
+    }
 
-	return items;
+    return items;
 }
