@@ -18,6 +18,15 @@ export function handleFoldingRequest(_foldingParams: FoldingRangeParams): Foldin
             multiLineNodes = doc.nodes.getMultilineNodes(),
             ranges: FoldingRange[] = [];
 
+		if (doc.hasFrontMatter()) {
+			const frontMatterEndLine = doc.getDocumentParser().getFrontMatterEndLine();
+
+			ranges.push({
+				startLine: 0,
+				endLine: frontMatterEndLine - 1
+			});
+		}
+
         if (regions.length > 0) {
             regions.forEach((node) => {
                 if (node.startPosition?.line == node.isClosedBy?.startPosition?.line) {
