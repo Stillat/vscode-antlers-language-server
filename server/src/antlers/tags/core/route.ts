@@ -1,3 +1,4 @@
+import { makeTagDoc } from '../../../documentation/utils';
 import { getRouteCompletions } from '../../../suggestions/project/routeCompletions';
 import { getCurrentSymbolMethodNameValue } from '../../../suggestions/suggestionManager';
 import { ISuggestionRequest } from '../../../suggestions/suggestionRequest';
@@ -21,6 +22,13 @@ const Route: IAntlersTag = {
         }
 
         return EmptyCompletionResult;
+    },
+    resolveDocumentation: (params?: ISuggestionRequest) => {
+        return makeTagDoc(
+            'route Tag',
+            'The `route` tag can be used to generate a full URL [to a named route](https://laravel.com/docs/8.x/routing#named-routes), including any defined route parameters.',
+            'https://statamic.dev/tags/route'
+        );
     }
 };
 

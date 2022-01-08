@@ -1,9 +1,12 @@
-import { CompletionItem, CompletionItemKind } from 'vscode-languageserver-types';
+import { CompletionItem } from 'vscode-languageserver-types';
+import { makeTagDoc } from '../../../documentation/utils';
 import { ISuggestionRequest } from '../../../suggestions/suggestionRequest';
+import { tagToCompletionItem } from '../../documentedLabel';
 import { EmptyCompletionResult, exclusiveResult, IAntlersTag } from '../../tagManager';
+import MarkdownIndent from './markdownIndent';
 
 const MarkdownCompletionItems: CompletionItem[] = [
-    { label: 'indent', kind: CompletionItemKind.Text }
+    tagToCompletionItem(MarkdownIndent)
 ];
 
 const Markdown: IAntlersTag = {
@@ -20,6 +23,13 @@ const Markdown: IAntlersTag = {
         }
 
         return EmptyCompletionResult;
+    },
+    resolveDocumentation: (params?: ISuggestionRequest) => {
+        return makeTagDoc(
+            'markdown Tag',
+            'The `markdown` tag can be used to render the tags contents as markdown.',
+            'https://statamic.dev/tags/markdown'
+        );
     }
 };
 

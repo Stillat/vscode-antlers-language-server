@@ -4,16 +4,12 @@ import { IProjectDetailsProvider } from '../projects/projectDetailsProvider';
 import { makeTagParameterSuggestions } from "../suggestions/attributeSuggestions";
 import { formatSuggestion } from "../suggestions/fieldFormatter";
 import { trimLeft } from "../utils/strings";
-import {
-    IAntlersTag,
-    IAntlersParameter,
-    IProviderCompletionResult,
-    ICompletionResult,
-} from "./tagManager";
+import { IAntlersTag, IAntlersParameter, IProviderCompletionResult, ICompletionResult } from "./tagManager";
 import { coreTags } from "./tags/coreTags";
 import { ISpecialResolverResults } from "./types";
 import { ISuggestionRequest } from '../suggestions/suggestionRequest';
 import { AntlersNode } from '../runtime/nodes/abstractNode';
+import { IDocumentedLabel } from './documentedLabel';
 
 class TagManager {
     private tags: Map<string, IAntlersTag> = new Map();
@@ -26,6 +22,27 @@ class TagManager {
         this.parameters.clear();
 
         this.loadCoreTags();
+    }
+
+    getVisibleTagsWithDocumentation(): IDocumentedLabel[] {
+        const tags: IDocumentedLabel[] = [];
+
+        this.tags.forEach((tag: IAntlersTag, name: string) => {
+            if (tag.hideFromCompletions == false) {
+                let docs = '';
+
+                if (tag.resolveDocumentation != null) {
+                    docs = tag.resolveDocumentation();
+                }
+
+                tags.push({
+                    label: name,
+                    documentation: docs
+                });
+            }
+        });
+
+        return tags;
     }
 
     getVisibleTagNames(): string[] {
@@ -256,7 +273,7 @@ class TagManager {
                 };
             }
         }
-		
+
         return {
             items: resolvedParams,
             isExclusive: false,
@@ -273,11 +290,7 @@ class TagManager {
         return tagReference.injectParentScope;
     }
 
-    resolveParameterCompletions(
-        tag: string,
-        parameter: IAntlersParameter,
-        params: ISuggestionRequest
-    ): ICompletionResult | null {
+    resolveParameterCompletions(tag: string, parameter: IAntlersParameter, params: ISuggestionRequest): ICompletionResult | null {
         const tagReference = this.findTag(tag);
 
         if (typeof tagReference !== "undefined" && tagReference !== null) {
@@ -326,6 +339,17 @@ class TagManager {
         }
 
         if (tagParams.has(param) == false) {
+            const tagRef = this.findTag(tag);
+
+            if (tagRef != null && typeof tagRef.resolveDynamicParameter !== 'undefined' &&
+                tagRef.resolveDynamicParameter != null) {
+                const dynamicParam = tagRef.resolveDynamicParameter(null, param);
+
+                if (dynamicParam !== null) {
+                    return dynamicParam;
+                }
+            }
+
             return null;
         }
 
@@ -385,6 +409,7 @@ class TagManager {
 if (typeof TagManager.instance == 'undefined' || TagManager.instance == null) {
     TagManager.instance = new TagManager();
     TagManager.instance.loadCoreTags();
+
 }
 
 export default TagManager;

@@ -3,6 +3,10 @@ import { trimLeft } from '../../../../utils/strings';
 import { dynamicParameter, IAntlersParameter } from '../../../tagManager';
 
 export function resolveConditionalParmaters(symbol: AntlersNode, paramName: string): IAntlersParameter | null {
+    if (symbol == null) {
+        return null;
+    }
+
     let checkName = trimLeft(paramName, ':');
 
     if (checkName.includes(':')) {

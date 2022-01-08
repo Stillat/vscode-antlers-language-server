@@ -1,4 +1,6 @@
+import { makeTagDoc } from '../../../documentation/utils';
 import { AntlersNode } from '../../../runtime/nodes/abstractNode';
+import { ISuggestionRequest } from '../../../suggestions/suggestionRequest';
 import { Scope } from '../../scope/scope';
 import { IAntlersTag } from '../../tagManager';
 import { makeFileVariables } from '../../variables/fileVariables';
@@ -126,6 +128,13 @@ const GetFiles: IAntlersTag = {
         scope.addVariables(makeFileVariables(symbol));
 
         return scope;
+    },
+    resolveDocumentation: (params?: ISuggestionRequest) => {
+        return makeTagDoc(
+            'get_files Tag',
+            'The `get_files` tag can be used to display information about files on the site\'s local filesystem.',
+            'https://statamic.dev/tags/get_files'
+        );
     }
 };
 

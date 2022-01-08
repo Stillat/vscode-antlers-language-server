@@ -1,3 +1,5 @@
+import { makeTagDoc } from '../../../documentation/utils';
+import { ISuggestionRequest } from '../../../suggestions/suggestionRequest';
 import { IAntlersTag } from '../../tagManager';
 
 const Obfuscate: IAntlersTag = {
@@ -7,7 +9,14 @@ const Obfuscate: IAntlersTag = {
     injectParentScope: false,
     allowsContentClose: false,
     allowsArbitraryParameters: false,
-    parameters: []
+    parameters: [],
+    resolveDocumentation: (params?: ISuggestionRequest) => {
+        return makeTagDoc(
+            'obfuscate Tag',
+            'The `obfuscate` tag converts the tags\'s content into a format that is difficult for bots to read, but can easily be viewed by users within their browser.',
+            'https://statamic.dev/tags/obfuscate'
+        );
+    }
 };
 
 export default Obfuscate;

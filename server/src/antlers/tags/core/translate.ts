@@ -1,3 +1,4 @@
+import { makeTagDoc } from '../../../documentation/utils';
 import { getTranslationSuggestions } from '../../../suggestions/project/translationCompletions';
 import { getCurrentSymbolMethodNameValue } from '../../../suggestions/suggestionManager';
 import { ISuggestionRequest } from '../../../suggestions/suggestionRequest';
@@ -72,10 +73,25 @@ const Translate: IAntlersTag = {
             return exclusiveResult(getTranslationSuggestions(existingTranslateValue, params.project));
         }
         return EmptyCompletionResult;
+    },
+    resolveDocumentation: (params?: ISuggestionRequest) => {
+        return makeTagDoc(
+            'trans Tag',
+            'The `trans` tag can be used to retrieve a string for the current locale\'s language file.',
+            'https://statamic.dev/tags/trans'
+        );
     }
 };
 
 const TransTag: IAntlersTag = createDefinitionAlias(Translate, 'trans');
 const TransChoiceTag: IAntlersTag = createDefinitionAlias(Translate, 'trans_choice');
+
+TransChoiceTag.resolveDocumentation = (params?: ISuggestionRequest) => {
+    return makeTagDoc(
+        'trans_choice Tag',
+        'The `trans_choice` tag can be used to retrieve a pluralized string for the current locale\'s language file.',
+        'https://statamic.dev/tags/trans#pluralization'
+    );
+};
 
 export { Translate, TransTag, TransChoiceTag };

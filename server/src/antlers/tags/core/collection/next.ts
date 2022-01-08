@@ -1,3 +1,5 @@
+import { makeTagDocWithCodeSample } from '../../../../documentation/utils';
+import { ISuggestionRequest } from '../../../../suggestions/suggestionRequest';
 import { IAntlersTag } from '../../../tagManager';
 import { suggestAlternativeCollectionParams } from './alternateParamSuggestions';
 import { augmentCollectionScope } from './augmentCollectionScope';
@@ -42,7 +44,17 @@ const CollectionNext: IAntlersTag = {
     resolveSpecialType: resolveCollectionScope,
     suggestAlternativeParams: suggestAlternativeCollectionParams,
     resovleParameterCompletionItems: resolveCollectionParameterCompletiontems,
-    resolveCompletionItems: resolveCollectionCompletions
+    resolveCompletionItems: resolveCollectionCompletions,
+    resolveDocumentation: (params?: ISuggestionRequest) => {
+        return makeTagDocWithCodeSample(
+            'collection:next Tag',
+            'The `collection:next` tag is used to show the entries that will appear after the current entry, based on some entry order (publish date, alphabetical, or manual).',
+            `{{# Retrieve the next two entries, based on dates in ascending order. #}}
+{{ collection:next in="articles" limit="2" sort="date:asc" }}
+
+{{ /collection:next }}`, 'https://statamic.dev/tags/collection-next'
+        );
+    }
 };
 
 export default CollectionNext;

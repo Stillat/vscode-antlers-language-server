@@ -248,6 +248,15 @@ const conditionalModifiers: IModifier[] = [
         canBeParameter: false
     },
     {
+        name: 'is_tomorrow',
+        acceptsType: ['string', 'date'],
+        returnsType: ['boolean'],
+        description: 'Tests if the date is tomorrow.',
+        docLink: null,
+        parameters: [],
+        canBeParameter: false
+    },
+    {
         name: 'starts_with',
         acceptsType: ['string'],
         returnsType: ['boolean'],

@@ -4,10 +4,7 @@ import { getFields } from "./blueprints";
 import { IFieldsetField } from '../fieldsets/fieldset';
 import { ISet } from '../blueprints/fields';
 
-export function getFieldsetFields(
-    fileName: string,
-    fieldsetName: string
-): IFieldsetField[] {
+export function getFieldsetFields(fileName: string, fieldsetName: string): IFieldsetField[] {
     const contents = fs.readFileSync(fileName, { encoding: "utf8" });
     const document = YAML.parse(contents);
 

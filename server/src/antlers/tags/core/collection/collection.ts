@@ -1,3 +1,4 @@
+import { makeTagDocWithCodeSample } from '../../../../documentation/utils';
 import { ISuggestionRequest } from '../../../../suggestions/suggestionRequest';
 import { IAntlersTag } from '../../../tagManager';
 import { suggestAlternativeCollectionParams } from './alternateParamSuggestions';
@@ -22,13 +23,18 @@ const Collection: IAntlersTag = {
     suggestAlternativeParams: suggestAlternativeCollectionParams,
     resovleParameterCompletionItems: resolveCollectionParameterCompletiontems,
     resolveCompletionItems: resolveCollectionCompletions,
-	resolveDocumentation: (params:ISuggestionRequest) => {
-		return `**Collection Tag**  
-The collection tag provides access to entry data such as blog posts, products, etc.  
+    resolveDocumentation: (params?: ISuggestionRequest) => {
+        return makeTagDocWithCodeSample(
+            'collection Tag',
+            'The `collection` tag provides access to entry data such as blog posts, products, etc.',
+            `{{ collection:articles as="posts" }}
 
-[Documentation Reference](https://statamic.dev/tags/collection)
-`;
-	}
+	{{ posts }}
+		{{ title }}
+	{{ /posts }}
+
+{{ /collection:articles }}`, 'https://statamic.dev/tags/collection');
+    }
 };
 
 export default Collection;

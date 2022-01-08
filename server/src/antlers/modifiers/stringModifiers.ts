@@ -109,6 +109,15 @@ const stringModifiers: IModifier[] = [
         canBeParameter: false
     },
     {
+        name: 'trackable_embed_url',
+        acceptsType: ['string'],
+        returnsType: ['string'],
+        description: 'Get the embed URL when given a youtube or vimeo link that\'s direct to the page.',
+        docLink: null,
+        parameters: [],
+        canBeParameter: false
+    },
+    {
         name: 'ensure_left',
         acceptsType: ['string'],
         returnsType: ['string'],

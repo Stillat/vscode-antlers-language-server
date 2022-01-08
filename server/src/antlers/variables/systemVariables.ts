@@ -27,6 +27,8 @@ export function getSystemVariables(): IScopeVariable[] {
     systemVariables.push({ dataType: 'string', name: 'homepage', sourceField: null, sourceName: '*internal.system', introducedBy: null });
     systemVariables.push({ dataType: 'string', name: 'current_uri', sourceField: null, sourceName: '*internal.system', introducedBy: null });
     systemVariables.push({ dataType: 'string', name: 'current_url', sourceField: null, sourceName: '*internal.system', introducedBy: null });
+    systemVariables.push({ dataType: 'string', name: 'current_template', sourceField: null, sourceName: '*internal.system', introducedBy: null });
+    systemVariables.push({ dataType: 'boolean', name: 'is_homepage', sourceField: null, sourceName: '*internal.system', introducedBy: null });
 
     systemVariables.push({ dataType: 'date', name: 'now', sourceField: null, sourceName: '*internal.system', introducedBy: null });
     systemVariables.push({ dataType: 'date', name: 'today', sourceField: null, sourceName: '*internal.system', introducedBy: null });

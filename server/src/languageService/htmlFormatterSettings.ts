@@ -2,7 +2,7 @@
 let htmlFormatterSettings: any = null;
 
 export function updateHtmlFormatterSettings(settings: any) {
-	htmlFormatterSettings = settings;
+    htmlFormatterSettings = settings;
 }
 
 export { htmlFormatterSettings };

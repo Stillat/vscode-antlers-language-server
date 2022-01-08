@@ -1,3 +1,5 @@
+import { makeTagDoc } from '../../../../documentation/utils';
+import { ISuggestionRequest } from '../../../../suggestions/suggestionRequest';
 import { IAntlersTag } from '../../../tagManager';
 
 const Else: IAntlersTag = {
@@ -7,7 +9,14 @@ const Else: IAntlersTag = {
     allowsContentClose: false,
     requiresClose: true,
     injectParentScope: true,
-    parameters: []
+    parameters: [],
+    resolveDocumentation: (params?: ISuggestionRequest) => {
+        return makeTagDoc(
+            'else Conditional Control Structure',
+            'The contents of the `else` control structure will be evaluated when all previous conditional branch conditions were not met.',
+            'https://statamic.dev/antlers#conditions'
+        );
+    }
 };
 
 export default Else;

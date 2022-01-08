@@ -33,7 +33,7 @@ export class TagIdentifier {
     }
 
     getRuntimeMethodName() {
-		// Not Implemented in TS version.
+        // Not Implemented in TS version.
     }
 
     getCompoundTagName() {

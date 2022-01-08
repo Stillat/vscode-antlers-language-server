@@ -1,4 +1,6 @@
+import { makeTagDoc } from '../../../documentation/utils';
 import { AntlersNode } from '../../../runtime/nodes/abstractNode';
+import { ISuggestionRequest } from '../../../suggestions/suggestionRequest';
 import { Scope } from '../../scope/scope';
 import { IAntlersTag } from "../../tagManager";
 import { createDefinitionAlias } from "../alias";
@@ -51,11 +53,26 @@ const UserPasswordReset: IAntlersTag = {
 
         return scope;
     },
+    resolveDocumentation: (params?: ISuggestionRequest) => {
+        return makeTagDoc(
+            'user:reset_password_form Tag',
+            'The `user:reset_password_form` tag is used to quickly create password reset forms. Forms created with this tag should be displayed after a user has received and clicked a password reset email link.',
+            'https://statamic.dev/tags/user-reset_password_form'
+        );
+    }
 };
 
 const MemberPasswordReset = createDefinitionAlias(
     UserPasswordReset,
     "member:reset_password_form"
 );
+
+MemberPasswordReset.resolveDocumentation = (params?: ISuggestionRequest) => {
+    return makeTagDoc(
+        'member:reset_password_form Tag',
+        'The `member:reset_password_form` tag is used to quickly create password reset forms. Forms created with this tag should be displayed after a user has received and clicked a password reset email link.',
+        'https://statamic.dev/tags/user-reset_password_form'
+    );
+};
 
 export { UserPasswordReset, MemberPasswordReset };

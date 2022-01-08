@@ -4,9 +4,7 @@ import {
 import { IAntlersParameter } from "../antlers/tagManager";
 import { BooleanCompletionItems } from "./defaults/booleanItems";
 
-export function getParameterCompletionItems(
-    parameter: IAntlersParameter
-): CompletionItem[] {
+export function getParameterCompletionItems(parameter: IAntlersParameter): CompletionItem[] {
     let itemsToReturn: CompletionItem[] = [];
 
     for (let i = 0; i < parameter.expectsTypes.length; i++) {

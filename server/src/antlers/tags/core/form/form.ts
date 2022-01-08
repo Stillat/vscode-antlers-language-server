@@ -1,55 +1,55 @@
-import {
-	CompletionItem,
-	CompletionItemKind,
-} from "vscode-languageserver-types";
+import { CompletionItem, CompletionItemKind, } from "vscode-languageserver-types";
 import { ISuggestionRequest } from '../../../../suggestions/suggestionRequest';
-import {
-	EmptyCompletionResult,
-	IAntlersTag,
-	nonExclusiveResult,
-} from "../../../tagManager";
+import { tagToCompletionItem } from '../../../documentedLabel';
+import { EmptyCompletionResult, IAntlersTag, nonExclusiveResult, } from "../../../tagManager";
+import FormCreate from './formCreate';
+import FormErrors from './formErrors';
+import FormSetTag from './formSet';
+import FormSubmission from './formSubmission';
+import FormSubmissions from './formSubmissions';
+import FormSuccess from './formSuccess';
 import { resolveFormParameterCompletions } from "./parameterCompletions";
 
 const FormCompletions: CompletionItem[] = [
-	{ label: "set", kind: CompletionItemKind.Text },
-	{ label: "create", kind: CompletionItemKind.Text },
-	{ label: "errors", kind: CompletionItemKind.Text },
-	{ label: "success", kind: CompletionItemKind.Text },
-	{ label: "submissions", kind: CompletionItemKind.Text },
-	{ label: "submission", kind: CompletionItemKind.Text },
+    tagToCompletionItem(FormSetTag),
+    tagToCompletionItem(FormCreate),
+    tagToCompletionItem(FormErrors),
+    tagToCompletionItem(FormSuccess),
+    tagToCompletionItem(FormSubmissions),
+    tagToCompletionItem(FormSubmission)
 ];
 
 const FormTag: IAntlersTag = {
-	tagName: "form",
-	allowsArbitraryParameters: false,
-	allowsContentClose: false,
-	requiresClose: true,
-	hideFromCompletions: false,
-	injectParentScope: false,
-	parameters: [],
-	resovleParameterCompletionItems: resolveFormParameterCompletions,
-	resolveCompletionItems: (params: ISuggestionRequest) => {
-		let items: CompletionItem[] = [];
+    tagName: "form",
+    allowsArbitraryParameters: false,
+    allowsContentClose: false,
+    requiresClose: true,
+    hideFromCompletions: false,
+    injectParentScope: false,
+    parameters: [],
+    resovleParameterCompletionItems: resolveFormParameterCompletions,
+    resolveCompletionItems: (params: ISuggestionRequest) => {
+        let items: CompletionItem[] = [];
 
-		if (params.isPastTagPart == false &&
-			(params.leftWord == "form" || params.leftWord == "/form") &&
-			params.leftChar == ":") {
-			const formNames = params.project.getUniqueFormNames();
+        if (params.isPastTagPart == false &&
+            (params.leftWord == "form" || params.leftWord == "/form") &&
+            params.leftChar == ":") {
+            const formNames = params.project.getUniqueFormNames();
 
-			items = items.concat(FormCompletions);
+            items = items.concat(FormCompletions);
 
-			for (let i = 0; i < formNames.length; i++) {
-				items.push({
-					label: formNames[i],
-					kind: CompletionItemKind.Field,
-				});
-			}
+            for (let i = 0; i < formNames.length; i++) {
+                items.push({
+                    label: formNames[i],
+                    kind: CompletionItemKind.Field,
+                });
+            }
 
-			return nonExclusiveResult(items);
-		}
+            return nonExclusiveResult(items);
+        }
 
-		return EmptyCompletionResult;
-	},
+        return EmptyCompletionResult;
+    },
 };
 
 export default FormTag;

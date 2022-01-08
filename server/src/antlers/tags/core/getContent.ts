@@ -1,3 +1,4 @@
+import { makeTagDocWithCodeSample } from '../../../documentation/utils';
 import { ISuggestionRequest } from '../../../suggestions/suggestionRequest';
 import { exclusiveResultList, IAntlersParameter, IAntlersTag } from '../../tagManager';
 
@@ -15,7 +16,7 @@ const GetContent: IAntlersTag = {
             acceptsVariableInterpolation: false,
             aliases: [],
             allowsVariableReference: true,
-            description: 'The URI or URIs to retrieve data for',
+            description: 'The ID to retrieve data for',
             expectsTypes: ['string', 'array'],
             isDynamic: false,
         },
@@ -36,6 +37,15 @@ const GetContent: IAntlersTag = {
         }
 
         return null;
+    },
+    resolveDocumentation: (params?: ISuggestionRequest) => {
+        return makeTagDocWithCodeSample(
+            'get_content Tag',
+            'The `get_content` tag can be used to retrieve content from other entries. This tag accepts the ID of another entry, and will return access to all data for that entry.',
+            `{{ get_content from="the-entry-id" }}
+{{ /get_content }}`,
+            'https://statamic.dev/tags/get_content'
+        );
     }
 };
 

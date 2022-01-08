@@ -1,4 +1,6 @@
+import { makeTagDocWithCodeSample } from '../../../documentation/utils';
 import { AntlersNode } from '../../../runtime/nodes/abstractNode';
+import { ISuggestionRequest } from '../../../suggestions/suggestionRequest';
 import { Scope } from '../../scope/scope';
 import { IAntlersTag } from "../../tagManager";
 import { makeAssetVariables } from "../../variables/assetVariables";
@@ -27,6 +29,15 @@ const Asset: IAntlersTag = {
 
         return scope;
     },
+    resolveDocumentation: (params?: ISuggestionRequest) => {
+        return makeTagDocWithCodeSample('asset Tag',
+            'The `asset` tag can be used to retrive Assets by supplying a URL.',
+            `{{ asset url="/url/for/asset.png" }}
+    <img src="{{ url }}" alt="{{ alt }}" />
+{{ /asset }}`,
+            'https://statamic.dev/tags/asset'
+        );
+    }
 };
 
 export default Asset;

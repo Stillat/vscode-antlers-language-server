@@ -1,3 +1,4 @@
+import { makeTagDoc } from '../../../documentation/utils';
 import SessionVariableManager from '../../../references/sessionVariableManager';
 import { ISuggestionRequest } from '../../../suggestions/suggestionRequest';
 import { getUniqueParameterArrayValuesSuggestions } from '../../../suggestions/uniqueParameterArraySuggestions';
@@ -32,6 +33,13 @@ const SessionForget: IAntlersTag = {
         }
 
         return null;
+    },
+    resolveDocumentation: (params?: ISuggestionRequest) => {
+        return makeTagDoc(
+            'session:forget Tag',
+            'The `session:forget` tag is used to remove variables from the user\'s session.',
+            'https://statamic.dev/tags/session-forget'
+        );
     }
 };
 

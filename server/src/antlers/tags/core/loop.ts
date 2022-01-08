@@ -1,4 +1,6 @@
+import { makeTagDoc } from '../../../documentation/utils';
 import { AntlersNode } from '../../../runtime/nodes/abstractNode';
+import { ISuggestionRequest } from '../../../suggestions/suggestionRequest';
 import { Scope } from '../../scope/scope';
 import { IAntlersTag } from "../../tagManager";
 
@@ -52,6 +54,13 @@ const Loop: IAntlersTag = {
             isDynamic: false,
         },
     ],
+    resolveDocumentation: (params?: ISuggestionRequest) => {
+        return makeTagDoc(
+            'loop Tag',
+            'The `loop` tag is used to create an array of items between two values, and then iterate the created array. Alternatively, a max value can be set using the `times` parameter to loop that number of times.',
+            'https://statamic.dev/tags/loop'
+        );
+    }
 };
 
 const RangeTag: IAntlersTag = {
@@ -104,6 +113,13 @@ const RangeTag: IAntlersTag = {
             isDynamic: false,
         },
     ],
+    resolveDocumentation: (params?: ISuggestionRequest) => {
+        return makeTagDoc(
+            'range Tag',
+            'The `range` tag is used to create an array of items between two values, and then iterate the created array. Alternatively, a max value can be set using the `times` parameter to loop that number of times.',
+            'https://statamic.dev/tags/loop'
+        );
+    }
 };
 
 export { Loop, RangeTag };

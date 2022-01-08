@@ -1,5 +1,6 @@
+import { makeTagDoc } from '../../../../documentation/utils';
+import { ISuggestionRequest } from '../../../../suggestions/suggestionRequest';
 import { IAntlersTag } from '../../../tagManager';
-import FormHandleParam from './formHandleParam';
 import { resolveFormParameterCompletions } from './parameterCompletions';
 
 const FormSetTag: IAntlersTag = {
@@ -10,9 +11,25 @@ const FormSetTag: IAntlersTag = {
     hideFromCompletions: false,
     injectParentScope: false,
     parameters: [
-        FormHandleParam
+        {
+            name: 'in',
+            description: 'The form to use',
+            acceptsVariableInterpolation: true,
+            aliases: ['handle', 'is', 'form', 'formset'],
+            allowsVariableReference: true,
+            expectsTypes: ['string'],
+            isDynamic: false,
+            isRequired: true
+        }
     ],
-    resovleParameterCompletionItems: resolveFormParameterCompletions
+    resovleParameterCompletionItems: resolveFormParameterCompletions,
+    resolveDocumentation: (params?: ISuggestionRequest) => {
+        return makeTagDoc(
+            'form:set Tag',
+            'The `form:set` tag can be used to set the form handle on all nested form tags.',
+            'https://statamic.dev/tags/form-set'
+        );
+    }
 };
 
 export default FormSetTag;

@@ -17,11 +17,58 @@ export function makeFieldSuggest(name: string, description: string, valueType: s
     return item;
 }
 
+function getTypedHeader(name: string, acceptsTypes: string[]): string {
+    let typePart = "";
+
+    if (acceptsTypes.length > 0) {
+        const typeString = acceptsTypes.join(", ");
+
+        typePart = typeString;
+    }
+
+    const header = "**" + name + "** `" + typePart + "`  \n";
+
+    return header;
+}
+
 export function makeModifierSuggest(modifier: IModifier): CompletionItem {
-    let helpContent = modifier.description;
+    let value = getTypedHeader(modifier.name, modifier.acceptsType);
+
+    let paramString = '';
+
+    if (modifier.parameters.length > 0) {
+        const paramNames: string[] = [];
+        modifier.parameters.forEach((param) => {
+            paramNames.push('$' + param.name);
+        });
+
+        paramString = paramNames.join(', ');
+    }
+
+    let returnString = '';
+
+    if (modifier.returnsType.length == 1) {
+        returnString = modifier.returnsType[0];
+    } else {
+        const returnNames: string[] = [];
+
+        modifier.returnsType.forEach((type) => {
+            returnNames.push(type);
+        });
+
+        returnString = returnNames.join(', ');
+    }
+
+    value += modifier.description + "\n";
+
+    value += "```js\n";
+    value += 'function ' + modifier.name + '(' + paramString + '):' + returnString;
+    value += "\n```";
+
 
     if (modifier.docLink != null && modifier.docLink.trim().length > 0) {
-        helpContent += " [" + modifier.docLink + "](" + modifier.docLink + ")";
+        value += "  \n\n";
+        value += '[Documentation Reference](' + modifier.docLink + ')';
     }
 
     const item: CompletionItem = {
@@ -30,7 +77,7 @@ export function makeModifierSuggest(modifier: IModifier): CompletionItem {
 
         documentation: {
             kind: MarkupKind.Markdown,
-            value: helpContent,
+            value: value,
         },
         kind: CompletionItemKind.Function,
     };

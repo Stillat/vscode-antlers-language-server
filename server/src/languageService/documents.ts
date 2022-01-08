@@ -6,6 +6,6 @@ const sessionDocuments = new DocumentManager();
 
 
 export {
-	documentMap,
-	sessionDocuments
+    documentMap,
+    sessionDocuments
 };

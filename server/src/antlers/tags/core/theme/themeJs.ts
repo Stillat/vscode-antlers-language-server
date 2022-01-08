@@ -1,5 +1,7 @@
+import { makeTagDoc } from '../../../../documentation/utils';
+import { ISuggestionRequest } from '../../../../suggestions/suggestionRequest';
 import { IAntlersTag } from '../../../tagManager';
-import { ThemePathParameters } from './theme';
+import { ThemePathParameters } from './themeParameters';
 
 const ThemeJavaScript: IAntlersTag = {
     tagName: 'theme:js',
@@ -20,7 +22,14 @@ const ThemeJavaScript: IAntlersTag = {
             description: 'Whether to generate an HTML tag',
             expectsTypes: ['boolean']
         }
-    ]
+    ],
+    resolveDocumentation: (params?: ISuggestionRequest) => {
+        return makeTagDoc(
+            'theme:js Tag',
+            'The `theme:js` tag may be used to generate a JavaScript path relative to a public `js/` directory for any arbitrary file path. This tag may also optionally create the HTML `script` tag.',
+            null
+        );
+    }
 };
 
 export default ThemeJavaScript;

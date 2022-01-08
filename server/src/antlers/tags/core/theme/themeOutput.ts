@@ -1,4 +1,6 @@
+import { makeTagDoc } from '../../../../documentation/utils';
 import { AntlersNode } from '../../../../runtime/nodes/abstractNode';
+import { ISuggestionRequest } from '../../../../suggestions/suggestionRequest';
 import { Scope } from '../../../scope/scope';
 import { IAntlersTag } from "../../../tagManager";
 
@@ -56,6 +58,13 @@ const ThemeOutput: IAntlersTag = {
 
         return scope;
     },
+    resolveDocumentation: (params?: ISuggestionRequest) => {
+        return makeTagDoc(
+            'theme:output Tag',
+            'The `theme:output` tag may be used to output the contents of any arbitrary file, relative to the site\'s `resources/` directory.',
+            null
+        );
+    }
 };
 
 export default ThemeOutput;

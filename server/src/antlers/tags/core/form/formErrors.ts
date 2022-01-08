@@ -1,3 +1,4 @@
+import { makeTagDoc } from '../../../../documentation/utils';
 import { ISuggestionRequest } from '../../../../suggestions/suggestionRequest';
 import { exclusiveResultList, IAntlersParameter, IAntlersTag } from '../../../tagManager';
 import FormHandleParam from './formHandleParam';
@@ -21,6 +22,13 @@ const FormErrors: IAntlersTag = {
         }
 
         return null;
+    },
+    resolveDocumentation: (params?: ISuggestionRequest) => {
+        return makeTagDoc(
+            'form:errors Tag',
+            'The `form:errors` tag can be used to retrieve validation errors after a user has submitted a form.',
+            'https://statamic.dev/tags/form-errors'
+        );
     }
 };
 

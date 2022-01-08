@@ -20,7 +20,7 @@ export function handleOnCompletion(_textDocumentPosition: TextDocumentPositionPa
         return [];
     }
 
-	sessionDocuments.refreshDocumentState();
+    sessionDocuments.refreshDocumentState();
 
     const docPath = decodeURIComponent(_textDocumentPosition.textDocument.uri);
 
@@ -28,22 +28,23 @@ export function handleOnCompletion(_textDocumentPosition: TextDocumentPositionPa
         return [];
     }
 
-    const suggestionRequest = makeProviderRequest(
-        _textDocumentPosition.position,
-        docPath
-    ),
-        globalSnippets = SnippetsManager.instance?.getSnippets(suggestionRequest) ?? [];
-    let suggestions = SuggestionManager.getSuggestions(suggestionRequest);
+    const suggestionRequest = makeProviderRequest(_textDocumentPosition.position, docPath);
 
     if (suggestionRequest == null) {
         return [];
     }
 
-    if (
-        globalSnippets.length > 0 &&
-        (suggestionRequest.isInDoubleBraces == false ||
-            suggestionRequest.nodesInScope.length == 0)
-    ) {
+	// Return empty completions when inside front matter.
+	if (suggestionRequest.hasFrontMatter && suggestionRequest.frontMatterEndsOn > -1) {
+		if (suggestionRequest.position.line < suggestionRequest.frontMatterEndsOn) {
+			return [];
+		}
+	}
+
+    const globalSnippets = SnippetsManager.instance?.getSnippets(suggestionRequest) ?? [];
+    let suggestions = SuggestionManager.getSuggestions(suggestionRequest);
+
+    if (globalSnippets.length > 0 && (suggestionRequest.isInDoubleBraces == false || suggestionRequest.nodesInScope.length == 0)) {
         suggestions = suggestions.concat(globalSnippets);
     }
 

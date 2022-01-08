@@ -1,32 +1,26 @@
-import {
-    CompletionItem,
-    CompletionItemKind,
-} from "vscode-languageserver-types";
+import { CompletionItem, CompletionItemKind } from "vscode-languageserver-types";
 import SessionVariableManager from "../../../references/sessionVariableManager";
 import { AntlersNode } from '../../../runtime/nodes/abstractNode';
 import { ISuggestionRequest } from '../../../suggestions/suggestionRequest';
+import { tagToCompletionItem } from '../../documentedLabel';
 import { Scope } from '../../scope/scope';
 import { IScopeVariable } from '../../scope/types';
-import {
-    EmptyCompletionResult,
-    exclusiveResult,
-    IAntlersTag,
-} from "../../tagManager";
+import { EmptyCompletionResult, exclusiveResult, IAntlersTag } from "../../tagManager";
+import SessionDump from './sessionDump';
+import SessionFlash from './sessionFlash';
+import SessionFlush from './sessionFlush';
+import SessionForget from './sessionForget';
+import SessionHas from './sessionHas';
+import SessionSet from './sessionSet';
 
 const SessionTagCompletionItems: CompletionItem[] = [
-    { label: "set", kind: CompletionItemKind.Text },
-    { label: "flash", kind: CompletionItemKind.Text },
-    { label: "forget", kind: CompletionItemKind.Text },
-    { label: "flush", kind: CompletionItemKind.Text },
+    tagToCompletionItem(SessionSet),
+    tagToCompletionItem(SessionFlash),
+    tagToCompletionItem(SessionForget),
+    tagToCompletionItem(SessionFlush),
+    tagToCompletionItem(SessionHas),
+    tagToCompletionItem(SessionDump)
 ];
-
-export class SessionVariableContext {
-    node: AntlersNode;
-
-    constructor(node: AntlersNode) {
-        this.node = node;
-    }
-}
 
 const SessionTag: IAntlersTag = {
     tagName: "session",
@@ -73,8 +67,7 @@ const SessionTag: IAntlersTag = {
     },
     augmentScope: (node: AntlersNode, scope: Scope) => {
         const asParam = node.findParameter("as"),
-            knownParams: string[] =
-                SessionVariableManager.instance?.getKnownSessionVariableNames() ?? [],
+            knownParams: string[] = SessionVariableManager.instance?.getKnownSessionVariableNames() ?? [],
             scopeVariables: IScopeVariable[] = [];
 
         for (let i = 0; i < knownParams.length; i++) {

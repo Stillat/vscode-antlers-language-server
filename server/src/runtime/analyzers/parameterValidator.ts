@@ -122,9 +122,9 @@ export class ParameterValidator {
                                 });
                             }
                         } else {
-							if (paramToAnalyze.hasInterpolations()) {
-								continue;
-							}
+                            if (paramToAnalyze.hasInterpolations()) {
+                                continue;
+                            }
 
                             for (let q = 0; q < registeredParam.expectsTypes.length; q++) {
                                 const curTypeToCheck = registeredParam.expectsTypes[q];

@@ -1,4 +1,6 @@
+import { makeTagDoc } from '../../../documentation/utils';
 import { AntlersNode } from '../../../runtime/nodes/abstractNode';
+import { ISuggestionRequest } from '../../../suggestions/suggestionRequest';
 import { Scope } from '../../scope/scope';
 import { IScopeVariable } from '../../scope/types';
 import { IAntlersTag } from '../../tagManager';
@@ -64,6 +66,13 @@ const UserLoginForm: IAntlersTag = {
         scope.addVariableArray('error', makeUserLoginFields(node));
 
         return scope;
+    },
+    resolveDocumentation: (params?: ISuggestionRequest) => {
+        return makeTagDoc(
+            'user:login_form Tag',
+            'The `user:login_form` tag can be used to quickly create a form that users can use to authenticate with the site.',
+            'https://statamic.dev/tags/user-login_form'
+        );
     }
 };
 

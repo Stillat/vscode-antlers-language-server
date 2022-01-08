@@ -1,3 +1,5 @@
+import { makeTagDoc } from '../../../../documentation/utils';
+import { ISuggestionRequest } from '../../../../suggestions/suggestionRequest';
 import { IAntlersTag } from '../../../tagManager';
 import { returnDynamicParameter } from '../../dynamicParameterResolver';
 
@@ -9,7 +11,14 @@ const ElseIf: IAntlersTag = {
     requiresClose: true,
     injectParentScope: true,
     parameters: [],
-    resolveDynamicParameter: returnDynamicParameter
+    resolveDynamicParameter: returnDynamicParameter,
+    resolveDocumentation: (params?: ISuggestionRequest) => {
+        return makeTagDoc(
+            'elseif Conditional Control Structure',
+            'The contents of the `elseif` tag will be rendered when it\'s expression evaluates to `true`.',
+            'https://statamic.dev/antlers#conditions'
+        );
+    }
 };
 
 export default ElseIf;

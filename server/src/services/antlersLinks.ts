@@ -17,15 +17,15 @@ export class DocumentLinkManager {
                     const projectPartial = ProjectManager.instance.getStructure().findRelativeView(thisRef.getMethodNameValue());
 
                     if (projectPartial != null) {
-						const end = antlersPositionToVsCode(thisRef.nameEndsOn);
+                        const end = antlersPositionToVsCode(thisRef.nameEndsOn);
 
                         documentLinks.push({
                             range: {
-                                start:  antlersPositionToVsCode(thisRef.startPosition),
+                                start: antlersPositionToVsCode(thisRef.startPosition),
                                 end: {
-									character: end.character - 2,
-									line: end.line
-								},
+                                    character: end.character - 2,
+                                    line: end.line
+                                },
                             },
                             tooltip: "Partial: " + projectPartial.displayName,
                             target: decodeURIComponent(projectPartial.documentUri),

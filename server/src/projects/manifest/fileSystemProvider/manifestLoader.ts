@@ -44,7 +44,7 @@ export function safeRunIndexing() {
 
         runProjectIndexing(workingDirectory);
     }
-} 
+}
 export function checkForIndexProcessAvailability() {
     if (!hasCheckedForCompatibility) {
         if (fs.existsSync(serverDirectory + "/" + analyzerName)) {

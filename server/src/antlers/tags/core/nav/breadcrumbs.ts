@@ -1,4 +1,6 @@
+import { makeTagDoc } from '../../../../documentation/utils';
 import { AntlersNode } from '../../../../runtime/nodes/abstractNode';
+import { ISuggestionRequest } from '../../../../suggestions/suggestionRequest';
 import { Scope } from '../../../scope/scope';
 import { IAntlersTag } from "../../../tagManager";
 import { makeRoutableVariables } from "../../../variables/routeableVariables";
@@ -58,6 +60,13 @@ const NavBreadcrumbs: IAntlersTag = {
 
         return scope;
     },
+    resolveDocumentation: (params?: ISuggestionRequest) => {
+        return makeTagDoc(
+            'nav:breadcrumbs Tag',
+            'The `nav:breadcrumbs` tag can be used to retrieve the URLs of all pages that make up the current URL back to the site\'s home page.',
+            'https://statamic.dev/tags/nav-breadcrumbs'
+        );
+    }
 };
 
 export default NavBreadcrumbs;

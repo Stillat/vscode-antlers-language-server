@@ -1,82 +1,107 @@
+import { AntlersDocument } from '../runtime/document/antlersDocument';
 import { AntlersError } from '../runtime/errors/antlersError';
 import { AntlersNode } from '../runtime/nodes/abstractNode';
 import { IDiagnosticsHandler } from "./diagnosticsHandler";
+import { IDocumentDiagnosticsHandler } from './documentHandler';
+import { CoreDocumentHandlers } from './documentHandlers/coreDocHandlers';
 import CoreHandlers from "./handlers/coreHandlers";
 
 class DiagnosticsManager {
-    private fileDiagnostics: Map<string, AntlersError[]> = new Map();
-    private handlers: IDiagnosticsHandler[] = [];
+	private fileDiagnostics: Map<string, AntlersError[]> = new Map();
+	private handlers: IDiagnosticsHandler[] = [];
+	private docHandlers: IDocumentDiagnosticsHandler[] = [];
 
-    public static instance: DiagnosticsManager | null = null;
+	public static instance: DiagnosticsManager | null = null;
 
-    registerHandler(handler: IDiagnosticsHandler) {
-        this.handlers.push(handler);
-    }
+	registerHandler(handler: IDiagnosticsHandler) {
+		this.handlers.push(handler);
+	}
 
-    registerHandlers(handlers: IDiagnosticsHandler[]) {
-        for (let i = 0; i < handlers.length; i++) {
-            this.registerHandler(handlers[i]);
-        }
-    }
+	registerDocumentHandler(handler: IDocumentDiagnosticsHandler) {
+		this.docHandlers.push(handler);
+	}
 
-    registerCoreHandlers() {
-        this.registerHandlers(CoreHandlers);
-    }
+	registerDocumentHandlers(handlers: IDocumentDiagnosticsHandler[]) {
+		for (let i = 0; i < handlers.length; i++) {
+			this.registerDocumentHandler(handlers[i]);
+		}
+	}
 
-    hasDiagnosticsIssues(documentUri: string): boolean {
-        if (this.fileDiagnostics.has(documentUri) == false) {
-            return false;
-        }
+	registerHandlers(handlers: IDiagnosticsHandler[]) {
+		for (let i = 0; i < handlers.length; i++) {
+			this.registerHandler(handlers[i]);
+		}
+	}
 
-        const docIssues = this.fileDiagnostics.get(
-            documentUri
-        ) as AntlersError[];
+	registerCoreHandlers() {
+		this.registerHandlers(CoreHandlers);
+		this.registerDocumentHandlers(CoreDocumentHandlers);
+	}
 
-        return docIssues.length > 0;
-    }
+	hasDiagnosticsIssues(documentUri: string): boolean {
+		if (this.fileDiagnostics.has(documentUri) == false) {
+			return false;
+		}
 
-    registerDiagnostics(documentUri: string, issues: AntlersError[]) {
-        this.fileDiagnostics.set(documentUri, issues);
-    }
+		const docIssues = this.fileDiagnostics.get(
+			documentUri
+		) as AntlersError[];
 
-    clearIssues(documentUri: string) {
-        this.fileDiagnostics.set(documentUri, []);
-    }
+		return docIssues.length > 0;
+	}
 
-    getDiagnostics(documentUri: string): AntlersError[] {
-        if (this.hasDiagnosticsIssues(documentUri)) {
-            return this.fileDiagnostics.get(documentUri) as AntlersError[];
-        }
+	registerDiagnostics(documentUri: string, issues: AntlersError[]) {
+		this.fileDiagnostics.set(documentUri, issues);
+	}
 
-        return [];
-    }
+	clearIssues(documentUri: string) {
+		this.fileDiagnostics.set(documentUri, []);
+	}
 
-    checkNode(node: AntlersNode) {
-        const errors: AntlersError[] = [];
-        this.handlers.forEach((handler) => {
-            handler.checkNode(node).forEach((error) => {
-                errors.push(error);
-            });
-        });
-        return errors;
-    }
+	getDiagnostics(documentUri: string): AntlersError[] {
+		if (this.hasDiagnosticsIssues(documentUri)) {
+			return this.fileDiagnostics.get(documentUri) as AntlersError[];
+		}
 
-    getAllDiagnostics(): AntlersError[] {
-        const allErrors: AntlersError[] = [];
+		return [];
+	}
 
-        this.fileDiagnostics.forEach((value: AntlersError[], key: string) => {
-            for (let i = 0; i < value.length; i++) {
-                allErrors.push(value[i]);
-            }
-        });
+	checkDocument(document:AntlersDocument) {
+		const errors: AntlersError[] = [];
+		this.docHandlers.forEach((handler) => {
+			handler.checkDocument(document).forEach((error) => {
+				errors.push(error);
+			});
+		});
+		return errors;
+	}
 
-        return allErrors;
-    }
+	checkNode(node: AntlersNode) {
+		const errors: AntlersError[] = [];
+		this.handlers.forEach((handler) => {
+			handler.checkNode(node).forEach((error) => {
+				errors.push(error);
+			});
+		});
+		return errors;
+	}
+
+	getAllDiagnostics(): AntlersError[] {
+		const allErrors: AntlersError[] = [];
+
+		this.fileDiagnostics.forEach((value: AntlersError[], key: string) => {
+			for (let i = 0; i < value.length; i++) {
+				allErrors.push(value[i]);
+			}
+		});
+
+		return allErrors;
+	}
 }
 
 if (typeof DiagnosticsManager.instance == "undefined" || DiagnosticsManager.instance == null) {
-    DiagnosticsManager.instance = new DiagnosticsManager();
-    DiagnosticsManager.instance.registerCoreHandlers();
+	DiagnosticsManager.instance = new DiagnosticsManager();
+	DiagnosticsManager.instance.registerCoreHandlers();
 }
 
 export default DiagnosticsManager;

@@ -1,5 +1,7 @@
+import { makeTagDoc } from '../../../../documentation/utils';
 import { IProjectDetailsProvider } from '../../../../projects/projectDetailsProvider';
 import { AntlersNode } from '../../../../runtime/nodes/abstractNode';
+import { ISuggestionRequest } from '../../../../suggestions/suggestionRequest';
 import { IAntlersTag } from "../../../tagManager";
 
 export class YieldContext {
@@ -44,6 +46,13 @@ const Yield: IAntlersTag = {
             issues: [],
         };
     },
+    resolveDocumentation: (params?: ISuggestionRequest) => {
+        return makeTagDoc(
+            'yield Tag',
+            'The `yield` tag may be used to push rendered content to named regions within a template\'s structure.',
+            'https://statamic.dev/tags/yield'
+        );
+    }
 };
 
 export { Yield, Yields };

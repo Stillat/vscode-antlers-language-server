@@ -4,7 +4,7 @@ import Dump from "./core/dump";
 import Error404 from "./core/error404";
 import Link from "./core/link";
 import { Loop, RangeTag } from "./core/loop";
-import Partial from "./core/partial";
+import Partial from "./core/partials/partial";
 import CollectionCount from "./core/collection/count";
 import Increment from "./core/increment";
 import { Yield, Yields } from "./core/sections/yield";
@@ -56,9 +56,7 @@ import ThemeCss from "./core/theme/themeCss";
 import ThemeImg from "./core/theme/themeImg";
 import ThemeJavaScript from "./core/theme/themeJs";
 import ThemeOutput from "./core/theme/themeOutput";
-import GlideGenerate from "./core/glideGenerate";
 import GlideBatch from "./core/glideBatch";
-import Relate from "./core/relate";
 import ScopeTag from "./core/scopeTag";
 import If from "./core/conditions/if";
 import ElseIf from "./core/conditions/elseIf";
@@ -101,6 +99,17 @@ import NoParse from "./core/noParse";
 import Unless from "./core/conditions/unless";
 import ElseUnless from "./core/conditions/elseUnless";
 import { InstalledTag } from "./core/installed";
+import Relate from './core/relate';
+import SessionHas from './core/sessionHas';
+import IncrementReset from './core/incrementReset';
+import LocalesCount from './core/localeCount';
+import { MemberForgotPasswordForm, UserForgotPasswordForm } from './core/userForgotPasswordForm';
+import PartialExists from './core/partials/partialExists';
+import PartialIfExists from './core/partials/partialIfExists';
+import GetErrors from './core/getErrors/getErrors';
+import GetAllErrors from './core/getErrors/getAllErrors';
+import GetError from './core/getErrors/getError';
+import SetTag from './core/set';
 
 const coreTags = [
     If,
@@ -118,6 +127,8 @@ const coreTags = [
     CollectionNewer,
     CollectionOlder,
 
+    Relate,
+
     FormTag,
 
     FormCreate,
@@ -128,21 +139,29 @@ const coreTags = [
     FormSuccess,
     FormErrors,
 
+	SetTag,
+
+    GetErrors,
+    GetError,
+    GetAllErrors,
+
     BaseSearchTag,
     SearchResultsTag,
 
     Partial,
+    PartialExists,
+    PartialIfExists,
 
     Error404,
     NotFound,
     Dump,
-    DdTag,
     DddTag,
+    DdTag,
+
     Cache,
     GetContent,
     GetFiles,
     Glide,
-    GlideGenerate,
     GlideBatch,
     Link,
     Loop,
@@ -150,7 +169,10 @@ const coreTags = [
     IterateTag,
     ForeachTag,
     Increment,
+    IncrementReset,
     Locales,
+    LocalesCount,
+
     Mix,
     NavTag,
     StructureTag,
@@ -174,6 +196,7 @@ const coreTags = [
     UserProfile,
     UserLoginForm,
     UserPasswordReset,
+    UserForgotPasswordForm,
     UserRegister,
 
     MemberTag,
@@ -187,6 +210,7 @@ const coreTags = [
     MemberNotIn,
     MemberLoginForm,
     MemberPasswordReset,
+    MemberForgotPasswordForm,
     MemberRegister,
 
     NoParse,
@@ -197,7 +221,6 @@ const coreTags = [
     Obfuscate,
     Parent,
     PathTag,
-    Relate,
     Redirect,
     Route,
     ScopeTag,
@@ -207,6 +230,7 @@ const coreTags = [
     SessionFlush,
     SessionForget,
     SessionSet,
+    SessionHas,
     SessionDump,
     SVGTag,
     TaxonomyTag,

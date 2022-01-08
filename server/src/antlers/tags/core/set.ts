@@ -2,7 +2,7 @@ import { IAntlersTag } from '../../tagManager';
 
 const SetTag: IAntlersTag = {
     tagName: 'set',
-    hideFromCompletions: false,
+    hideFromCompletions: true,
     allowsArbitraryParameters: true,
     requiresClose: false,
     allowsContentClose: false,

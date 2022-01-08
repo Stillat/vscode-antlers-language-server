@@ -86,8 +86,8 @@ export class ContextResolver {
 
                     if (thisParam.blockPosition != null && thisParam.blockPosition.start != null && thisParam.blockPosition.end != null) {
                         if (position.char > thisParam.blockPosition.start.char && position.char <= thisParam.blockPosition.end.char + 1 &&
-							position.line >= (thisParam.namePosition?.start?.line ?? thisParam.blockPosition.start.line) &&
-							position.line <= (thisParam.valuePosition?.end?.line ?? thisParam.blockPosition.end.line)) {
+                            position.line >= (thisParam.namePosition?.start?.line ?? thisParam.blockPosition.start.line) &&
+                            position.line <= (thisParam.valuePosition?.end?.line ?? thisParam.blockPosition.end.line)) {
                             cursorContext.cursorContext = CursorContext.Parameter;
                             cursorContext.parameterContext = ParameterContext.resolveContext(position, thisParam);
                             cursorContext.isInParameter = true;

@@ -83,8 +83,8 @@ const markupModifiers: IModifier[] = [
         name: 'nl2br',
         acceptsType: ['string'],
         returnsType: ['string'],
-        description: '',
-        docLink: '',
+        description: 'Replaces line breaks with HTML `<br>` tags.',
+        docLink: 'https://statamic.dev/modifiers/nl2br',
         parameters: [],
         canBeParameter: false
     },
@@ -92,8 +92,8 @@ const markupModifiers: IModifier[] = [
         name: 'obfuscate',
         acceptsType: ['string'],
         returnsType: ['string'],
-        description: 'Replaces line breaks with HTML `<br>` tags.',
-        docLink: 'https://statamic.dev/modifiers/nl2br',
+        description: 'Modifies the input string by replacing it with special characters, making it harder for bots but remains readable to site visitors.',
+        docLink: 'https://statamic.dev/modifiers/obfuscate',
         parameters: [],
         canBeParameter: false
     },

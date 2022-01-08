@@ -1,5 +1,7 @@
+import { makeTagDoc } from '../../../../documentation/utils';
+import { ISuggestionRequest } from '../../../../suggestions/suggestionRequest';
 import { IAntlersTag } from '../../../tagManager';
-import { ThemePathParameters } from './theme';
+import { ThemePathParameters } from './themeParameters';
 
 const ThemeImg: IAntlersTag = {
     tagName: 'theme:img',
@@ -30,7 +32,14 @@ const ThemeImg: IAntlersTag = {
             description: 'The alt text to use when generating the HTML tag',
             expectsTypes: ['string']
         }
-    ]
+    ],
+    resolveDocumentation: (params?: ISuggestionRequest) => {
+        return makeTagDoc(
+            'theme:img Tag',
+            'The `theme:img` tag may be used to generate an image path relative to a public `img/` directory for any arbitrary file path. This tag may also optionally create the HTML `img` tag.',
+            null
+        );
+    }
 };
 
 export default ThemeImg;

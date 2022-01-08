@@ -1,4 +1,13 @@
-import { IAntlersTag } from '../../tagManager';
+import { CompletionItem } from 'vscode-languageserver';
+import { makeTagDoc } from '../../../documentation/utils';
+import { ISuggestionRequest } from '../../../suggestions/suggestionRequest';
+import { tagToCompletionItem } from '../../documentedLabel';
+import { EmptyCompletionResult, exclusiveResult, IAntlersTag } from '../../tagManager';
+import IncrementReset from './incrementReset';
+
+const IncrementCompletionItems: CompletionItem[] = [
+    tagToCompletionItem(IncrementReset)
+];
 
 const Increment: IAntlersTag = {
     tagName: 'increment',
@@ -28,7 +37,21 @@ const Increment: IAntlersTag = {
             expectsTypes: ['number'],
             isDynamic: false
         }
-    ]
+    ],
+    resolveCompletionItems: (params: ISuggestionRequest) => {
+        if (params.leftWord == 'increment' || params.leftWord == '/increment' && params.leftChar == ':') {
+            return exclusiveResult(IncrementCompletionItems);
+        }
+
+        return EmptyCompletionResult;
+    },
+    resolveDocumentation: (params?: ISuggestionRequest) => {
+        return makeTagDoc(
+            'increment Tag',
+            'The `increment` tag can be used to increment a value each time the tag is encountered.',
+            'https://statamic.dev/tags/increment'
+        );
+    }
 };
 
 export default Increment;

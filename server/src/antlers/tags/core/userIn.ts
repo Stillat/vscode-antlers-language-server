@@ -1,3 +1,4 @@
+import { makeTagDoc } from '../../../documentation/utils';
 import { ISuggestionRequest } from '../../../suggestions/suggestionRequest';
 import { exclusiveResult, IAntlersParameter, IAntlersTag } from '../../tagManager';
 import { makeUserGroupSuggestions } from './user/permissionUtils';
@@ -29,6 +30,13 @@ const UserIn: IAntlersTag = {
         }
 
         return null;
+    },
+    resolveDocumentation: (params?: ISuggestionRequest) => {
+        return makeTagDoc(
+            'user:in Tag',
+            'The `user:in` tag can be used to check if the currently authenticated user belongs to one or more user groups. When used as a tag pair, the tag contents will only be rendered if the user belongs to the specified groups.',
+            'https://statamic.dev/tags/user-in'
+        );
     }
 };
 

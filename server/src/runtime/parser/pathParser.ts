@@ -58,7 +58,7 @@ export class PathParser {
 
     parse(content: string) {
         this.antlersErrors = [];
-		this._recusriveEntryCheck.clear();
+        this._recusriveEntryCheck.clear();
 
         const originalContent = content;
         let isStrictVariableReference = false,

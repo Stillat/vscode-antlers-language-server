@@ -2,7 +2,7 @@ import { IEnvironmentHelper, IVariableHelper, parseIdeHelper } from '../../idehe
 import { IBlueprintField } from '../../projects/blueprints/fields';
 import { getFieldRuntimeType } from '../../projects/blueprints/blueprintTypes';
 import ReferenceManager from '../../references/referenceManager';
-import {AbstractNode, AntlersNode, EqualCompOperator, StringValueNode, VariableNode} from '../../runtime/nodes/abstractNode';
+import { AbstractNode, AntlersNode, EqualCompOperator, StringValueNode, VariableNode } from '../../runtime/nodes/abstractNode';
 import { IAntlersTag } from '../tagManager';
 import TagManager from '../tagManagerInstance';
 import { makeArrayVariables } from '../variables/arrayVariables';
@@ -17,46 +17,34 @@ import { IScopeVariable } from './types';
 import { IFieldtypeInjection } from '../../projects/fieldsets/fieldtypeInjection';
 import FieldtypeManager from '../fieldtypes/fieldtypeManager';
 import InjectionManager from './injections';
+import { AntlersDocument } from '../../runtime/document/antlersDocument';
 
 const IgnoreArrayContextualData: string[] = ['collection'];
 const ChecksForFieldReferences: string[] = ['if', 'elseif', 'unless', 'elseunless'];
 
 export class ScopeEngine {
 
+	private document: AntlersDocument;
 	private statamicProject: IProjectDetailsProvider;
 	private pageVars: IScopeVariable[] = [];
-	private viewDataVars: IScopeVariable[] = [];
+	private viewDataVars: Scope | null = null;
 	private documentUri = '';
 	private lastSymbolId = '';
 	private ideHelperMap: Map<string, IVariableHelper> = new Map();
 
-	constructor(project: IProjectDetailsProvider, documentUri: string) {
+	constructor(project: IProjectDetailsProvider, documentUri: string, document: AntlersDocument) {
 		this.statamicProject = project;
 		this.documentUri = documentUri;
+		this.document = document;
 
 		this.makePageScope();
 		this.makeViewDataScope();
 	}
 
 	private makeViewDataScope() {
-		const newViewDataVariables: IScopeVariable[] = [],
-			projectView = this.statamicProject.findView(this.documentUri);
-
-		if (projectView != null && projectView.isAntlers) {
-			if (projectView.viewDataVariables.length > 0) {
-				for (let i = 0; i < projectView.viewDataVariables.length; i++) {
-					newViewDataVariables.push({
-						dataType: 'string',
-						name: projectView.viewDataVariables[i],
-						sourceField: null,
-						sourceName: 'view',
-						introducedBy: null
-					});
-				}
-			}
+		if (this.document.hasFrontMatter()) {
+			this.viewDataVars = this.document.getFrontMatterScope();
 		}
-
-		this.viewDataVars = newViewDataVariables;
 	}
 
 	private makePageScope() {
@@ -90,12 +78,27 @@ export class ScopeEngine {
 		rootScope.addScopeList('site', getSiteData(this.statamicProject));
 		rootScope.addScopeList('sites', getSiteData(this.statamicProject));
 		rootScope.addVariables(getSystemVariables());
+		const rootUserVariableScope = new Scope(this.statamicProject);
+		rootUserVariableScope.name = '*root_user*';
+		rootUserVariableScope.parentScope = rootScope;
+
+		this.statamicProject.getUserFields().forEach((field) => {
+			rootUserVariableScope.addBlueprintField(null, field);
+		});
+
+		rootScope.addScopeList('current_user', rootUserVariableScope);
 
 		if (ReferenceManager.instance?.pageScopeDisabled(this.documentUri)) {
-			rootScope.mergeAndList('view', this.viewDataVars);
+			if (this.viewDataVars != null) {
+				rootScope.addScopeList('view', this.viewDataVars);
+			}
 		} else {
-			rootScope.mergeAndList('page', this.pageVars)
-				.mergeAndList('view', this.viewDataVars);
+
+			if (this.viewDataVars != null) {
+				rootScope.mergeAndList('page', this.pageVars).addScopeList('view', this.viewDataVars);
+			} else {
+				rootScope.mergeAndList('page', this.pageVars);
+			}
 		}
 
 		let ideHelper: IEnvironmentHelper | null = null;
@@ -319,6 +322,22 @@ export class ScopeEngine {
 				}
 			}
 
+			if (currentNode.modifierChain != null && currentNode.modifierChain.modifierChain.length > 0) {
+				currentNode.modifierChain.modifierChain.forEach((modifier) => {
+					if (modifier.modifier != null && typeof modifier.modifier.augmentScope != 'undefined' && modifier.modifier.augmentScope != null) {
+						modifier.modifier.augmentScope(currentNode, currentScope);
+					}
+				});
+			}
+
+			if (currentNode.modifiers.hasParameterModifiers()) {
+				currentNode.modifiers.parameterModifiers.forEach((param) => {
+					if (param.modifier != null && typeof param.modifier.augmentScope != 'undefined' && param.modifier.augmentScope != null) {
+						param.modifier.augmentScope(currentNode, currentScope);
+					}
+				});
+			}
+
 			if (currentNode.sourceType == 'array') {
 				const chunkParam = currentNode.findParameter('chunk');
 				let injectContextualArrayData = true;
@@ -400,7 +419,25 @@ export class ScopeEngine {
 
 			if (popScopeIds.includes(currentNode.id())) {
 				if (currentNode.parent != null && currentNode.parent instanceof AntlersNode) {
-					currentNode.currentScope = currentNode.parent.currentScope;
+					const tRef = currentNode.currentScope.findAncestorWithList(currentNode.getTagName());
+
+					if (tRef != null) {
+						currentNode.currentScope = tRef;
+						currentScope = tRef.copy();
+						activeScopes.pop();
+
+						if (activeScopes.length == 0) {
+							activeScopes.push(rootScope);
+						}
+
+						activeScopes.push(currentScope);
+					} else {
+						if (currentNode.parent.parent != null) {
+							currentNode.currentScope = currentNode.parent.parent.currentScope;
+						} else {
+							currentNode.currentScope = currentNode.parent.currentScope;
+						}
+					}
 				}
 			}
 

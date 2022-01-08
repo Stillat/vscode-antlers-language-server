@@ -2,8 +2,10 @@ import {
     CompletionItem,
     CompletionItemKind,
 } from "vscode-languageserver-types";
+import { makeTagDoc } from '../../../documentation/utils';
 import { AntlersNode } from '../../../runtime/nodes/abstractNode';
 import { ISuggestionRequest } from '../../../suggestions/suggestionRequest';
+import { tagToCompletionItem } from '../../documentedLabel';
 import { Scope } from '../../scope/scope';
 import { IScopeVariable } from '../../scope/types';
 import {
@@ -14,112 +16,6 @@ import {
     nonExclusiveResult,
 } from "../../tagManager";
 
-const SearchCompletionItems: CompletionItem[] = [
-    { label: "results", kind: CompletionItemKind.Text },
-];
-
-function makeDefaultSearchResultVariables(node: AntlersNode): IScopeVariable[] {
-    return [
-        {
-            name: "url",
-            dataType: "string",
-            sourceField: null,
-            sourceName: "*internal.search.results",
-            introducedBy: node,
-        },
-        {
-            name: "title",
-            dataType: "string",
-            sourceField: null,
-            sourceName: "*internal.search.results",
-            introducedBy: node,
-        },
-        {
-            name: "content",
-            dataType: "string",
-            sourceField: null,
-            sourceName: "*internal.search.results",
-            introducedBy: node,
-        },
-        {
-            name: "first",
-            dataType: "boolean",
-            sourceField: null,
-            sourceName: "*internal.search.results",
-            introducedBy: node,
-        },
-        {
-            name: "last",
-            dataType: "boolean",
-            sourceField: null,
-            sourceName: "*internal.search.results",
-            introducedBy: node,
-        },
-        {
-            name: "is_entry",
-            dataType: "boolean",
-            sourceField: null,
-            sourceName: "*internal.search.results",
-            introducedBy: node,
-        },
-        {
-            name: "is_term",
-            dataType: "boolean",
-            sourceField: null,
-            sourceName: "*internal.search.results",
-            introducedBy: node,
-        },
-        {
-            name: "count",
-            dataType: "number",
-            sourceField: null,
-            sourceName: "*internal.search.results",
-            introducedBy: node,
-        },
-        {
-            name: "index",
-            dataType: "number",
-            sourceField: null,
-            sourceName: "*internal.search.results",
-            introducedBy: node,
-        },
-        {
-            name: "search_score",
-            dataType: "number",
-            sourceField: null,
-            sourceName: "*internal.search.results",
-            introducedBy: node,
-        },
-        {
-            name: "_highlightResult",
-            dataType: "array",
-            sourceField: null,
-            sourceName: "*internal.search.results",
-            introducedBy: node,
-        },
-    ];
-}
-
-const BaseSearchTag: IAntlersTag = {
-    tagName: "search",
-    allowsArbitraryParameters: false,
-    requiresClose: true,
-    allowsContentClose: false,
-    hideFromCompletions: false,
-    injectParentScope: false,
-    parameters: [],
-    resolveCompletionItems: (params: ISuggestionRequest) => {
-        if (
-            params.isPastTagPart == false &&
-            (params.leftWord == "search" || params.leftWord == "/search") &&
-            params.leftChar == ":"
-        ) {
-            return nonExclusiveResult(SearchCompletionItems);
-        }
-
-        return EmptyCompletionResult;
-    },
-};
 
 const SearchResultsTag: IAntlersTag = {
     tagName: "search:results",
@@ -240,6 +136,120 @@ const SearchResultsTag: IAntlersTag = {
         }
 
         return scope;
+    },
+    resolveDocumentation: (params?: ISuggestionRequest) => {
+        return makeTagDoc(
+            'search:results Tag',
+            'The `search:results` tag provides access to all data that was returned as a result of a user\'s search.',
+            'https://statamic.dev/tags/search'
+        );
+    }
+};
+
+const SearchCompletionItems: CompletionItem[] = [
+    tagToCompletionItem(SearchResultsTag)
+];
+
+function makeDefaultSearchResultVariables(node: AntlersNode): IScopeVariable[] {
+    return [
+        {
+            name: "url",
+            dataType: "string",
+            sourceField: null,
+            sourceName: "*internal.search.results",
+            introducedBy: node,
+        },
+        {
+            name: "title",
+            dataType: "string",
+            sourceField: null,
+            sourceName: "*internal.search.results",
+            introducedBy: node,
+        },
+        {
+            name: "content",
+            dataType: "string",
+            sourceField: null,
+            sourceName: "*internal.search.results",
+            introducedBy: node,
+        },
+        {
+            name: "first",
+            dataType: "boolean",
+            sourceField: null,
+            sourceName: "*internal.search.results",
+            introducedBy: node,
+        },
+        {
+            name: "last",
+            dataType: "boolean",
+            sourceField: null,
+            sourceName: "*internal.search.results",
+            introducedBy: node,
+        },
+        {
+            name: "is_entry",
+            dataType: "boolean",
+            sourceField: null,
+            sourceName: "*internal.search.results",
+            introducedBy: node,
+        },
+        {
+            name: "is_term",
+            dataType: "boolean",
+            sourceField: null,
+            sourceName: "*internal.search.results",
+            introducedBy: node,
+        },
+        {
+            name: "count",
+            dataType: "number",
+            sourceField: null,
+            sourceName: "*internal.search.results",
+            introducedBy: node,
+        },
+        {
+            name: "index",
+            dataType: "number",
+            sourceField: null,
+            sourceName: "*internal.search.results",
+            introducedBy: node,
+        },
+        {
+            name: "search_score",
+            dataType: "number",
+            sourceField: null,
+            sourceName: "*internal.search.results",
+            introducedBy: node,
+        },
+        {
+            name: "_highlightResult",
+            dataType: "array",
+            sourceField: null,
+            sourceName: "*internal.search.results",
+            introducedBy: node,
+        },
+    ];
+}
+
+const BaseSearchTag: IAntlersTag = {
+    tagName: "search",
+    allowsArbitraryParameters: false,
+    requiresClose: true,
+    allowsContentClose: false,
+    hideFromCompletions: false,
+    injectParentScope: false,
+    parameters: [],
+    resolveCompletionItems: (params: ISuggestionRequest) => {
+        if (
+            params.isPastTagPart == false &&
+            (params.leftWord == "search" || params.leftWord == "/search") &&
+            params.leftChar == ":"
+        ) {
+            return nonExclusiveResult(SearchCompletionItems);
+        }
+
+        return EmptyCompletionResult;
     },
 };
 

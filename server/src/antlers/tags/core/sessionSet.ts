@@ -1,8 +1,10 @@
+import { makeTagDoc } from '../../../documentation/utils';
 import { IProjectDetailsProvider } from '../../../projects/projectDetailsProvider';
 import { AntlersNode } from '../../../runtime/nodes/abstractNode';
+import { ISuggestionRequest } from '../../../suggestions/suggestionRequest';
 import { IAntlersTag } from '../../tagManager';
 import { returnDynamicParameter } from '../dynamicParameterResolver';
-import { SessionVariableContext } from './session';
+import { SessionVariableContext } from './contexts/sessionContext';
 
 const SessionSet: IAntlersTag = {
     tagName: 'session:set',
@@ -20,6 +22,13 @@ const SessionSet: IAntlersTag = {
             context: context,
             issues: []
         };
+    },
+    resolveDocumentation: (params: ISuggestionRequest) => {
+        return makeTagDoc(
+            'session:set Tag',
+            'The `session:set` tag is used to add new data to the user\'s session.',
+            'https://statamic.dev/tags/session-set'
+        );
     }
 };
 

@@ -6,504 +6,526 @@ import { valuesToDataMap } from './scopeUtilities';
 import { AntlersNode } from '../../runtime/nodes/abstractNode';
 
 export class Scope {
-	static generationCounter = 0;
-
-	public generation = 0;
-	public statamicProject: IProjectDetailsProvider;
-	public id = '';
-	public name = '';
-	public values: Map<string, IScopeVariable> = new Map();
-	public lists: Map<string, Scope> = new Map();
-	public pristine: Map<string, IPristineSnapshot> = new Map();
-	public parentScope: Scope | null = null;
-
-	constructor(statamicProject: IProjectDetailsProvider) {
-		this.statamicProject = statamicProject;
-		Scope.generationCounter += 1;
-		this.generation = Scope.generationCounter;
-		this.id = uuidv4();
-	}
-
-	makeNew(): Scope {
-		return new Scope(this.statamicProject);
-	}
-
-	ancestor(): Scope {
-		if (this.parentScope != null) {
-			return this.parentScope;
-		}
-
-		return this;
-	}
-
-	canShiftScope(path: string): boolean {
-		if (this.pristine.has(path)) {
-			return true;
-		}
-
-		return false;
-	}
-
-	shiftScope(symbol: AntlersNode, path: string, newScopeName: string): Scope {
-		if (this.pristine.has(path)) {
-			const pristineCopy = this.pristine.get(path) as IPristineSnapshot,
-				newScope = pristineCopy.parentCopy.copy();
-
-			newScope.introduceAliasScope(symbol, newScopeName, pristineCopy.introducedFields);
-
-			return newScope;
-		}
-
-		return this;
-	}
-
-	containsPath(path: string): boolean {
-		if (path.includes(':')) {
-			const parts: string[] = path.split(':'),
-				thisPath = parts.shift(),
-				nextPath = parts.join(':');
-
-			if (typeof thisPath === 'undefined') {
-				return false;
-			}
-
-			const nextScope = this.lists.get(thisPath) as Scope;
-
-			if (typeof nextScope === 'undefined') {
-				return false;
-			}
-
-			return nextScope.containsPath(nextPath);
-		}
-
-		if (this.lists.has(path)) {
-			return true;
-		}
-
-		return false;
-	}
-
-	findReference(path: string): IScopeVariable | null {
-		if (path.includes(':')) {
-			const parts = path.split(':'),
-				itemToFind = parts.pop() as string,
-				newPath = parts.join(':'),
-				adjustScope = this.findNestedScope(newPath);
-
-			if (adjustScope != null) {
-				return adjustScope.findReference(itemToFind);
-			}
-		}
+    static generationCounter = 0;
+
+    public generation = 0;
+    public statamicProject: IProjectDetailsProvider;
+    public id = '';
+    public name = '';
+    public values: Map<string, IScopeVariable> = new Map();
+    public lists: Map<string, Scope> = new Map();
+    public pristine: Map<string, IPristineSnapshot> = new Map();
+    public parentScope: Scope | null = null;
+
+    constructor(statamicProject: IProjectDetailsProvider) {
+        this.statamicProject = statamicProject;
+        Scope.generationCounter += 1;
+        this.generation = Scope.generationCounter;
+        this.id = uuidv4();
+    }
+
+    makeNew(): Scope {
+        return new Scope(this.statamicProject);
+    }
+
+    ancestor(): Scope {
+        if (this.parentScope != null) {
+            return this.parentScope;
+        }
+
+        return this;
+    }
+
+    canShiftScope(path: string): boolean {
+        if (this.pristine.has(path)) {
+            return true;
+        }
+
+        return false;
+    }
+
+    shiftScope(symbol: AntlersNode, path: string, newScopeName: string): Scope {
+        if (this.pristine.has(path)) {
+            const pristineCopy = this.pristine.get(path) as IPristineSnapshot,
+                newScope = pristineCopy.parentCopy.copy();
+
+            newScope.introduceAliasScope(symbol, newScopeName, pristineCopy.introducedFields);
+
+            return newScope;
+        }
+
+        return this;
+    }
+
+    containsPath(path: string): boolean {
+        if (path.includes(':')) {
+            const parts: string[] = path.split(':'),
+                thisPath = parts.shift(),
+                nextPath = parts.join(':');
+
+            if (typeof thisPath === 'undefined') {
+                return false;
+            }
+
+            const nextScope = this.lists.get(thisPath) as Scope;
+
+            if (typeof nextScope === 'undefined') {
+                return false;
+            }
+
+            return nextScope.containsPath(nextPath);
+        }
+
+        if (this.lists.has(path)) {
+            return true;
+        }
+
+        return false;
+    }
+
+    findReference(path: string): IScopeVariable | null {
+        if (path.includes(':')) {
+            const parts = path.split(':'),
+                itemToFind = parts.pop() as string,
+                newPath = parts.join(':'),
+                adjustScope = this.findNestedScope(newPath);
+
+            if (adjustScope != null) {
+                return adjustScope.findReference(itemToFind);
+            }
+        }
 
-		if (this.values.has(path)) {
-			return this.values.get(path) as IScopeVariable;
-		}
+        if (this.values.has(path)) {
+            return this.values.get(path) as IScopeVariable;
+        }
 
-		return null;
-	}
+        return null;
+    }
 
-	findReferenceWithField(path: string): IScopeVariable | null {
-		if (path.includes(':')) {
-			const parts = path.split(':'),
-				itemToFind = parts.pop() as string,
-				newPath = parts.join(':'),
-				adjustScope = this.findNestedScope(newPath);
+    findReferenceWithField(path: string): IScopeVariable | null {
+        if (path.includes(':')) {
+            const parts = path.split(':'),
+                itemToFind = parts.pop() as string,
+                newPath = parts.join(':'),
+                adjustScope = this.findNestedScope(newPath);
 
-			if (adjustScope != null) {
-				return adjustScope.findReference(itemToFind);
-			}
-		}
+            if (adjustScope != null) {
+                return adjustScope.findReference(itemToFind);
+            }
+        }
 
-		if (this.values.has(path)) {
-			const varRef = this.values.get(path) as IScopeVariable;
+        if (this.values.has(path)) {
+            const varRef = this.values.get(path) as IScopeVariable;
 
-			if (varRef.sourceField == null) {
-				if (varRef.introducedBy != null && varRef.introducedBy.currentScope != null) {
-					return varRef.introducedBy.currentScope.findReferenceWithField(varRef.introducedBy.getTagName());
-				}
+            if (varRef.sourceField == null) {
+                if (varRef.introducedBy != null && varRef.introducedBy.currentScope != null) {
+                    return varRef.introducedBy.currentScope.findReferenceWithField(varRef.introducedBy.getTagName());
+                }
 
-				if (this.parentScope != null && this.parentScope != this) {
-					return this.parentScope.findReferenceWithField(path);
-				}
-			}
+                if (this.parentScope != null && this.parentScope != this) {
+                    return this.parentScope.findReferenceWithField(path);
+                }
+            }
 
-			return varRef;
-		}
+            return varRef;
+        }
 
-		return null;
-	}
+        return null;
+    }
 
 
-	containsReference(path: string): boolean {
-		const pathRef = this.findReference(path);
+    containsReference(path: string): boolean {
+        const pathRef = this.findReference(path);
 
-		if (pathRef == null) {
-			return false;
-		}
+        if (pathRef == null) {
+            return false;
+        }
 
-		return true;
-	}
+        return true;
+    }
 
-	findNestedScope(path: string): Scope | null {
-		if (path.includes(':')) {
-			const parts: string[] = path.split(':'),
-				thisPath = parts.shift(),
-				nextPath = parts.join(':');
+    findNestedScope(path: string): Scope | null {
+        if (path.includes(':')) {
+            const parts: string[] = path.split(':'),
+                thisPath = parts.shift(),
+                nextPath = parts.join(':');
 
-			if (typeof thisPath === 'undefined') {
-				return null;
-			}
+            if (typeof thisPath === 'undefined') {
+                return null;
+            }
 
-			const nextScope = this.lists.get(thisPath) as Scope;
+            const nextScope = this.lists.get(thisPath) as Scope;
 
-			if (typeof nextScope === 'undefined') {
-				return null;
-			}
+            if (typeof nextScope === 'undefined') {
+                return null;
+            }
 
-			return nextScope.findNestedScope(nextPath);
-		}
+            return nextScope.findNestedScope(nextPath);
+        }
 
-		if (this.lists.has(path)) {
-			return this.lists.get(path) as Scope;
-		}
+        if (this.lists.has(path)) {
+            return this.lists.get(path) as Scope;
+        }
 
-		if (this.parentScope != null && this.parentScope != this && this.parentScope.hasList(path)) {
-			return this.parentScope.lists.get(path) as Scope;
-		}
+        if (this.parentScope != null && this.parentScope != this && this.parentScope.hasList(path)) {
+            return this.parentScope.lists.get(path) as Scope;
+        }
 
-		return null;
-	}
+        return null;
+    }
 
-	/**
-	 * Finds a scope list, and removes it from the current scope.
-	 * @param name The list name.
-	 * @returns 
-	 */
-	liftList(name: string): Scope | null {
+    /**
+     * Finds a scope list, and removes it from the current scope.
+     * @param name The list name.
+     * @returns 
+     */
+    liftList(name: string): Scope | null {
 
-		if (this.lists.has(name)) {
-			const list = this.lists.get(name);
+        if (this.lists.has(name)) {
+            const list = this.lists.get(name);
 
-			if (typeof list === 'undefined' || list === null) {
-				return null;
-			}
+            if (typeof list === 'undefined' || list === null) {
+                return null;
+            }
 
-			this.lists.delete(name);
+            this.lists.delete(name);
 
-			return list;
-		}
+            return list;
+        }
 
-		return null;
-	}
+        return null;
+    }
 
-	hasPristineReference(name: string): boolean {
-		if (this.pristine.has(name)) {
-			return true;
-		}
+    hasPristineReference(name: string): boolean {
+        if (this.pristine.has(name)) {
+            return true;
+        }
 
-		return false;
-	}
+        return false;
+    }
 
-	hasListInHistory(name: string): boolean {
-		if (this.hasList(name)) {
-			return true;
-		}
+    hasListInHistory(name: string): boolean {
+        if (this.hasList(name)) {
+            return true;
+        }
 
-		if (this.parentScope != null) {
-			// The root scope references itself.
-			if (this.name == '*root*') {
-				return false;
-			}
+        if (this.parentScope != null) {
+            // The root scope references itself.
+            if (this.name == '*root*') {
+                return false;
+            }
 
-			return this.parentScope.hasList(name);
-		}
+            return this.parentScope.hasList(name);
+        }
 
-		return false;
-	}
+        return false;
+    }
 
-	hasList(name: string): boolean {
-		if (this.lists.has(name)) {
-			const list = this.lists.get(name);
+    hasList(name: string): boolean {
+        if (this.lists.has(name)) {
+            const list = this.lists.get(name);
 
-			if (typeof list === 'undefined' || list === null) {
-				return false;
-			}
+            if (typeof list === 'undefined' || list === null) {
+                return false;
+            }
 
-			return true;
-		}
+            return true;
+        }
 
-		return false;
-	}
+        return false;
+    }
 
-	bringListIntoMainScope(path: string): Scope {
-		if (path.includes(':')) {
-			const parts: string[] = path.split(':'),
-				thisPath = parts.shift(),
-				nextPath = parts.join(':');
+    bringListIntoMainScope(path: string): Scope {
+        if (path.includes(':')) {
+            const parts: string[] = path.split(':'),
+                thisPath = parts.shift(),
+                nextPath = parts.join(':');
 
-			if (typeof thisPath === 'undefined') {
-				return this;
-			}
+            if (typeof thisPath === 'undefined') {
+                return this;
+            }
 
-			const nextScope = this.lists.get(thisPath) as Scope;
+            const nextScope = this.lists.get(thisPath) as Scope;
 
-			if (typeof nextScope === 'undefined') {
-				return this;
-			}
+            if (typeof nextScope === 'undefined') {
+                return this;
+            }
 
-			return nextScope.bringListIntoMainScope(nextPath);
-		}
+            return nextScope.bringListIntoMainScope(nextPath);
+        }
 
-		const nestedScope = this.lists.get(path) as Scope;
-		this.lists.delete(path);
+        const nestedScope = this.lists.get(path) as Scope;
+        this.lists.delete(path);
 
-		return this.mergeScope(nestedScope);
-	}
+        return this.mergeScope(nestedScope);
+    }
 
-	getListNames(): string[] {
-		const listNames: string[] = [];
+    getListNames(): string[] {
+        const listNames: string[] = [];
 
-		this.lists.forEach((value: Scope, name: string) => {
-			listNames.push(name);
+        this.lists.forEach((value: Scope, name: string) => {
+            listNames.push(name);
+        });
+
+        return listNames;
+    }
+
+	getVariableNames(): string[] {
+		const variableNames:string[] = [];
+
+		this.values.forEach((variable) => {
+			variableNames.push(variable.name);
 		});
 
-		return listNames;
+		return variableNames;
 	}
 
-	getList(name: string): Scope | null {
-		if (this.lists.has(name)) {
-			return this.lists.get(name) as Scope;
-		}
+    getList(name: string): Scope | null {
+        if (this.lists.has(name)) {
+            return this.lists.get(name) as Scope;
+        }
 
-		if (this.parentScope != null && this.parentScope != this) {
-			return this.parentScope.getList(name);
-		}
+        if (this.parentScope != null && this.parentScope != this) {
+            return this.parentScope.getList(name);
+        }
 
-		return null;
-	}
+        return null;
+    }
 
-	hasValue(name: string): boolean {
-		return this.values.has(name);
-	}
+    hasValue(name: string): boolean {
+        return this.values.has(name);
+    }
 
-	findReferenceNotIntroducedBy(name: string, introducedBy: AntlersNode): IScopeVariable | null {
-		if (this.hasValue(name)) {
-			const varRef = this.values.get(name) as IScopeVariable;
-
-			if (varRef.introducedBy != null && varRef.introducedBy != introducedBy) {
-				return varRef;
-			}
-		}
-
-		if (this.parentScope != null && this.parentScope != this) {
-			return this.parentScope.findReferenceNotIntroducedBy(name, introducedBy);
-		}
-
-		return null;
-	}
-
-	removeThroughIntroduction(name: string, introducedBy: AntlersNode) {
-		this.values.delete(name);
-
-		// If this removal operation will re-expose a previously
-		// hidden variable with the same name, let's locate
-		// the last time the variable was introduced by
-		// any other symbol that is not the current.
-		if (this.parentScope != null) {
-			const refInSCope = this.findReferenceNotIntroducedBy(name, introducedBy);
-
-			if (refInSCope != null) {
-				this.addVariable(refInSCope);
-			}
-		}
-	}
-
-	wasIntroducedBySymbol(name: string, checkSymbol: AntlersNode): boolean {
-		if (this.values.has(name) == false) {
-			return false;
-		}
-
-		const value = this.values.get(name) as IScopeVariable;
-
-		if (value.introducedBy != null) {
-			return value.introducedBy == checkSymbol;
-		}
-
-		return false;
-	}
-
-	referencesArray(name: string): boolean {
-		if (this.values.has(name) == false) {
-			return false;
-		}
-
-		const ref = this.values.get(name) as IScopeVariable;
-
-		if (ref.dataType == 'array') {
-			return true;
-		}
-
-		return false;
-	}
-
-	addScopeList(listName: string, scope: Scope): Scope {
-		this.lists.set(listName, scope);
-
-		return this;
-	}
-
-	mergeAndList(listName: string, data: IScopeVariable[]): Scope {
-		const newListScope = new Scope(this.statamicProject);
-		newListScope.values = valuesToDataMap(data);
-
-		this.lists.set(listName, newListScope);
-		this.mergeVariableScope(data);
-
-		return this;
-	}
-
-	mergeScope(scope: Scope): Scope {
-		if (scope == this || scope == null) {
+	findAncestorWithList(name: string): Scope | null {
+		if (this.hasList(name)) {
 			return this;
 		}
 
-		scope.values.forEach((value: IScopeVariable, name: string) => {
-			this.values.set(name, value);
-		});
-
-		scope.lists.forEach((value: Scope, name: string) => {
-			this.lists.set(name, value);
-		});
-
-		return this;
-	}
-
-	mergeVariableScope(data: IScopeVariable[]): Scope {
-		for (let i = 0; i < data.length; i++) {
-			this.values.set(data[i].name, data[i]);
+		if (this.parentScope != null && this.parentScope != this) {
+			return this.parentScope.findAncestorWithList(name);
 		}
-
-		return this;
+	
+		return null;
 	}
 
-	addVariable(variable: IScopeVariable) {
-		this.values.set(variable.name, variable);
-	}
+    findReferenceNotIntroducedBy(name: string, introducedBy: AntlersNode): IScopeVariable | null {
+        if (this.hasValue(name)) {
+            const varRef = this.values.get(name) as IScopeVariable;
 
-	addVariables(variables: IScopeVariable[]) {
-		for (let i = 0; i < variables.length; i++) {
-			this.addVariable(variables[i]);
-		}
-	}
+            if (varRef.introducedBy != null && varRef.introducedBy != introducedBy) {
+                return varRef;
+            }
+        }
 
-	addVariableArray(name: string, variables: IScopeVariable[]) {
-		if (this.values.has(name)) {
-			this.values.delete(name);
-		}
+        if (this.parentScope != null && this.parentScope != this) {
+            return this.parentScope.findReferenceNotIntroducedBy(name, introducedBy);
+        }
 
-		const array = new Scope(this.statamicProject);
-		array.addVariables(variables);
+        return null;
+    }
 
-		this.addScopeList(name, array);
-	}
+    removeThroughIntroduction(name: string, introducedBy: AntlersNode) {
+        this.values.delete(name);
 
-	injectAssetContainer(symbol: AntlersNode, container: string) {
-		this.addBlueprintFields(symbol, this.statamicProject.getAssetBlueprintFields(container));
-	}
+        // If this removal operation will re-expose a previously
+        // hidden variable with the same name, let's locate
+        // the last time the variable was introduced by
+        // any other symbol that is not the current.
+        if (this.parentScope != null) {
+            const refInSCope = this.findReferenceNotIntroducedBy(name, introducedBy);
 
-	injectUserFields(symbol: AntlersNode) {
-		this.addBlueprintFields(symbol, this.statamicProject.getUserFields());
-	}
+            if (refInSCope != null) {
+                this.addVariable(refInSCope);
+            }
+        }
+    }
 
-	addBlueprintField(symbol: AntlersNode, field: IBlueprintField) {
-		this.addVariable({
-			dataType: field.type,
-			name: field.name,
-			sourceField: field,
-			sourceName: field.blueprintName,
-			introducedBy: symbol
-		});
-	}
+    wasIntroducedBySymbol(name: string, checkSymbol: AntlersNode): boolean {
+        if (this.values.has(name) == false) {
+            return false;
+        }
 
-	introduceScopedAliasScope(symbol: AntlersNode, scopeName: string, aliasName: string, fields: IBlueprintField[]): Scope {
-		this.pristine.set(aliasName, {
-			introducedFields: fields,
-			introducedScope: aliasName,
-			parentCopy: this.copy()
-		});
+        const value = this.values.get(name) as IScopeVariable;
 
-		const newAliasScope = new Scope(this.statamicProject),
-			fieldScope = new Scope(this.statamicProject);
+        if (value.introducedBy != null) {
+            return value.introducedBy == checkSymbol;
+        }
 
-		fieldScope.addBlueprintFields(symbol, fields);
+        return false;
+    }
 
-		newAliasScope.name = aliasName;
-		newAliasScope.addScopeList(scopeName, fieldScope);
+    referencesArray(name: string): boolean {
+        if (this.values.has(name) == false) {
+            return false;
+        }
 
-		this.addScopeList(aliasName, newAliasScope);
+        const ref = this.values.get(name) as IScopeVariable;
 
-		return newAliasScope;
-	}
+        if (ref.dataType == 'array') {
+            return true;
+        }
 
-	expandScopedAliasScope(symbol: AntlersNode, scopeName: string, aliasName: string, fields: IBlueprintField[]) {
-		if (this.lists.has(aliasName) == false) {
-			this.introduceScopedAliasScope(symbol, scopeName, aliasName, fields);
-		} else {
-			const listRef = this.lists.get(aliasName) as Scope;
+        return false;
+    }
 
-			listRef.addBlueprintFields(symbol, fields);
-		}
-	}
+    addScopeList(listName: string, scope: Scope): Scope {
+        this.lists.set(listName, scope);
 
-	introduceAliasScope(symbol: AntlersNode, aliasName: string, fields: IBlueprintField[]) {
-		this.pristine.set(aliasName, {
-			introducedFields: fields,
-			introducedScope: aliasName,
-			parentCopy: this.copy()
-		});
+        return this;
+    }
 
-		const newAliasScope = new Scope(this.statamicProject);
-		newAliasScope.addBlueprintFields(symbol, fields);
-		newAliasScope.name = aliasName;
-		this.addScopeList(aliasName, newAliasScope);
-	}
+    mergeAndList(listName: string, data: IScopeVariable[]): Scope {
+        const newListScope = new Scope(this.statamicProject);
+        newListScope.values = valuesToDataMap(data);
 
-	introduceDynamicScopeList(symbol: AntlersNode, listName: string, fields: IBlueprintField[]) {
-		this.pristine.set(listName, {
-			introducedFields: fields,
-			introducedScope: listName,
-			parentCopy: this.copy()
-		});
+        this.lists.set(listName, newListScope);
+        this.mergeVariableScope(data);
 
-		const newListScope = new Scope(this.statamicProject);
+        return this;
+    }
 
-		newListScope.name = listName;
-		newListScope.addBlueprintFields(symbol, fields);
+    mergeScope(scope: Scope): Scope {
+        if (scope == this || scope == null) {
+            return this;
+        }
 
-		this.addScopeList(listName, newListScope);
-	}
+        scope.values.forEach((value: IScopeVariable, name: string) => {
+            this.values.set(name, value);
+        });
 
-	addBlueprintFields(symbol: AntlersNode, fields: IBlueprintField[]) {
-		for (let i = 0; i < fields.length; i++) {
-			this.addBlueprintField(symbol, fields[i]);
-		}
-	}
+        scope.lists.forEach((value: Scope, name: string) => {
+            this.lists.set(name, value);
+        });
 
-	injectBlueprint(symbol: AntlersNode, handle: string) {
-		const blueprintDetails = this.statamicProject.getBlueprintDetails(handle);
+        return this;
+    }
 
-		if (blueprintDetails.length > 0) {
-			this.addBlueprintFields(symbol, blueprintDetails);
-		}
-	}
+    mergeVariableScope(data: IScopeVariable[]): Scope {
+        for (let i = 0; i < data.length; i++) {
+            this.values.set(data[i].name, data[i]);
+        }
 
-	copy(): Scope {
-		const newScope = new Scope(this.statamicProject);
-		newScope.pristine = new Map(this.pristine);
-		newScope.values = new Map(this.values);
-		newScope.lists = new Map(this.lists);
-		newScope.parentScope = this;
+        return this;
+    }
 
-		return newScope;
-	}
+    addVariable(variable: IScopeVariable) {
+        this.values.set(variable.name, variable);
+    }
+
+    addVariables(variables: IScopeVariable[]) {
+        for (let i = 0; i < variables.length; i++) {
+            this.addVariable(variables[i]);
+        }
+    }
+
+    addVariableArray(name: string, variables: IScopeVariable[]) {
+        if (this.values.has(name)) {
+            this.values.delete(name);
+        }
+
+        const array = new Scope(this.statamicProject);
+        array.addVariables(variables);
+
+        this.addScopeList(name, array);
+    }
+
+    injectAssetContainer(symbol: AntlersNode, container: string) {
+        this.addBlueprintFields(symbol, this.statamicProject.getAssetBlueprintFields(container));
+    }
+
+    injectUserFields(symbol: AntlersNode) {
+        this.addBlueprintFields(symbol, this.statamicProject.getUserFields());
+    }
+
+    addBlueprintField(symbol: AntlersNode | null, field: IBlueprintField) {
+        this.addVariable({
+            dataType: field.type,
+            name: field.name,
+            sourceField: field,
+            sourceName: field.blueprintName,
+            introducedBy: symbol
+        });
+    }
+
+    introduceScopedAliasScope(symbol: AntlersNode, scopeName: string, aliasName: string, fields: IBlueprintField[]): Scope {
+        this.pristine.set(aliasName, {
+            introducedFields: fields,
+            introducedScope: aliasName,
+            parentCopy: this.copy()
+        });
+
+        const newAliasScope = new Scope(this.statamicProject),
+            fieldScope = new Scope(this.statamicProject);
+
+        fieldScope.addBlueprintFields(symbol, fields);
+
+        newAliasScope.name = aliasName;
+        newAliasScope.addScopeList(scopeName, fieldScope);
+
+        this.addScopeList(aliasName, newAliasScope);
+
+        return newAliasScope;
+    }
+
+    expandScopedAliasScope(symbol: AntlersNode, scopeName: string, aliasName: string, fields: IBlueprintField[]) {
+        if (this.lists.has(aliasName) == false) {
+            this.introduceScopedAliasScope(symbol, scopeName, aliasName, fields);
+        } else {
+            const listRef = this.lists.get(aliasName) as Scope;
+
+            listRef.addBlueprintFields(symbol, fields);
+        }
+    }
+
+    introduceAliasScope(symbol: AntlersNode, aliasName: string, fields: IBlueprintField[]) {
+        this.pristine.set(aliasName, {
+            introducedFields: fields,
+            introducedScope: aliasName,
+            parentCopy: this.copy()
+        });
+
+        const newAliasScope = new Scope(this.statamicProject);
+        newAliasScope.addBlueprintFields(symbol, fields);
+        newAliasScope.name = aliasName;
+        this.addScopeList(aliasName, newAliasScope);
+    }
+
+    introduceDynamicScopeList(symbol: AntlersNode, listName: string, fields: IBlueprintField[]) {
+        this.pristine.set(listName, {
+            introducedFields: fields,
+            introducedScope: listName,
+            parentCopy: this.copy()
+        });
+
+        const newListScope = new Scope(this.statamicProject);
+
+        newListScope.name = listName;
+        newListScope.addBlueprintFields(symbol, fields);
+
+        this.addScopeList(listName, newListScope);
+    }
+
+    addBlueprintFields(symbol: AntlersNode, fields: IBlueprintField[]) {
+        for (let i = 0; i < fields.length; i++) {
+            this.addBlueprintField(symbol, fields[i]);
+        }
+    }
+
+    injectBlueprint(symbol: AntlersNode, handle: string) {
+        const blueprintDetails = this.statamicProject.getBlueprintDetails(handle);
+
+        if (blueprintDetails.length > 0) {
+            this.addBlueprintFields(symbol, blueprintDetails);
+        }
+    }
+
+    copy(): Scope {
+        const newScope = new Scope(this.statamicProject);
+        newScope.pristine = new Map(this.pristine);
+        newScope.values = new Map(this.values);
+        newScope.lists = new Map(this.lists);
+        newScope.parentScope = this;
+
+        return newScope;
+    }
 }

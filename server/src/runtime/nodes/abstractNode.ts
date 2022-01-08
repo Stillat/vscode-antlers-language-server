@@ -205,7 +205,20 @@ export class AntlersNode extends AbstractNode {
 	public reference: any | null = null;
 	public _conditionParserAbandonPairing = false;
 	public _isEndVirtual = false;
-	/** End: Internal Parser State Variables */
+
+	nodeAtIndex(index: number): AbstractNode | null {
+		if (this.runtimeNodes.length == 0) {
+			return null;
+		}
+
+		for (let i = 0; i < this.runtimeNodes.length; i++) {
+			if (this.runtimeNodes[i].index == index) {
+				return this.runtimeNodes[i];
+			}
+		}
+
+		return null;
+	}
 
 	isEmpty() {
 		return this.content.trim().length == 0;
@@ -668,6 +681,7 @@ export class ParameterNode extends AbstractNode {
 }
 
 export class ModifierChainNode {
+	public modifierTarget: AbstractNode | null = null;
 	public modifierChain: ModifierNode[] = [];
 	public startPosition: Position | null = null;
 	public endPosition: Position | null = null;

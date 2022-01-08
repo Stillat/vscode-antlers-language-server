@@ -143,5 +143,9 @@ export class AntlersErrorCodes {
     static readonly LINT_DEBUG_DATA_EXPOSED = 'ANTLR_505';
     static readonly LINT_DOUBLE_COLON_IN_TAG_IDENTIFIER = 'ANTLR_506';
     static readonly LINT_MIXED_MODIFIERS = 'ANTLER_507';
-	static readonly LINT_MODIFIER_UNEXPECTED_TYPE = 'ANTLR_508';
+    static readonly LINT_MODIFIER_UNEXPECTED_TYPE = 'ANTLR_508';
+	static readonly LINT_REMOVE_RELATE_TAG = 'ANTLR_509';
+	static readonly LINT_SET_PRODUCES_RUNTIME_ERROR = 'ANTLR_510';
+	static readonly LINT_FRONT_MATTER_EMPTY_DOCUMENT = 'ANTLR_511';
+	static readonly LINT_SHORTHAND_MODIFIER_TAG_MUST_MATCH = 'ANTLR_512';
 }

@@ -7,9 +7,16 @@ export function anltersErrorsToDiagnostics(errors: AntlersError[]): ls.Diagnosti
     const diagnostics: ls.Diagnostic[] = [];
 
     errors.forEach((error) => {
-        if (error.node == null) {
-            return;
-        }
+		let range:ls.Range | null = null;
+
+		if (error.node != null) {
+			range = nodeToRange(error.node);
+		} else {
+			range = {
+				start: { line: 1, character: 1},
+				end: { line: 1, character: 1},
+			};
+		}
 
         let severity: ls.DiagnosticSeverity = 1;
 
@@ -19,7 +26,7 @@ export function anltersErrorsToDiagnostics(errors: AntlersError[]): ls.Diagnosti
 
         diagnostics.push({
             severity: severity,
-            range: nodeToRange(error.node),
+            range: range,
             message: "[" + error.errorCode + "] " + error.message,
             source: 'antlers'
         });

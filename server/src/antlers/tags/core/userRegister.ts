@@ -1,4 +1,6 @@
+import { makeTagDoc } from '../../../documentation/utils';
 import { AntlersNode } from '../../../runtime/nodes/abstractNode';
+import { ISuggestionRequest } from '../../../suggestions/suggestionRequest';
 import { Scope } from '../../scope/scope';
 import { blueprintFieldsToScopeVariables } from '../../scope/scopeUtilities';
 import { IAntlersTag } from '../../tagManager';
@@ -63,9 +65,24 @@ const UserRegister: IAntlersTag = {
         }
 
         return scope;
+    },
+    resolveDocumentation: (params?: ISuggestionRequest) => {
+        return makeTagDoc(
+            'user:register_form  Form Tag',
+            'The `user:register_form` tag can be used to build out public registration forms for new users.',
+            'https://statamic.dev/tags/user-register_form'
+        );
     }
 };
 
 const MemberRegister = createDefinitionAlias(UserRegister, 'member:register_form');
+
+MemberRegister.resolveDocumentation = (params?: ISuggestionRequest) => {
+    return makeTagDoc(
+        'member:register_form Tag',
+        'The `member:register_form` tag can be used to build out public registration forms for new users.',
+        'https://statamic.dev/tags/user-register_form'
+    );
+};
 
 export { UserRegister, MemberRegister };

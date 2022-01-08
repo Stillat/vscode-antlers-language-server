@@ -1,3 +1,4 @@
+import { makeTagDoc } from '../../../documentation/utils';
 import { ISuggestionRequest } from '../../../suggestions/suggestionRequest';
 import { exclusiveResult, IAntlersParameter, IAntlersTag } from '../../tagManager';
 import { makeUserRolesSuggestions } from './user/permissionUtils';
@@ -29,6 +30,13 @@ const UserIsnt: IAntlersTag = {
         }
 
         return null;
+    },
+    resolveDocumentation: (params?: ISuggestionRequest) => {
+        return makeTagDoc(
+            'user:isnt Tag',
+            'The `user:isnt` tag can be used to check whether the currently authenticated user does not have one or more roles.',
+            'https://statamic.dev/tags/user-is#isnt'
+        );
     }
 };
 

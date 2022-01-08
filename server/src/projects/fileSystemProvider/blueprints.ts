@@ -3,13 +3,7 @@ import * as fs from "fs";
 import { IBlueprintField, ISet, blueprintFieldFromFieldSet, adjustFieldType, SetFieldTypes } from '../blueprints/fields';
 import { IFieldsetField } from '../fieldsets/fieldset';
 
-export function getFields(
-    container: any,
-    outerblueprintName: string,
-    fieldSetName: string,
-    path: string,
-    fieldsets: Map<string, IFieldsetField[]>
-): IBlueprintField[] {
+export function getFields(container: any, outerblueprintName: string, fieldSetName: string, path: string, fieldsets: Map<string, IFieldsetField[]>): IBlueprintField[] {
     const foundFields: IBlueprintField[] = [];
     const includedHandles: string[] = [];
 

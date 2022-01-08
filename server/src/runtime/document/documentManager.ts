@@ -17,11 +17,11 @@ class DocumentManager {
         });
     }
 
-	refreshDocumentState() {
-		if (this.activeProject != null) {
-			this.setProject(this.activeProject);
-		}
-	}
+    refreshDocumentState() {
+        if (this.activeProject != null) {
+            this.setProject(this.activeProject);
+        }
+    }
 
     hasDocument(uri: string) {
         return this.loadedDocuments.has(uri);

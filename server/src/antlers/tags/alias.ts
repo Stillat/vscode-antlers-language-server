@@ -23,6 +23,7 @@ export function copyTagDefinition(tag: IAntlersTag): IAntlersTag {
         resolveDynamicParameter: tag.resolveDynamicParameter,
         resolveSpecialType: tag.resolveSpecialType,
         resovleParameterCompletionItems: tag.resovleParameterCompletionItems,
-        suggestAlternativeParams: tag.suggestAlternativeParams
+        suggestAlternativeParams: tag.suggestAlternativeParams,
+        resolveDocumentation: tag.resolveDocumentation
     };
 }

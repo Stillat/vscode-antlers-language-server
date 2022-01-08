@@ -1,4 +1,5 @@
 import { CompletionItem, CompletionItemKind } from 'vscode-languageserver-types';
+import { makeTagDoc } from '../../../../documentation/utils';
 import SectionManager from '../../../../references/sectionManager';
 import { ISuggestionRequest } from '../../../../suggestions/suggestionRequest';
 import { EmptyCompletionResult, IAntlersTag, nonExclusiveResult } from '../../../tagManager';
@@ -27,6 +28,13 @@ const Section: IAntlersTag = {
         }
 
         return EmptyCompletionResult;
+    },
+    resolveDocumentation: (params?: ISuggestionRequest) => {
+        return makeTagDoc(
+            'section Tag',
+            'The `section` tag is used to push content to a named region defined by the `yield` tag.',
+            'https://statamic.dev/tags/section'
+        );
     }
 };
 

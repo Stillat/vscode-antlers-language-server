@@ -1,13 +1,9 @@
+import { makeTagDocWithCodeSample } from '../../../documentation/utils';
 import { AntlersNode } from '../../../runtime/nodes/abstractNode';
 import { getAllAssetCompletions } from "../../../suggestions/project/assetCompletions";
 import { ISuggestionRequest } from '../../../suggestions/suggestionRequest';
 import { Scope } from '../../scope/scope';
-import {
-    EmptyCompletionResult,
-    exclusiveResult,
-    IAntlersParameter,
-    IAntlersTag,
-} from "../../tagManager";
+import { EmptyCompletionResult, exclusiveResult, IAntlersParameter, IAntlersTag } from "../../tagManager";
 import { makeAssetVariables } from "../../variables/assetVariables";
 
 const AssetContainerParameters: string[] = ["container", "id", "handle"];
@@ -111,6 +107,16 @@ const Assets: IAntlersTag = {
         }
         return EmptyCompletionResult;
     },
+    resolveDocumentation: (params?: ISuggestionRequest) => {
+        return makeTagDocWithCodeSample('assets Tag',
+            'The `assets` tag can be used to retrieve multiple Assets from an Asset container.',
+            `{{ assets container="container-name" }}
+    {{# Loop over all assets in the container. #}}
+	<img src="{{ url }}" alt="{{ alt }}" />
+{{ /assets }}`,
+            'https://statamic.dev/tags/assets'
+        );
+    }
 };
 
 export default Assets;

@@ -1,6 +1,6 @@
 import { AntlersError } from '../errors/antlersError';
 import { AntlersErrorCodes } from '../errors/antlersErrorCodes';
-import {AbstractNode, AntlersNode, AntlersParserFailNode, ConditionNode, EscapedContentNode, ExecutionBranch, RecursiveNode} from '../nodes/abstractNode';
+import { AbstractNode, AntlersNode, AntlersParserFailNode, ConditionNode, EscapedContentNode, ExecutionBranch, RecursiveNode } from '../nodes/abstractNode';
 import { TagIdentifier } from '../nodes/tagIdentifier';
 import { DocumentParser } from '../parser/documentParser';
 import { NoParseManager } from '../runtime/noParseManager';

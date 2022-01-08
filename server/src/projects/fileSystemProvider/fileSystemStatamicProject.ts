@@ -187,9 +187,7 @@ function getProjectViews(viewPath: string): IView[] {
             isPartial = false,
             isAntlers = false,
             isBlade = false,
-            displayName = "",
-            viewDataVariables: string[] = [],
-            viewDataDoc: any = null;
+            displayName = "";
 
         // Allows non .antlers.html files to be flagged as partials.
         if (fileName.startsWith("_")) {
@@ -201,29 +199,6 @@ function getProjectViews(viewPath: string): IView[] {
             isAntlers = true;
 
             workingFileName = workingFileName.substr(0, workingFileName.length - 13);
-
-            const contents = fs.readFileSync(thisFile, { encoding: "utf8" });
-
-            if (contents.startsWith("---")) {
-                try {
-                    const parsedDocument = YAML.parseAllDocuments(contents);
-
-                    if (
-                        typeof parsedDocument !== "undefined" &&
-                        parsedDocument !== null
-                    ) {
-                        if (parsedDocument.length > 0) {
-                            const frontMatter = parsedDocument[0];
-                            const docVars = frontMatter.toJSON();
-                            viewDataDoc = docVars;
-                            viewDataVariables = Object.keys(docVars);
-                        }
-                    }
-                } catch (e) {
-                    // Just move on to prevent bad YAML docs
-                    // from bringing down the entire thing.
-                }
-            }
         } else if (fileName.endsWith(".blade.php")) {
             isAntlers = false;
             isBlade = true;
@@ -250,11 +225,9 @@ function getProjectViews(viewPath: string): IView[] {
             relativeDisplayName: displayName,
             relativeFileName: fileName,
             relativePath: relativePath,
-            viewDataVariables: viewDataVariables,
             injectsCollections: [],
             injectsParameters: [],
             varReferenceNames: new Map(),
-            viewDataDocument: viewDataDoc,
         });
     }
 

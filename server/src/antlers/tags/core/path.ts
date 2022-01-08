@@ -1,3 +1,5 @@
+import { makeTagDoc } from '../../../documentation/utils';
+import { ISuggestionRequest } from '../../../suggestions/suggestionRequest';
 import { IAntlersTag } from '../../tagManager';
 
 const PathTag: IAntlersTag = {
@@ -28,7 +30,14 @@ const PathTag: IAntlersTag = {
             isDynamic: false,
             name: 'absolute'
         }
-    ]
+    ],
+    resolveDocumentation: (params?: ISuggestionRequest) => {
+        return makeTagDoc(
+            'path Tag',
+            'The `path` tag can be used to generate URLs from relative URLs, or an entry ID.',
+            null
+        );
+    }
 };
 
 export default PathTag;

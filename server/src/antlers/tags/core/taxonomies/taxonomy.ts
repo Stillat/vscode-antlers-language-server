@@ -1,3 +1,5 @@
+import { makeTagDoc } from '../../../../documentation/utils';
+import { ISuggestionRequest } from '../../../../suggestions/suggestionRequest';
 import { IAntlersTag } from '../../../tagManager';
 import { returnDynamicParameter } from '../../dynamicParameterResolver';
 import { augmentTaxonomyScope } from './augmentTaxonomiesScope';
@@ -16,7 +18,14 @@ const TaxonomyTag: IAntlersTag = {
     resolveDynamicParameter: returnDynamicParameter,
     resolveCompletionItems: resolveTaxonomyCompletions,
     resovleParameterCompletionItems: resolveTaxonomyParameterCompletions,
-    augmentScope: augmentTaxonomyScope
+    augmentScope: augmentTaxonomyScope,
+    resolveDocumentation: (params?: ISuggestionRequest) => {
+        return makeTagDoc(
+            'taxonomy Tag',
+            'The `taxonomy` tag may be used to retrieve taxonomy entries. The taxonomy tag can also be used to access entries associated with any given taxonomy term.',
+            'https://statamic.dev/tags/taxonomy'
+        );
+    }
 };
 
 export default TaxonomyTag;

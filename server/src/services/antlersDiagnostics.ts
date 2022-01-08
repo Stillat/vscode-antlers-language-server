@@ -24,7 +24,7 @@ export function parseDocument(textDocument: TextDocument) {
     documentMap.set(documentPath, textDocument);
 }
 
-export async function validateTextDocument(textDocument: TextDocument, connection:_Connection): Promise<void> {
+export async function validateTextDocument(textDocument: TextDocument, connection: _Connection): Promise<void> {
     const docPath = decodeURIComponent(textDocument.uri);
     sessionDocuments.createOrUpdate(docPath, textDocument.getText());
 
@@ -51,7 +51,7 @@ export async function validateTextDocument(textDocument: TextDocument, connectio
     sendOtherDiagnostics(textDocument.uri, connection);
 }
 
-function sendOtherDiagnostics(currentUri: string, connection:_Connection) {
+function sendOtherDiagnostics(currentUri: string, connection: _Connection) {
     if (ProjectManager.instance?.hasStructure()) {
         const projViews = ProjectManager.instance.getStructure().getViews();
 

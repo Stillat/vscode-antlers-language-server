@@ -1,4 +1,6 @@
+import { makeTagDoc } from '../../../../documentation/utils';
 import { AntlersNode } from '../../../../runtime/nodes/abstractNode';
+import { ISuggestionRequest } from '../../../../suggestions/suggestionRequest';
 import { Scope } from '../../../scope/scope';
 import { blueprintFieldsToScopeVariables } from '../../../scope/scopeUtilities';
 import { IAntlersTag } from '../../../tagManager';
@@ -91,6 +93,13 @@ const FormCreate: IAntlersTag = {
         }
 
         return scope;
+    },
+    resolveDocumentation: (params?: ISuggestionRequest) => {
+        return makeTagDoc(
+            'form:create Tag',
+            'The `form:create` tag can be used to access form data, generate field HTML markup, and handle form validation errors.',
+            'https://statamic.dev/tags/form-create'
+        );
     }
 };
 

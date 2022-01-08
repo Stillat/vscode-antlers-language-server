@@ -6,6 +6,7 @@ import { IBlueprintField } from '../projects/blueprints/fields';
 import { IProjectDetailsProvider } from '../projects/projectDetailsProvider';
 import { AntlersNode, ParameterNode } from '../runtime/nodes/abstractNode';
 import { ISuggestionRequest } from '../suggestions/suggestionRequest';
+import { HtmlClassParameter, HtmlStyleParameter } from './htmlCompat/parameters';
 import { IModifier } from './modifierTypes';
 import { Scope } from './scope/scope';
 import { IReportableError, ISpecialResolverResults } from "./types";
@@ -137,7 +138,9 @@ interface IAntlersParameter {
      * @param {ParameterNode} parameter The parameter being analyzed.
      */
     validate?(symbol: AntlersNode, parameter: ParameterNode): IReportableError[];
-	providesDocumentation?(params:ISuggestionRequest):string
+    documentationLink?: string;
+    docLinkName?: string;
+    providesDocumentation?(params: ISuggestionRequest): string
 }
 
 const DnyamicParameter: IAntlersParameter = {
@@ -152,6 +155,12 @@ const DnyamicParameter: IAntlersParameter = {
 };
 
 function dynamicParameter(name: string): IAntlersParameter {
+    if (name == 'class') {
+        return HtmlClassParameter;
+    } else if (name == 'style') {
+        return HtmlStyleParameter;
+    }
+
     return {
         name: name,
         acceptsVariableInterpolation: false,
@@ -337,7 +346,7 @@ interface IAntlersTag {
      * @param {string} paramName The encountered parameter name.
      */
     resolveDynamicParameter?(
-        symbol: AntlersNode, paramName: string): IAntlersParameter | null;
+        symbol: AntlersNode | null, paramName: string): IAntlersParameter | null;
     /**
      * Allows tag authors to control what items are presented to the user when
      * a completion request is triggered within an Antlers parameter.
@@ -359,7 +368,7 @@ interface IAntlersTag {
      * @param {IProjectDetailsProvider} project The active Statamic project.
      */
     resolveSpecialType?(context: AntlersNode, project: IProjectDetailsProvider): ISpecialResolverResults;
-	resolveDocumentation?(params:ISuggestionRequest): string
+    resolveDocumentation?(params?: ISuggestionRequest): string
 }
 
 interface ITagMethod {

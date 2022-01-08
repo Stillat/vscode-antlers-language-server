@@ -1,4 +1,5 @@
 import { ScopeEngine } from '../../antlers/scope/engine';
+import { Scope } from '../../antlers/scope/scope';
 import TagManager from '../../antlers/tagManagerInstance';
 import { resolveTypedTree } from '../../antlers/tags';
 import { IProjectDetailsProvider } from '../../projects/projectDetailsProvider';
@@ -10,214 +11,227 @@ import { ContextResolver } from "./contexts/contextResolver";
 import { PositionContext } from "./contexts/positionContext";
 import { DocumentCursor } from "./documentCursor";
 import { DocumentErrors } from "./documentErrors";
+import { FrontMatterParser } from './frontMatter/frontMatterParser';
 import { NodeScanner } from "./scanners/nodeScanner";
 import { RangeScanner } from "./scanners/rangeScanner";
 import { YamlDocument } from "./yamlDocument";
 
 export class AntlersDocument {
-    private documentParser: DocumentParser = new DocumentParser();
+	private documentParser: DocumentParser = new DocumentParser();
 
-    public readonly ranges: RangeScanner = new RangeScanner(this);
-    public readonly nodes: NodeScanner = new NodeScanner(this);
-    public readonly cursor: DocumentCursor = new DocumentCursor(this);
-    public readonly errors: DocumentErrors = new DocumentErrors(this);
-    public project: IProjectDetailsProvider | null = null;
-    public documentUri = "";
+	public readonly ranges: RangeScanner = new RangeScanner(this);
+	public readonly nodes: NodeScanner = new NodeScanner(this);
+	public readonly cursor: DocumentCursor = new DocumentCursor(this);
+	public readonly errors: DocumentErrors = new DocumentErrors(this);
+	public project: IProjectDetailsProvider | null = null;
+	public documentUri = "";
 
-    static fromText(text: string, project?: IProjectDetailsProvider | null) {
-        const document = new AntlersDocument();
+	static fromText(text: string, project?: IProjectDetailsProvider | null) {
+		const document = new AntlersDocument();
 
-        if (typeof project != "undefined") {
-            document.project = project;
-        }
+		if (typeof project != "undefined") {
+			document.project = project;
+		}
 
-        return document.loadString(text);
-    }
+		return document.loadString(text);
+	}
 
-    getFrontMatterDoc(): YamlDocument | null {
-        if (this.hasFrontMatter()) {
-            const yamlDoc = new YamlDocument();
-            yamlDoc.loadString(this.getFrontMatter());
+	getFrontMatterDoc(): YamlDocument | null {
+		if (this.hasFrontMatter()) {
+			const yamlDoc = new YamlDocument();
+			yamlDoc.loadString(this.getFrontMatter());
 
-            return yamlDoc;
-        }
+			return yamlDoc;
+		}
 
-        return null;
-    }
+		return null;
+	}
 
-    hasFrontMatter() {
-        return this.documentParser.getFrontMatter().trim().length > 0;
-    }
+	hasFrontMatter() {
+		return this.documentParser.getFrontMatter().trim().length > 0;
+	}
 
-    getFrontMatter() {
-        return this.documentParser.getFrontMatter();
-    }
+	getFrontMatter() {
+		return this.documentParser.getFrontMatter();
+	}
 
-    updateProject(project: IProjectDetailsProvider) {
-        this.project = project;
-        this.updateProjectDetails();
-    }
+	getFrontMatterScope(): Scope | null {
+		if (this.project == null) {
+			return null;
+		}
 
-    protected updateProjectDetails() {
-        try {
-            if (this.project != null) {
-                const scopeEngine = new ScopeEngine(this.project, this.documentUri),
-                    analysisNodes = this.documentParser.antlersNodes();
+		const frontMatterParser = new FrontMatterParser(this.project);
+		frontMatterParser.parse(this.getFrontMatter());
 
-                analysisNodes.forEach((node) => {
-                    if (this.project != null && TagManager.instance?.canResolveSpecialTypes(node.getTagName())) {
-                        const specialResults = TagManager.instance?.resolveSpecialType(
-                            node.getTagName(),
-                            node,
-                            this.project
-                        );
+		return frontMatterParser.getScope();
+	}
 
-                        if (specialResults.context != null) {
-                            node.reference = specialResults.context;
-                        }
-                    }
-                });
+	updateProject(project: IProjectDetailsProvider) {
+		this.project = project;
+		this.updateProjectDetails();
+	}
 
-                scopeEngine.analyzeScope(analysisNodes);
+	protected updateProjectDetails() {
+		try {
+			if (this.project != null) {
+				const scopeEngine = new ScopeEngine(this.project, this.documentUri, this),
+					analysisNodes = this.documentParser.antlersNodes();
 
-                for (let i = 0; i < analysisNodes.length; i++) {
-                    const node = analysisNodes[i];
+				analysisNodes.forEach((node) => {
+					if (this.project != null && TagManager.instance?.canResolveSpecialTypes(node.getTagName())) {
+						const specialResults = TagManager.instance?.resolveSpecialType(
+							node.getTagName(),
+							node,
+							this.project
+						);
 
-                    if (node.hasParameters) {
-                        for (let j = 0; j < node.parameters.length; j++) {
-                            const thisParam = node.parameters[j];
+						if (specialResults.context != null) {
+							node.reference = specialResults.context;
+						}
+					}
+				});
 
-                            if (thisParam.hasInterpolations()) {
-                                for (let l = 0; l < thisParam.interpolations.length; l++) {
-                                    const thisInterpolation = thisParam.interpolations[l];
+				scopeEngine.analyzeScope(analysisNodes);
 
-                                    if (node.processedInterpolationRegions.has(thisInterpolation)) {
-                                        const tInterpolation = node.processedInterpolationRegions.get(
-                                            thisInterpolation
-                                        ) as AbstractNode[];
+				for (let i = 0; i < analysisNodes.length; i++) {
+					const node = analysisNodes[i];
 
-                                        tInterpolation.forEach((interpolationNode) => {
-                                            if (interpolationNode instanceof AntlersNode) {
-                                                interpolationNode.currentScope = node.currentScope;
-                                            }
-                                        });
-                                    }
-                                }
-                            }
-                        }
-                    }
-                }
+					if (node.hasParameters) {
+						for (let j = 0; j < node.parameters.length; j++) {
+							const thisParam = node.parameters[j];
 
-                resolveTypedTree(this);
-            }
-        } catch (err) {
-        }
-    }
+							if (thisParam.hasInterpolations()) {
+								for (let l = 0; l < thisParam.interpolations.length; l++) {
+									const thisInterpolation = thisParam.interpolations[l];
 
-    loadString(text: string) {
-        this.documentParser.parse(text);
+									if (node.processedInterpolationRegions.has(thisInterpolation)) {
+										const tInterpolation = node.processedInterpolationRegions.get(
+											thisInterpolation
+										) as AbstractNode[];
 
-        this.updateProjectDetails();
+										tInterpolation.forEach((interpolationNode) => {
+											if (interpolationNode instanceof AntlersNode) {
+												interpolationNode.currentScope = node.currentScope;
+											}
+										});
+									}
+								}
+							}
+						}
+					}
+				}
 
-        return this;
-    }
+				resolveTypedTree(this);
+			}
+		} catch (err) {
+			console.log(err);
+		}
+	}
 
-    getDocumentParser() {
-        return this.documentParser;
-    }
+	loadString(text: string) {
+		this.documentParser.parse(text);
 
-    getAllNodes() {
-        return this.documentParser.getNodes();
-    }
+		this.updateProjectDetails();
 
-    getAllAntlersNodes() {
-        return this.documentParser.antlersNodes();
-    }
+		return this;
+	}
 
-    /**
-     * Extracts all literal text from the Antlers document.
-     */
-    extractText(): string {
-        const parts: string[] = [];
+	getDocumentParser() {
+		return this.documentParser;
+	}
 
-        this.nodes.getAllLiteralNodes().forEach((node) => {
-            parts.push(node.content);
-        });
+	getAllNodes() {
+		return this.documentParser.getNodes();
+	}
 
-        return parts.join("");
-    }
+	getAllAntlersNodes() {
+		return this.documentParser.antlersNodes();
+	}
 
-    getNameAt(position: Position): TagIdentifier | null {
-        const node = this.nodes.getNodeAt(position);
+	/**
+	 * Extracts all literal text from the Antlers document.
+	 */
+	extractText(): string {
+		const parts: string[] = [];
 
-        if (node instanceof AntlersNode) {
-            return node.name;
-        }
+		this.nodes.getAllLiteralNodes().forEach((node) => {
+			parts.push(node.content);
+		});
 
-        return null;
-    }
+		return parts.join("");
+	}
 
-    getContent() {
-        return this.documentParser.getContent();
-    }
+	getNameAt(position: Position): TagIdentifier | null {
+		const node = this.nodes.getNodeAt(position);
 
-    getFeaturesAt(position: Position | null): PositionContext | null {
-        const node = this.nodes.getNodeAt(position);
+		if (node instanceof AntlersNode) {
+			return node.name;
+		}
 
-        return ContextResolver.resolveContext(position, node, this, false, node);
-    }
+		return null;
+	}
 
-    getText(start: number, end: number) {
-        return this.documentParser.getText(start, end);
-    }
+	getContent() {
+		return this.documentParser.getContent();
+	}
 
-    charLeftAt(position: Position | null) {
-        return this.documentParser.charLeftAt(position);
-    }
+	getFeaturesAt(position: Position | null): PositionContext | null {
+		const node = this.nodes.getNodeAt(position);
 
-    charAt(position: Position | null) {
-        return this.documentParser.charAt(position);
-    }
+		return ContextResolver.resolveContext(position, node, this, false, node);
+	}
 
-    charRightAt(position: Position | null) {
-        return this.documentParser.charRightAt(position);
-    }
+	getText(start: number, end: number) {
+		return this.documentParser.getText(start, end);
+	}
 
-    getLineIndex(lineNumber: number): DocumentIndex | null {
-        return this.documentParser.getLineIndex(lineNumber);
-    }
+	charLeftAt(position: Position | null) {
+		return this.documentParser.charLeftAt(position);
+	}
 
-    getLineText(lineNumber: number): string | null {
-        return this.documentParser.getLineText(lineNumber);
-    }
+	charAt(position: Position | null) {
+		return this.documentParser.charAt(position);
+	}
 
-    wordAt(position: Position | null, tabSize = 4) {
-        return this.documentParser.wordAt(position, tabSize);
-    }
+	charRightAt(position: Position | null) {
+		return this.documentParser.charRightAt(position);
+	}
 
-    wordLeftAt(position: Position | null, tabSize = 4) {
-        return this.documentParser.wordLeftAt(position, tabSize);
-    }
+	getLineIndex(lineNumber: number): DocumentIndex | null {
+		return this.documentParser.getLineIndex(lineNumber);
+	}
 
-    wordRightAt(position: Position | null, tabSize = 4) {
-        return this.documentParser.wordRightAt(position, tabSize);
-    }
+	getLineText(lineNumber: number): string | null {
+		return this.documentParser.getLineText(lineNumber);
+	}
 
-    punctuationLeftAt(position: Position | null, tabSize = 4) {
-        return this.documentParser.punctuationLeftAt(position, tabSize);
-    }
+	wordAt(position: Position | null, tabSize = 4) {
+		return this.documentParser.wordAt(position, tabSize);
+	}
 
-    punctuationRightAt(position: Position | null, tabSize = 4) {
-        return this.documentParser.punctuationRightAt(position, tabSize);
-    }
+	wordLeftAt(position: Position | null, tabSize = 4) {
+		return this.documentParser.wordLeftAt(position, tabSize);
+	}
 
-    getLineChars(lineNumber: number): string[] | null {
-        const lineText = this.getLineText(lineNumber);
+	wordRightAt(position: Position | null, tabSize = 4) {
+		return this.documentParser.wordRightAt(position, tabSize);
+	}
 
-        if (lineText != null) {
-            return lineText.split("");
-        }
+	punctuationLeftAt(position: Position | null, tabSize = 4) {
+		return this.documentParser.punctuationLeftAt(position, tabSize);
+	}
 
-        return null;
-    }
+	punctuationRightAt(position: Position | null, tabSize = 4) {
+		return this.documentParser.punctuationRightAt(position, tabSize);
+	}
+
+	getLineChars(lineNumber: number): string[] | null {
+		const lineText = this.getLineText(lineNumber);
+
+		if (lineText != null) {
+			return lineText.split("");
+		}
+
+		return null;
+	}
 }

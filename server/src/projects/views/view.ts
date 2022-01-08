@@ -14,13 +14,6 @@ export interface IView {
      */
     relativeDisplayName: string;
     /**
-     * A collection of view data variables.
-     *
-     * @see https://statamic.dev/template-engines#view-data
-     */
-    viewDataVariables: string[];
-    viewDataDocument: any;
-    /**
      * The normalizerd relative path to the file.
      */
     relativePath: string;

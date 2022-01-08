@@ -10,240 +10,250 @@ import { ISuggestionRequest } from '../suggestions/suggestionRequest';
 import { antlersPositionToVsCode } from '../utils/conversions';
 
 export class HoverManager {
-	static getTypedHeader(name: string, acceptsTypes: string[]): string {
-		let typePart = "";
+    static getTypedHeader(name: string, acceptsTypes: string[]): string {
+        let typePart = "";
 
-		if (acceptsTypes.length > 0) {
-			const typeString = acceptsTypes.join(", ");
+        if (acceptsTypes.length > 0) {
+            const typeString = acceptsTypes.join(", ");
 
-			typePart = typeString;
-		}
+            typePart = typeString;
+        }
 
-		const header = "**" + name + "** `" + typePart + "`  \n";
+        const header = "**" + name + "** `" + typePart + "`  \n";
 
-		return header;
-	}
+        return header;
+    }
 
-	static formatParameterHover(param: IAntlersParameter): Hover {
-		let value = this.getTypedHeader(param.name, param.expectsTypes);
+    static formatParameterHover(param: IAntlersParameter): Hover {
+        let value = this.getTypedHeader(param.name, param.expectsTypes);
 
-		value += param.description;
+        value += param.description;
 
-		return {
-			contents: {
-				kind: MarkupKind.Markdown,
-				value: value,
-			},
-		};
-	}
+        if (param.documentationLink != null && param.documentationLink.trim().length > 0) {
+            value += "  \n\n";
 
-	static formatModifierHover(modifier: IModifier): Hover {
-		let value = this.getTypedHeader(modifier.name, modifier.acceptsType);
+            let linkName = 'Documentation Reference]';
 
-		value += "\n";
+            if (param.docLinkName != null && param.docLinkName.trim().length > 0) {
+                linkName = param.docLinkName.trim();
+            }
 
-		let paramString = '';
+            value += '[' + linkName + '](' + param.documentationLink + ')';
+        }
 
-		if (modifier.parameters.length > 0) {
-			const paramNames: string[] = [];
-			modifier.parameters.forEach((param) => {
-				paramNames.push('$' + param.name);
-			});
+        return {
+            contents: {
+                kind: MarkupKind.Markdown,
+                value: value,
+            },
+        };
+    }
 
-			paramString = paramNames.join(', ');
-		}
+    static formatModifierHover(modifier: IModifier): Hover {
+        let value = this.getTypedHeader(modifier.name, modifier.acceptsType);
 
-		let returnString = '';
+        let paramString = '';
 
-		if (modifier.returnsType.length == 1) {
-			returnString = modifier.returnsType[0];
-		} else {
-			const returnNames: string[] = [];
+        if (modifier.parameters.length > 0) {
+            const paramNames: string[] = [];
+            modifier.parameters.forEach((param) => {
+                paramNames.push('$' + param.name);
+            });
 
-			modifier.returnsType.forEach((type) => {
-				returnNames.push(type);
-			});
+            paramString = paramNames.join(', ');
+        }
 
-			returnString = returnNames.join(', ');
-		}
+        let returnString = '';
 
-		value += modifier.description + "\n";
+        if (modifier.returnsType.length == 1) {
+            returnString = modifier.returnsType[0];
+        } else {
+            const returnNames: string[] = [];
 
-		value += "```js\n";
-		value += 'function ' + modifier.name + '(' + paramString + '):' + returnString;
-		value += "\n```";
+            modifier.returnsType.forEach((type) => {
+                returnNames.push(type);
+            });
+
+            returnString = returnNames.join(', ');
+        }
+
+        value += modifier.description + "\n";
+
+        value += "```js\n";
+        value += 'function ' + modifier.name + '(' + paramString + '):' + returnString;
+        value += "\n```";
 
 
-		if (modifier.docLink != null && modifier.docLink.trim().length > 0) {
-			value += "  \n\n";
-			value += '[Documentation Reference](' + modifier.docLink + ')';
-		}
+        if (modifier.docLink != null && modifier.docLink.trim().length > 0) {
+            value += "  \n\n";
+            value += '[Documentation Reference](' + modifier.docLink + ')';
+        }
 
-		return {
-			contents: {
-				kind: MarkupKind.Markdown,
-				value: value,
-			},
-		};
-	}
+        return {
+            contents: {
+                kind: MarkupKind.Markdown,
+                value: value,
+            },
+        };
+    }
 
-	static formatBlueprintHover(
-		blueprintField: IBlueprintField,
-		introducedBy: AntlersNode | null
-	): Hover {
-		let value = "";
+    static formatBlueprintHover(
+        blueprintField: IBlueprintField,
+        introducedBy: AntlersNode | null
+    ): Hover {
+        let value = "";
 
-		if (
-			blueprintField.displayName != null &&
-			blueprintField.displayName.trim().length > 0
-		) {
-			value =
-				"**" +
-				blueprintField.displayName +
-				"** (" +
-				blueprintField.name +
-				")\n\n";
-		} else {
-			value = "**" + blueprintField.name + "**\n\n";
-		}
+        if (
+            blueprintField.displayName != null &&
+            blueprintField.displayName.trim().length > 0
+        ) {
+            value =
+                "**" +
+                blueprintField.displayName +
+                "** (" +
+                blueprintField.name +
+                ")\n\n";
+        } else {
+            value = "**" + blueprintField.name + "**\n\n";
+        }
 
-		if (blueprintField.instructionText != null) {
-			value += blueprintField.instructionText + "\n\n";
-		}
+        if (blueprintField.instructionText != null) {
+            value += blueprintField.instructionText + "\n\n";
+        }
 
-		value += "**Blueprint**: " + blueprintField.blueprintName + "\n\n";
-		value += "**Type**: " + blueprintField.type;
+        value += "**Blueprint**: " + blueprintField.blueprintName + "\n\n";
+        value += "**Type**: " + blueprintField.type;
 
-		if (blueprintField.maxItems != null) {
-			value += "\n\n**Max Items**: " + blueprintField.maxItems;
-		}
+        if (blueprintField.maxItems != null) {
+            value += "\n\n**Max Items**: " + blueprintField.maxItems;
+        }
 
-		if (introducedBy != null) {
-			value += "\n\n**From**: " + introducedBy.runtimeName();
-		}
+        if (introducedBy != null) {
+            value += "\n\n**From**: " + introducedBy.runtimeName();
+        }
 
-		return {
-			contents: {
-				kind: MarkupKind.Markdown,
-				value: value,
-			},
-		};
-	}
+        return {
+            contents: {
+                kind: MarkupKind.Markdown,
+                value: value,
+            },
+        };
+    }
 
-	static formatScopeVariableHover(scopeVariable: IScopeVariable): Hover {
-		if (scopeVariable.sourceField != null) {
-			return this.formatBlueprintHover(
-				scopeVariable.sourceField,
-				scopeVariable.introducedBy
-			);
-		}
+    static formatScopeVariableHover(scopeVariable: IScopeVariable): Hover {
+        if (scopeVariable.sourceField != null) {
+            return this.formatBlueprintHover(
+                scopeVariable.sourceField,
+                scopeVariable.introducedBy
+            );
+        }
 
-		let value = "**" + scopeVariable.name + "**\n\n";
+        let value = "**" + scopeVariable.name + "**\n\n";
 
-		value += "**Type**: " + scopeVariable.dataType;
+        value += "**Type**: " + scopeVariable.dataType;
 
-		if (scopeVariable.introducedBy != null) {
-			value += "\n**From**: " + scopeVariable.introducedBy.runtimeName();
-		}
+        if (scopeVariable.introducedBy != null) {
+            value += "\n**From**: " + scopeVariable.introducedBy.runtimeName();
+        }
 
-		return {
-			contents: {
-				kind: MarkupKind.Markdown,
-				value: value,
-			},
-		};
-	}
+        return {
+            contents: {
+                kind: MarkupKind.Markdown,
+                value: value,
+            },
+        };
+    }
 
-	static getHover(params: ISuggestionRequest | null): Hover | null {
-		if (params == null) {
-			return null;
-		}
+    static getHover(params: ISuggestionRequest | null): Hover | null {
+        if (params == null) {
+            return null;
+        }
 
-		if (params.nodesInScope.length == 0) {
-			return null;
-		}
+        if (params.nodesInScope.length == 0) {
+            return null;
+        }
 
-		let lastSymbolInScope = params.nodesInScope[params.nodesInScope.length - 1];
+        let lastSymbolInScope = params.nodesInScope[params.nodesInScope.length - 1];
 
-		if (params.context != null && params.context.node != null) {
-			lastSymbolInScope = params.context.node;
-		}
+        if (params.context != null && params.context.node != null) {
+            lastSymbolInScope = params.context.node;
+        }
 
-		if (lastSymbolInScope != null) {
-			if (TagManager.instance?.isKnownTag(lastSymbolInScope.runtimeName())) {
-				const tagRef = TagManager.instance?.findTag(lastSymbolInScope.runtimeName());
+        if (lastSymbolInScope != null) {
+            if (TagManager.instance?.isKnownTag(lastSymbolInScope.runtimeName())) {
+                const tagRef = TagManager.instance?.findTag(lastSymbolInScope.runtimeName());
 
-				if (params.context != null && params.context.isCursorInIdentifier) {
-					if (typeof tagRef?.resolveDocumentation != 'undefined') {
-						const resolvedDocs = tagRef.resolveDocumentation(params);
+                if (params.context != null && params.context.isCursorInIdentifier) {
+                    if (typeof tagRef?.resolveDocumentation != 'undefined') {
+                        const resolvedDocs = tagRef.resolveDocumentation(params);
 
-						if (resolvedDocs.trim().length > 0) {
-							return {
-								contents: {
-									kind: MarkupKind.Markdown,
-									value: resolvedDocs,
-								},
-								range: {
-									start: antlersPositionToVsCode(lastSymbolInScope.startPosition),
-									end: antlersPositionToVsCode(lastSymbolInScope.endPosition)
-								}
-							};
-						}
-					}
-				}
+                        if (resolvedDocs.trim().length > 0) {
+                            return {
+                                contents: {
+                                    kind: MarkupKind.Markdown,
+                                    value: resolvedDocs,
+                                },
+                                range: {
+                                    start: antlersPositionToVsCode(lastSymbolInScope.startPosition),
+                                    end: antlersPositionToVsCode(lastSymbolInScope.endPosition)
+                                }
+                            };
+                        }
+                    }
+                }
 
-				if (tagRef != null) {
-					if (params.context?.parameterContext?.parameter != null) {
-						const tActiveParam = params.context.parameterContext.parameter,
-							paramRef = TagManager.instance.getParameter(tagRef.tagName, tActiveParam.name);
-						if (paramRef != null) {
-							if (typeof paramRef.providesDocumentation !== 'undefined') {
-								const resolvedDocs = paramRef.providesDocumentation(params);
+                if (tagRef != null) {
+                    if (params.context?.parameterContext?.parameter != null) {
+                        const tActiveParam = params.context.parameterContext.parameter,
+                            paramRef = TagManager.instance.getParameter(tagRef.tagName, tActiveParam.name);
+                        if (paramRef != null) {
+                            if (typeof paramRef.providesDocumentation !== 'undefined') {
+                                const resolvedDocs = paramRef.providesDocumentation(params);
 
-								if (resolvedDocs.trim().length > 0) {
+                                if (resolvedDocs.trim().length > 0) {
 
-									return {
-										contents: {
-											kind: MarkupKind.Markdown,
-											value: resolvedDocs,
-										},
-										range: {
-											start: antlersPositionToVsCode(lastSymbolInScope.startPosition),
-											end: antlersPositionToVsCode(lastSymbolInScope.endPosition)
-										}
-									};
-								}
-							}
+                                    return {
+                                        contents: {
+                                            kind: MarkupKind.Markdown,
+                                            value: resolvedDocs,
+                                        },
+                                        range: {
+                                            start: antlersPositionToVsCode(lastSymbolInScope.startPosition),
+                                            end: antlersPositionToVsCode(lastSymbolInScope.endPosition)
+                                        }
+                                    };
+                                }
+                            }
 
-							return this.formatParameterHover(paramRef);
-						} else if (tActiveParam.isModifierParameter && tActiveParam.modifier != null) {
-							return this.formatModifierHover(tActiveParam.modifier);
-						}
-					}
-				}
-			}
+                            return this.formatParameterHover(paramRef);
+                        } else if (tActiveParam.isModifierParameter && tActiveParam.modifier != null) {
+                            return this.formatModifierHover(tActiveParam.modifier);
+                        }
+                    }
+                }
+            }
 
-			if (params.context?.parameterContext != null) {
-				if (params.context?.parameterContext.parameter?.modifier != null) {
-					return this.formatModifierHover(params.context.parameterContext.parameter.modifier);
-				}
-			}
+            if (params.context?.parameterContext != null) {
+                if (params.context?.parameterContext.parameter?.modifier != null) {
+                    return this.formatModifierHover(params.context.parameterContext.parameter.modifier);
+                }
+            }
 
-			if (params.context?.modifierContext != null) {
-				const modifierRef = ModifierManager.instance?.getModifier(params.context.modifierContext.name);
+            if (params.context?.modifierContext != null) {
+                const modifierRef = ModifierManager.instance?.getModifier(params.context.modifierContext.name);
 
-				if (modifierRef != null) {
-					return this.formatModifierHover(modifierRef);
-				}
-			}
+                if (modifierRef != null) {
+                    return this.formatModifierHover(modifierRef);
+                }
+            }
 
-			if (lastSymbolInScope.scopeVariable != null) {
-				return this.formatScopeVariableHover(lastSymbolInScope.scopeVariable);
-			}
+            if (lastSymbolInScope.scopeVariable != null) {
+                return this.formatScopeVariableHover(lastSymbolInScope.scopeVariable);
+            }
 
-			return null;
-		}
+            return null;
+        }
 
-		return null;
-	}
+        return null;
+    }
 }

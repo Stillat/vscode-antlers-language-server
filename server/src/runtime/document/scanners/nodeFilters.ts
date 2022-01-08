@@ -17,7 +17,7 @@ export function filterStructuralAntlersNodes(sourceNodes: AbstractNode[]) {
             if (node.logicBranches.length > 0) {
                 node.logicBranches.forEach((branch) => {
                     if (branch.head != null) {
-						const tBrancHead = branch.head as AntlersNode;
+                        const tBrancHead = branch.head as AntlersNode;
 
                         if (tBrancHead.originalNode != null) {
                             nodes.push(tBrancHead.originalNode);

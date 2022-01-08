@@ -1,3 +1,4 @@
+import { makeTagDoc } from '../../../documentation/utils';
 import { ISuggestionRequest } from '../../../suggestions/suggestionRequest';
 import { EmptyCompletionResult, exclusiveResult, IAntlersParameter, IAntlersTag, ICompletionResult } from '../../tagManager';
 import { getAllRolesSuggestions, makeUserRolesSuggestions } from './user/permissionUtils';
@@ -37,6 +38,13 @@ const Is: IAntlersTag = {
         }
 
         return EmptyCompletionResult;
+    },
+    resolveDocumentation: (params?: ISuggestionRequest) => {
+        return makeTagDoc(
+            'is Tag',
+            'The `is` tag can be used to check whether the currently authenticated user has one or more roles. This tag behaves the same as the `user:is` tag.',
+            'https://statamic.dev/tags/user-is'
+        );
     }
 };
 

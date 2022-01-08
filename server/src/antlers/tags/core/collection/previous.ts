@@ -1,3 +1,5 @@
+import { makeTagDocWithCodeSample } from '../../../../documentation/utils';
+import { ISuggestionRequest } from '../../../../suggestions/suggestionRequest';
 import { IAntlersTag } from '../../../tagManager';
 import { suggestAlternativeCollectionParams } from './alternateParamSuggestions';
 import { augmentCollectionScope } from './augmentCollectionScope';
@@ -42,7 +44,17 @@ const CollectionPrevious: IAntlersTag = {
     resolveSpecialType: resolveCollectionScope,
     suggestAlternativeParams: suggestAlternativeCollectionParams,
     resovleParameterCompletionItems: resolveCollectionParameterCompletiontems,
-    resolveCompletionItems: resolveCollectionCompletions
+    resolveCompletionItems: resolveCollectionCompletions,
+    resolveDocumentation: (params?: ISuggestionRequest) => {
+        return makeTagDocWithCodeSample(
+            'collection:previous Tag',
+            'The `collection:previous` tag is used to show the entries that appear before the current entry, based on some entry order (publish date, alphabetical, or manual).',
+            `{{# Retrieve the previous two entries, based on dates in ascending order. #}}
+{{ collection:previous in="articles" limit="2" sort="date:asc" }}
+
+{{ /collection:previous }}`, 'https://statamic.dev/tags/collection-previous'
+        );
+    }
 };
 
 export default CollectionPrevious;

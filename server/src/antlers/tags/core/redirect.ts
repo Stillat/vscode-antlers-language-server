@@ -1,4 +1,6 @@
+import { makeTagDoc } from '../../../documentation/utils';
 import { RedirectStatusCodes } from '../../../suggestions/defaults/httpStatusCodes';
+import { ISuggestionRequest } from '../../../suggestions/suggestionRequest';
 import { EmptyCompletionResult, exclusiveResult, IAntlersParameter, IAntlersTag } from '../../tagManager';
 
 const Redirect: IAntlersTag = {
@@ -33,6 +35,13 @@ const Redirect: IAntlersTag = {
         }
 
         return EmptyCompletionResult;
+    },
+    resolveDocumentation: (params?: ISuggestionRequest) => {
+        return makeTagDoc(
+            'redirect Tag',
+            'The `redirect` tag can be used to redirect the site visitor to a URL or named route. An optional HTTP status code can also be specified on the response using the `response` parameter.',
+            'https://statamic.dev/tags/redirect'
+        );
     }
 };
 

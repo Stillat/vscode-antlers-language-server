@@ -1,3 +1,5 @@
+import { makeTagDoc } from '../../../documentation/utils';
+import { ISuggestionRequest } from '../../../suggestions/suggestionRequest';
 import { IAntlersTag } from '../../tagManager';
 
 const IterateTag: IAntlersTag = {
@@ -28,7 +30,14 @@ const IterateTag: IAntlersTag = {
             isDynamic: false,
             isRequired: false
         }
-    ]
+    ],
+    resolveDocumentation: (params?: ISuggestionRequest) => {
+        return makeTagDoc(
+            'iterate Tag',
+            'The `iterate` tag can be used to iterate over arbitrary arrays.',
+            'https://statamic.dev/tags/foreach'
+        );
+    }
 };
 
 const ForeachTag: IAntlersTag = {
@@ -59,7 +68,14 @@ const ForeachTag: IAntlersTag = {
             isDynamic: false,
             isRequired: false
         }
-    ]
+    ],
+    resolveDocumentation: (params?: ISuggestionRequest) => {
+        return makeTagDoc(
+            'foreach Tag',
+            'The `foreach` tag can be used to iterate over arbitrary arrays.',
+            'https://statamic.dev/tags/foreach'
+        );
+    }
 };
 
 export {

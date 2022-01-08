@@ -90,13 +90,7 @@ const collectionParameters: IAntlersParameter[] = [
         acceptsVariableInterpolation: false,
         allowsVariableReference: false,
         expectsTypes: ['integer'],
-        isDynamic: false,
-		providesDocumentation: (params:ISuggestionRequest) => {
-			return `**limit \`integer\`**  
-Limits the number of entries to return for the collection. Accepts a positive integer.  
-[Statamic Documentation Reference](https://statamic.dev/tags/collection#parameters)
-`;
-		}
+        isDynamic: false
     },
     {
         isRequired: false,
@@ -123,7 +117,7 @@ Limits the number of entries to return for the collection. Accepts a positive in
         allowsVariableReference: false,
         aliases: null,
         description: 'Sets whether not to paginate entry results',
-        expectsTypes: ['boolean'],
+        expectsTypes: ['boolean', 'number'],
         isRequired: false,
         name: 'paginate',
         isDynamic: false

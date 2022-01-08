@@ -1,11 +1,8 @@
+import { makeTagDocWithCodeSample } from '../../../documentation/utils';
 import { IProjectDetailsProvider } from '../../../projects/projectDetailsProvider';
 import { AntlersNode } from '../../../runtime/nodes/abstractNode';
 import { ISuggestionRequest } from '../../../suggestions/suggestionRequest';
-import {
-    exclusiveResultList,
-    IAntlersParameter,
-    IAntlersTag
-} from "../../tagManager";
+import { exclusiveResultList, IAntlersParameter, IAntlersTag } from "../../tagManager";
 import { ICacheContext } from "./contexts/cacheContext";
 
 const Cache: IAntlersTag = {
@@ -77,6 +74,16 @@ const Cache: IAntlersTag = {
             issues: [],
         };
     },
+    resolveDocumentation: (params?: ISuggestionRequest) => {
+        return makeTagDocWithCodeSample(
+            'cache Tag',
+            'The `cache` tag can be used to save the results of an expensive template operation. The duration of the cache can be configured.',
+            `{{ cache for="10 minutes" }}
+    {{# Template code that won't be re-rendered for at least 10 minutes. #}}
+{{ /cache }}`,
+            'https://statamic.dev/tags/cache'
+        );
+    }
 };
 
 export default Cache;

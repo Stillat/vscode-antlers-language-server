@@ -93,10 +93,15 @@
             }
         },
         "commands": [
+			{
+				"command": "extension.antlersLanguageServer.reloadProjectDetails",
+				"title": "Reload Statamic Project Details",
+				"category": "Antlers"
+			},
             {
                 "command": "extension.antlersLanguageServer.debugEditorContents",
                 "title": "Debug Antlers",
-                "category": "Antlers Debug",
+                "category": "Antlers",
                 "enablement": "!inDebugMode",
                 "icon": "$(debug-alt)"
             }

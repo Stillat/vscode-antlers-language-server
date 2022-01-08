@@ -1,3 +1,4 @@
+import { makeTagDoc } from '../../../../documentation/utils';
 import { ISuggestionRequest } from '../../../../suggestions/suggestionRequest';
 import { exclusiveResultList, IAntlersParameter, IAntlersTag } from '../../../tagManager';
 import FormHandleParam from './formHandleParam';
@@ -21,6 +22,13 @@ const FormSuccess: IAntlersTag = {
         }
 
         return null;
+    },
+    resolveDocumentation: (params?: ISuggestionRequest) => {
+        return makeTagDoc(
+            'form:success Tag',
+            'The `form:success` tag can be used to check if a form submission was successful or not.',
+            'https://statamic.dev/tags/form-success'
+        );
     }
 };
 

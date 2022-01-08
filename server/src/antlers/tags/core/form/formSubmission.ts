@@ -1,11 +1,8 @@
+import { makeTagDoc } from '../../../../documentation/utils';
 import { AntlersNode } from '../../../../runtime/nodes/abstractNode';
 import { ISuggestionRequest } from '../../../../suggestions/suggestionRequest';
 import { Scope } from '../../../scope/scope';
-import {
-    exclusiveResultList,
-    IAntlersParameter,
-    IAntlersTag,
-} from "../../../tagManager";
+import { exclusiveResultList, IAntlersParameter, IAntlersTag, } from "../../../tagManager";
 import FormHandleParam from "./formHandleParam";
 import { HandleParams } from "./parameterCompletions";
 import { resolveFormSetReference } from "./resolveFormSetReference";
@@ -42,6 +39,13 @@ const FormSubmission: IAntlersTag = {
 
         return scope;
     },
+    resolveDocumentation: (params?: ISuggestionRequest) => {
+        return makeTagDoc(
+            'form:submission Tag',
+            'The `form:submission` tag can be used to access the form submission submitted by the current user.',
+            'https://statamic.dev/tags/form-submission'
+        );
+    }
 };
 
 export default FormSubmission;

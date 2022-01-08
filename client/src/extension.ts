@@ -147,6 +147,14 @@ export function activate(context: ExtensionContext) {
 		});
 	}
 
+	context.subscriptions.push(
+		vscode.commands.registerCommand("extension.antlersLanguageServer.reloadProjectDetails", () => {
+			if (isClientReady) {
+				client.sendRequest(ProjectUpdateRequest.type, {});
+			}
+		})
+	);
+
 	// Create the language client and start the client.
 	client = new LanguageClient(
 		'antlersLanguageServer',

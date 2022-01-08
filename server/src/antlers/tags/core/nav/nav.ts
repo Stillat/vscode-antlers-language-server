@@ -1,9 +1,12 @@
 import { CompletionItem, CompletionItemKind } from 'vscode-languageserver-types';
+import { makeTagDoc } from '../../../../documentation/utils';
 import { makeFieldSuggest } from '../../../../suggestions/fieldFormatter';
 import { ISuggestionRequest } from '../../../../suggestions/suggestionRequest';
+import { tagToCompletionItem } from '../../../documentedLabel';
 import { EmptyCompletionResult, IAntlersTag, nonExclusiveResult } from '../../../tagManager';
 import { createDefinitionAlias } from '../../alias';
 import { augmentNavScope } from './augmentScope';
+import NavBreadcrumbs from './breadcrumbs';
 import { resolveNavParameterCompletions } from './parameterCompletions';
 import NavParameters from './parameters';
 
@@ -30,7 +33,7 @@ const StructureTag: IAntlersTag = {
                 }
 
                 if (params.leftWord == 'nav' || params.leftWord == '/nav') {
-                    items.push({ label: 'breadcrumbs', kind: CompletionItemKind.Text });
+                    items.push(tagToCompletionItem(NavBreadcrumbs));
                 }
 
                 items.push(makeFieldSuggest('collection', '', ''));
@@ -41,7 +44,7 @@ const StructureTag: IAntlersTag = {
             }
         }
 
-        if ((params.leftWord == 'nav:collection' || params.leftWord == '/nav:collection' ||
+        if ((params.leftWord == 'nav:collection' || params.leftWord == '/nav:collection' || params.leftWord == 'collection' || params.leftWord == '/collection' ||
             params.leftWord == 'structure:collection' || params.leftWord == '/structure:collection') && params.leftChar == ':') {
             const collectionNames = params.project.getUniqueCollectionNames();
 
@@ -56,6 +59,13 @@ const StructureTag: IAntlersTag = {
         }
 
         return EmptyCompletionResult;
+    },
+    resolveDocumentation: (params?: ISuggestionRequest) => {
+        return makeTagDoc(
+            'nav Tag',
+            'The `nav` tag can be used to iterate structured collections or navigation menus.',
+            'https://statamic.dev/tags/nav'
+        );
     }
 };
 

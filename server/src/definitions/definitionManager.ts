@@ -18,9 +18,9 @@ export class DefinitionManager {
 
         let lastSymbolInScope = params.nodesInScope[params.nodesInScope.length - 1];
 
-		if (params.context != null && params.context.node != null) {
-			lastSymbolInScope = params.context.node;
-		}
+        if (params.context != null && params.context.node != null) {
+            lastSymbolInScope = params.context.node;
+        }
 
         if (lastSymbolInScope != null) {
             if (lastSymbolInScope.scopeVariable != null) {

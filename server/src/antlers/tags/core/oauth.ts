@@ -1,3 +1,4 @@
+import { makeTagDocWithCodeSample } from '../../../documentation/utils';
 import { ISuggestionRequest } from '../../../suggestions/suggestionRequest';
 import { exclusiveResultList, IAntlersParameter, IAntlersTag } from '../../tagManager';
 
@@ -33,6 +34,14 @@ const OAuth: IAntlersTag = {
         }
 
         return null;
+    },
+    resolveDocumentation: (params?: ISuggestionRequest) => {
+        return makeTagDocWithCodeSample(
+            'oauth Tag',
+            'The `oauth` tag can be used to generate login URls for various third-party services.',
+            `<a href="{{ oauth provider="github" }}">Sign In with Github</a>`,
+            'https://statamic.dev/tags/oauth'
+        );
     }
 };
 

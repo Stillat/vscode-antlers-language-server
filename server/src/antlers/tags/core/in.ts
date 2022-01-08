@@ -1,3 +1,4 @@
+import { makeTagDoc } from '../../../documentation/utils';
 import { ISuggestionRequest } from '../../../suggestions/suggestionRequest';
 import { EmptyCompletionResult, exclusiveResult, IAntlersParameter, IAntlersTag, ICompletionResult } from '../../tagManager';
 import { getAllGroupSuggestionsn, makeUserGroupSuggestions } from './user/permissionUtils';
@@ -36,6 +37,13 @@ const In: IAntlersTag = {
         }
 
         return EmptyCompletionResult;
+    },
+    resolveDocumentation: (params?: ISuggestionRequest) => {
+        return makeTagDoc(
+            'in Tag',
+            'The `in` tag can be used to check if the authenticated user belongs to one or more groups. This tag operates similarly to the `user:in` tag.',
+            'https://statamic.dev/tags/user-in'
+        );
     }
 };
 

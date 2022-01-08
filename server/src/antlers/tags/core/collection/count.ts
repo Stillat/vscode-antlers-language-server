@@ -1,3 +1,5 @@
+import { makeTagDocWithCodeSample } from '../../../../documentation/utils';
+import { ISuggestionRequest } from '../../../../suggestions/suggestionRequest';
 import { IAntlersTag } from '../../../tagManager';
 import { collectionParameters } from './parameters';
 import { resolveCollectionScope } from './resolvesCollectionScope';
@@ -24,7 +26,14 @@ const CollectionCount: IAntlersTag = {
         }
     ],
     resolveSpecialType: resolveCollectionScope,
-    resovleParameterCompletionItems: resolveCollectionParameterCompletiontems
+    resovleParameterCompletionItems: resolveCollectionParameterCompletiontems,
+    resolveDocumentation: (params?: ISuggestionRequest) => {
+        return makeTagDocWithCodeSample(
+            'collection:count Tag',
+            'The `collection:count` tag returns the total number of entries in the specified collection(s). The collection count tag accepts the same parameters as the collection tag, allowing developers to count entries that meet specific conditions.',
+            `Total entry count: {{ collection:count in="collection-name" }}
+Draft count: {{ collection:count in="collection-name" status:in="draft" }}`, 'https://statamic.dev/tags/collection-count');
+    }
 };
 
 export default CollectionCount;

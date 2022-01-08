@@ -1,3 +1,5 @@
+import { makeTagDoc } from '../../../documentation/utils';
+import { ISuggestionRequest } from '../../../suggestions/suggestionRequest';
 import { IAntlersTag } from '../../tagManager';
 
 const Link: IAntlersTag = {
@@ -26,8 +28,33 @@ const Link: IAntlersTag = {
             aliases: [],
             isRequired: false,
             isDynamic: false
+        }, {
+            name: 'id',
+            description: 'The ID of the entry to link to',
+            expectsTypes: ['string'],
+            allowsVariableReference: true,
+            acceptsVariableInterpolation: true,
+            aliases: [],
+            isDynamic: false,
+            isRequired: false,
+        }, {
+            name: 'in',
+            description: 'The handle of the site to link to.',
+            expectsTypes: ['string'],
+            allowsVariableReference: true,
+            acceptsVariableInterpolation: true,
+            aliases: [],
+            isDynamic: false,
+            isRequired: false
         }
-    ]
+    ],
+    resolveDocumentation: (params?: ISuggestionRequest) => {
+        return makeTagDoc(
+            'link Tag',
+            'The `link` tag accepts relative URLs or entry IDs and generates fully-qualified URLs to the desired content.',
+            'https://statamic.dev/tags/link'
+        );
+    }
 };
 
 export default Link;

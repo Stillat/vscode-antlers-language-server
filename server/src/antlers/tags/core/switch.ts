@@ -1,3 +1,5 @@
+import { makeTagDoc } from '../../../documentation/utils';
+import { ISuggestionRequest } from '../../../suggestions/suggestionRequest';
 import { IAntlersTag } from '../../tagManager';
 
 const Switch: IAntlersTag = {
@@ -25,7 +27,14 @@ const Switch: IAntlersTag = {
         allowsVariableReference: false,
         isDynamic: false,
         expectsTypes: ['string']
-    }]
+    }],
+    resolveDocumentation: (params?: ISuggestionRequest) => {
+        return makeTagDoc(
+            'switch Tag',
+            'The `switch` tag can be used to alternate between a set of values each time the tag is evaluated.',
+            'https://statamic.dev/tags/switch'
+        );
+    }
 };
 
 const Rotate: IAntlersTag = {
@@ -53,7 +62,14 @@ const Rotate: IAntlersTag = {
         allowsVariableReference: false,
         isDynamic: false,
         expectsTypes: ['string']
-    }]
+    }],
+    resolveDocumentation: (params?: ISuggestionRequest) => {
+        return makeTagDoc(
+            'rotate Tag',
+            'The `rotate` tag can be used to alternate between a set of values each time the tag is evaluated.',
+            'https://statamic.dev/tags/switch'
+        );
+    }
 };
 
 export { Switch, Rotate };

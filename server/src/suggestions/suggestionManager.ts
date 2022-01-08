@@ -1,10 +1,4 @@
-import {
-	CompletionItem,
-	CompletionItemKind,
-	InsertTextFormat,
-	Position,
-	TextEdit,
-} from "vscode-languageserver-protocol";
+import { CompletionItem, CompletionItemKind, InsertTextFormat, Position, TextEdit, } from "vscode-languageserver-protocol";
 import { Range } from "vscode-languageserver-textdocument";
 import ModifierManager from '../antlers/modifierManager';
 import { parseMacros } from '../antlers/modifiers/macros';
@@ -220,6 +214,7 @@ export class SuggestionManager {
 		}
 
 		const lastScopeItem = params.nodesInScope[params.nodesInScope.length - 1];
+
 		let completionItems: CompletionItem[] = [],
 			injectParentScope = true;
 
@@ -255,7 +250,7 @@ export class SuggestionManager {
 		if (params.currentNode?.isEmpty() ||
 			params.context?.isCursorInIdentifier && params.leftChar != ':' && params.leftChar != ' ') {
 			if (params.context?.modifierContext == null) {
-				const allTagNames = TagManager.instance?.getVisibleTagNames() ?? [],
+				const allTagNames = TagManager.instance?.getVisibleTagsWithDocumentation() ?? [],
 					addedTagNames: string[] = [],
 					tagCompletions: CompletionItem[] = [];
 
@@ -263,7 +258,7 @@ export class SuggestionManager {
 					let sort: string | undefined = '000';
 
 					if (params.leftWord != null) {
-						if (allTagNames[i].startsWith(params.leftWord) == false) {
+						if (allTagNames[i].label.startsWith(params.leftWord) == false) {
 							sort = '001';
 						}
 					}
@@ -272,22 +267,30 @@ export class SuggestionManager {
 						sort = undefined;
 					}
 
-					if (allTagNames[i].includes(":") == false) {
-						if (addedTagNames.includes(allTagNames[i]) == false) {
+					if (allTagNames[i].label.includes(":") == false) {
+						if (addedTagNames.includes(allTagNames[i].label) == false) {
 							tagCompletions.push({
-								label: allTagNames[i],
+								label: allTagNames[i].label,
 								kind: CompletionItemKind.Text,
+								documentation: {
+									kind: 'markdown',
+									value: allTagNames[i].documentation
+								},
 								sortText: sort
 							});
-							addedTagNames.push(allTagNames[i]);
+							addedTagNames.push(allTagNames[i].label);
 						}
 					} else {
-						const adjustedTagName = allTagNames[i].split(":")[0] as string;
+						const adjustedTagName = allTagNames[i].label.split(":")[0] as string;
 
 						if (addedTagNames.includes(adjustedTagName) == false) {
 							tagCompletions.push({
 								label: adjustedTagName,
 								kind: CompletionItemKind.Text,
+								documentation: {
+									kind: 'markdown',
+									value: allTagNames[i].documentation
+								},
 								sortText: sort
 							});
 							addedTagNames.push(adjustedTagName);
@@ -298,7 +301,6 @@ export class SuggestionManager {
 				completionItems = completionItems.concat(tagCompletions);
 			}
 		}
-
 
 		if (lastScopeItem != null && lastScopeItem.currentScope != null) {
 			if (InvalidTriggers.includes(lastScopeItem.getTagName())) {
