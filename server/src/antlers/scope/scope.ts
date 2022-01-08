@@ -118,7 +118,7 @@ export class Scope {
             const varRef = this.values.get(path) as IScopeVariable;
 
             if (varRef.sourceField == null) {
-                if (varRef.introducedBy != null && varRef.introducedBy.currentScope != null) {
+                if (varRef.introducedBy != null && varRef.introducedBy.currentScope != null && varRef.introducedBy.currentScope != this) {
                     return varRef.introducedBy.currentScope.findReferenceWithField(varRef.introducedBy.getTagName());
                 }
 
