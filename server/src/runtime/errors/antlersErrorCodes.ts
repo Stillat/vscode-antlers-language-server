@@ -138,7 +138,7 @@ export class AntlersErrorCodes {
     static readonly LINT_UNKNOWN_PARAMETER = 'ANTLR_500';
     static readonly LINT_GENERAL_INVALID_PARAMETER_CONTENTS = 'ANTLR_501';
     static readonly LINT_PARAMETER_CONTENT_INVALID_INTEGER = 'ANTLR_502';
-    static readonly LINT_PARAMETER_CONTENT_INVALID_BOOLEAN = 'ANTLR_503';
+    static readonly LINT_PARAMETER_CONTENT_INVALID_BOOLEAN = 'ANT LR_503';
     static readonly LINT_PAGINATE_INVALID_VALUE = 'ANTLR_504';
     static readonly LINT_DEBUG_DATA_EXPOSED = 'ANTLR_505';
     static readonly LINT_DOUBLE_COLON_IN_TAG_IDENTIFIER = 'ANTLR_506';
@@ -148,4 +148,5 @@ export class AntlersErrorCodes {
 	static readonly LINT_SET_PRODUCES_RUNTIME_ERROR = 'ANTLR_510';
 	static readonly LINT_FRONT_MATTER_EMPTY_DOCUMENT = 'ANTLR_511';
 	static readonly LINT_SHORTHAND_MODIFIER_TAG_MUST_MATCH = 'ANTLR_512';
+	static readonly LINT_INVALID_FRONT_MATTER = 'ANTLR_513';
 }

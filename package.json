@@ -93,11 +93,11 @@
             }
         },
         "commands": [
-			{
-				"command": "extension.antlersLanguageServer.reloadProjectDetails",
-				"title": "Reload Statamic Project Details",
-				"category": "Antlers"
-			},
+            {
+                "command": "extension.antlersLanguageServer.reloadProjectDetails",
+                "title": "Reload Statamic Project Details",
+                "category": "Antlers"
+            },
             {
                 "command": "extension.antlersLanguageServer.debugEditorContents",
                 "title": "Debug Antlers",
@@ -138,6 +138,7 @@
         "typescript": "^4.4.2"
     },
     "dependencies": {
+        "js-yaml": "^4.1.0",
         "locutus": "^2.0.15",
         "semver": "^7.3.5",
         "ts-md5": "^1.2.9",

@@ -1,5 +1,6 @@
 import { Md5 } from 'ts-md5';
 import { AbstractNode } from '../nodes/abstractNode';
+import { Range } from '../nodes/position';
 
 export enum ErrrorLevel {
     Error = 0,
@@ -11,6 +12,7 @@ export class AntlersError {
     public errorCode = '';
     public message = '';
     public level: ErrrorLevel = ErrrorLevel.Error;
+	public range:Range | null = null;
 
     hash() {
         let positionSlug = '';
