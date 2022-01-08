@@ -2,6 +2,7 @@ import { ModifierChainNode, ModifierNode, AbstractNode, AntlersNode, ModifierNam
 import { Position } from '../../nodes/position';
 import { DocumentParser } from '../../parser/documentParser';
 import { LanguageParser } from '../../parser/languageParser';
+import { AntlersDocument } from '../antlersDocument';
 
 export class ModifierContext {
     public modifierChain: ModifierChainNode | null = null;
@@ -13,7 +14,7 @@ export class ModifierContext {
     public activeValueIndex = -1;
     public activeValue: AbstractNode | null = null;
 
-    static resolveContext(position: Position, node: AntlersNode, feature: AbstractNode | null) {
+    static resolveContext(position: Position, node: AntlersNode, feature: AbstractNode | null, document:AntlersDocument) {
         const parser = node.getParser() as DocumentParser,
             context = new ModifierContext(),
             chains = parser.getLanguageParser().getCreatedModifierChains();
@@ -40,8 +41,8 @@ export class ModifierContext {
         }
 
         if (modifier == null && feature instanceof ModifierNameNode) {
-            if (LanguageParser.hasModifierConstruct(feature)) {
-                modifier = LanguageParser.getModifierConstruct(feature);
+            if (document.getDocumentParser().getLanguageParser().hasModifierConstruct(feature)) {
+                modifier = document.getDocumentParser().getLanguageParser().getModifierConstruct(feature);
             }
         }
 

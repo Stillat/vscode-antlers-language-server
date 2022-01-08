@@ -20,13 +20,13 @@ export class LanguageParser {
     private createdArrays: ArrayNode[] = [];
     private mergedVariablePaths: VariableNode[] = [];
     private mergedComponents: Map<AbstractNode, VariableNode> = new Map();
-    private static modifierNameMapping: Map<ModifierNameNode, ModifierNode> = new Map();
+    private modifierNameMapping: Map<ModifierNameNode, ModifierNode> = new Map();
 
-    public static hasModifierConstruct(name: ModifierNameNode): boolean {
+    public hasModifierConstruct(name: ModifierNameNode): boolean {
         return this.modifierNameMapping.has(name);
     }
 
-    public static getModifierConstruct(name: ModifierNameNode): ModifierNode {
+    public getModifierConstruct(name: ModifierNameNode): ModifierNode {
         return this.modifierNameMapping.get(name) as ModifierNode;
     }
 
@@ -62,6 +62,13 @@ export class LanguageParser {
     }
 
     parse(tokens: AbstractNode[]) {
+		this.createdModifierChains = [];
+		this.createdLanguageOperators = [];
+		this.createdArrays = [];
+		this.mergedVariablePaths = [];
+		this.mergedComponents.clear();
+		this.modifierNameMapping.clear();
+
         this.tokens = tokens;
 
         this.tokens = this.combineVariablePaths(this.tokens);
@@ -2002,7 +2009,7 @@ export class LanguageParser {
                 const modifier = this.createModifier(results) as ModifierNode;
 
                 if (modifier.nameNode != null) {
-                    LanguageParser.modifierNameMapping.set(modifier.nameNode, modifier);
+                    this.modifierNameMapping.set(modifier.nameNode, modifier);
                 }
 
                 i += resultCount;
