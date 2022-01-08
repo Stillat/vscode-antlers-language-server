@@ -8,7 +8,7 @@ import { anltersErrorsToDiagnostics } from "../utils/conversions";
 export function parseDocumentText(uri: string, text: string) {
     const documentPath = decodeURIComponent(uri);
     sessionDocuments.createOrUpdate(
-        uri,
+        documentPath,
         text
     );
 }
@@ -52,20 +52,16 @@ export async function validateTextDocument(textDocument: TextDocument, connectio
 }
 
 function sendOtherDiagnostics(currentUri: string, connection: _Connection) {
+
     if (ProjectManager.instance?.hasStructure()) {
         const projViews = ProjectManager.instance.getStructure().getViews();
 
         for (let i = 0; i < projViews.length; i++) {
             if (projViews[i].documentUri != currentUri) {
-                if (
-                    DiagnosticsManager.instance?.hasDiagnosticsIssues(
-                        projViews[i].documentUri
-                    )
-                ) {
+				const diagnosticsPath = decodeURIComponent(projViews[i].documentUri);
+                if (DiagnosticsManager.instance?.hasDiagnosticsIssues(diagnosticsPath)) {
                     const diagnostics: Diagnostic[] = [],
-                        issues = DiagnosticsManager.instance?.getDiagnostics(
-                            projViews[i].documentUri
-                        );
+                        issues = DiagnosticsManager.instance?.getDiagnostics(diagnosticsPath);
 
                     anltersErrorsToDiagnostics(issues).forEach((error) => {
                         diagnostics.push(error);
