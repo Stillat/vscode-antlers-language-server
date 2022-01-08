@@ -6,29 +6,29 @@ import * as fs from 'fs';
 /* eslint-disable @typescript-eslint/no-namespace */
 import { Range, TextDocument } from "vscode-languageserver-textdocument";
 import {
-    createConnection,
-    DidChangeConfigurationNotification,
-    DocumentLinkParams,
-    InitializeParams,
-    InitializeResult,
-    ProposedFeatures,
-    RequestType,
-    RequestType0,
-    TextDocumentIdentifier,
-    TextDocuments,
-    TextDocumentSyncKind,
-    WorkDoneProgress,
-    WorkDoneProgressCreateRequest,
+	createConnection,
+	DidChangeConfigurationNotification,
+	DocumentLinkParams,
+	InitializeParams,
+	InitializeResult,
+	ProposedFeatures,
+	RequestType,
+	RequestType0,
+	TextDocumentIdentifier,
+	TextDocuments,
+	TextDocumentSyncKind,
+	WorkDoneProgress,
+	WorkDoneProgressCreateRequest,
 } from "vscode-languageserver/node";
 import {
-    handleOnCompletion,
-    handleOnCompletionResolve,
+	handleOnCompletion,
+	handleOnCompletionResolve,
 } from "./services/antlersCompletion";
 import { handleFoldingRequest } from "./services/antlersFoldingRegions";
 import {
-    parseDocument,
-    parseDocumentText,
-    validateTextDocument,
+	parseDocument,
+	parseDocumentText,
+	validateTextDocument,
 } from "./services/antlersDiagnostics";
 import { formatAntlersDocument } from "./formatting/formatter";
 import { handleSignatureHelpRequest } from "./services/modifierMethodSignatures";
@@ -57,22 +57,31 @@ import { SessionVariableContext } from './antlers/tags/core/contexts/sessionCont
 
 const projectIndex = "antlers-project-index";
 
+export interface ServerTrace {
+	server: string;
+}
+
 // The example settings
 export interface AntlersSettings {
-	antlersFormatFrontMatter: boolean;
+	formatFrontMatter: boolean;
+	trace: ServerTrace;
 }
 
 // The global settings, used when the `workspace/configuration` request is not supported by the client.
 // Please note that this is not the case when using this server with the client provided in this example
 // but could happen with other clients.
-const defaultSettings: AntlersSettings = { antlersFormatFrontMatter: false };
+const defaultSettings: AntlersSettings = { formatFrontMatter: false, trace: { server: 'off' } };
 let globalSettings: AntlersSettings = defaultSettings;
 
-// Cache the settings of all open documents
-const documentSettings: Map<string, Thenable<AntlersSettings>> = new Map();
+function updateGlobalSettings(settings: AntlersSettings) {
+	globalSettings = settings;
+}
 
+export function getAntlersSettings() {
+	return globalSettings;
+}
 
-export { defaultSettings, globalSettings, documentSettings };
+export { defaultSettings, globalSettings };
 export { hasConfigurationCapability, connection };
 
 // Create a connection for the server, using Node's IPC as a transport.
@@ -92,9 +101,9 @@ let hasDiagnosticRelatedInformationCapability = false;
 interface ManifestAvailableParams { }
 
 namespace ManifestAvailableRequest {
-    export const type: RequestType<ReindexParams, null, any> = new RequestType(
-        "antlers/loadManifest"
-    );
+	export const type: RequestType<ReindexParams, null, any> = new RequestType(
+		"antlers/loadManifest"
+	);
 }
 
 // eslint-disable-next-line @typescript-eslint/no-empty-interface
@@ -103,165 +112,154 @@ interface ReindexParams { }
 interface ProjectUpdateParams { }
 
 namespace ReindexRequest {
-    export const type: RequestType<ReindexParams, null, any> = new RequestType("antlers/reindex");
+	export const type: RequestType<ReindexParams, null, any> = new RequestType("antlers/reindex");
 }
 
 namespace ProjectUpdateRequest {
-    export const type: RequestType<ProjectUpdateParams, null, any> = new RequestType('antlers/projectUpdate');
+	export const type: RequestType<ProjectUpdateParams, null, any> = new RequestType('antlers/projectUpdate');
 }
 
 namespace SemanticTokenLegendRequest {
-    export const type: RequestType0<
-        { types: string[]; modifiers: string[] } | null,
-        any
-    > = new RequestType0("antlers/semanticTokenLegend");
+	export const type: RequestType0<
+		{ types: string[]; modifiers: string[] } | null,
+		any
+	> = new RequestType0("antlers/semanticTokenLegend");
 }
 
 interface SemanticTokenParams {
-    textDocument: TextDocumentIdentifier;
-    ranges?: Range[];
+	textDocument: TextDocumentIdentifier;
+	ranges?: Range[];
 }
 namespace SemanticTokenRequest {
-    export const type: RequestType<SemanticTokenParams, number[] | null, any> =
-        new RequestType("antlers/semanticTokens");
+	export const type: RequestType<SemanticTokenParams, number[] | null, any> =
+		new RequestType("antlers/semanticTokens");
 }
 
 connection.onInitialize((params: InitializeParams) => {
-    const capabilities = params.capabilities;
+	const capabilities = params.capabilities;
 
-    checkForIndexProcessAvailability();
+	checkForIndexProcessAvailability();
 
-    // Does the client support the `workspace/configuration` request?
-    // If not, we fall back using global settings.
-    hasConfigurationCapability = !!(
-        capabilities.workspace && !!capabilities.workspace.configuration
-    );
-    hasWorkspaceFolderCapability = !!(
-        capabilities.workspace && !!capabilities.workspace.workspaceFolders
-    );
-    hasDiagnosticRelatedInformationCapability = !!(
-        capabilities.textDocument &&
-        capabilities.textDocument.publishDiagnostics &&
-        capabilities.textDocument.publishDiagnostics.relatedInformation
-    );
+	// Does the client support the `workspace/configuration` request?
+	// If not, we fall back using global settings.
+	hasConfigurationCapability = !!(
+		capabilities.workspace && !!capabilities.workspace.configuration
+	);
+	hasWorkspaceFolderCapability = !!(
+		capabilities.workspace && !!capabilities.workspace.workspaceFolders
+	);
+	hasDiagnosticRelatedInformationCapability = !!(
+		capabilities.textDocument &&
+		capabilities.textDocument.publishDiagnostics &&
+		capabilities.textDocument.publishDiagnostics.relatedInformation
+	);
 
-    const result: InitializeResult = {
-        capabilities: {
-            textDocumentSync: TextDocumentSyncKind.Full,
-            // Tell the client that this server supports code completion.
-            completionProvider: {
-                resolveProvider: true,
-                triggerCharacters: [":", '"', "'", "{", "/", "|", "@", ' '],
-            },
-            documentFormattingProvider: {},
-            foldingRangeProvider: {},
-            signatureHelpProvider: {
-                triggerCharacters: [":"],
-            },
-            documentLinkProvider: {},
-            hoverProvider: {},
-            definitionProvider: {},
-            documentSymbolProvider: {},
-        },
-    };
-    if (hasWorkspaceFolderCapability) {
-        result.capabilities.workspace = {
-            workspaceFolders: {
-                supported: true,
-            },
-        };
-    }
-    return result;
+	const result: InitializeResult = {
+		capabilities: {
+			textDocumentSync: TextDocumentSyncKind.Full,
+			// Tell the client that this server supports code completion.
+			completionProvider: {
+				resolveProvider: true,
+				triggerCharacters: [":", '"', "'", "{", "/", "|", "@", ' '],
+			},
+			documentFormattingProvider: {},
+			foldingRangeProvider: {},
+			signatureHelpProvider: {
+				triggerCharacters: [":"],
+			},
+			documentLinkProvider: {},
+			hoverProvider: {},
+			definitionProvider: {},
+			documentSymbolProvider: {},
+		},
+	};
+	if (hasWorkspaceFolderCapability) {
+		result.capabilities.workspace = {
+			workspaceFolders: {
+				supported: true,
+			},
+		};
+	}
+	return result;
 });
 
 connection.onInitialized(() => {
-    if (hasConfigurationCapability) {
-        // Register for all configuration changes.
-        connection.client.register(
-            DidChangeConfigurationNotification.type,
-            undefined
-        );
-    }
+	if (hasConfigurationCapability) {
+		// Register for all configuration changes.
+		connection.client.register(
+			DidChangeConfigurationNotification.type,
+			undefined
+		);
+	}
 
-    const htmlResult = connection.workspace
-        .getConfiguration("html")
-        .then(function (value) {
-            updateHtmlFormatterSettings(value);
-        });
+	const htmlResult = connection.workspace
+		.getConfiguration("html")
+		.then(function (value) {
+			updateHtmlFormatterSettings(value);
+		});
+
+	const antlersResult = connection.workspace
+		.getConfiguration("antlersLanguageServer")
+		.then(function (value) {
+			if (value != null) {
+				updateGlobalSettings(value as AntlersSettings);
+			} else {
+				updateGlobalSettings(defaultSettings);
+			}
+		});
 });
 
-export function getDocumentSettings(resource: string): Thenable<AntlersSettings> {
-    if (!hasConfigurationCapability) {
-        return Promise.resolve(globalSettings);
-    }
-    let result = documentSettings.get(resource);
-    if (!result) {
-        result = connection.workspace.getConfiguration({
-            scopeUri: resource,
-            section: "antlers",
-        });
-
-        documentSettings.set(resource, result);
-    }
-    return result;
-}
-
 connection.onDidChangeConfiguration((change) => {
-    if (hasConfigurationCapability) {
-        // Reset all cached document settings
-        documentSettings.clear();
-    } else {
-        globalSettings = <AntlersSettings>(
-            (change.settings.languageServerExample || defaultSettings)
-        );
-    }
+	const htmlResult = connection.workspace
+		.getConfiguration("html")
+		.then(function (value) {
+			updateHtmlFormatterSettings(value);
+		});
+	const antlersResult = connection.workspace
+		.getConfiguration("antlersLanguageServer")
+		.then(function (value) {
+			if (value != null) {
+				updateGlobalSettings(value as AntlersSettings);
+			} else {
+				updateGlobalSettings(defaultSettings);
+			}
+		});
 
-    const htmlResult = connection.workspace
-        .getConfiguration("html")
-        .then(function (value) {
-            updateHtmlFormatterSettings(value);
-        });
-
-    documents.all().forEach(collectProjectDetails);
-    documents.all().forEach(parseDocument);
-    documents.all().forEach((document: TextDocument) => {
-        analyzeStructures(encodeURIComponent(document.uri));
-    });
-    documents.all().forEach((document) => {
-        validateTextDocument(document, connection);
-    });
+	documents.all().forEach(collectProjectDetails);
+	documents.all().forEach(parseDocument);
+	documents.all().forEach((document: TextDocument) => {
+		analyzeStructures(encodeURIComponent(document.uri));
+	});
+	documents.all().forEach((document) => {
+		validateTextDocument(document, connection);
+	});
 });
 
 connection.onDocumentLinks((params: DocumentLinkParams) => {
-    const docPath = decodeURIComponent(params.textDocument.uri);
+	const docPath = decodeURIComponent(params.textDocument.uri);
 
-    return DocumentLinkManager.getDocumentLinks(docPath);
-});
-
-// Only keep settings for open documents
-documents.onDidClose((e) => {
-    documentSettings.delete(decodeURIComponent(e.document.uri));
+	return DocumentLinkManager.getDocumentLinks(docPath);
 });
 
 // The content of a text document has changed. This event is emitted
 // when the text document first opened or when its content has changed.
 documents.onDidChangeContent((change) => {
-    collectProjectDetails(change.document);
-    parseDocument(change.document);
-    analyzeStructures(decodeURIComponent(change.document.uri));
-    validateTextDocument(change.document, connection);
+	collectProjectDetails(change.document);
+	parseDocument(change.document);
+	analyzeStructures(decodeURIComponent(change.document.uri));
+	validateTextDocument(change.document, connection);
 });
 
 connection.onDidChangeWatchedFiles((_change) => {
-    // Monitored files have change in VSCode
+	// Monitored files have change in VSCode
 });
 
 connection.onHover((_params) => {
-    return handleDocumentHover(_params);
+	return handleDocumentHover(_params);
 });
 
 connection.onDocumentSymbol((_params) => {
-    return handleDocumentSymbolRequest(_params);
+	return handleDocumentSymbolRequest(_params);
 });
 
 connection.onDefinition(handleDefinitionRequest);
@@ -273,39 +271,39 @@ connection.onCompletionResolve(handleOnCompletionResolve);
 documents.listen(connection);
 
 connection.onRequest(SemanticTokenLegendRequest.type, (token) => {
-    return newSemanticTokenProvider().legend;
+	return newSemanticTokenProvider().legend;
 });
 
 connection.onRequest(ReindexRequest.type, () => {
-    safeRunIndexing();
+	safeRunIndexing();
 });
 
 connection.onRequest(ProjectUpdateRequest.type, () => {
-    ProjectManager.instance?.setDirtyState(true);
-    ProjectManager.instance?.reloadDetails();
+	ProjectManager.instance?.setDirtyState(true);
+	ProjectManager.instance?.reloadDetails();
 
-    if (ProjectManager.instance?.hasStructure()) {
-        const currentStructure = ProjectManager.instance?.getStructure();
+	if (ProjectManager.instance?.hasStructure()) {
+		const currentStructure = ProjectManager.instance?.getStructure();
 
-        sessionDocuments.setProject(currentStructure);
-        InjectionManager.instance?.updateProject(currentStructure);
-    }
+		sessionDocuments.setProject(currentStructure);
+		InjectionManager.instance?.updateProject(currentStructure);
+	}
 });
 
 connection.onRequest(ManifestAvailableRequest.type, () => {
-    reloadProjectManifest();
+	reloadProjectManifest();
 });
 
 connection.onRequest(SemanticTokenRequest.type, (params, token) => {
-    const docPath = decodeURIComponent(params.textDocument.uri);
+	const docPath = decodeURIComponent(params.textDocument.uri);
 
-    if (documentMap.has(docPath)) {
-        const document = documentMap.get(docPath) as TextDocument;
+	if (documentMap.has(docPath)) {
+		const document = documentMap.get(docPath) as TextDocument;
 
-        return newSemanticTokenProvider().getSemanticTokens(document, params.ranges);
-    }
+		return newSemanticTokenProvider().getSemanticTokens(document, params.ranges);
+	}
 
-    return null;
+	return null;
 });
 
 let registeredProjectIndexToken = false;
@@ -317,130 +315,130 @@ const isFirstRun = true;
  * @param textDocument 
  */
 export async function collectProjectDetails(textDocument: TextDocument): Promise<void> {
-    if (ProjectManager.instance?.hasStructure()) {
+	if (ProjectManager.instance?.hasStructure()) {
 		ProjectManager.instance.reloadDetails();
-		
-        sessionDocuments.setProject(ProjectManager.instance.getStructure());
-        reloadProjectManifest();
-        return;
-    }
 
-    const docPath = decodeURIComponent(textDocument.uri), localPath = uri2path(docPath),
-        project = getProjectStructure(localPath);
-    ProjectManager.instance?.setActiveProject(project);
+		sessionDocuments.setProject(ProjectManager.instance.getStructure());
+		reloadProjectManifest();
+		return;
+	}
 
-    if (ProjectManager.instance?.hasStructure()) {
-        sessionDocuments.setProject(ProjectManager.instance?.getStructure());
-        InjectionManager.instance?.updateProject(ProjectManager.instance?.getStructure());
-    }
+	const docPath = decodeURIComponent(textDocument.uri), localPath = uri2path(docPath),
+		project = getProjectStructure(localPath);
+	ProjectManager.instance?.setActiveProject(project);
 
-    if (!registeredProjectIndexToken) {
-        registeredProjectIndexToken = true;
-        await connection.sendRequest(WorkDoneProgressCreateRequest.type, {
-            token: projectIndex,
-        });
-    }
+	if (ProjectManager.instance?.hasStructure()) {
+		sessionDocuments.setProject(ProjectManager.instance?.getStructure());
+		InjectionManager.instance?.updateProject(ProjectManager.instance?.getStructure());
+	}
 
-    reloadProjectManifest();
+	if (!registeredProjectIndexToken) {
+		registeredProjectIndexToken = true;
+		await connection.sendRequest(WorkDoneProgressCreateRequest.type, {
+			token: projectIndex,
+		});
+	}
 
-    connection.sendProgress(WorkDoneProgress.type, projectIndex, {
-        kind: "begin",
-        title: "Analyzing Statamic Project",
-    });
-    ReferenceManager.instance?.clearPartialReferences(docPath);
-    DiagnosticsManager.instance?.clearIssues(docPath);
+	reloadProjectManifest();
 
-    if (ProjectManager.instance?.hasStructure()) {
-        const curViews = ProjectManager.instance.getStructure().getViews();
-        for (let i = 0; i < curViews.length; i++) {
-            const thisView = curViews[i];
+	connection.sendProgress(WorkDoneProgress.type, projectIndex, {
+		kind: "begin",
+		title: "Analyzing Statamic Project",
+	});
+	ReferenceManager.instance?.clearPartialReferences(docPath);
+	DiagnosticsManager.instance?.clearIssues(docPath);
 
-            parseDocumentText(
-                thisView.documentUri,
-                fs.readFileSync(thisView.path, { encoding: 'utf8' })
-            );
+	if (ProjectManager.instance?.hasStructure()) {
+		const curViews = ProjectManager.instance.getStructure().getViews();
+		for (let i = 0; i < curViews.length; i++) {
+			const thisView = curViews[i];
 
-            analyzeStructures(thisView.documentUri);
-        }
-    }
+			parseDocumentText(
+				thisView.documentUri,
+				fs.readFileSync(thisView.path, { encoding: 'utf8' })
+			);
 
-    connection.sendProgress(WorkDoneProgress.type, projectIndex, {
-        kind: "end",
-        message: "Analysis Complete",
-    });
+			analyzeStructures(thisView.documentUri);
+		}
+	}
+
+	connection.sendProgress(WorkDoneProgress.type, projectIndex, {
+		kind: "end",
+		message: "Analysis Complete",
+	});
 }
 
 export function analyzeStructures(document: string) {
-    document = decodeURIComponent(document);
-    if (sessionDocuments.hasDocument(document)) {
-        const doc = sessionDocuments.getDocument(document),
-            nodes = doc.getAllAntlersNodes();
+	document = decodeURIComponent(document);
+	if (sessionDocuments.hasDocument(document)) {
+		const doc = sessionDocuments.getDocument(document),
+			nodes = doc.getAllAntlersNodes();
 
-        DiagnosticsManager.instance?.clearIssues(document);
-        ReferenceManager.instance?.clearAllReferences(document);
-        UnclosedTagManager.clear(document);
+		DiagnosticsManager.instance?.clearIssues(document);
+		ReferenceManager.instance?.clearAllReferences(document);
+		UnclosedTagManager.clear(document);
 
-        const fileSections: YieldContext[] = [],
-            fileSessionVariables: SessionVariableContext[] = [],
-            partialTags: AntlersNode[] = [],
-            cacheTags: AntlersNode[] = [],
-            unclosedTags: AntlersNode[] = [];
-        let documentErrors: AntlersError[] = [];
+		const fileSections: YieldContext[] = [],
+			fileSessionVariables: SessionVariableContext[] = [],
+			partialTags: AntlersNode[] = [],
+			cacheTags: AntlersNode[] = [],
+			unclosedTags: AntlersNode[] = [];
+		let documentErrors: AntlersError[] = [];
 
-        for (let i = 0; i < nodes.length; i++) {
-            const node = nodes[i],
-                tagName = node.getTagName();
+		for (let i = 0; i < nodes.length; i++) {
+			const node = nodes[i],
+				tagName = node.getTagName();
 
-            if (tagName === "yield" || tagName == "yields") {
-                const thisRef = node.reference;
+			if (tagName === "yield" || tagName == "yields") {
+				const thisRef = node.reference;
 
-                if (thisRef != null && thisRef instanceof YieldContext) {
-                    fileSections.push(thisRef);
-                }
-            } else if (tagName === "partial") {
-                partialTags.push(node);
-            } else if (tagName === "cache") {
-                cacheTags.push(node);
-            } else if (node.runtimeName() == "session:set" || node.runtimeName() == "session:flash") {
-                const thisRef = node.reference;
+				if (thisRef != null && thisRef instanceof YieldContext) {
+					fileSections.push(thisRef);
+				}
+			} else if (tagName === "partial") {
+				partialTags.push(node);
+			} else if (tagName === "cache") {
+				cacheTags.push(node);
+			} else if (node.runtimeName() == "session:set" || node.runtimeName() == "session:flash") {
+				const thisRef = node.reference;
 
-                if (thisRef != null && thisRef instanceof SessionVariableContext) {
-                    fileSessionVariables.push(thisRef);
-                }
-            }
+				if (thisRef != null && thisRef instanceof SessionVariableContext) {
+					fileSessionVariables.push(thisRef);
+				}
+			}
 
-            if (node.modifiers != null) {
-                const partialModifierValue = node.modifiers.getModifierValue('partial');
+			if (node.modifiers != null) {
+				const partialModifierValue = node.modifiers.getModifierValue('partial');
 
-                if (partialModifierValue != null) {
-                    const partialRef = ProjectManager.instance?.getStructure().findPartial(partialModifierValue);
+				if (partialModifierValue != null) {
+					const partialRef = ProjectManager.instance?.getStructure().findPartial(partialModifierValue);
 
-                    if (partialRef != null) {
+					if (partialRef != null) {
 
-                        ReferenceManager.instance?.clearRemovesPageScope(partialRef.originalDocumentUri);
-                        ReferenceManager.instance?.setRemovesPageScope(partialRef.originalDocumentUri, node);
-                    }
-                }
-            }
+						ReferenceManager.instance?.clearRemovesPageScope(partialRef.originalDocumentUri);
+						ReferenceManager.instance?.setRemovesPageScope(partialRef.originalDocumentUri, node);
+					}
+				}
+			}
 
-            if (node.isTagNode) {
-                const tagRef = TagManager.instance?.findTag(node.runtimeName());
+			if (node.isTagNode) {
+				const tagRef = TagManager.instance?.findTag(node.runtimeName());
 
-                if (tagRef != null && tagRef.requiresClose) {
-                    if (node.isClosedBy == null && node.isClosingTag == false && node.isSelfClosing == false) {
-                        unclosedTags.push(node);
-                    }
-                }
-            } else if (node.manifestType === "array" && node.isClosedBy == null) {
-                unclosedTags.push(node);
-            }
+				if (tagRef != null && tagRef.requiresClose) {
+					if (node.isClosedBy == null && node.isClosingTag == false && node.isSelfClosing == false) {
+						unclosedTags.push(node);
+					}
+				}
+			} else if (node.manifestType === "array" && node.isClosedBy == null) {
+				unclosedTags.push(node);
+			}
 
 			const errors = DiagnosticsManager.instance?.checkNode(node) ?? [];
 
 			if (errors.length > 0) {
 				documentErrors = documentErrors.concat(errors);
 			}
-        }
+		}
 
 		const docLevelErrors = DiagnosticsManager.instance?.checkDocument(doc) ?? [];
 
@@ -448,20 +446,20 @@ export function analyzeStructures(document: string) {
 			documentErrors = documentErrors.concat(docLevelErrors);
 		}
 
-        if (unclosedTags.length > 0) {
-            UnclosedTagManager.registerNodes(document, unclosedTags);
-        }
+		if (unclosedTags.length > 0) {
+			UnclosedTagManager.registerNodes(document, unclosedTags);
+		}
 
-        InjectionManager.instance?.registerInjections(document, partialTags);
-        SectionManager.instance?.registerDocumentSections(document, fileSections);
-        ReferenceManager.instance?.registerPartialReferences(document, partialTags);
-        ReferenceManager.instance?.registerCacheReferences(document, cacheTags);
-        DiagnosticsManager.instance?.registerDiagnostics(document, documentErrors);
-        SessionVariableManager.instance?.registerDocumentSessionVariables(
-            document,
-            fileSessionVariables
-        );
-    }
+		InjectionManager.instance?.registerInjections(document, partialTags);
+		SectionManager.instance?.registerDocumentSections(document, fileSections);
+		ReferenceManager.instance?.registerPartialReferences(document, partialTags);
+		ReferenceManager.instance?.registerCacheReferences(document, cacheTags);
+		DiagnosticsManager.instance?.registerDiagnostics(document, documentErrors);
+		SessionVariableManager.instance?.registerDocumentSessionVariables(
+			document,
+			fileSessionVariables
+		);
+	}
 }
 
 // Listen on the connection

@@ -1,482 +1,505 @@
 // eslint-disable-next-line @typescript-eslint/no-var-requires
 const beautify = require("js-beautify").html;
 
+import * as yaml from 'js-yaml';
 import {
-    DocumentFormattingParams,
-    Position,
+	DocumentFormattingParams,
+	Position,
 } from "vscode-languageserver-protocol";
 import {
-    Range,
-    TextDocument,
-    TextEdit,
+	Range,
+	TextDocument,
+	TextEdit,
 } from "vscode-languageserver-textdocument";
 import { sessionDocuments, documentMap } from '../languageService/documents';
 import { htmlFormatterSettings } from '../languageService/htmlFormatterSettings';
+import { getAntlersSettings } from '../server';
 import {
-    getFormatOption,
-    getTagsFormatOption,
-    IHTMLFormatConfiguration,
+	getFormatOption,
+	getTagsFormatOption,
+	IHTMLFormatConfiguration,
 } from "./htmlCompat";
 
 const Conditionals: string[] = [
-    "if",
-    "elseif",
-    "else",
-    "/if",
-    "unless",
-    "elseunless",
-    "/unless",
+	"if",
+	"elseif",
+	"else",
+	"/if",
+	"unless",
+	"elseunless",
+	"/unless",
 ];
 const NormalConditionals: string[] = ["if", "elseif", "else", "/if"];
 
 function getLeadText(lead: any) {
-    if (typeof lead === "undefined" || lead === null) {
-        return "";
-    }
+	if (typeof lead === "undefined" || lead === null) {
+		return "";
+	}
 
-    return lead;
+	return lead;
 }
 
 function balanceIfStatements(lines: string[]): string[] {
-    const newLines: string[] = [],
-        lineOffsets: number[] = [],
-        leads: string[] = [];
+	const newLines: string[] = [],
+		lineOffsets: number[] = [],
+		leads: string[] = [];
 
-    for (let i = 0; i < lines.length; i++) {
-        const trimmedLine = lines[i].trim();
+	for (let i = 0; i < lines.length; i++) {
+		const trimmedLine = lines[i].trim();
 
-        if (trimmedLine.startsWith("{{ if")) {
-            const startsAt = lines[i].indexOf("{{ if");
+		if (trimmedLine.startsWith("{{ if")) {
+			const startsAt = lines[i].indexOf("{{ if");
 
-            lineOffsets.push(startsAt);
-            newLines.push(lines[i]);
-            leads.push(lines[i].substr(0, startsAt));
+			lineOffsets.push(startsAt);
+			newLines.push(lines[i]);
+			leads.push(lines[i].substr(0, startsAt));
 
-            continue;
-        } else if (trimmedLine.startsWith("{{if")) {
-            const startsAt = lines[i].indexOf("{{if");
+			continue;
+		} else if (trimmedLine.startsWith("{{if")) {
+			const startsAt = lines[i].indexOf("{{if");
 
-            lineOffsets.push(startsAt);
-            newLines.push(lines[i]);
-            leads.push(lines[i].substr(0, startsAt));
+			lineOffsets.push(startsAt);
+			newLines.push(lines[i]);
+			leads.push(lines[i].substr(0, startsAt));
 
-            continue;
-        } else if (trimmedLine.startsWith("{{unless")) {
-            const startsAt = lines[i].indexOf("{{unless");
+			continue;
+		} else if (trimmedLine.startsWith("{{unless")) {
+			const startsAt = lines[i].indexOf("{{unless");
 
-            lineOffsets.push(startsAt);
-            newLines.push(lines[i]);
-            leads.push(lines[i].substr(0, startsAt));
+			lineOffsets.push(startsAt);
+			newLines.push(lines[i]);
+			leads.push(lines[i].substr(0, startsAt));
 
-            continue;
-        } else if (trimmedLine.startsWith("{{ unless")) {
-            const startsAt = lines[i].indexOf("{{ unless");
+			continue;
+		} else if (trimmedLine.startsWith("{{ unless")) {
+			const startsAt = lines[i].indexOf("{{ unless");
 
-            lineOffsets.push(startsAt);
-            newLines.push(lines[i]);
-            leads.push(lines[i].substr(0, startsAt));
+			lineOffsets.push(startsAt);
+			newLines.push(lines[i]);
+			leads.push(lines[i].substr(0, startsAt));
 
-            continue;
-        } else if (trimmedLine.startsWith("{{ elseif")) {
-            const startsAt = lines[i].indexOf("{{ elseif"),
-                adjustLine = lines[i].substr(startsAt),
-                lead = leads[leads.length - 1];
+			continue;
+		} else if (trimmedLine.startsWith("{{ elseif")) {
+			const startsAt = lines[i].indexOf("{{ elseif"),
+				adjustLine = lines[i].substr(startsAt),
+				lead = leads[leads.length - 1];
 
-            newLines.push(getLeadText(lead) + adjustLine);
+			newLines.push(getLeadText(lead) + adjustLine);
 
-            continue;
-        } else if (trimmedLine.startsWith("{{elseif")) {
-            const startsAt = lines[i].indexOf("{{elseif"),
-                adjustLine = lines[i].substr(startsAt),
-                lead = leads[leads.length - 1];
+			continue;
+		} else if (trimmedLine.startsWith("{{elseif")) {
+			const startsAt = lines[i].indexOf("{{elseif"),
+				adjustLine = lines[i].substr(startsAt),
+				lead = leads[leads.length - 1];
 
-            newLines.push(getLeadText(lead) + adjustLine);
+			newLines.push(getLeadText(lead) + adjustLine);
 
-            continue;
-        } else if (trimmedLine.startsWith("{{ elseunless")) {
-            const startsAt = lines[i].indexOf("{{ elseunless"),
-                adjustLine = lines[i].substr(startsAt),
-                lead = leads[leads.length - 1];
+			continue;
+		} else if (trimmedLine.startsWith("{{ elseunless")) {
+			const startsAt = lines[i].indexOf("{{ elseunless"),
+				adjustLine = lines[i].substr(startsAt),
+				lead = leads[leads.length - 1];
 
-            newLines.push(getLeadText(lead) + adjustLine);
+			newLines.push(getLeadText(lead) + adjustLine);
 
-            continue;
-        } else if (trimmedLine.startsWith("{{elseunless")) {
-            const startsAt = lines[i].indexOf("{{elseunless"),
-                adjustLine = lines[i].substr(startsAt),
-                lead = leads[leads.length - 1];
+			continue;
+		} else if (trimmedLine.startsWith("{{elseunless")) {
+			const startsAt = lines[i].indexOf("{{elseunless"),
+				adjustLine = lines[i].substr(startsAt),
+				lead = leads[leads.length - 1];
 
-            newLines.push(getLeadText(lead) + adjustLine);
+			newLines.push(getLeadText(lead) + adjustLine);
 
-            continue;
-        } else if (trimmedLine.startsWith("{{ else")) {
-            const startsAt = lines[i].indexOf("{{ else"),
-                adjustLine = lines[i].substr(startsAt),
-                lead = leads[leads.length - 1];
+			continue;
+		} else if (trimmedLine.startsWith("{{ else")) {
+			const startsAt = lines[i].indexOf("{{ else"),
+				adjustLine = lines[i].substr(startsAt),
+				lead = leads[leads.length - 1];
 
-            newLines.push(getLeadText(lead) + adjustLine);
+			newLines.push(getLeadText(lead) + adjustLine);
 
-            continue;
-        } else if (trimmedLine.startsWith("{{else")) {
-            const startsAt = lines[i].indexOf("{{else"),
-                adjustLine = lines[i].substr(startsAt),
-                lead = leads[leads.length - 1];
+			continue;
+		} else if (trimmedLine.startsWith("{{else")) {
+			const startsAt = lines[i].indexOf("{{else"),
+				adjustLine = lines[i].substr(startsAt),
+				lead = leads[leads.length - 1];
 
-            newLines.push(getLeadText(lead) + adjustLine);
+			newLines.push(getLeadText(lead) + adjustLine);
 
-            continue;
-        } else if (trimmedLine.startsWith("{{ /if")) {
-            const startsAt = lines[i].indexOf("{{ /if"),
-                adjustLine = lines[i].substr(startsAt),
-                lead = leads[leads.length - 1];
+			continue;
+		} else if (trimmedLine.startsWith("{{ /if")) {
+			const startsAt = lines[i].indexOf("{{ /if"),
+				adjustLine = lines[i].substr(startsAt),
+				lead = leads[leads.length - 1];
 
-            newLines.push(getLeadText(lead) + adjustLine);
+			newLines.push(getLeadText(lead) + adjustLine);
 
-            lineOffsets.pop();
-            leads.pop();
-            continue;
-        } else if (trimmedLine.startsWith("{{/if")) {
-            const startsAt = lines[i].indexOf("{{/if"),
-                adjustLine = lines[i].substr(startsAt),
-                lead = leads[leads.length - 1];
+			lineOffsets.pop();
+			leads.pop();
+			continue;
+		} else if (trimmedLine.startsWith("{{/if")) {
+			const startsAt = lines[i].indexOf("{{/if"),
+				adjustLine = lines[i].substr(startsAt),
+				lead = leads[leads.length - 1];
 
-            newLines.push(getLeadText(lead) + adjustLine);
+			newLines.push(getLeadText(lead) + adjustLine);
 
-            lineOffsets.pop();
-            leads.pop();
-            continue;
-        } else if (trimmedLine.startsWith("{{/endunless")) {
-            const startsAt = lines[i].indexOf("{{/endunless"),
-                adjustLine = lines[i].substr(startsAt),
-                lead = leads[leads.length - 1];
+			lineOffsets.pop();
+			leads.pop();
+			continue;
+		} else if (trimmedLine.startsWith("{{/endunless")) {
+			const startsAt = lines[i].indexOf("{{/endunless"),
+				adjustLine = lines[i].substr(startsAt),
+				lead = leads[leads.length - 1];
 
-            newLines.push(getLeadText(lead) + adjustLine);
+			newLines.push(getLeadText(lead) + adjustLine);
 
-            lineOffsets.pop();
-            leads.pop();
-            continue;
-        } else if (trimmedLine.startsWith("{{ /endunless")) {
-            const startsAt = lines[i].indexOf("{{ /endunless"),
-                adjustLine = lines[i].substr(startsAt),
-                lead = leads[leads.length - 1];
+			lineOffsets.pop();
+			leads.pop();
+			continue;
+		} else if (trimmedLine.startsWith("{{ /endunless")) {
+			const startsAt = lines[i].indexOf("{{ /endunless"),
+				adjustLine = lines[i].substr(startsAt),
+				lead = leads[leads.length - 1];
 
-            newLines.push(getLeadText(lead) + adjustLine);
+			newLines.push(getLeadText(lead) + adjustLine);
 
-            lineOffsets.pop();
-            leads.pop();
-            continue;
-        } else if (trimmedLine.startsWith("{{/unless")) {
-            const startsAt = lines[i].indexOf("{{/unless"),
-                adjustLine = lines[i].substr(startsAt),
-                lead = leads[leads.length - 1];
+			lineOffsets.pop();
+			leads.pop();
+			continue;
+		} else if (trimmedLine.startsWith("{{/unless")) {
+			const startsAt = lines[i].indexOf("{{/unless"),
+				adjustLine = lines[i].substr(startsAt),
+				lead = leads[leads.length - 1];
 
-            newLines.push(getLeadText(lead) + adjustLine);
+			newLines.push(getLeadText(lead) + adjustLine);
 
-            lineOffsets.pop();
-            leads.pop();
-            continue;
-        } else if (trimmedLine.startsWith("{{ /unless")) {
-            const startsAt = lines[i].indexOf("{{ /unless"),
-                adjustLine = lines[i].substr(startsAt),
-                lead = leads[leads.length - 1];
+			lineOffsets.pop();
+			leads.pop();
+			continue;
+		} else if (trimmedLine.startsWith("{{ /unless")) {
+			const startsAt = lines[i].indexOf("{{ /unless"),
+				adjustLine = lines[i].substr(startsAt),
+				lead = leads[leads.length - 1];
 
-            newLines.push(getLeadText(lead) + adjustLine);
+			newLines.push(getLeadText(lead) + adjustLine);
 
-            lineOffsets.pop();
-            leads.pop();
-            continue;
-        } else if (trimmedLine.startsWith("{{/endif")) {
-            const startsAt = lines[i].indexOf("{{/endif"),
-                adjustLine = lines[i].substr(startsAt),
-                lead = leads[leads.length - 1];
+			lineOffsets.pop();
+			leads.pop();
+			continue;
+		} else if (trimmedLine.startsWith("{{/endif")) {
+			const startsAt = lines[i].indexOf("{{/endif"),
+				adjustLine = lines[i].substr(startsAt),
+				lead = leads[leads.length - 1];
 
-            newLines.push(getLeadText(lead) + adjustLine);
+			newLines.push(getLeadText(lead) + adjustLine);
 
-            lineOffsets.pop();
-            leads.pop();
-            continue;
-        } else if (trimmedLine.startsWith("{{ /endif")) {
-            const startsAt = lines[i].indexOf("{{ /endif"),
-                adjustLine = lines[i].substr(startsAt),
-                lead = leads[leads.length - 1];
+			lineOffsets.pop();
+			leads.pop();
+			continue;
+		} else if (trimmedLine.startsWith("{{ /endif")) {
+			const startsAt = lines[i].indexOf("{{ /endif"),
+				adjustLine = lines[i].substr(startsAt),
+				lead = leads[leads.length - 1];
 
-            newLines.push(getLeadText(lead) + adjustLine);
+			newLines.push(getLeadText(lead) + adjustLine);
 
-            lineOffsets.pop();
-            leads.pop();
-            continue;
-        } else {
-            newLines.push(lines[i]);
-        }
-    }
+			lineOffsets.pop();
+			leads.pop();
+			continue;
+		} else {
+			newLines.push(lines[i]);
+		}
+	}
 
-    return newLines;
+	return newLines;
 }
 
 function padTags(content: string): string {
-    const newContent = content.split("");
-    let addOpeningSpace = false,
-        addClosingSpace = false;
+	const newContent = content.split("");
+	let addOpeningSpace = false,
+		addClosingSpace = false;
 
-    if (newContent.length >= 4) {
-        if (newContent[0] == "{" && newContent[1] == "{" && newContent[2] != " ") {
-            addOpeningSpace = true;
-        }
+	if (newContent.length >= 4) {
+		if (newContent[0] == "{" && newContent[1] == "{" && newContent[2] != " ") {
+			addOpeningSpace = true;
+		}
 
-        if (
-            newContent[newContent.length - 1] == "}" &&
-            newContent[newContent.length - 2] == "}" &&
-            newContent[newContent.length - 3] != " "
-        ) {
-            addClosingSpace = true;
-        }
-    }
+		if (
+			newContent[newContent.length - 1] == "}" &&
+			newContent[newContent.length - 2] == "}" &&
+			newContent[newContent.length - 3] != " "
+		) {
+			addClosingSpace = true;
+		}
+	}
 
-    if (addOpeningSpace) {
-        newContent.splice(2, 0, " ");
-    }
+	if (addOpeningSpace) {
+		newContent.splice(2, 0, " ");
+	}
 
-    if (addClosingSpace) {
-        newContent.splice(newContent.length - 2, 0, " ");
-    }
+	if (addClosingSpace) {
+		newContent.splice(newContent.length - 2, 0, " ");
+	}
 
-    return newContent.join("");
+	return newContent.join("");
 }
 
 interface IExtractedFrontMatter {
-    frontMatter: string;
-    documentContents: string;
+	frontMatter: string;
+	documentContents: string;
 }
 
 function extractFrontMatter(contents: string): IExtractedFrontMatter {
-    if (contents.trim().length == 0) {
-        return {
-            documentContents: contents,
-            frontMatter: "",
-        };
-    }
-    const analysisDocument = contents.trim();
+	if (contents.trim().length == 0) {
+		return {
+			documentContents: contents,
+			frontMatter: "",
+		};
+	}
+	const analysisDocument = contents.trim();
 
-    let lines = analysisDocument.replace(/(\r\n|\n|\r)/gm, "\n").split("\n");
+	let lines = analysisDocument.replace(/(\r\n|\n|\r)/gm, "\n").split("\n");
 
-    if (lines.length <= 1) {
-        return {
-            documentContents: contents,
-            frontMatter: "",
-        };
-    }
+	if (lines.length <= 1) {
+		return {
+			documentContents: contents,
+			frontMatter: "",
+		};
+	}
 
-    if (lines[0].trim().startsWith("---") == false) {
-        return {
-            documentContents: contents,
-            frontMatter: "",
-        };
-    }
+	if (lines[0].trim().startsWith("---") == false) {
+		return {
+			documentContents: contents,
+			frontMatter: "",
+		};
+	}
 
-    let breakAtIndex = 0;
-    for (let i = 1; i < lines.length; i++) {
-        if (lines[i].trim().startsWith("---")) {
-            breakAtIndex = i;
-            break;
-        }
-    }
+	let breakAtIndex = 0;
+	for (let i = 1; i < lines.length; i++) {
+		if (lines[i].trim().startsWith("---")) {
+			breakAtIndex = i;
+			break;
+		}
+	}
 
-    const frontMatterLines = lines.slice(0, breakAtIndex + 1);
+	const frontMatterLines = lines.slice(0, breakAtIndex + 1);
 
-    lines = lines.slice(breakAtIndex + 1);
+	lines = lines.slice(breakAtIndex + 1);
 
-    return {
-        documentContents: lines.join("\n"),
-        frontMatter: frontMatterLines.join("\n"),
-    };
+	return {
+		documentContents: lines.join("\n"),
+		frontMatter: frontMatterLines.join("\n"),
+	};
 }
 
-export function formatAntlersDocument(
-    params: DocumentFormattingParams
-): TextEdit[] | null {
+export function formatAntlersDocument(params: DocumentFormattingParams): TextEdit[] | null {
 
-    const documentPath = decodeURIComponent(params.textDocument.uri);
-    const options = htmlFormatterSettings.format as IHTMLFormatConfiguration;
+	const settings = getAntlersSettings();
+	const documentPath = decodeURIComponent(params.textDocument.uri);
+	const options = htmlFormatterSettings.format as IHTMLFormatConfiguration;
 
-    if (sessionDocuments.hasDocument(documentPath) && documentMap.has(documentPath)) {
-        const document = documentMap.get(documentPath) as TextDocument,
-            antlersDoc = sessionDocuments.getDocument(documentPath);
+	if (sessionDocuments.hasDocument(documentPath) && documentMap.has(documentPath)) {
+		const document = documentMap.get(documentPath) as TextDocument,
+			antlersDoc = sessionDocuments.getDocument(documentPath);
 
-        let docText = document.getText().replace(/(\r\n|\n|\r)/gm, "\n");
-        const extractedDocument = extractFrontMatter(docText);
+		let docText = document.getText().replace(/(\r\n|\n|\r)/gm, "\n");
+		const extractedDocument = extractFrontMatter(docText);
 
-        docText = extractedDocument.documentContents;
-        const replaceEndPosition = document.positionAt(document.getText().length);
+		docText = extractedDocument.documentContents;
+		const replaceEndPosition = document.positionAt(document.getText().length);
 
-        const nodes = antlersDoc.getAllAntlersNodes(),
-            replaceMapping: Map<string, string> = new Map(),
-            ifPrefixMapping: Map<string, string> = new Map(),
-            unlessPrefixMapping: Map<string, string> = new Map(),
-            dumpMapping: Map<string, string> = new Map();
+		const nodes = antlersDoc.getAllAntlersNodes(),
+			replaceMapping: Map<string, string> = new Map(),
+			ifPrefixMapping: Map<string, string> = new Map(),
+			unlessPrefixMapping: Map<string, string> = new Map(),
+			dumpMapping: Map<string, string> = new Map();
 
-        for (let i = 0; i < nodes.length; i++) {
-            const node = nodes[i];
-            let content = node.content,
-                formatTag = "";
+		for (let i = 0; i < nodes.length; i++) {
+			const node = nodes[i];
+			let content = node.content,
+				formatTag = "";
 
-            content = padTags(content);
+			content = padTags(content);
 
-            if (Conditionals.includes(node.getTagName())) {
-                if (node.getTagName() == "if" && node.isClosingTag) {
-                    if (ifPrefixMapping.has(node.id())) {
-                        const prefixId = ifPrefixMapping.get(node.id()) as string;
+			if (Conditionals.includes(node.getTagName())) {
+				if (node.getTagName() == "if" && node.isClosingTag) {
+					if (ifPrefixMapping.has(node.id())) {
+						const prefixId = ifPrefixMapping.get(node.id()) as string;
 
-                        formatTag = "</IF:" + prefixId + ">";
-                    } else {
-                        formatTag = "</IF:" + node.id() + ">";
-                    }
-                } else if (node.getTagName() == "unless" && node.isClosingTag) {
-                    if (unlessPrefixMapping.has(node.id())) {
-                        const prefixId = unlessPrefixMapping.get(node.id()) as string;
+						formatTag = "</IF:" + prefixId + ">";
+					} else {
+						formatTag = "</IF:" + node.id() + ">";
+					}
+				} else if (node.getTagName() == "unless" && node.isClosingTag) {
+					if (unlessPrefixMapping.has(node.id())) {
+						const prefixId = unlessPrefixMapping.get(node.id()) as string;
 
-                        formatTag = "</UNLESS:" + prefixId + ">";
-                    } else {
-                        formatTag = "</UNLESS:" + node.id() + ">";
-                    }
-                } else {
-                    if (NormalConditionals.includes(node.getTagName().trim())) {
-                        if (node.isClosedBy != null) {
-                            ifPrefixMapping.set(node.isClosedBy.id(), node.id());
+						formatTag = "</UNLESS:" + prefixId + ">";
+					} else {
+						formatTag = "</UNLESS:" + node.id() + ">";
+					}
+				} else {
+					if (NormalConditionals.includes(node.getTagName().trim())) {
+						if (node.isClosedBy != null) {
+							ifPrefixMapping.set(node.isClosedBy.id(), node.id());
 
-                            if (ifPrefixMapping.has(node.id())) {
-                                const prefixId = ifPrefixMapping.get(node.id()) as string;
+							if (ifPrefixMapping.has(node.id())) {
+								const prefixId = ifPrefixMapping.get(node.id()) as string;
 
-                                formatTag = "</IF:" + prefixId + ">";
-                                formatTag += "<IF:" + node.id() + ">";
-                                replaceMapping.set("</IF:" + prefixId + ">", content);
-                                dumpMapping.set("<IF:" + node.id() + ">", "");
-                            } else {
-                                formatTag = "<IF:" + node.id() + ">";
-                            }
-                        }
-                    } else {
-                        if (node.isClosedBy != null) {
-                            unlessPrefixMapping.set(node.isClosedBy.id(), node.id());
+								formatTag = "</IF:" + prefixId + ">";
+								formatTag += "<IF:" + node.id() + ">";
+								replaceMapping.set("</IF:" + prefixId + ">", content);
+								dumpMapping.set("<IF:" + node.id() + ">", "");
+							} else {
+								formatTag = "<IF:" + node.id() + ">";
+							}
+						}
+					} else {
+						if (node.isClosedBy != null) {
+							unlessPrefixMapping.set(node.isClosedBy.id(), node.id());
 
-                            if (unlessPrefixMapping.has(node.id())) {
-                                const prefixId = ifPrefixMapping.get(node.id()) as string;
+							if (unlessPrefixMapping.has(node.id())) {
+								const prefixId = ifPrefixMapping.get(node.id()) as string;
 
-                                formatTag = "</UNLESS:" + prefixId + ">";
-                                formatTag += "<UNLESS:" + node.id() + ">";
-                                replaceMapping.set("</UNLESS:" + prefixId + ">", content);
-                                dumpMapping.set("<UNLESS:" + node.id() + ">", "");
-                            } else {
-                                formatTag = "<UNLESS:" + node.id() + ">";
-                            }
-                        }
-                    }
-                }
-            } else {
-                if (node.isClosedBy == null) {
-                    if (node.isClosingTag && node.isOpenedBy != null) {
-                        formatTag = "</ANTLR:" + node.isOpenedBy.id() + ">";
-                    } else {
-                        formatTag = "<ANTLR:" + node.id() + " />";
-                    }
-                } else {
-                    formatTag = "<ANTLR:" + node.id() + ">";
-                }
-            }
+								formatTag = "</UNLESS:" + prefixId + ">";
+								formatTag += "<UNLESS:" + node.id() + ">";
+								replaceMapping.set("</UNLESS:" + prefixId + ">", content);
+								dumpMapping.set("<UNLESS:" + node.id() + ">", "");
+							} else {
+								formatTag = "<UNLESS:" + node.id() + ">";
+							}
+						}
+					}
+				}
+			} else {
+				if (node.isClosedBy == null) {
+					if (node.isClosingTag && node.isOpenedBy != null) {
+						formatTag = "</ANTLR:" + node.isOpenedBy.id() + ">";
+					} else {
+						formatTag = "<ANTLR:" + node.id() + " />";
+					}
+				} else {
+					formatTag = "<ANTLR:" + node.id() + ">";
+				}
+			}
 
-            docText = docText.replace(node.content, formatTag);
-            replaceMapping.set(formatTag, content);
-        }
+			docText = docText.replace(node.content, formatTag);
+			replaceMapping.set(formatTag, content);
+		}
 
-        const includesEnd = docText.endsWith("\n");
+		const includesEnd = docText.endsWith("\n");
 
-        let content_unformatted = getTagsFormatOption(
-            options,
-            "contentUnformatted",
-            void 0
-        );
+		let content_unformatted = getTagsFormatOption(
+			options,
+			"contentUnformatted",
+			void 0
+		);
 
-        if (
-            typeof content_unformatted === "undefined" ||
-            content_unformatted === null
-        ) {
-            content_unformatted = [];
-        }
+		if (
+			typeof content_unformatted === "undefined" ||
+			content_unformatted === null
+		) {
+			content_unformatted = [];
+		}
 
-        content_unformatted.push("IF", "ANTLR");
+		content_unformatted.push("IF", "ANTLR");
 
-        let formattingResults = beautify(docText, {
-            indent_size: params.options.tabSize,
-            indent_char: params.options.insertSpaces ? " " : "\t",
-            indent_empty_lines: getFormatOption(options, "indentEmptyLines", false),
-            wrap_line_length: getFormatOption(options, "wrapLineLength", 120),
-            unformatted: getTagsFormatOption(options, "unformatted", void 0),
-            content_unformatted: content_unformatted,
-            indent_inner_html: getFormatOption(options, "indentInnerHtml", false),
-            preserve_newlines: getFormatOption(options, "preserveNewLines", true),
-            max_preserve_newlines: getFormatOption(
-                options,
-                "maxPreserveNewLines",
-                32786
-            ),
-            indent_handlebars: getFormatOption(options, "indentHandlebars", false),
-            end_with_newline:
-                includesEnd && getFormatOption(options, "endWithNewline", false),
-            extra_liners: getTagsFormatOption(options, "extraLiners", void 0),
-            wrap_attributes: getFormatOption(options, "wrapAttributes", "auto"),
-            wrap_attributes_indent_size: getFormatOption(
-                options,
-                "wrapAttributesIndentSize",
-                void 0
-            ),
-            eol: "\n",
-            indent_scripts: getFormatOption(options, "indentScripts", "normal"),
-            unformatted_content_delimiter: getFormatOption(
-                options,
-                "unformattedContentDelimiter",
-                ""
-            ),
-        }) as string;
+		let formattingResults = beautify(docText, {
+			indent_size: params.options.tabSize,
+			indent_char: params.options.insertSpaces ? " " : "\t",
+			indent_empty_lines: getFormatOption(options, "indentEmptyLines", false),
+			wrap_line_length: getFormatOption(options, "wrapLineLength", 120),
+			unformatted: getTagsFormatOption(options, "unformatted", void 0),
+			content_unformatted: content_unformatted,
+			indent_inner_html: getFormatOption(options, "indentInnerHtml", false),
+			preserve_newlines: getFormatOption(options, "preserveNewLines", true),
+			max_preserve_newlines: getFormatOption(
+				options,
+				"maxPreserveNewLines",
+				32786
+			),
+			indent_handlebars: getFormatOption(options, "indentHandlebars", false),
+			end_with_newline:
+				includesEnd && getFormatOption(options, "endWithNewline", false),
+			extra_liners: getTagsFormatOption(options, "extraLiners", void 0),
+			wrap_attributes: getFormatOption(options, "wrapAttributes", "auto"),
+			wrap_attributes_indent_size: getFormatOption(
+				options,
+				"wrapAttributesIndentSize",
+				void 0
+			),
+			eol: "\n",
+			indent_scripts: getFormatOption(options, "indentScripts", "normal"),
+			unformatted_content_delimiter: getFormatOption(
+				options,
+				"unformattedContentDelimiter",
+				""
+			),
+		}) as string;
 
-        replaceMapping.forEach((content: string, formatTag: string) => {
-            formattingResults = formattingResults.replace(formatTag, content);
-        });
+		replaceMapping.forEach((content: string, formatTag: string) => {
+			formattingResults = formattingResults.replace(formatTag, content);
+		});
 
-        const lines = formattingResults.replace(/(\r\n|\n|\r)/gm, "\n").split("\n");
-        let newLines: string[] = [];
+		const lines = formattingResults.replace(/(\r\n|\n|\r)/gm, "\n").split("\n");
+		let newLines: string[] = [];
 
-        for (let i = 0; i < lines.length; i++) {
-            if (dumpMapping.has(lines[i].trim())) {
-                continue;
-            }
+		for (let i = 0; i < lines.length; i++) {
+			if (dumpMapping.has(lines[i].trim())) {
+				continue;
+			}
 
-            newLines.push(lines[i]);
-        }
+			newLines.push(lines[i]);
+		}
 
-        newLines = balanceIfStatements(newLines);
+		newLines = balanceIfStatements(newLines);
 
-        formattingResults = newLines.join("\n") as string;
+		formattingResults = newLines.join("\n") as string;
 
-        dumpMapping.forEach((content: string, format: string) => {
-            formattingResults = formattingResults.replace(format, content);
-        });
+		dumpMapping.forEach((content: string, format: string) => {
+			formattingResults = formattingResults.replace(format, content);
+		});
 
-        if (extractedDocument.frontMatter.trim().length > 0) {
-            formattingResults =
-                extractedDocument.frontMatter + "\n\n" + formattingResults;
-        }
+		if (extractedDocument.frontMatter.trim().length > 0) {
+			if (settings.formatFrontMatter) {
+				if (antlersDoc.hasFrontMatter()) {
+					const sourceFrontMatter = antlersDoc.getFrontMatter();
 
-        const range: Range = {
-            start: Position.create(0, 0),
-            end: replaceEndPosition,
-        };
+					try {
+						const docFrontMatter = yaml.load(sourceFrontMatter, {
+						});
+						const formatted = yaml.dump(docFrontMatter, {
+							indent: 2,
+							noArrayIndent: false,
+							condenseFlow: false,
+							forceQuotes: true,
+							noRefs: true,
+							skipInvalid: true,
+						});
 
-        return [
-            {
-                range: range,
-                newText: formattingResults,
-            },
-        ];
-    }
+						formattingResults = "---\n" + formatted + "\n---\n\n" + formattingResults;
+					} catch (err) {
+						formattingResults = extractedDocument.frontMatter + "\n\n" + formattingResults;
+					}
+				}
+			} else {
+				formattingResults = extractedDocument.frontMatter + "\n\n" + formattingResults;
+			}
+		}
 
-    return null;
+		const range: Range = {
+			start: Position.create(0, 0),
+			end: replaceEndPosition,
+		};
+
+		return [
+			{
+				range: range,
+				newText: formattingResults,
+			},
+		];
+	}
+
+	return null;
 }
