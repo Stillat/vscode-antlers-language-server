@@ -7,6 +7,7 @@ import { IdentifierContext } from './identifierContext';
 import { ModifierContext } from './modifierContext';
 import { ParameterContext } from './parameterContext';
 import { CursorContext, PositionContext } from './positionContext';
+import { VariableContext } from './variableContext';
 
 export class ContextResolver {
 
@@ -102,7 +103,7 @@ export class ContextResolver {
 			if (!foundParameterContext) {
 				node.runtimeNodes.forEach((runtimeNode) => {
 					if (runtimeNode.startPosition != null && runtimeNode.endPosition != null) {
-						if (position.isWithin(runtimeNode.startPosition, runtimeNode.endPosition)) {
+						if (position.isWithin(runtimeNode.startPosition, runtimeNode.endPosition, 1)) {
 							cursorContext.feature = runtimeNode;
 						}
 					}
@@ -142,6 +143,8 @@ export class ContextResolver {
 					cursorContext.generalContext = GeneralContext.resolveContext(position, node, cursorContext.feature);
 				}
 			}
+
+			cursorContext.variableContext = VariableContext.resolveContext(position, node, cursorContext.feature, document);
 
 			return cursorContext;
 		}

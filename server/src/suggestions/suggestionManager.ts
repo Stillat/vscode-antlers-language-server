@@ -218,6 +218,34 @@ export class SuggestionManager {
 		let completionItems: CompletionItem[] = [],
 			injectParentScope = true;
 
+		if (lastScopeItem.currentScope != null && params.context?.variableContext != null) {
+			if (params.context.variableContext.varPathText.length > 0) {
+				if (lastScopeItem.currentScope.hasListInHistory(params.context.variableContext.varPathText)) {
+					const scopeList = lastScopeItem.currentScope.getList(params.context.variableContext.varPathText);
+
+					if (scopeList != null) {
+						convertScopeToCompletionList(params, scopeList).forEach((item) => {
+							completionItems.push({
+								...item,
+								sortText: '00'
+							});
+						});
+					}
+				} else if (lastScopeItem.currentScope.containsPath(params.context.variableContext.varPathText)) {
+					const scopeList = lastScopeItem.currentScope.findNestedScope(params.context.variableContext.varPathText);
+
+					if (scopeList != null) {
+						convertScopeToCompletionList(params, scopeList).forEach((item) => {
+							completionItems.push({
+								...item,
+								sortText: '00'
+							});
+						});
+					}
+				}
+			}
+		}
+
 		if (params.context?.modifierContext != null) {
 			if (params.context.modifierContext.inModifierName ||
 				(params.context.modifierContext.inModifierName == false && params.context.modifierContext.inModifierParameter == false) ||

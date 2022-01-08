@@ -1,7 +1,6 @@
 import { ModifierChainNode, ModifierNode, AbstractNode, AntlersNode, ModifierNameNode } from '../../nodes/abstractNode';
 import { Position } from '../../nodes/position';
 import { DocumentParser } from '../../parser/documentParser';
-import { LanguageParser } from '../../parser/languageParser';
 import { AntlersDocument } from '../antlersDocument';
 
 export class ModifierContext {

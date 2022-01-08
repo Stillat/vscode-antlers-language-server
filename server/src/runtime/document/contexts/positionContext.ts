@@ -5,6 +5,7 @@ import { ParameterContext } from './parameterContext';
 import { v4 as uuidv4 } from 'uuid';
 import { IdentifierContext } from './identifierContext';
 import { AntlersNode, AbstractNode } from '../../nodes/abstractNode';
+import { VariableContext } from './variableContext';
 
 export class PositionContext {
     public refId = '';
@@ -34,6 +35,7 @@ export class PositionContext {
     public parameterContext: ParameterContext | null = null;
     public modifierContext: ModifierContext | null = null;
     public generalContext: GeneralContext | null = null;
+	public variableContext: VariableContext | null = null;
 
     public cursorContext: CursorContext = CursorContext.Unknown;
 
