@@ -2,6 +2,7 @@ import {
     FoldingRange,
     FoldingRangeParams,
 } from "vscode-languageserver-protocol";
+import { FoldingRangeKind } from 'vscode-languageserver-protocol/lib/common/protocol.foldingRange';
 import { sessionDocuments } from '../languageService/documents';
 import {
     multilineCommentToFoldingRange,
@@ -23,7 +24,8 @@ export function handleFoldingRequest(_foldingParams: FoldingRangeParams): Foldin
 
 			ranges.push({
 				startLine: 0,
-				endLine: frontMatterEndLine - 1
+				endLine: frontMatterEndLine - 1,
+				kind: FoldingRangeKind.Imports
 			});
 		}
 
@@ -36,6 +38,7 @@ export function handleFoldingRequest(_foldingParams: FoldingRangeParams): Foldin
                 const convertedRegion = nodePairToFoldingRange(node);
 
                 if (convertedRegion != null) {
+					convertedRegion.kind = FoldingRangeKind.Region;
                     ranges.push(convertedRegion);
                 }
             });
@@ -46,6 +49,7 @@ export function handleFoldingRequest(_foldingParams: FoldingRangeParams): Foldin
                 const convertedRegion = multilineCommentToFoldingRange(comment);
 
                 if (convertedRegion != null) {
+					convertedRegion.kind = FoldingRangeKind.Comment;
                     ranges.push(convertedRegion);
                 }
             });
@@ -60,6 +64,7 @@ export function handleFoldingRequest(_foldingParams: FoldingRangeParams): Foldin
                 const convertedRegion = multilineCommentToFoldingRange(node);
 
                 if (convertedRegion != null) {
+					convertedRegion.kind = FoldingRangeKind.Region;
                     ranges.push(convertedRegion);
                 }
             });
