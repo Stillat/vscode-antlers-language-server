@@ -59,16 +59,15 @@ export class LanguageParser {
         this.createdModifierChains = [];
         this.createdLanguageOperators = [];
         this.createdArrays = [];
-    }
-
-    parse(tokens: AbstractNode[]) {
 		this.createdModifierChains = [];
 		this.createdLanguageOperators = [];
 		this.createdArrays = [];
 		this.mergedVariablePaths = [];
 		this.mergedComponents.clear();
 		this.modifierNameMapping.clear();
+    }
 
+    parse(tokens: AbstractNode[]) {
         this.tokens = tokens;
 
         this.tokens = this.combineVariablePaths(this.tokens);
@@ -284,6 +283,7 @@ export class LanguageParser {
                     newNodes.push(right);
 
                     this.mergedVariablePaths.push(right);
+					this.mergedComponents.set(node, right);
                     this.mergedComponents.set(left, right);
                     this.mergedComponents.set(right, right);
                     // Skip over the adjusted right.
@@ -310,6 +310,7 @@ export class LanguageParser {
 
                     newNodes.push(left);
                     this.mergedVariablePaths.push(left);
+					this.mergedComponents.set(node, left);
                     this.mergedComponents.set(left, left);
                     this.mergedComponents.set(right, left);
                     i += 1;
