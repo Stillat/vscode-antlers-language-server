@@ -3,73 +3,83 @@ import { AntlersError } from '../errors/antlersError';
 import { AntlersDocument } from './antlersDocument';
 
 class DocumentManager {
-    private loadedDocuments: Map<string, AntlersDocument> = new Map();
-    private activeProject: IProjectDetailsProvider | null = null;
-    public static instance: DocumentManager | null = null;
+	private loadedDocuments: Map<string, AntlersDocument> = new Map();
+	private activeProject: IProjectDetailsProvider | null = null;
+	public static instance: DocumentManager | null = null;
 
-    setProject(project: IProjectDetailsProvider) {
-        this.activeProject = project;
+	getDocuments(): AntlersDocument[] {
+		const docs: AntlersDocument[] = [];
 
-        this.loadedDocuments.forEach((document) => {
-            if (this.activeProject != null) {
-                document.updateProject(this.activeProject);
-            }
-        });
-    }
+		this.loadedDocuments.forEach((doc) => {
+			docs.push(doc);
+		});
 
-    refreshDocumentState() {
-        if (this.activeProject != null) {
-            this.setProject(this.activeProject);
-        }
-    }
+		return docs;
+	}
 
-    hasDocument(uri: string) {
-        return this.loadedDocuments.has(uri);
-    }
+	setProject(project: IProjectDetailsProvider) {
+		this.activeProject = project;
 
-    createDocument(uri: string) {
-        if (!this.loadedDocuments.has(uri)) {
-            const doc = new AntlersDocument();
-            doc.documentUri = uri;
+		this.loadedDocuments.forEach((document) => {
+			if (this.activeProject != null) {
+				document.updateProject(this.activeProject);
+			}
+		});
+	}
 
-            this.loadedDocuments.set(uri, doc);
-        }
-    }
+	refreshDocumentState() {
+		if (this.activeProject != null) {
+			this.setProject(this.activeProject);
+		}
+	}
 
-    loadDocument(uri: string, text: string) {
-        this.loadedDocuments.set(uri, AntlersDocument.fromText(text));
-    }
+	hasDocument(uri: string) {
+		return this.loadedDocuments.has(uri);
+	}
 
-    getDocument(uri: string) {
-        return this.loadedDocuments.get(uri) as AntlersDocument;
-    }
+	createDocument(uri: string) {
+		if (!this.loadedDocuments.has(uri)) {
+			const doc = new AntlersDocument();
+			doc.documentUri = uri;
 
-    updateDocument(uri: string, text: string) {
-        if (this.loadedDocuments.has(uri)) {
-            const document = this.loadedDocuments.get(uri) as AntlersDocument;
+			this.loadedDocuments.set(uri, doc);
+		}
+	}
 
-            document.loadString(text);
-        }
-    }
+	loadDocument(uri: string, text: string) {
+		this.loadedDocuments.set(uri, AntlersDocument.fromText(text));
+	}
 
-    createOrUpdate(uri: string, text: string) {
-        this.createDocument(uri);
-        this.updateDocument(uri, text);
-    }
+	getDocument(uri: string) {
+		return this.loadedDocuments.get(uri) as AntlersDocument;
+	}
 
-    getDocumentErrors(uri: string): AntlersError[] {
-        if (!this.loadedDocuments.has(uri)) {
-            return [];
-        }
+	updateDocument(uri: string, text: string) {
+		if (this.loadedDocuments.has(uri)) {
+			const document = this.loadedDocuments.get(uri) as AntlersDocument;
 
-        const doc = this.loadedDocuments.get(uri) as AntlersDocument;
+			document.loadString(text);
+		}
+	}
 
-        return doc.errors.all();
-    }
+	createOrUpdate(uri: string, text: string) {
+		this.createDocument(uri);
+		this.updateDocument(uri, text);
+	}
+
+	getDocumentErrors(uri: string): AntlersError[] {
+		if (!this.loadedDocuments.has(uri)) {
+			return [];
+		}
+
+		const doc = this.loadedDocuments.get(uri) as AntlersDocument;
+
+		return doc.errors.all();
+	}
 }
 
 if (typeof DocumentManager.instance == 'undefined' || DocumentManager.instance) {
-    DocumentManager.instance = new DocumentManager();
+	DocumentManager.instance = new DocumentManager();
 }
 
 export default DocumentManager;
