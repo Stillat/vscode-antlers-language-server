@@ -203,7 +203,11 @@ export class AntlersNodeParser {
             && trimmedInner != '/if' && trimmedInner != '/unless' && trimmedInner != '/endunless'
             && trimmedInner != 'endif' && trimmedInner != 'endunless'
             && trimmedInner != '/endif') {
-            this.pushConditionWithoutExpression(node);
+            const nodeContent = node.getContent().trim();
+
+			if (nodeContent.length == 0) {
+				this.pushConditionWithoutExpression(node);
+			}
         }
 
         if (node.name.name == 'endif') {
