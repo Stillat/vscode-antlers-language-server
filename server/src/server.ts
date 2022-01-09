@@ -55,6 +55,7 @@ import { updateHtmlFormatterSettings } from './languageService/htmlFormatterSett
 import { AntlersNode } from './runtime/nodes/abstractNode';
 import { SessionVariableContext } from './antlers/tags/core/contexts/sessionContext';
 import { handleReferences } from './services/antlersVariableReferences';
+import { handleDocumentHighlight } from './services/antlersDocumentHighlight';
 
 const projectIndex = "antlers-project-index";
 
@@ -172,7 +173,8 @@ connection.onInitialize((params: InitializeParams) => {
 			hoverProvider: {},
 			definitionProvider: {},
 			documentSymbolProvider: {},
-			referencesProvider: {}
+			referencesProvider: {},
+			documentHighlightProvider: {}
 		},
 	};
 	if (hasWorkspaceFolderCapability) {
@@ -264,6 +266,7 @@ connection.onDocumentSymbol((_params) => {
 	return handleDocumentSymbolRequest(_params);
 });
 
+connection.onDocumentHighlight(handleDocumentHighlight);
 connection.onReferences(handleReferences);
 
 connection.onDefinition(handleDefinitionRequest);
