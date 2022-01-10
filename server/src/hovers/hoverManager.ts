@@ -6,6 +6,7 @@ import { IAntlersParameter } from "../antlers/tagManager";
 import TagManager from '../antlers/tagManagerInstance';
 import { IBlueprintField } from '../projects/blueprints/fields';
 import { AntlersNode } from '../runtime/nodes/abstractNode';
+import { Position } from '../runtime/nodes/position';
 import { ISuggestionRequest } from '../suggestions/suggestionRequest';
 import { antlersPositionToVsCode } from '../utils/conversions';
 
@@ -247,7 +248,11 @@ export class HoverManager {
                 }
             }
 
-            if (lastSymbolInScope.scopeVariable != null) {
+			const targetLine = params.position.line + 1,
+				targetChar = params.position.character + 1,
+				targetPos = params.antlersDocument.cursor.position(targetLine, targetChar);
+
+            if (lastSymbolInScope.scopeVariable != null && targetPos != null && targetPos.isWithin(lastSymbolInScope.startPosition, lastSymbolInScope.endPosition)) {
                 return this.formatScopeVariableHover(lastSymbolInScope.scopeVariable);
             }
 
