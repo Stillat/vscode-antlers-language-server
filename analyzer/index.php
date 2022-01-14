@@ -18,7 +18,7 @@ if (!file_exists($applicationPath) || !is_dir($applicationPath)) {
     return;
 }
 
-$storagePath = $applicationPath.'storage/antlers-language-server/';
+$storagePath = $applicationPath.'storage/framework/cache/antlers-language-server/';
 
 if (!file_exists($storagePath)) {
     @mkdir($storagePath, 0755, true);
@@ -27,7 +27,7 @@ if (!file_exists($storagePath)) {
 try {
 
     $composerPath = $applicationPath.'composer.json';
-    $targetManifest = $applicationPath.'.antlers.json';
+    $targetManifest = $storagePath.'.antlers.json';
 
     if (!file_exists($composerPath)) {
         return;
