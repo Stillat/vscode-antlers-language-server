@@ -49,11 +49,11 @@ export class RecursiveParentAnalyzer {
                 }
 
                 if (lastNode == null) {
-                    node.pushError(AntlersError.makeSyntaxError(
+                    /*node.pushError(AntlersError.makeSyntaxError(
                         AntlersErrorCodes.TYPE_RECURSIVE_UNPAIRED_NODE,
                         node,
                         'Unpaired recursive node. All recursive nodes must have a parent node introducing them.'
-                    ));
+                    ));*/
                     continue;
                 }
 
