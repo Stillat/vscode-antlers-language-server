@@ -707,6 +707,7 @@ export class ModifierNode extends AbstractNode {
 
 	public modifier: IModifier | null = null;
 
+	public methodStyleArguments: ArgumentGroup | null = null;
 	public nameNode: ModifierNameNode | null = null;
 	public name = '';
 	public valueNodes: AbstractNode[] = [];

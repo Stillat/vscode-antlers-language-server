@@ -2438,6 +2438,27 @@ export class LanguageParser {
             values: AbstractNode[] = [],
             tokenCount = tokens.length;
 
+		if (tokens.length > 0 && tokens[0] instanceof LogicGroup) {
+			const unwrapped = this.unpack(tokens[0].nodes),
+				tArgGroup = this.makeArgGroup(unwrapped);
+
+			const modifier = new ModifierNode();
+			modifier.nameNode = modifierName;
+			modifier.methodStyleArguments = tArgGroup;
+
+			if (tokens.length > 1) {
+				for (let i = 1; i < tokenCount; i++) {
+					tokens[i].pushError(AntlersError.makeSyntaxError(
+						AntlersErrorCodes.TYPE_MODIFIER_UNEXPECTED_TOKEN_METHOD_SYNTAX,
+						tokens[i],
+						'Unexpected [' + TypeLabeler.getPrettyTypeName(tokens[i]) + '] while parsing modifier argument group. Expecting [T_MODIFIER_SEPARATOR] or end of current expression.'
+					));
+				}
+			}
+		
+			return modifier;
+		}
+
         for (let i = 0; i < tokenCount; i++) {
             if (tokens[i] instanceof ModifierValueSeparator || tokens[i] instanceof InlineBranchSeparator) {
                 if (i + 1 >= tokenCount) {

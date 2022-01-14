@@ -131,6 +131,7 @@ export class AntlersErrorCodes {
     static readonly TYPE_MODIFIER_NOT_FOUND = 'ANTLR_126';
     static readonly TYPE_RUNTIME_GENERAL_FAULT = 'ANTLR_127';
     static readonly TYPE_MODIFIER_INCORRECT_VALUE_POSITION = 'ANTLR_128';
+	static readonly TYPE_MODIFIER_UNEXPECTED_TOKEN_METHOD_SYNTAX = 'ANTLR_129';
 
     static readonly PARSER_CANNOT_PARSE_PATH_RECURSIVE = 'ANTLR_200';
     static readonly PATH_STRING_NOT_INSIDE_ARRAY_ACCESSOR = 'ANTLR_201';
