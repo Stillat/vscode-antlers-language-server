@@ -299,6 +299,14 @@ export function formatAntlersDocument(params: DocumentFormattingParams): TextEdi
 	const documentPath = decodeURIComponent(params.textDocument.uri);
 	const options = htmlFormatterSettings.format as IHTMLFormatConfiguration;
 
+	if (settings.formatterIgnoreExtensions.length > 0) {
+		for (let i = 0; i < settings.formatterIgnoreExtensions.length; i++) {
+			if (documentPath.toLowerCase().endsWith(settings.formatterIgnoreExtensions[i].toLowerCase())) {
+				return null;
+			}
+		}
+	}
+
 	if (sessionDocuments.hasDocument(documentPath) && documentMap.has(documentPath)) {
 		const document = documentMap.get(documentPath) as TextDocument,
 			antlersDoc = sessionDocuments.getDocument(documentPath);

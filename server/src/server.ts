@@ -67,12 +67,13 @@ export interface ServerTrace {
 export interface AntlersSettings {
 	formatFrontMatter: boolean;
 	trace: ServerTrace;
+	formatterIgnoreExtensions:string[];
 }
 
 // The global settings, used when the `workspace/configuration` request is not supported by the client.
 // Please note that this is not the case when using this server with the client provided in this example
 // but could happen with other clients.
-const defaultSettings: AntlersSettings = { formatFrontMatter: false, trace: { server: 'off' } };
+const defaultSettings: AntlersSettings = { formatFrontMatter: false, trace: { server: 'off' }, formatterIgnoreExtensions: ['xml'] };
 let globalSettings: AntlersSettings = defaultSettings;
 
 function updateGlobalSettings(settings: AntlersSettings) {
@@ -167,7 +168,7 @@ connection.onInitialize((params: InitializeParams) => {
 			documentFormattingProvider: {},
 			foldingRangeProvider: {},
 			signatureHelpProvider: {
-				triggerCharacters: [":"],
+				triggerCharacters: [":", ','],
 			},
 			documentLinkProvider: {},
 			hoverProvider: {},
