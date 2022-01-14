@@ -66,7 +66,7 @@ export function checkForIndexProcessAvailability() {
 export function reloadProjectManifest() {
     if (ProjectManager.instance?.hasStructure()) {
         const manifestPath = ProjectManager.instance.getStructure().getWorkingDirectory() +
-            "/.antlers.json";
+            "/storage/framework/cache/antlers-language-server/.antlers.json";
 
         if (fs.existsSync(manifestPath)) {
             const parsedManifest = ManifestLoader.loadFromPath(manifestPath);

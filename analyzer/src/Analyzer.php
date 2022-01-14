@@ -63,7 +63,7 @@ class Analyzer
     private function analyzeComposerDependencies($dependencies, $applicationPath)
     {
         $canCache = false;
-        $storagePath = $applicationPath.'storage/';
+        $storagePath = $applicationPath.'storage/framework/cache/';
         $cachePath = $storagePath.'antlers-language-server/';
 
         if (file_exists($storagePath) && is_dir($storagePath)) {
