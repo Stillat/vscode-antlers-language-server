@@ -253,6 +253,7 @@ export class AntlersNodeParser {
                 replacedNode.runtimeNodes = this.lexer.tokenize(replacedNode, replacedNode.getContent() ?? '');
                 this.testUnlessContent(replacedNode);
             } else {
+				replacedNode.originalNode = node;
                 replacedNode.content = ' /if ';
             }
 

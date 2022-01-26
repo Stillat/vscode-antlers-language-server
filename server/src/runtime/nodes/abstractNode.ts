@@ -597,8 +597,16 @@ export class AntlersNode extends AbstractNode {
 		return true;
 	}
 
-	rawContent() {
+	rawContent():string {
 		return this.rawStart + this.content + this.rawEnd;
+	}
+
+	getTrueRawContent():string {
+		if (this.originalNode != null && this.originalNode != this) {
+			return this.originalNode.getTrueRawContent();
+		}
+
+		return this.rawContent();
 	}
 
 	getStructuralChildren(): AntlersNode[] {
