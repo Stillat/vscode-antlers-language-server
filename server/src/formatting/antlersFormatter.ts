@@ -56,8 +56,6 @@ export class AntlersFormatter {
 					this.conditionRegions.set(elementConstruction, logicBranch.head);
 					rootText += elementConstruction + tChildResult + closeConstruct;
 				}
-			} else {
-				const howdy = 'there';
 			}
 		});
 
@@ -153,8 +151,7 @@ export class AntlersFormatter {
 		}
 
 
-		console.log(documentRootFormatted);
-		return 'Hello';
+		return documentRootFormatted;
 	}
 
 }
