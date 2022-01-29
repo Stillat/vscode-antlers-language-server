@@ -23,7 +23,7 @@ Want to take your install even further? Consider checking out the documentation 
 
 Bugs fixed, what's new, and more! :)
 
-### v1.2.0
+### v2.0.0
 
 #### User Experience Updates
 
