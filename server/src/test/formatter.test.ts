@@ -50,6 +50,14 @@ const input = `{{#
         assert.strictEqual(format(input), expected);
     });
 
+	test('it does not remove unless else', () => {
+const output = `<body class="flex flex-col min-h-screen bg-white selection:bg-primary selection:text-white {{ unless segment_1 }}home-{{else}}page-{{ /unless }}content">`;
+		assert.strictEqual(
+			format(`<body class="flex flex-col min-h-screen bg-white selection:bg-primary selection:text-white {{ unless segment_1 }}home-{{else}}page-{{ /unless }}content">`),
+			output
+		);
+	});
+
 	test('it indents nested pairs nicely', () => {
 const expected = `{{ fields }}
     {{ if something }}
