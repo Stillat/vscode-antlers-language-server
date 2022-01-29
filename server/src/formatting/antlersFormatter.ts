@@ -3,14 +3,12 @@ const beautify = require("js-beautify").html;
 
 import { AntlersDocument } from '../runtime/document/antlersDocument';
 import { AbstractNode, AdditionOperator, AntlersNode, ArgSeparator, ConditionNode, DivisionOperator, InlineBranchSeparator, InlineTernarySeparator, LeftAssignmentOperator, LiteralNode, LogicGroupBegin, LogicGroupEnd, ModifierNameNode, ModifierSeparator, ModifierValueNode, ModifierValueSeparator, MultiplicationOperator, NumberNode, ParameterNode, ScopeAssignmentOperator, StatementSeparatorNode, StringValueNode, TupleListStart, VariableNode } from '../runtime/nodes/abstractNode';
-import { HtmlFragments } from '../runtime/parser/htmlFragments';
 import { LanguageParser } from '../runtime/parser/languageParser';
 import { NodeHelpers } from '../runtime/utilities/nodeHelpers';
 import { replaceAllInString } from '../utils/strings';
 import { FrontMatterFormatter } from './frontMatterFormatter';
 import { getFormatOption, getTagsFormatOption, IHTMLFormatConfiguration } from './htmlCompat';
 import { GenericPrinters } from './printers/genericPrinters';
-import { v4 as uuidv4 } from 'uuid';
 
 export interface AntlersFormattingOptions {
 	htmlOptions: IHTMLFormatConfiguration,
@@ -761,7 +759,6 @@ export class AntlersFormatter {
 
 		this.chopList.forEach((chop) => {
 			documentRootFormatted = replaceAllInString(documentRootFormatted, chop, '');
-
 		});
 
 		const rLines = documentRootFormatted.replace(/(\r\n|\n|\r)/gm, "\n").split("\n");
