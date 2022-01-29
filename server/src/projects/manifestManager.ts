@@ -75,6 +75,7 @@ class ManifestManager {
 				injectParentScope: false,
 				parameters: getRuntimeTagParameters(manifest.tags[i]),
 				requiresClose: false,
+				introducedIn: null,
 				tagName: manifest.tags[i].compound,
 			});
 		}
@@ -121,6 +122,7 @@ class ManifestManager {
 					hideFromCompletions:
 						!manifest.packageManifests[p].tags[i].showInCompletions,
 					injectParentScope: false,
+					introducedIn: null,
 					parameters: getRuntimeTagParameters(
 						manifest.packageManifests[p].tags[i]
 					),

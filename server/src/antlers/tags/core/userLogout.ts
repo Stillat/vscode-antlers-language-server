@@ -9,6 +9,7 @@ const UserLogout: IAntlersTag = {
     requiresClose: false,
     allowsArbitraryParameters: false,
     allowsContentClose: false,
+	introducedIn: null,
     parameters: [{
         name: 'redirect',
         description: 'An optional URL to redirect the user after being logged out',

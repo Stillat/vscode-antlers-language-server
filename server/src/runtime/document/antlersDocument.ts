@@ -36,6 +36,10 @@ export class AntlersDocument {
 		return document.loadString(text);
 	}
 
+	hasInvalidControlFlowStructures() {
+		return this.documentParser.hasUnclosedIfStructures();
+	}
+
 	getFrontMatterDoc(): YamlDocument | null {
 		if (this.hasFrontMatter()) {
 			const yamlDoc = new YamlDocument();
@@ -173,6 +177,10 @@ export class AntlersDocument {
 
 	getContent() {
 		return this.documentParser.getContent();
+	}
+
+	getOriginalContent() {
+		return this.documentParser.getOriginalContent();
 	}
 
 	getFeaturesAt(position: Position | null): PositionContext | null {

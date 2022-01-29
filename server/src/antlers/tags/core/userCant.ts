@@ -10,6 +10,7 @@ const UserCant: IAntlersTag = {
     requiresClose: false,
     allowsArbitraryParameters: false,
     allowsContentClose: true,
+	introducedIn: null,
     resovleParameterCompletionItems: resolveUserParameterCompletionItems,
     parameters: [
         {

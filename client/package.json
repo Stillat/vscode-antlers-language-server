@@ -3,7 +3,7 @@
     "description": "Provides Antlers syntax highlighting, and robust language features.",
     "author": "John Koster",
     "license": "MIT",
-    "version": "0.0.2",
+    "version": "0.1.22",
     "publisher": "stillat",
     "engines": {
         "vscode": "^1.52.0"

@@ -14,6 +14,7 @@ const SessionSet: IAntlersTag = {
     allowsArbitraryParameters: true,
     allowsContentClose: true,
     parameters: [],
+	introducedIn: null,
     resolveDynamicParameter: returnDynamicParameter,
     resolveSpecialType: (node: AntlersNode, project: IProjectDetailsProvider) => {
         const context = new SessionVariableContext(node);

@@ -14,6 +14,7 @@ const SessionFlash: IAntlersTag = {
     allowsArbitraryParameters: true,
     allowsContentClose: false,
     parameters: [],
+	introducedIn: null,
     resolveDynamicParameter: returnDynamicParameter,
     resolveSpecialType: (node: AntlersNode, project: IProjectDetailsProvider) => {
         const context = new SessionVariableContext(node);

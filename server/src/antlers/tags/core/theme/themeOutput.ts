@@ -11,6 +11,7 @@ const ThemeOutput: IAntlersTag = {
     allowsContentClose: true,
     requiresClose: false,
     injectParentScope: false,
+	introducedIn: null,
     parameters: [
         {
             isRequired: true,

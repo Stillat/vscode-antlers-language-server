@@ -9,6 +9,7 @@ const Obfuscate: IAntlersTag = {
     injectParentScope: false,
     allowsContentClose: false,
     allowsArbitraryParameters: false,
+	introducedIn: null,
     parameters: [],
     resolveDocumentation: (params?: ISuggestionRequest) => {
         return makeTagDoc(

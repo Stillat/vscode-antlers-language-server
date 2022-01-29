@@ -1,17 +1,12 @@
 /* eslint-disable @typescript-eslint/no-namespace */
 import * as path from 'path';
 import { ExtensionContext, FileSystemWatcher, workspace } from 'vscode';
-import {
-	LanguageClient,
-	LanguageClientOptions,
-	ServerOptions,
-	TransportKind
-} from 'vscode-languageclient/node';
+import { LanguageClient, LanguageClientOptions, ServerOptions, TransportKind } from 'vscode-languageclient/node';
 import {
 	languages, SemanticTokensLegend,
 	DocumentSemanticTokensProvider, DocumentRangeSemanticTokensProvider, SemanticTokens
 } from 'vscode';
-import { RequestType, TextDocumentIdentifier, RequestType0, Range as LspRange } from 'vscode-languageclient';
+import { RequestType, TextDocumentIdentifier, RequestType0, Range as LspRange, DidOpenTextDocumentNotification } from 'vscode-languageclient';
 import { debounce } from 'ts-debounce';
 import { activateAntlersDebug } from './debug/activateAntlersDebug';
 import { TimingsLensProvider } from './debug/timingsLensProvider';
@@ -27,10 +22,17 @@ interface SemanticTokenParams {
 interface ReindexParams { }
 
 // eslint-disable-next-line @typescript-eslint/no-empty-interface
+interface LockEditsParams { }
+
+// eslint-disable-next-line @typescript-eslint/no-empty-interface
 interface ProjectUpdateParams { }
 
 namespace ReindexRequest {
 	export const type: RequestType<ReindexParams, null, any> = new RequestType('antlers/reindex');
+}
+
+namespace LockEditsRequest {
+	export const type: RequestType<LockEditsParams, null, any> = new RequestType('antlers/lockedits');
 }
 
 namespace ProjectUpdateRequest {
@@ -85,8 +87,15 @@ const debouncedAskForIndex = debounce(askForIndex, 350);
 const debounceAskForProjectUpdate = debounce(askForProjectUpdate, 350);
 const debouncedManifestLoaded = debounce(sendManifestReloadRequest, 350);
 
+let shouldUsePrettierFirst = false;
+
 export function activate(context: ExtensionContext) {
-	const antlersOverrideHtmlComments = workspace.getConfiguration().get('antlersOverrideHtmlComments');
+	const antlersOverrideHtmlComments = workspace.getConfiguration().get('antlersOverrideHtmlComments'),
+		tempShouldUsePrettierFirst = workspace.getConfiguration().get('antlersFormatWithPrettierFirstIfAvailable');
+
+	if (typeof tempShouldUsePrettierFirst !== 'undefined' && tempShouldUsePrettierFirst === true) {
+		shouldUsePrettierFirst = true;
+	}
 
 	// The server is implemented in node
 	const serverModule = context.asAbsolutePath(
@@ -112,12 +121,45 @@ export function activate(context: ExtensionContext) {
 	const clientOptions: LanguageClientOptions = {
 		// Register the server for plain text documents
 		documentSelector: [{ scheme: 'file', language: 'html' }],
+		middleware: {
+			provideDocumentFormattingEdits: async (doc, options, token, next) => {
+				if (shouldUsePrettierFirst) {
+					const prettierVscode = vscode.extensions.getExtension('esbenp.prettier-vscode');
+
+					if (typeof prettierVscode !== 'undefined' && prettierVscode !== null && prettierVscode.isActive) {
+						await client.sendRequest(LockEditsRequest.type, {}).then(async () => {
+							await vscode.commands.executeCommand('prettier.forceFormatDocument');
+							
+							const formattingResults = await next(doc, options, token);
+							const edits = new vscode.WorkspaceEdit();
+							edits.set(doc.uri, formattingResults);
+							vscode.workspace.applyEdit(edits);
+						});
+					}
+				} else {
+					const formattingResults = await next(doc, options, token);
+					const edits = new vscode.WorkspaceEdit();
+					edits.set(doc.uri, formattingResults);
+					vscode.workspace.applyEdit(edits);
+				}
+				return null;
+			}
+		}
 	};
 
 	workspace.onDidChangeConfiguration((e) => {
+		if (e.affectsConfiguration('antlersFormatWithPrettierFirstIfAvailable')) {
+			const newPrettierSetting = workspace.getConfiguration().get('antlersFormatWithPrettierFirstIfAvailable');
+
+			if (typeof newPrettierSetting !== 'undefined' && newPrettierSetting === true) {
+				shouldUsePrettierFirst = true;
+			} else {
+				shouldUsePrettierFirst = false;
+			}
+		}
+
 		if (e.affectsConfiguration('antlersOverrideHtmlComments')) {
-			const newHtmlCommentSetting = workspace.getConfiguration().get('antlersOverrideHtmlComments'),
-				curv = workspace.getConfiguration().inspect('antlersOverrideHtmlComments');
+			const newHtmlCommentSetting = workspace.getConfiguration().get('antlersOverrideHtmlComments');
 
 			if (typeof newHtmlCommentSetting !== 'undefined' && newHtmlCommentSetting === true) {
 				didChangeHtmlComments = true;

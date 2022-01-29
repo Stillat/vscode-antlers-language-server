@@ -13,7 +13,6 @@ function getInterpolatedAncestors(node: AntlersNode, startPosition: antlr.Positi
 			for (let i = 0; i < region.length; i++) {
 				const thisRegionNode = region[i];
 				
-				// TODO: Do this recursively to handle nested regions!!!
 				if (thisRegionNode instanceof AntlersNode && startPosition.isWithin(thisRegionNode.startPosition, thisRegionNode.endPosition)) {
 					if (thisRegionNode.currentScope == null) {
 						if (node.parent?.currentScope != null) {

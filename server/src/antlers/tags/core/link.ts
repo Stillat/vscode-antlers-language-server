@@ -9,6 +9,7 @@ const Link: IAntlersTag = {
     injectParentScope: false,
     allowsArbitraryParameters: false,
     allowsContentClose: false,
+	introducedIn: null,
     parameters: [
         {
             name: 'to',

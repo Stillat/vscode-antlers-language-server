@@ -12,6 +12,7 @@ const Asset: IAntlersTag = {
     injectParentScope: false,
     allowsArbitraryParameters: false,
     allowsContentClose: false,
+	introducedIn: null,
     parameters: [
         {
             isRequired: true,

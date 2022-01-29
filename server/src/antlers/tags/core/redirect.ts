@@ -10,6 +10,7 @@ const Redirect: IAntlersTag = {
     requiresClose: false,
     allowsArbitraryParameters: false,
     allowsContentClose: false,
+	introducedIn: null,
     parameters: [{
         name: 'to',
         description: 'The destination URL',

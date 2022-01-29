@@ -9,6 +9,7 @@ const ScopeTag: IAntlersTag = {
     allowsArbitraryParameters: false,
     allowsContentClose: false,
     injectParentScope: false,
+	introducedIn: null,
     parameters: [
 
     ],

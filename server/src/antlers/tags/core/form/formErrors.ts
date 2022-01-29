@@ -12,6 +12,7 @@ const FormErrors: IAntlersTag = {
     requiresClose: true,
     hideFromCompletions: false,
     injectParentScope: false,
+	introducedIn: null,
     parameters: [
         FormHandleParam
     ],

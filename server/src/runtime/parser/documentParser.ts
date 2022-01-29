@@ -62,6 +62,7 @@ export class DocumentParser {
     private charLen = 0;
     private lastAntlersNode: AntlersNode | null = null;
     private content = '';
+	private originalContent = '';
     private currentIndex = 0;
     private currentContent: string[] = [];
     private sourceContent: string[] = [];
@@ -97,8 +98,13 @@ export class DocumentParser {
     private documentPath: string | null = null;
     private pushedErrors: Map<string, AntlersError> = new Map();
     private frontMatter = '';
+	private doesHaveUncloseIfStructures = false;
 
     public readonly structure: VirtualHierarchy = new VirtualHierarchy(this);
+
+	hasUnclosedIfStructures() {
+		return this.doesHaveUncloseIfStructures;
+	}
 
     getFrontMatter() {
         return this.frontMatter;
@@ -113,12 +119,21 @@ export class DocumentParser {
 	}
 
     pushError(error: AntlersError) {
+		if (error.errorCode == AntlersErrorCodes.TYPE_PARSE_UNCLOSED_CONDITIONAL ||
+			error.errorCode == AntlersErrorCodes.TYPE_PARSE_UNPAIRED_CONDITIONAL) {
+			this.doesHaveUncloseIfStructures = true;
+		}
+
         const errorHash = error.hash();
         if (!this.pushedErrors.has(errorHash)) {
             this.pushedErrors.set(errorHash, error);
             this.antlersErrors.push(error);
         }
     }
+
+	getInterpolationRegions() {
+		return this.interpolationRegions;
+	}
 
     getDocumentPath(): string | null {
         return this.documentPath;
@@ -618,10 +633,6 @@ export class DocumentParser {
         this.nodes.forEach((node) => {
             if (node instanceof AntlersNode && node.interpolationRegions.size > 0) {
                 node.interpolationRegions.forEach((content, varName) => {
-                    //content  = content.substr(1);
-                    //content = content.slice(0, -1);
-                    //content = '{{' + content + '}}';
-
                     const docParser = new DocumentParser();
                     docParser.setIsInterpolatedParser(true);
 
@@ -818,6 +829,10 @@ export class DocumentParser {
     getText(start: number, end: number) {
         return this.content.substr(start, (end - start));
     }
+
+	getOriginalContent() {
+		return this.originalContent;
+	}
 
     getContent() {
         return this.content;
@@ -1030,6 +1045,7 @@ export class DocumentParser {
     }
 
     private processInputText(input: string) {
+		this.originalContent = input;
         this.content = StringUtilities.normalizeLineEndings(input);
         this.inputLen = this.content.length;
 
@@ -1526,10 +1542,10 @@ export class DocumentParser {
         node.interpolationRegions = new Map();
 
         this.interpolationRegions.forEach((region, key) => {
-            node.interpolationRegions.set(key, region);
+            if (node.content.includes(key)) {
+				node.interpolationRegions.set(key, region);
+			}
         });
-
-        this.interpolationRegions.clear();
 
         return node;
     }
@@ -1590,10 +1606,10 @@ export class DocumentParser {
         node.interpolationRegions = new Map();
 
         this.interpolationRegions.forEach((region, key) => {
-            node.interpolationRegions.set(key, region);
+            if (node.content.includes(key)) {
+				node.interpolationRegions.set(key, region);
+			}
         });
-
-        this.interpolationRegions.clear();
 
         const returnNode = this.nodeParser.parseNode(node);
         this.mergeErrors(returnNode.getErrors());
@@ -1659,10 +1675,10 @@ export class DocumentParser {
         node.interpolationRegions = new Map();
 
         this.interpolationRegions.forEach((region, key) => {
-            node.interpolationRegions.set(key, region);
+            if (node.content.includes(key)) {
+				node.interpolationRegions.set(key, region);
+			}
         });
-
-        this.interpolationRegions.clear();
 
         const returnNode = this.nodeParser.parseNode(node);
         this.mergeErrors(returnNode.getErrors());

@@ -10,6 +10,7 @@ const UserIsnt: IAntlersTag = {
     allowsContentClose: false,
     requiresClose: true,
     injectParentScope: false,
+	introducedIn: null,
     parameters: [
         {
             isRequired: true,

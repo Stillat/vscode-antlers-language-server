@@ -11,6 +11,7 @@ const Section: IAntlersTag = {
     requiresClose: true,
     allowsArbitraryParameters: false,
     allowsContentClose: false,
+	introducedIn: null,
     parameters: [],
     resolveCompletionItems: (params: ISuggestionRequest) => {
         if ((params.leftWord == 'section' || params.leftWord == '/section') && params.leftChar == ':') {

@@ -13,6 +13,7 @@ const GetErrors: IAntlersTag = {
     allowsArbitraryParameters: false,
     allowsContentClose: false,
     parameters: GetErrorsParameters,
+	introducedIn: '3.2.23',
     augmentScope: (node: AntlersNode, scope: Scope) => {
         if (node.isClosingTag) {
             return scope;

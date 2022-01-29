@@ -313,6 +313,7 @@ interface IAntlersTag {
      * when they are encountered. Examples are the 'member:' tags.
      */
     hideFromCompletions: boolean;
+	introducedIn:string|null;
     /**
      * Allows the tag implementor to inject data into the active scope.
      *

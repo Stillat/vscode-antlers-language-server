@@ -16,6 +16,7 @@ const CollectionNext: IAntlersTag = {
     injectParentScope: false,
     allowsContentClose: false,
     allowsArbitraryParameters: false,
+	introducedIn: null,
     parameters: [
         ...collectionParameters,
         {

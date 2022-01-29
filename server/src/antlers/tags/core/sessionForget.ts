@@ -11,6 +11,7 @@ const SessionForget: IAntlersTag = {
     requiresClose: false,
     allowsArbitraryParameters: false,
     allowsContentClose: false,
+	introducedIn: null,
     parameters: [
         {
             name: 'keys',

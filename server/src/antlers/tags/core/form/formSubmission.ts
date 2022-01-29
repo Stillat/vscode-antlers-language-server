@@ -15,6 +15,7 @@ const FormSubmission: IAntlersTag = {
     allowsArbitraryParameters: false,
     hideFromCompletions: false,
     injectParentScope: false,
+	introducedIn: null,
     parameters: [FormHandleParam],
     resolveSpecialType: resolveFormSetReference,
     resovleParameterCompletionItems: (

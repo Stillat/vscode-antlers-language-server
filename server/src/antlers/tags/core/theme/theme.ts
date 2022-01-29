@@ -18,6 +18,7 @@ const Theme: IAntlersTag = {
     allowsArbitraryParameters: false,
     allowsContentClose: false,
     requiresClose: false,
+	introducedIn: null,
     injectParentScope: false,
     parameters: ThemePathParameters,
     resolveCompletionItems: (params: ISuggestionRequest) => {

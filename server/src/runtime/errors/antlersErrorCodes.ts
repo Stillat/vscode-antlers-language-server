@@ -151,4 +151,5 @@ export class AntlersErrorCodes {
 	static readonly LINT_SHORTHAND_MODIFIER_TAG_MUST_MATCH = 'ANTLR_512';
 	static readonly LINT_INVALID_FRONT_MATTER = 'ANTLR_513';
 	static readonly LINT_DUPLICATE_CODE = 'ANTLR_514';
+	static readonly LINT_VERSION_NOT_COMPATIBLE = 'ANTLR_515';
 }

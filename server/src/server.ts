@@ -68,12 +68,13 @@ export interface AntlersSettings {
 	formatFrontMatter: boolean;
 	trace: ServerTrace;
 	formatterIgnoreExtensions:string[];
+	languageVersion: string;
 }
 
 // The global settings, used when the `workspace/configuration` request is not supported by the client.
 // Please note that this is not the case when using this server with the client provided in this example
 // but could happen with other clients.
-const defaultSettings: AntlersSettings = { formatFrontMatter: false, trace: { server: 'off' }, formatterIgnoreExtensions: ['xml'] };
+const defaultSettings: AntlersSettings = { formatFrontMatter: false, trace: { server: 'off' }, formatterIgnoreExtensions: ['xml'], languageVersion: 'regex' };
 let globalSettings: AntlersSettings = defaultSettings;
 
 function updateGlobalSettings(settings: AntlersSettings) {
@@ -112,10 +113,15 @@ namespace ManifestAvailableRequest {
 // eslint-disable-next-line @typescript-eslint/no-empty-interface
 interface ReindexParams { }
 // eslint-disable-next-line @typescript-eslint/no-empty-interface
+interface LockEditsParams { }
+// eslint-disable-next-line @typescript-eslint/no-empty-interface
 interface ProjectUpdateParams { }
 
 namespace ReindexRequest {
 	export const type: RequestType<ReindexParams, null, any> = new RequestType("antlers/reindex");
+}
+namespace LockEditsRequest {
+	export const type: RequestType<LockEditsParams, null, any> = new RequestType("antlers/lockedits");
 }
 
 namespace ProjectUpdateRequest {
@@ -246,9 +252,21 @@ connection.onDocumentLinks((params: DocumentLinkParams) => {
 	return DocumentLinkManager.getDocumentLinks(docPath);
 });
 
+let isDidChangeContentLocked = false;
+
+connection.onRequest(LockEditsRequest.type, () => {
+	isDidChangeContentLocked = true;
+});
+
+
 // The content of a text document has changed. This event is emitted
 // when the text document first opened or when its content has changed.
 documents.onDidChangeContent((change) => {
+	if (isDidChangeContentLocked) {
+		isDidChangeContentLocked = false;
+		return;
+	}
+
 	collectProjectDetails(change.document);
 	parseDocument(change.document);
 	analyzeStructures(decodeURIComponent(change.document.uri));
