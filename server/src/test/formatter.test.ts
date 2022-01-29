@@ -50,37 +50,37 @@ const input = `{{#
         assert.strictEqual(format(input), expected);
     });
 
-	test('it does not double up', () => {
-		const initial = `{{# Page title #}}
-		<title>
-			{{ yield:seo_title }}
-			{{ seo_title ? seo_title : title }}
-			{{ seo:title_separator ? seo:title_separator : " &#124; " }}
-			{{ seo:change_page_title where="collection:{collection}" }}
-				{{ if what_to_add == 'collection_title' }}
-					{{ collection:title }}
-				{{ elseif what_to_add == 'custom_text' }}
-					{{ custom_text }}
-				{{ /if }}
-				{{ seo:title_separator ? seo:title_separator : " &#124; " }}
-			{{ /seo:change_page_title }}
-			{{ seo:site_name ? seo:site_name : config:app:name }}
-		</title>
-		
-		{{# Page description #}}
-		{{ if seo_description }}
-			  <meta name="description" content="{{ seo_description }}">
-		{{ elseif seo:collection_defaults }}
-			  <meta name="description" content="{{ partial:snippets/fallback_description }}">
-		{{ /if }}
-		
-		
-		{{# Some other comments #}}
-		{{ if seo_description }}
-			<meta name="description" content="{{ seo_description }}">
-		{{ elseif seo:collection_defaults }}
-			<meta name="description" content="{{ partial:snippets/fallback_description }}">
-		{{ /if }}`;
+    test('it does not double up', () => {
+        const initial = `{{# Page title #}}
+        <title>
+            {{ yield:seo_title }}
+            {{ seo_title ? seo_title : title }}
+            {{ seo:title_separator ? seo:title_separator : " &#124; " }}
+            {{ seo:change_page_title where="collection:{collection}" }}
+                {{ if what_to_add == 'collection_title' }}
+                    {{ collection:title }}
+                {{ elseif what_to_add == 'custom_text' }}
+                    {{ custom_text }}
+                {{ /if }}
+                {{ seo:title_separator ? seo:title_separator : " &#124; " }}
+            {{ /seo:change_page_title }}
+            {{ seo:site_name ? seo:site_name : config:app:name }}
+        </title>
+        
+        {{# Page description #}}
+        {{ if seo_description }}
+              <meta name="description" content="{{ seo_description }}">
+        {{ elseif seo:collection_defaults }}
+              <meta name="description" content="{{ partial:snippets/fallback_description }}">
+        {{ /if }}
+        
+        
+        {{# Some other comments #}}
+        {{ if seo_description }}
+            <meta name="description" content="{{ seo_description }}">
+        {{ elseif seo:collection_defaults }}
+            <meta name="description" content="{{ partial:snippets/fallback_description }}">
+        {{ /if }}`;
 const output = `{{# Page title #}}
 <title>
     {{ yield:seo_title }}
@@ -113,38 +113,38 @@ const output = `{{# Page title #}}
 {{ elseif seo:collection_defaults }}
     <meta name="description" content="{{ partial:snippets/fallback_description }}">
 {{ /if }}`;
-		assert.strictEqual(format(initial), output);
-		for (let i = 0; i <= 10; i++) {
-			assert.strictEqual(format(output), output);
-		}
-	});
+        assert.strictEqual(format(initial), output);
+        for (let i = 0; i <= 10; i++) {
+            assert.strictEqual(format(output), output);
+        }
+    });
 
-	test('it does not continue to indent comments', () => {
-		const initial = `<div>
-		{{#  comment 1 #}}
-		{{# comment 2 #}}
-		{{ variable }}
-		</div>`;
+    test('it does not continue to indent comments', () => {
+        const initial = `<div>
+        {{#  comment 1 #}}
+        {{# comment 2 #}}
+        {{ variable }}
+        </div>`;
 const output = `<div>
     {{# comment 1 #}}
     {{# comment 2 #}}
     {{ variable }}
 </div>`;
-		assert.strictEqual(format(initial), output);
-		for (let i = 0; i <= 10; i++) {
-			assert.strictEqual(format(output), output);
-		}
-	});
+        assert.strictEqual(format(initial), output);
+        for (let i = 0; i <= 10; i++) {
+            assert.strictEqual(format(output), output);
+        }
+    });
 
-	test('it does not remove unless else', () => {
+    test('it does not remove unless else', () => {
 const output = `<body class="flex flex-col min-h-screen bg-white selection:bg-primary selection:text-white {{ unless segment_1 }}home-{{else}}page-{{ /unless }}content">`;
-		assert.strictEqual(
-			format(`<body class="flex flex-col min-h-screen bg-white selection:bg-primary selection:text-white {{ unless segment_1 }}home-{{else}}page-{{ /unless }}content">`),
-			output
-		);
-	});
+        assert.strictEqual(
+            format(`<body class="flex flex-col min-h-screen bg-white selection:bg-primary selection:text-white {{ unless segment_1 }}home-{{else}}page-{{ /unless }}content">`),
+            output
+        );
+    });
 
-	test('it indents nested pairs nicely', () => {
+    test('it indents nested pairs nicely', () => {
 const expected = `{{ fields }}
     {{ if something }}
         <div>
@@ -153,14 +153,14 @@ const expected = `{{ fields }}
      {{ /if }}
 {{ /fields }}`;
 
-		assert.strictEqual(format(`{{ fields }}
-		{{ if something }}
-		<div>
-		<label></label>
-	</div>
-		{{ /if}}
-	{{ /fields }}`), expected);
-	});
+        assert.strictEqual(format(`{{ fields }}
+        {{ if something }}
+        <div>
+        <label></label>
+    </div>
+        {{ /if}}
+    {{ /fields }}`), expected);
+    });
 
     test('peak_sample2', () => {
 const expected = `{{#
