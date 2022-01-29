@@ -9,6 +9,7 @@ const Switch: IAntlersTag = {
     requiresClose: false,
     allowsArbitraryParameters: false,
     allowsContentClose: false,
+	introducedIn: null,
     parameters: [{
         name: 'between',
         description: 'A set of values to iterate over',
@@ -42,6 +43,7 @@ const Rotate: IAntlersTag = {
     hideFromCompletions: false,
     injectParentScope: false,
     requiresClose: false,
+	introducedIn: null,
     allowsArbitraryParameters: false,
     allowsContentClose: false,
     parameters: [{

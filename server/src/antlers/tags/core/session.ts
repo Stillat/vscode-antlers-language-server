@@ -29,6 +29,7 @@ const SessionTag: IAntlersTag = {
     allowsArbitraryParameters: false,
     hideFromCompletions: false,
     injectParentScope: false,
+	introducedIn: null,
     parameters: [
         {
             name: "as",

@@ -52,7 +52,14 @@ export class AbstractNode {
 	private addedContexts: Map<string, boolean> = new Map();
 
 	/* Start: Internal Parser Variables and APIs. */
-
+	public isVirtual = true;
+	public isPartOfMethodChain = false;
+	public isVirtualGroupMember = false;
+	public isVirtualGroupOperatorResolve = false;
+	public isSwitchGroupMember = false;
+	public isListGroupMember = false;
+	public producesVirtualStatementTerminator = false;
+	public convertedToOperator = false;
 	public scopeVariable: IScopeVariable | null = null;
 	public currentScope: Scope | null = null;
 	public manifestType = '';
@@ -601,12 +608,28 @@ export class AntlersNode extends AbstractNode {
 		return this.rawStart + this.content + this.rawEnd;
 	}
 
+	getTrueRuntimeNodes(): AbstractNode[] {
+		if (this.originalNode != null && this.originalNode != this) {
+			return this.originalNode.getTrueRuntimeNodes();
+		}
+
+		return this.runtimeNodes;
+	}
+
 	getTrueRawContent():string {
 		if (this.originalNode != null && this.originalNode != this) {
 			return this.originalNode.getTrueRawContent();
 		}
 
 		return this.rawContent();
+	}
+
+	getTrueNode():AntlersNode {
+		if (this.originalNode != null && this.originalNode != this) {
+			return this.originalNode.getTrueNode();
+		}
+
+		return this;
 	}
 
 	getStructuralChildren(): AntlersNode[] {
@@ -657,7 +680,7 @@ export class ParameterNode extends AbstractNode {
 
 	public modifier: IModifier | null = null;
 	public isModifierParameter = false;
-
+	public nameDelimiter = '"';
 	public isVariableReference = false;
 	public name = "";
 	public value = "";
@@ -895,7 +918,10 @@ export class LogicGroup extends AbstractNode {
 	public start: LogicGroupBegin | null = null;
 	public end: LogicGroupEnd | null = null;
 	public nodes: AbstractNode[] = [];
+
+	public scopeOperator: ScopeAssignmentOperator | null = null;
 }
+
 export class SwitchCase extends AbstractNode {
 	public condition: LogicGroup | null = null;
 	public expression: LogicGroup | null = null;
@@ -922,6 +948,7 @@ export class ArgSeparator extends AbstractNode {
 }
 export class SemanticGroup extends AbstractNode {
 	public nodes: AbstractNode[] = [];
+	public separatorToken: StatementSeparatorNode | null = null;
 }
 
 export class ScopedLogicGroup extends LogicGroup {

@@ -8,6 +8,7 @@ const GetContent: IAntlersTag = {
     requiresClose: true,
     injectParentScope: false,
     allowsContentClose: false,
+	introducedIn: null,
     allowsArbitraryParameters: false,
     parameters: [
         {

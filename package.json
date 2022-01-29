@@ -4,7 +4,7 @@
     "description": "Provides Antlers syntax highlighting, and robust language features.",
     "author": "John Koster",
     "license": "MIT",
-    "version": "1.2.0",
+    "version": "2.0.0",
     "repository": {
         "type": "git",
         "url": "https://github.com/Stillat/vscode-antlers-language-server"
@@ -79,6 +79,12 @@
                     "default": false,
                     "description": "When enabled Antlers style block comments will be used in HTML contexts."
                 },
+                "antlersFormatWithPrettierFirstIfAvailable": {
+                    "scope": "resource",
+                    "type": "boolean",
+                    "default": false,
+                    "description": "When enabled Antlers will be formatted with Prettier first, if available."
+                },
                 "antlersLanguageServer.trace.server": {
                     "scope": "window",
                     "type": "string",
@@ -90,20 +96,30 @@
                     "default": "off",
                     "description": "Traces the communication between VS Code and the language server."
                 },
+                "antlersLanguageServer.languageVersion": {
+                    "scope": "window",
+                    "type": "string",
+                    "enum": [
+                        "regex",
+                        "runtime"
+                    ],
+                    "default": "regex",
+                    "description": "The Antlers language version to use."
+                },
                 "antlersLanguageServer.formatFrontMatter": {
                     "scope": "window",
                     "type": "boolean",
                     "default": "false",
-					"title": "Formatter: Format Front Matter",
+                    "title": "Formatter: Format Front Matter",
                     "description": "Controls whether YAML frontmatter is formatted."
                 },
-				"antlersLanguageServer.formatterIgnoreExtensions": {
-					"scope": "window",
-					"type": "array",
-					"default": [],
-					"title": "Formatter: Ignore File Extensions",
-					"description": "A list of file extensions the Antlers formatter should ignore."
-				}
+                "antlersLanguageServer.formatterIgnoreExtensions": {
+                    "scope": "window",
+                    "type": "array",
+                    "default": [],
+                    "title": "Formatter: Ignore File Extensions",
+                    "description": "A list of file extensions the Antlers formatter should ignore."
+                }
             }
         },
         "commands": [

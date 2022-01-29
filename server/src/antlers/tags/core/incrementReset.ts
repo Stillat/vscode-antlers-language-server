@@ -9,6 +9,7 @@ const IncrementReset: IAntlersTag = {
     injectParentScope: false,
     allowsContentClose: false,
     allowsArbitraryParameters: false,
+	introducedIn: '3.2.28',
     parameters: [
         {
             isRequired: true,

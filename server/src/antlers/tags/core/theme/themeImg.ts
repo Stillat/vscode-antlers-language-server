@@ -10,6 +10,7 @@ const ThemeImg: IAntlersTag = {
     allowsContentClose: false,
     requiresClose: false,
     injectParentScope: false,
+	introducedIn: null,
     parameters: [
         ...ThemePathParameters,
         {

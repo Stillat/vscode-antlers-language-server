@@ -11,6 +11,7 @@ const SessionHas: IAntlersTag = {
     allowsArbitraryParameters: true,
     allowsContentClose: true,
     parameters: [],
+	introducedIn: '3.1.28',
     resolveDynamicParameter: returnDynamicParameter,
     resolveDocumentation: (params: ISuggestionRequest) => {
         return makeTagDoc(

@@ -13,6 +13,7 @@ const Route: IAntlersTag = {
     allowsArbitraryParameters: true,
     allowsContentClose: false,
     parameters: [],
+	introducedIn: null,
     resolveDynamicParameter: returnDynamicParameter,
     resolveCompletionItems: (params: ISuggestionRequest): ICompletionResult => {
         if (params.leftMeaningfulWord == 'route') {

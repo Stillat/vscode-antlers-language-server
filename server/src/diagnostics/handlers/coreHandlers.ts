@@ -5,6 +5,7 @@ import MixedModifierHandler from './mixedModifierHandler';
 import ModifierRuntimeTypeHandler from './modifierRuntimeTypeHandler';
 import RelateTagHandler from './relateHandler';
 import ShorthandModifierHandler from './shorthandModifierHandler';
+import StatamicVersionHandler from './statamicVersionHandler';
 import TagsThatErrorHandler from './tagsThatErrorHandler';
 
 const CoreHandlers: IDiagnosticsHandler[] = [
@@ -14,7 +15,8 @@ const CoreHandlers: IDiagnosticsHandler[] = [
     DoubleColonHandler,
 	RelateTagHandler,
 	TagsThatErrorHandler,
-	ShorthandModifierHandler
+	ShorthandModifierHandler,
+	StatamicVersionHandler
 ];
 
 export default CoreHandlers;

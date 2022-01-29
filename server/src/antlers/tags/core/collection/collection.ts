@@ -12,6 +12,7 @@ import { resolveCollectionParameterCompletiontems } from './resolvesParameterSug
 const Collection: IAntlersTag = {
     tagName: 'collection',
     hideFromCompletions: false,
+	introducedIn: null,
     requiresClose: true,
     injectParentScope: false,
     allowsContentClose: false, // False since we already specified it should be closed.

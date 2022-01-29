@@ -9,6 +9,7 @@ const Else: IAntlersTag = {
     allowsContentClose: false,
     requiresClose: true,
     injectParentScope: true,
+	introducedIn: null,
     parameters: [],
     resolveDocumentation: (params?: ISuggestionRequest) => {
         return makeTagDoc(

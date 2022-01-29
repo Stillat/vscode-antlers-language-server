@@ -7,6 +7,7 @@ const SetTag: IAntlersTag = {
     requiresClose: false,
     allowsContentClose: false,
     injectParentScope: false,
+	introducedIn: null,
     parameters: []
 };
 

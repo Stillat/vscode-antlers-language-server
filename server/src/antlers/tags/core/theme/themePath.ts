@@ -11,6 +11,7 @@ const ThemePath: IAntlersTag = {
     allowsContentClose: false,
     requiresClose: false,
     injectParentScope: false,
+	introducedIn: null,
     parameters: ThemePathParameters,
     resolveDocumentation: (params?: ISuggestionRequest) => {
         return makeTagDoc(

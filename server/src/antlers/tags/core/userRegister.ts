@@ -15,6 +15,7 @@ const UserRegister: IAntlersTag = {
     requiresClose: true,
     hideFromCompletions: false,
     injectParentScope: false,
+	introducedIn: null,
     parameters: [
         {
             name: 'redirect',

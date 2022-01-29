@@ -19,6 +19,7 @@ const Yields: IAntlersTag = {
     allowsArbitraryParameters: false,
     allowsContentClose: true,
     parameters: [],
+	introducedIn: null,
     requiresClose: false,
     resolveSpecialType: (node: AntlersNode, project: IProjectDetailsProvider) => {
         const context = new YieldContext(node);
@@ -37,6 +38,7 @@ const Yield: IAntlersTag = {
     allowsArbitraryParameters: false,
     allowsContentClose: true,
     parameters: [],
+	introducedIn: null,
     requiresClose: false,
     resolveSpecialType: (node: AntlersNode, project: IProjectDetailsProvider) => {
         const context = new YieldContext(node);

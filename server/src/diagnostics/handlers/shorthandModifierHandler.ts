@@ -1,11 +1,16 @@
 import { AntlersError, ErrrorLevel } from '../../runtime/errors/antlersError';
 import { AntlersErrorCodes } from '../../runtime/errors/antlersErrorCodes';
 import { AntlersNode } from '../../runtime/nodes/abstractNode';
+import { globalSettings } from '../../server';
 import { IDiagnosticsHandler } from '../diagnosticsHandler';
 
 const ShorthandModifierHandler: IDiagnosticsHandler = {
 	checkNode(node: AntlersNode) {
 		const errors: AntlersError[] = [];
+
+		if (globalSettings.languageVersion == 'runtime') {
+			return [];
+		}
 
 		if (node.isClosedBy != null && node.modifierChain != null) {
 			const curNodeContent = node.content.trim(),

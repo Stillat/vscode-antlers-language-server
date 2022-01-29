@@ -12,6 +12,7 @@ const CollectionCount: IAntlersTag = {
     requiresClose: false,
     allowsContentClose: false,
     allowsArbitraryParameters: false,
+	introducedIn: null,
     parameters: [
         ...collectionParameters,
         {

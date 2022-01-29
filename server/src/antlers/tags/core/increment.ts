@@ -16,6 +16,7 @@ const Increment: IAntlersTag = {
     injectParentScope: false,
     allowsContentClose: false,
     allowsArbitraryParameters: false,
+	introducedIn: null,
     parameters: [
         {
             isRequired: false,

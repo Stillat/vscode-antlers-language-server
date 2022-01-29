@@ -9,6 +9,7 @@ const IterateTag: IAntlersTag = {
     allowsContentClose: false,
     requiresClose: true,
     injectParentScope: false,
+	introducedIn: null,
     parameters: [
         {
             name: 'as',
@@ -47,6 +48,7 @@ const ForeachTag: IAntlersTag = {
     allowsContentClose: false,
     requiresClose: true,
     injectParentScope: false,
+	introducedIn: null,
     parameters: [
         {
             name: 'as',

@@ -7,6 +7,7 @@ const Relate: IAntlersTag = {
     allowsContentClose: false,
     injectParentScope: false,
     requiresClose: true,
+	introducedIn: null,
     parameters: []
 };
 
