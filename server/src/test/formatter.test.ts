@@ -119,6 +119,23 @@ const output = `{{# Page title #}}
 		}
 	});
 
+	test('it does not continue to indent comments', () => {
+		const initial = `<div>
+		{{#  comment 1 #}}
+		{{# comment 2 #}}
+		{{ variable }}
+		</div>`;
+const output = `<div>
+    {{# comment 1 #}}
+    {{# comment 2 #}}
+    {{ variable }}
+</div>`;
+		assert.strictEqual(format(initial), output);
+		for (let i = 0; i <= 10; i++) {
+			assert.strictEqual(format(output), output);
+		}
+	});
+
 	test('it does not remove unless else', () => {
 const output = `<body class="flex flex-col min-h-screen bg-white selection:bg-primary selection:text-white {{ unless segment_1 }}home-{{else}}page-{{ /unless }}content">`;
 		assert.strictEqual(
