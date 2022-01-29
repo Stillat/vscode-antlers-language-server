@@ -40,6 +40,7 @@ Bugs fixed, what's new, and more! :)
 * Document diagnostics analysis for debug tags and modifiers are now more reactive
 * Improved detection of partial document links
 * Improves partial document link generation such that partial tag parameters are no longer links
+* Improves the Antlers formatter
 
 #### Technical Updates
 
