@@ -50,6 +50,24 @@ const input = `{{#
         assert.strictEqual(format(input), expected);
     });
 
+	test('it indents nested pairs nicely', () => {
+const expected = `{{ fields }}
+    {{ if something }}
+        <div>
+            <label></label>
+        </div>
+     {{ /if }}
+{{ /fields }}`;
+
+		assert.strictEqual(format(`{{ fields }}
+		{{ if something }}
+		<div>
+		<label></label>
+	</div>
+		{{ /if}}
+	{{ /fields }}`), expected);
+	});
+
     test('peak_sample2', () => {
 const expected = `{{#
     @name Main navigation
