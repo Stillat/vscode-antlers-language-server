@@ -19,15 +19,15 @@ export function handleFoldingRequest(_foldingParams: FoldingRangeParams): Foldin
             multiLineNodes = doc.nodes.getMultilineNodes(),
             ranges: FoldingRange[] = [];
 
-		if (doc.hasFrontMatter()) {
-			const frontMatterEndLine = doc.getDocumentParser().getFrontMatterEndLine();
+        if (doc.hasFrontMatter()) {
+            const frontMatterEndLine = doc.getDocumentParser().getFrontMatterEndLine();
 
-			ranges.push({
-				startLine: 0,
-				endLine: frontMatterEndLine - 1,
-				kind: FoldingRangeKind.Imports
-			});
-		}
+            ranges.push({
+                startLine: 0,
+                endLine: frontMatterEndLine - 1,
+                kind: FoldingRangeKind.Imports
+            });
+        }
 
         if (regions.length > 0) {
             regions.forEach((node) => {
@@ -38,7 +38,7 @@ export function handleFoldingRequest(_foldingParams: FoldingRangeParams): Foldin
                 const convertedRegion = nodePairToFoldingRange(node);
 
                 if (convertedRegion != null) {
-					convertedRegion.kind = FoldingRangeKind.Region;
+                    convertedRegion.kind = FoldingRangeKind.Region;
                     ranges.push(convertedRegion);
                 }
             });
@@ -49,7 +49,7 @@ export function handleFoldingRequest(_foldingParams: FoldingRangeParams): Foldin
                 const convertedRegion = multilineCommentToFoldingRange(comment);
 
                 if (convertedRegion != null) {
-					convertedRegion.kind = FoldingRangeKind.Comment;
+                    convertedRegion.kind = FoldingRangeKind.Comment;
                     ranges.push(convertedRegion);
                 }
             });
@@ -64,7 +64,7 @@ export function handleFoldingRequest(_foldingParams: FoldingRangeParams): Foldin
                 const convertedRegion = multilineCommentToFoldingRange(node);
 
                 if (convertedRegion != null) {
-					convertedRegion.kind = FoldingRangeKind.Region;
+                    convertedRegion.kind = FoldingRangeKind.Region;
                     ranges.push(convertedRegion);
                 }
             });

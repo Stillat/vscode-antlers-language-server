@@ -16,7 +16,7 @@ const Markdown: IAntlersTag = {
     requiresClose: true,
     allowsArbitraryParameters: false,
     allowsContentClose: false,
-	introducedIn: null,
+    introducedIn: null,
     parameters: [],
     resolveCompletionItems: (params: ISuggestionRequest) => {
         if (params.isPastTagPart == false && (params.leftWord == 'markdown' || params.leftWord == '/markdown') && params.leftChar == ':') {

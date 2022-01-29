@@ -58,7 +58,7 @@ function sendOtherDiagnostics(currentUri: string, connection: _Connection) {
 
         for (let i = 0; i < projViews.length; i++) {
             if (projViews[i].documentUri != currentUri) {
-				const diagnosticsPath = decodeURIComponent(projViews[i].documentUri);
+                const diagnosticsPath = decodeURIComponent(projViews[i].documentUri);
                 if (DiagnosticsManager.instance?.hasDiagnosticsIssues(diagnosticsPath)) {
                     const diagnostics: Diagnostic[] = [],
                         issues = DiagnosticsManager.instance?.getDiagnostics(diagnosticsPath);

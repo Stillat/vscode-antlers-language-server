@@ -10,7 +10,7 @@ const If: IAntlersTag = {
     allowsContentClose: false,
     requiresClose: true,
     injectParentScope: true,
-	introducedIn: null,
+    introducedIn: null,
     parameters: [],
     resolveDynamicParameter: returnDynamicParameter,
     resolveDocumentation: (params?: ISuggestionRequest) => {

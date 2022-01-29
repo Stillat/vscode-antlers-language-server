@@ -10,7 +10,7 @@ const SVGTag: IAntlersTag = {
     injectParentScope: false,
     allowsArbitraryParameters: true,
     allowsContentClose: false,
-	introducedIn: null,
+    introducedIn: null,
     parameters: [
         {
             isRequired: false,

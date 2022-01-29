@@ -270,15 +270,15 @@ export class Scope {
         return listNames;
     }
 
-	getVariableNames(): string[] {
-		const variableNames:string[] = [];
+    getVariableNames(): string[] {
+        const variableNames: string[] = [];
 
-		this.values.forEach((variable) => {
-			variableNames.push(variable.name);
-		});
+        this.values.forEach((variable) => {
+            variableNames.push(variable.name);
+        });
 
-		return variableNames;
-	}
+        return variableNames;
+    }
 
     getList(name: string): Scope | null {
         if (this.lists.has(name)) {
@@ -296,17 +296,17 @@ export class Scope {
         return this.values.has(name);
     }
 
-	findAncestorWithList(name: string): Scope | null {
-		if (this.hasList(name)) {
-			return this;
-		}
+    findAncestorWithList(name: string): Scope | null {
+        if (this.hasList(name)) {
+            return this;
+        }
 
-		if (this.parentScope != null && this.parentScope != this) {
-			return this.parentScope.findAncestorWithList(name);
-		}
-	
-		return null;
-	}
+        if (this.parentScope != null && this.parentScope != this) {
+            return this.parentScope.findAncestorWithList(name);
+        }
+
+        return null;
+    }
 
     findReferenceNotIntroducedBy(name: string, introducedBy: AntlersNode): IScopeVariable | null {
         if (this.hasValue(name)) {

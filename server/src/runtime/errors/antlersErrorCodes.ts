@@ -131,7 +131,7 @@ export class AntlersErrorCodes {
     static readonly TYPE_MODIFIER_NOT_FOUND = 'ANTLR_126';
     static readonly TYPE_RUNTIME_GENERAL_FAULT = 'ANTLR_127';
     static readonly TYPE_MODIFIER_INCORRECT_VALUE_POSITION = 'ANTLR_128';
-	static readonly TYPE_MODIFIER_UNEXPECTED_TOKEN_METHOD_SYNTAX = 'ANTLR_129';
+    static readonly TYPE_MODIFIER_UNEXPECTED_TOKEN_METHOD_SYNTAX = 'ANTLR_129';
 
     static readonly PARSER_CANNOT_PARSE_PATH_RECURSIVE = 'ANTLR_200';
     static readonly PATH_STRING_NOT_INSIDE_ARRAY_ACCESSOR = 'ANTLR_201';
@@ -145,11 +145,11 @@ export class AntlersErrorCodes {
     static readonly LINT_DOUBLE_COLON_IN_TAG_IDENTIFIER = 'ANTLR_506';
     static readonly LINT_MIXED_MODIFIERS = 'ANTLER_507';
     static readonly LINT_MODIFIER_UNEXPECTED_TYPE = 'ANTLR_508';
-	static readonly LINT_REMOVE_RELATE_TAG = 'ANTLR_509';
-	static readonly LINT_SET_PRODUCES_RUNTIME_ERROR = 'ANTLR_510';
-	static readonly LINT_FRONT_MATTER_EMPTY_DOCUMENT = 'ANTLR_511';
-	static readonly LINT_SHORTHAND_MODIFIER_TAG_MUST_MATCH = 'ANTLR_512';
-	static readonly LINT_INVALID_FRONT_MATTER = 'ANTLR_513';
-	static readonly LINT_DUPLICATE_CODE = 'ANTLR_514';
-	static readonly LINT_VERSION_NOT_COMPATIBLE = 'ANTLR_515';
+    static readonly LINT_REMOVE_RELATE_TAG = 'ANTLR_509';
+    static readonly LINT_SET_PRODUCES_RUNTIME_ERROR = 'ANTLR_510';
+    static readonly LINT_FRONT_MATTER_EMPTY_DOCUMENT = 'ANTLR_511';
+    static readonly LINT_SHORTHAND_MODIFIER_TAG_MUST_MATCH = 'ANTLR_512';
+    static readonly LINT_INVALID_FRONT_MATTER = 'ANTLR_513';
+    static readonly LINT_DUPLICATE_CODE = 'ANTLR_514';
+    static readonly LINT_VERSION_NOT_COMPATIBLE = 'ANTLR_515';
 }

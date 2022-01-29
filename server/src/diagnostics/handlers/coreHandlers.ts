@@ -13,10 +13,10 @@ const CoreHandlers: IDiagnosticsHandler[] = [
     MixedModifierHandler,
     ModifierRuntimeTypeHandler,
     DoubleColonHandler,
-	RelateTagHandler,
-	TagsThatErrorHandler,
-	ShorthandModifierHandler,
-	StatamicVersionHandler
+    RelateTagHandler,
+    TagsThatErrorHandler,
+    ShorthandModifierHandler,
+    StatamicVersionHandler
 ];
 
 export default CoreHandlers;

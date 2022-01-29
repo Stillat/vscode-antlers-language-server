@@ -21,7 +21,7 @@ const UserLoginForm: IAntlersTag = {
     requiresClose: true,
     hideFromCompletions: false,
     injectParentScope: false,
-	introducedIn: null,
+    introducedIn: null,
     parameters: [
         {
             name: 'redirect',

@@ -10,7 +10,7 @@ const SessionDump: IAntlersTag = {
     allowsArbitraryParameters: false,
     allowsContentClose: false,
     parameters: [],
-	introducedIn: null,
+    introducedIn: null,
     resolveDocumentation: (params?: ISuggestionRequest) => {
         return makeTagDoc(
             'session:dump Tag',

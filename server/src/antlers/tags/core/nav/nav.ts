@@ -16,7 +16,7 @@ const StructureTag: IAntlersTag = {
     allowsArbitraryParameters: false,
     allowsContentClose: false,
     requiresClose: true,
-	introducedIn: null,
+    introducedIn: null,
     injectParentScope: false,
     parameters: NavParameters,
     augmentScope: augmentNavScope,

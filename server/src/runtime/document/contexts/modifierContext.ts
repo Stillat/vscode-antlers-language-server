@@ -13,7 +13,7 @@ export class ModifierContext {
     public activeValueIndex = -1;
     public activeValue: AbstractNode | null = null;
 
-    static resolveContext(position: Position, node: AntlersNode, feature: AbstractNode | null, document:AntlersDocument) {
+    static resolveContext(position: Position, node: AntlersNode, feature: AbstractNode | null, document: AntlersDocument) {
         const parser = node.getParser() as DocumentParser,
             context = new ModifierContext(),
             chains = parser.getLanguageParser().getCreatedModifierChains();

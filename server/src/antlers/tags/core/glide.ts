@@ -28,7 +28,7 @@ const Glide: IAntlersTag = {
     injectParentScope: false,
     requiresClose: false,
     parameters: GlideParameters,
-	introducedIn: null,
+    introducedIn: null,
     augmentScope: (node: AntlersNode, scope: Scope) => {
         scope.addVariables(makeGlideVariables(node));
 

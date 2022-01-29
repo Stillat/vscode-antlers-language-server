@@ -5,36 +5,36 @@ import { AntlersNode } from '../../runtime/nodes/abstractNode';
 import { IDocumentDiagnosticsHandler } from '../documentHandler';
 
 const DuplicateNeighboringTags: IDocumentDiagnosticsHandler = {
-	checkDocument(document: AntlersDocument) {
-		const errors: AntlersError[] = [];
-		let lastNode: AntlersNode | null = null;
+    checkDocument(document: AntlersDocument) {
+        const errors: AntlersError[] = [];
+        let lastNode: AntlersNode | null = null;
 
-		document.getAllAntlersNodes().forEach((node) => {
-			if (lastNode == null && node.isTagNode) {
-				lastNode = node;
-				return;
-			}
+        document.getAllAntlersNodes().forEach((node) => {
+            if (lastNode == null && node.isTagNode) {
+                lastNode = node;
+                return;
+            }
 
-			if (node.isClosingTag) {
-				return;
-			}
+            if (node.isClosingTag) {
+                return;
+            }
 
-			if (lastNode != null && lastNode.isTagNode && node.isTagNode) {
-				if (lastNode.getContent().trim() == node.getContent().trim()) {
-					errors.push(AntlersError.makeSyntaxError(
-						AntlersErrorCodes.LINT_DUPLICATE_CODE,
-						node,
-						'Duplicate code detected',
-						ErrrorLevel.Warning
-					));
-				}
+            if (lastNode != null && lastNode.isTagNode && node.isTagNode) {
+                if (lastNode.getContent().trim() == node.getContent().trim()) {
+                    errors.push(AntlersError.makeSyntaxError(
+                        AntlersErrorCodes.LINT_DUPLICATE_CODE,
+                        node,
+                        'Duplicate code detected',
+                        ErrrorLevel.Warning
+                    ));
+                }
 
-				lastNode = node;
-			}
-		});
+                lastNode = node;
+            }
+        });
 
-		return errors;
-	}
+        return errors;
+    }
 };
 
 export default DuplicateNeighboringTags;

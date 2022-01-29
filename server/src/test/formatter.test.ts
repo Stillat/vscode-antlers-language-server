@@ -4,11 +4,11 @@ import { AntlersFormatter, AntlersFormattingOptions } from '../formatting/antler
 import { IHTMLFormatConfiguration } from '../formatting/htmlCompat';
 import { AntlersDocument } from '../runtime/document/antlersDocument';
 
-const htmlOptions:IHTMLFormatConfiguration = {
+const htmlOptions: IHTMLFormatConfiguration = {
     wrapLineLength: 500,
 
 };
-const antlersOptions:AntlersFormattingOptions = {
+const antlersOptions: AntlersFormattingOptions = {
     htmlOptions: htmlOptions,
     tabSize: 4,
     insertSpaces: true,
@@ -16,7 +16,7 @@ const antlersOptions:AntlersFormattingOptions = {
     maxStatementsPerLine: 3
 };
 
-function format(text:string):string {
+function format(text: string): string {
     const doc = AntlersDocument.fromText(text),
         formatter = new AntlersFormatter(antlersOptions);
 
@@ -26,7 +26,7 @@ function format(text:string):string {
 suite("Document Formatting Test", () => {
 
     test('peak_sample1', () => {
-const expected = `{{#
+        const expected = `{{#
     @name Skip to content button
     @desc The first button that pops up when a user tabs. This enables them to skip directly to the content.
 #}}
@@ -36,7 +36,7 @@ const expected = `{{#
     {{ trans:strings.skip_to_content }}
 </a>
 <!-- End: /navigation/_skip_to_content.antlers.html -->`;
-const input = `{{#
+        const input = `{{#
 @name Skip to content button
 @desc The first button that pops up when a user tabs. This enables them to skip directly to the content.
 #}}
@@ -81,7 +81,7 @@ const input = `{{#
         {{ elseif seo:collection_defaults }}
             <meta name="description" content="{{ partial:snippets/fallback_description }}">
         {{ /if }}`;
-const output = `{{# Page title #}}
+        const output = `{{# Page title #}}
 <title>
     {{ yield:seo_title }}
     {{ seo_title ? seo_title : title }}
@@ -125,7 +125,7 @@ const output = `{{# Page title #}}
         {{# comment 2 #}}
         {{ variable }}
         </div>`;
-const output = `<div>
+        const output = `<div>
     {{# comment 1 #}}
     {{# comment 2 #}}
     {{ variable }}
@@ -137,7 +137,7 @@ const output = `<div>
     });
 
     test('it does not remove unless else', () => {
-const output = `<body class="flex flex-col min-h-screen bg-white selection:bg-primary selection:text-white {{ unless segment_1 }}home-{{else}}page-{{ /unless }}content">`;
+        const output = `<body class="flex flex-col min-h-screen bg-white selection:bg-primary selection:text-white {{ unless segment_1 }}home-{{else}}page-{{ /unless }}content">`;
         assert.strictEqual(
             format(`<body class="flex flex-col min-h-screen bg-white selection:bg-primary selection:text-white {{ unless segment_1 }}home-{{else}}page-{{ /unless }}content">`),
             output
@@ -145,7 +145,7 @@ const output = `<body class="flex flex-col min-h-screen bg-white selection:bg-pr
     });
 
     test('it indents nested pairs nicely', () => {
-const expected = `{{ fields }}
+        const expected = `{{ fields }}
     {{ if something }}
         <div>
             <label></label>
@@ -163,7 +163,7 @@ const expected = `{{ fields }}
     });
 
     test('peak_sample2', () => {
-const expected = `{{#
+        const expected = `{{#
     @name Main navigation
     @desc The sites main navigation rendered on each page. There's a desktop and a mobile version.
 #}}
@@ -173,7 +173,7 @@ const expected = `{{#
 
 {{# The mobile navigation. Hidden from md and up #}}
 {{ partial:navigation/main_mobile }}`;
-const input = `{{#
+        const input = `{{#
     @name Main navigation
     @desc The sites main navigation rendered on each page. There's a desktop and a mobile version.
 #}}
@@ -188,7 +188,7 @@ const input = `{{#
     });
 
     test('peak_sample3', () => {
-const expected = `{{#
+        const expected = `{{#
     @name Layout
     @desc The default layout file.
 #}}
@@ -225,7 +225,7 @@ const expected = `{{#
 
 </html>
 <!-- End: /layout.antlers.html -->`;
-const input = `{{#
+        const input = `{{#
     @name Layout
     @desc The default layout file.
 #}}
@@ -271,7 +271,7 @@ const input = `{{#
     });
 
     test('peak_sample4', () => {
-const expected = `{{#
+        const expected = `{{#
     @name Form
     @desc The form page builder block.
     @set page.page_builder.form
@@ -358,7 +358,7 @@ const expected = `{{#
     </div>
 </section>
 <!-- End: /page_builder/_form.antlers.html -->`;
-const input = `{{#
+        const input = `{{#
     @name Form
     @desc The form page builder block.
     @set page.page_builder.form
@@ -458,12 +458,12 @@ const input = `{{#
     </div>
     </section>
     <!-- End: /page_builder/_form.antlers.html -->`;
-    
+
         assert.strictEqual(format(input), expected);
     });
 
     test('peak_sample5', () => {
-const expected = `{{#
+        const expected = `{{#
     @name Collection
     @desc The collection page builder block.
     @set page.page_builder.collection
@@ -485,7 +485,7 @@ const expected = `{{#
     </div>
 </section>
 <!-- End: /page_builder/_collection.antlers.html -->`;
-const input = `{{#
+        const input = `{{#
 @name Collection
 @desc The collection page builder block.
 @set page.page_builder.collection
@@ -514,12 +514,12 @@ const input = `{{#
 </div>
 </section>
 <!-- End: /page_builder/_collection.antlers.html -->`;
-    
+
         assert.strictEqual(format(input), expected);
     });
 
     test('peak_sample6', () => {
-const expected = `{{#
+        const expected = `{{#
     @name Caption
     @desc The typography caption partial to render an h1 caption \`as\`, \`caption\` attributes.
 #}}
@@ -531,7 +531,7 @@ const expected = `{{#
     </{{ as or 'span' }}>
 {{ /if }}
 <!-- End: /typography/_caption.antlers.html -->`;
-const input = `{{#
+        const input = `{{#
     @name Caption
     @desc The typography caption partial to render an h1 caption \`as\`, \`caption\` attributes.
     #}}
@@ -548,13 +548,13 @@ const input = `{{#
     });
 
     test('peak_sample7', () => {
-const expected = `{{#
+        const expected = `{{#
     @name h3
     @desc The typography h3 partial to render an h3 with \`class\`, \`as\`, \`color\` and \`content\` attributes.
 #}}
 
 <{{ as or 'h3' }} class="text-base font-bold leading-tight {{ color or 'text-black' }} {{ class }}">{{ content | nl2br }}</{{ as or 'h3' }}>`;
-const input = `{{#
+        const input = `{{#
 @name h3
 @desc The typography h3 partial to render an h3 with \`class\`, \`as\`, \`color\` and \`content\` attributes.
 #}}
@@ -580,8 +580,8 @@ const input = `{{#
     });
 
     test('it preserves simple method chains', () => {
-        assert.strictEqual(format('<div>{{ hello:there():chained() }}</div>'), 
-        `<div>{{ hello:there():chained() }}</div>`);
+        assert.strictEqual(format('<div>{{ hello:there():chained() }}</div>'),
+            `<div>{{ hello:there():chained() }}</div>`);
     });
 
     test('it preserves at params', () => {
@@ -597,7 +597,7 @@ const input = `{{#
     });
 
     test('it indents code', () => {
-const expected =`{{#
+        const expected = `{{#
     @name Article
     @desc The article page builder block.
     @set page.page_builder.article
@@ -639,7 +639,7 @@ const expected =`{{#
 </div>
 </nav>
 `;
-const output = `<nav class="flex items-center justify-between flex-wrap py-12 lg:py-24 max-w-5xl mx-auto">
+        const output = `<nav class="flex items-center justify-between flex-wrap py-12 lg:py-24 max-w-5xl mx-auto">
     <div class="text-sm">&copy; {{ now format="Y" }} {{ settings:site_name }}
         –Powered by <a href="https://statamic.com?ref=cool-writings" class="hover:text-teal">Statamic</a></div>
     <div class="flex items-center">
@@ -660,7 +660,7 @@ const output = `<nav class="flex items-center justify-between flex-wrap py-12 lg
         {{ /collection }}
         {{ /collection }}
         `;
-const output = `{{ collection from="blog" }}
+        const output = `{{ collection from="blog" }}
     {{ collection :from="related_collection" }}
         {{ title }}
     {{ /collection }}
@@ -678,7 +678,7 @@ const output = `{{ collection from="blog" }}
         assert.strictEqual(format(`{{ size = size ? sizes[size] : sizes["md"]; size }}`), `{{ size = size ? sizes[size] : sizes["md"]; size }}`);
         assert.strictEqual(format(`{{(view:test[hello]|upper:test:param:"hello :|"|lower)==(view:title|lower)}}`), `{{ (view:test[hello] | upper:test:param:"hello :|" | lower) == (view:title | lower) }}`);
         assert.strictEqual(format(`{{		 view:data:test[nested.key[path:path1]]|upper|lower }}`), `{{ view:data:test[nested.key[path:path1]] | upper | lower }}`);
-const output = `{{# A comment #}}
+        const output = `{{# A comment #}}
 {{# another comment {{ width }} #}}
 <div class="max-w-2xl mx-auto mb-32">
     <p>test</p> {{ subtitle }}
@@ -706,7 +706,7 @@ const output = `{{# A comment #}}
         </div>
         ===============================
         {{ /foreach:array_dynamic }}`;
-const output = `{{ foreach:array_dynamic }}
+        const output = `{{ foreach:array_dynamic }}
     <p>First: {{ first | bool_string }}</p>
     <p>Last: {{ last | bool_string() }}</p>
     <p>Count: {{ count }}</p>
@@ -728,7 +728,7 @@ const output = `{{ foreach:array_dynamic }}
     });
 
     test('it produces reasonable indentation', () => {
-const output = `{{ bard raw="true" }}
+        const output = `{{ bard raw="true" }}
     {{ type }}
     {{ attrs | length }}
     {{ if attrs | length > 0 }}{{ attrs:values:type }}{{ /if }}
@@ -765,7 +765,7 @@ const output = `{{ bard raw="true" }}
     });
 
     test('it respects nested block elements', () => {
-const expected = `{{#
+        const expected = `{{#
     @name Article
     @desc The article page builder block.
     @set page.page_builder.article
@@ -800,11 +800,11 @@ const expected = `{{#
     });
 
     test('it handles mixed automatic and explicit statement separators', () => {
-const template = `{{ test = 1 + 
+        const template = `{{ test = 1 + 
     3; test += 3;                  confusing += (							1 + 3 -
                      2 / (3 % 2)) third = 3232 + 342; tail = 		(3 + 2) }}				 
 `;
-const expected = `{{ test = 1 + 3; test += 3; confusing += (1 + 3 - 2 / (3 % 2))
+        const expected = `{{ test = 1 + 3; test += 3; confusing += (1 + 3 - 2 / (3 % 2))
    third = 3232 + 342;
    tail = (3 + 2) }}`;
         assert.strictEqual(format(template), expected);
@@ -953,7 +953,7 @@ const expected = `{{ test = 1 + 3; test += 3; confusing += (1 + 3 - 2 / (3 % 2))
     });
 
     test('it indents conditionals', () => {
-const input = `<p>Outer Start</p>
+        const input = `<p>Outer Start</p>
 {{ articles }}
 <p>start</p>
 {{ if title == 'Nectar of the Gods' }}
@@ -966,7 +966,7 @@ const input = `<p>Outer Start</p>
 <p>end</p>
 {{ /articles }}
 <p>Outer end</p>`;
-const expected = `<p>Outer Start</p>
+        const expected = `<p>Outer Start</p>
 {{ articles }}
     <p>start</p>
     {{ if title == 'Nectar of the Gods' }}
@@ -985,7 +985,7 @@ const expected = `<p>Outer Start</p>
     });
 
     test('it indents nested conditionals', () => {
-const input = `<p>Outer Start</p>
+        const input = `<p>Outer Start</p>
 {{ articles }}
 <p>start</p>
 {{ if title == 'Nectar of the Gods' }}
@@ -1010,7 +1010,7 @@ const input = `<p>Outer Start</p>
 <p>end</p>
 {{ /articles }}
 <p>Outer end</p>`;
-const expected = `<p>Outer Start</p>
+        const expected = `<p>Outer Start</p>
 {{ articles }}
     <p>start</p>
     {{ if title == 'Nectar of the Gods' }}
@@ -1041,13 +1041,13 @@ const expected = `<p>Outer Start</p>
     });
 
     test('it emits switch groups', () => {
-const input = `{{ test variable="{switch(
+        const input = `{{ test variable="{switch(
 (size == 'sm') => '(min-width: 768px) 35vw, 90vw',
 (size == 'md') => '(min-width: 768px) 55vw, 90vw',
 (size == 'lg') => '(min-width: 768px) 75vw, 90vw',
 (size == 'xl') => '90vw'
 )}" }}`;
-const expected = `{{ test variable="{switch(
+        const expected = `{{ test variable="{switch(
       (size == 'sm') => '(min-width: 768px) 35vw, 90vw',
       (size == 'md') => '(min-width: 768px) 55vw, 90vw',
       (size == 'lg') => '(min-width: 768px) 75vw, 90vw',
@@ -1057,7 +1057,7 @@ const expected = `{{ test variable="{switch(
     });
 
     test('it emits list groups', () => {
-const input = `{{
+        const input = `{{
 
     items = list(
         name,  
@@ -1085,7 +1085,7 @@ const input = `{{
             'Lettuce', 'green', 'vegetable'
         )
     }}`;
-const expected = `{{ items = list(name, color, type;
+        const expected = `{{ items = list(name, color, type;
                 'Apple', 'red', 'fruit';
                 'Hammer', 'brown', 'tool';
                 'Orange', 'orange', 'fruit';
@@ -1110,7 +1110,7 @@ const expected = `{{ items = list(name, color, type;
         {{ else }}
         <div>C</div>
         {{ /unless }}`;
-const expected = `Leading Literal
+        const expected = `Leading Literal
 {{ unless true }}
     <div>A</div>
 
@@ -1120,7 +1120,7 @@ const expected = `Leading Literal
 {{ else }}
     <div>C</div>
 {{ /unless }}`;
-            assert.strictEqual(format(template), expected);
+        assert.strictEqual(format(template), expected);
     });
 
     test('it exits early on unpaired unless structures', () => {
@@ -1144,7 +1144,7 @@ B`;
     });
 
     test('nested tags inside elements', () => {
-const input = `<ul>
+        const input = `<ul>
 {{ loop from="1" to="10" }}
 Before Yield
 {{ yield:tester }}
@@ -1159,7 +1159,7 @@ Normal Slot Content ({{ value }})
 After Partial
 {{ /loop }}
 </ul>`;
-const output = `<ul>
+        const output = `<ul>
     {{ loop from="1" to="10" }}
         Before Yield
         {{ yield:tester }}
@@ -1194,7 +1194,7 @@ const output = `<ul>
         {{ /partial:nested }}
         After Partial
         {{ /arrdata }}`;
-const output = `Before Yield
+        const output = `Before Yield
 {{ yield:tester }}
 After Yield
 
@@ -1228,7 +1228,7 @@ Normal Slot Content ({{ value }})
 {{ /partial:nested }}
 After Partial
 {{ /arrdata }}</ul>`;
- const output = `Before Yield
+        const output = `Before Yield
 {{ yield:tester }}
 After Yield
 
@@ -1256,7 +1256,7 @@ After Yield
         {{ section:dark_mode }}
         <span>Some content.</span>
         {{ /section:dark_mode }}`;
-const output = `Before Yield.
+        const output = `Before Yield.
 {{ yield:dark_mode }}
 After Yield.
 
@@ -1296,7 +1296,7 @@ B`;
     });
 
     test('it can format front matter', () => {
-const template = `---
+        const template = `---
 hello: 			wilderness
 hello2: 			wilderness2
 hello3: wilderness3
@@ -1315,7 +1315,7 @@ hello3: wilderness3
     </div>
 </header>
 <!-- End: /layout/_header.antlers.html -->`;
-const expected = `---
+        const expected = `---
 hello: 'wilderness'
 hello2: 'wilderness2'
 hello3: 'wilderness3'
@@ -1339,9 +1339,9 @@ hello3: 'wilderness3'
     });
 
     test('it respects parameter node value delimiters', () => {
-const input = `{{ partial:components/button as="button" 				label="{ trans:strings.form_send }" 
+        const input = `{{ partial:components/button as="button" 				label="{ trans:strings.form_send }" 
                                     attribute='x-bind:disabled="sending" x-bind:class="&#123;&#39;opacity-25 cursor-default&#39;: sending&#125;"' }}`;
-const expected = `{{ partial:components/button as="button" label="{trans:strings.form_send}" attribute='x-bind:disabled="sending" x-bind:class="&#123;&#39;opacity-25 cursor-default&#39;: sending&#125;"' }}`;
+        const expected = `{{ partial:components/button as="button" label="{trans:strings.form_send}" attribute='x-bind:disabled="sending" x-bind:class="&#123;&#39;opacity-25 cursor-default&#39;: sending&#125;"' }}`;
 
         assert.strictEqual(format(input), expected);
     });

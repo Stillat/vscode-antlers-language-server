@@ -34,12 +34,12 @@ export function handleOnCompletion(_textDocumentPosition: TextDocumentPositionPa
         return [];
     }
 
-	// Return empty completions when inside front matter.
-	if (suggestionRequest.hasFrontMatter && suggestionRequest.frontMatterEndsOn > -1) {
-		if (suggestionRequest.position.line < suggestionRequest.frontMatterEndsOn) {
-			return [];
-		}
-	}
+    // Return empty completions when inside front matter.
+    if (suggestionRequest.hasFrontMatter && suggestionRequest.frontMatterEndsOn > -1) {
+        if (suggestionRequest.position.line < suggestionRequest.frontMatterEndsOn) {
+            return [];
+        }
+    }
 
     const globalSnippets = SnippetsManager.instance?.getSnippets(suggestionRequest) ?? [];
     let suggestions = SuggestionManager.getSuggestions(suggestionRequest);

@@ -9,7 +9,7 @@ const PathTag: IAntlersTag = {
     allowsContentClose: false,
     requiresClose: false,
     injectParentScope: false,
-	introducedIn: null,
+    introducedIn: null,
     parameters: [
         {
             isRequired: false,

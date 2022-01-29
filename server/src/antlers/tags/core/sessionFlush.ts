@@ -10,7 +10,7 @@ const SessionFlush: IAntlersTag = {
     allowsArbitraryParameters: false,
     allowsContentClose: false,
     parameters: [],
-	introducedIn: null,
+    introducedIn: null,
     resolveDocumentation: (params?: ISuggestionRequest) => {
         return makeTagDoc(
             'session:flush Tag',

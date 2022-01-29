@@ -7,7 +7,7 @@ const Scope: IAntlersTag = {
     allowsContentClose: false,
     requiresClose: true,
     parameters: [],
-	introducedIn: null,
+    introducedIn: null,
     tagName: 'scope'
 };
 

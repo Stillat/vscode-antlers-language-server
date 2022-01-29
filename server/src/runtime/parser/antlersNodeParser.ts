@@ -205,9 +205,9 @@ export class AntlersNodeParser {
             && trimmedInner != '/endif') {
             const nodeContent = node.getContent().trim();
 
-			if (nodeContent.length == 0) {
-				this.pushConditionWithoutExpression(node);
-			}
+            if (nodeContent.length == 0) {
+                this.pushConditionWithoutExpression(node);
+            }
         }
 
         if (node.name.name == 'endif') {
@@ -253,7 +253,7 @@ export class AntlersNodeParser {
                 replacedNode.runtimeNodes = this.lexer.tokenize(replacedNode, replacedNode.getContent() ?? '');
                 this.testUnlessContent(replacedNode);
             } else {
-				replacedNode.originalNode = node;
+                replacedNode.originalNode = node;
                 replacedNode.content = ' /if ';
             }
 
@@ -299,7 +299,7 @@ export class AntlersNodeParser {
             replacedNode.originalNode = node;
 
             return replacedNode;
-		}
+        }
 
         return node;
     }
@@ -374,7 +374,7 @@ export class AntlersNodeParser {
             nameBlockEndAt = -1,
             valueBlockStartAt = -1,
             valueBlockEndAt = -1,
-			nameDelimiter = '"';
+            nameDelimiter = '"';
 
         for (let i = 0; i < charCount; i++) {
             const current = chars[i];
@@ -458,19 +458,19 @@ export class AntlersNodeParser {
                     name = currentChars.join('');
                     nameStart = startAt;
                     hasFoundName = true;
-					
+
                     currentChars = [];
                 }
 
                 if (next == DocumentParser.String_Terminator_DoubleQuote) {
                     terminator = DocumentParser.String_Terminator_DoubleQuote;
-					nameDelimiter = DocumentParser.String_Terminator_DoubleQuote;
+                    nameDelimiter = DocumentParser.String_Terminator_DoubleQuote;
                     i += 1;
                 }
 
                 if (next == DocumentParser.String_Terminator_SingleQuote) {
                     terminator = DocumentParser.String_Terminator_SingleQuote;
-					nameDelimiter = DocumentParser.String_Terminator_SingleQuote;
+                    nameDelimiter = DocumentParser.String_Terminator_SingleQuote;
                     i += 1;
                 }
 
@@ -534,7 +534,7 @@ export class AntlersNodeParser {
                     name = name.substr(1);
                 }
 
-				parameterNode.nameDelimiter = nameDelimiter;
+                parameterNode.nameDelimiter = nameDelimiter;
                 parameterNode.name = name;
                 parameterNode.value = content;
 

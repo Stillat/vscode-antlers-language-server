@@ -10,7 +10,7 @@ const NoParse: IAntlersTag = {
     hideFromCompletions: false,
     injectParentScope: false,
     parameters: [],
-	introducedIn: null,
+    introducedIn: null,
     resolveDocumentation: (params?: ISuggestionRequest) => {
         return makeTagDoc(
             'noparse Tag',

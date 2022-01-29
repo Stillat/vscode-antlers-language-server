@@ -16,7 +16,7 @@ export function copyTagDefinition(tag: IAntlersTag): IAntlersTag {
         parameters: tag.parameters,
         requiresClose: tag.requiresClose,
         tagName: tag.tagName,
-		introducedIn: tag.introducedIn,
+        introducedIn: tag.introducedIn,
         hideFromCompletions: tag.hideFromCompletions,
         augmentScope: tag.augmentScope,
         requiresCloseResolver: tag.requiresCloseResolver,

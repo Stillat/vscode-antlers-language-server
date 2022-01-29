@@ -26,7 +26,7 @@ const FormTag: IAntlersTag = {
     requiresClose: true,
     hideFromCompletions: false,
     injectParentScope: false,
-	introducedIn: null,
+    introducedIn: null,
     parameters: [],
     resovleParameterCompletionItems: resolveFormParameterCompletions,
     resolveCompletionItems: (params: ISuggestionRequest) => {

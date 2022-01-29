@@ -8,50 +8,50 @@ import { AntlersFormatter, AntlersFormattingOptions } from './antlersFormatter';
 import { IHTMLFormatConfiguration } from "./htmlCompat";
 
 export function formatAntlersDocument(params: DocumentFormattingParams): TextEdit[] | null {
-	const settings = getAntlersSettings();
-	const documentPath = decodeURIComponent(params.textDocument.uri);
-	const options = htmlFormatterSettings.format as IHTMLFormatConfiguration;
+    const settings = getAntlersSettings();
+    const documentPath = decodeURIComponent(params.textDocument.uri);
+    const options = htmlFormatterSettings.format as IHTMLFormatConfiguration;
 
-	if (settings.formatterIgnoreExtensions.length > 0) {
-		for (let i = 0; i < settings.formatterIgnoreExtensions.length; i++) {
-			if (documentPath.toLowerCase().endsWith(settings.formatterIgnoreExtensions[i].toLowerCase())) {
-				return null;
-			}
-		}
-	}
+    if (settings.formatterIgnoreExtensions.length > 0) {
+        for (let i = 0; i < settings.formatterIgnoreExtensions.length; i++) {
+            if (documentPath.toLowerCase().endsWith(settings.formatterIgnoreExtensions[i].toLowerCase())) {
+                return null;
+            }
+        }
+    }
 
-	if (sessionDocuments.hasDocument(documentPath) && documentMap.has(documentPath)) {
-		const document = documentMap.get(documentPath) as TextDocument,
-			sessionDocument = sessionDocuments.getDocument(documentPath),
-			docText = document.getText(),
-			antlersDoc = AntlersDocument.fromText(docText),
-			antlersFormatterOptions:AntlersFormattingOptions = {
-				htmlOptions: options,
-				formatFrontMatter: settings.formatFrontMatter,
-				insertSpaces: params.options.insertSpaces,
-				tabSize: params.options.tabSize,
-				maxStatementsPerLine: 3
-			};
+    if (sessionDocuments.hasDocument(documentPath) && documentMap.has(documentPath)) {
+        const document = documentMap.get(documentPath) as TextDocument,
+            sessionDocument = sessionDocuments.getDocument(documentPath),
+            docText = document.getText(),
+            antlersDoc = AntlersDocument.fromText(docText),
+            antlersFormatterOptions: AntlersFormattingOptions = {
+                htmlOptions: options,
+                formatFrontMatter: settings.formatFrontMatter,
+                insertSpaces: params.options.insertSpaces,
+                tabSize: params.options.tabSize,
+                maxStatementsPerLine: 3
+            };
 
-		AntlersFormatter.applyPositionsFromDocument(sessionDocument, antlersDoc);
-		const formatter = new AntlersFormatter(antlersFormatterOptions),
-			results = formatter.formatDocument(antlersDoc);
+        AntlersFormatter.applyPositionsFromDocument(sessionDocument, antlersDoc);
+        const formatter = new AntlersFormatter(antlersFormatterOptions),
+            results = formatter.formatDocument(antlersDoc);
 
-		const replaceEndPosition = document.positionAt(docText.length);
+        const replaceEndPosition = document.positionAt(docText.length);
 
 
-		const range: Range = {
-			start: Position.create(0, 0),
-			end: replaceEndPosition
-		};
+        const range: Range = {
+            start: Position.create(0, 0),
+            end: replaceEndPosition
+        };
 
-		return [
-			{
-				range: range,
-				newText: results,
-			},
-		];
-	}
+        return [
+            {
+                range: range,
+                newText: results,
+            },
+        ];
+    }
 
-	return null;
+    return null;
 }

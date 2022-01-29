@@ -10,7 +10,7 @@ const UserCan: IAntlersTag = {
     requiresClose: false,
     allowsArbitraryParameters: false,
     allowsContentClose: true,
-	introducedIn: null,
+    introducedIn: null,
     resovleParameterCompletionItems: resolveUserParameterCompletionItems,
     parameters: [
         {

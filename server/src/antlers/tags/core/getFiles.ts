@@ -12,7 +12,7 @@ const GetFiles: IAntlersTag = {
     allowsArbitraryParameters: false,
     allowsContentClose: false,
     injectParentScope: false,
-	introducedIn: null,
+    introducedIn: null,
     parameters: [
         {
             isRequired: false,

@@ -11,7 +11,7 @@ const InstalledTag: IAntlersTag = {
     injectParentScope: false,
     allowsContentClose: false,
     allowsArbitraryParameters: true,
-	introducedIn: '3.1.19',
+    introducedIn: '3.1.19',
     parameters: [],
     resolveCompletionItems: (params: ISuggestionRequest): ICompletionResult => {
         if (params.project != null) {

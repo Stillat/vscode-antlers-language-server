@@ -7,101 +7,101 @@ import { CoreDocumentHandlers } from './documentHandlers/coreDocHandlers';
 import CoreHandlers from "./handlers/coreHandlers";
 
 class DiagnosticsManager {
-	private fileDiagnostics: Map<string, AntlersError[]> = new Map();
-	private handlers: IDiagnosticsHandler[] = [];
-	private docHandlers: IDocumentDiagnosticsHandler[] = [];
+    private fileDiagnostics: Map<string, AntlersError[]> = new Map();
+    private handlers: IDiagnosticsHandler[] = [];
+    private docHandlers: IDocumentDiagnosticsHandler[] = [];
 
-	public static instance: DiagnosticsManager | null = null;
+    public static instance: DiagnosticsManager | null = null;
 
-	registerHandler(handler: IDiagnosticsHandler) {
-		this.handlers.push(handler);
-	}
+    registerHandler(handler: IDiagnosticsHandler) {
+        this.handlers.push(handler);
+    }
 
-	registerDocumentHandler(handler: IDocumentDiagnosticsHandler) {
-		this.docHandlers.push(handler);
-	}
+    registerDocumentHandler(handler: IDocumentDiagnosticsHandler) {
+        this.docHandlers.push(handler);
+    }
 
-	registerDocumentHandlers(handlers: IDocumentDiagnosticsHandler[]) {
-		for (let i = 0; i < handlers.length; i++) {
-			this.registerDocumentHandler(handlers[i]);
-		}
-	}
+    registerDocumentHandlers(handlers: IDocumentDiagnosticsHandler[]) {
+        for (let i = 0; i < handlers.length; i++) {
+            this.registerDocumentHandler(handlers[i]);
+        }
+    }
 
-	registerHandlers(handlers: IDiagnosticsHandler[]) {
-		for (let i = 0; i < handlers.length; i++) {
-			this.registerHandler(handlers[i]);
-		}
-	}
+    registerHandlers(handlers: IDiagnosticsHandler[]) {
+        for (let i = 0; i < handlers.length; i++) {
+            this.registerHandler(handlers[i]);
+        }
+    }
 
-	registerCoreHandlers() {
-		this.registerHandlers(CoreHandlers);
-		this.registerDocumentHandlers(CoreDocumentHandlers);
-	}
+    registerCoreHandlers() {
+        this.registerHandlers(CoreHandlers);
+        this.registerDocumentHandlers(CoreDocumentHandlers);
+    }
 
-	hasDiagnosticsIssues(documentUri: string): boolean {
-		if (this.fileDiagnostics.has(documentUri) == false) {
-			return false;
-		}
+    hasDiagnosticsIssues(documentUri: string): boolean {
+        if (this.fileDiagnostics.has(documentUri) == false) {
+            return false;
+        }
 
-		const docIssues = this.fileDiagnostics.get(
-			documentUri
-		) as AntlersError[];
+        const docIssues = this.fileDiagnostics.get(
+            documentUri
+        ) as AntlersError[];
 
-		return docIssues.length > 0;
-	}
+        return docIssues.length > 0;
+    }
 
-	registerDiagnostics(documentUri: string, issues: AntlersError[]) {
-		this.fileDiagnostics.set(documentUri, issues);
-	}
+    registerDiagnostics(documentUri: string, issues: AntlersError[]) {
+        this.fileDiagnostics.set(documentUri, issues);
+    }
 
-	clearIssues(documentUri: string) {
-		this.fileDiagnostics.set(documentUri, []);
-	}
+    clearIssues(documentUri: string) {
+        this.fileDiagnostics.set(documentUri, []);
+    }
 
-	getDiagnostics(documentUri: string): AntlersError[] {
-		if (this.hasDiagnosticsIssues(documentUri)) {
-			return this.fileDiagnostics.get(documentUri) as AntlersError[];
-		}
+    getDiagnostics(documentUri: string): AntlersError[] {
+        if (this.hasDiagnosticsIssues(documentUri)) {
+            return this.fileDiagnostics.get(documentUri) as AntlersError[];
+        }
 
-		return [];
-	}
+        return [];
+    }
 
-	checkDocument(document:AntlersDocument) {
-		const errors: AntlersError[] = [];
-		this.docHandlers.forEach((handler) => {
-			handler.checkDocument(document).forEach((error) => {
-				errors.push(error);
-			});
-		});
-		return errors;
-	}
+    checkDocument(document: AntlersDocument) {
+        const errors: AntlersError[] = [];
+        this.docHandlers.forEach((handler) => {
+            handler.checkDocument(document).forEach((error) => {
+                errors.push(error);
+            });
+        });
+        return errors;
+    }
 
-	checkNode(node: AntlersNode) {
-		const errors: AntlersError[] = [];
-		this.handlers.forEach((handler) => {
-			handler.checkNode(node).forEach((error) => {
-				errors.push(error);
-			});
-		});
-		return errors;
-	}
+    checkNode(node: AntlersNode) {
+        const errors: AntlersError[] = [];
+        this.handlers.forEach((handler) => {
+            handler.checkNode(node).forEach((error) => {
+                errors.push(error);
+            });
+        });
+        return errors;
+    }
 
-	getAllDiagnostics(): AntlersError[] {
-		const allErrors: AntlersError[] = [];
+    getAllDiagnostics(): AntlersError[] {
+        const allErrors: AntlersError[] = [];
 
-		this.fileDiagnostics.forEach((value: AntlersError[], key: string) => {
-			for (let i = 0; i < value.length; i++) {
-				allErrors.push(value[i]);
-			}
-		});
+        this.fileDiagnostics.forEach((value: AntlersError[], key: string) => {
+            for (let i = 0; i < value.length; i++) {
+                allErrors.push(value[i]);
+            }
+        });
 
-		return allErrors;
-	}
+        return allErrors;
+    }
 }
 
 if (typeof DiagnosticsManager.instance == "undefined" || DiagnosticsManager.instance == null) {
-	DiagnosticsManager.instance = new DiagnosticsManager();
-	DiagnosticsManager.instance.registerCoreHandlers();
+    DiagnosticsManager.instance = new DiagnosticsManager();
+    DiagnosticsManager.instance.registerCoreHandlers();
 }
 
 export default DiagnosticsManager;

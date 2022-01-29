@@ -12,7 +12,7 @@ export class AntlersError {
     public errorCode = '';
     public message = '';
     public level: ErrrorLevel = ErrrorLevel.Error;
-	public range:Range | null = null;
+    public range: Range | null = null;
 
     hash() {
         let positionSlug = '';

@@ -7,34 +7,34 @@ import { IDiagnosticsHandler } from '../diagnosticsHandler';
 import * as semver from 'semver';
 
 const StatamicVersionHandler: IDiagnosticsHandler = {
-	checkNode(node: AntlersNode) {
-		const errors: AntlersError[] = [];
+    checkNode(node: AntlersNode) {
+        const errors: AntlersError[] = [];
 
-		if (node.isOpenedBy != null) { return errors; }
+        if (node.isOpenedBy != null) { return errors; }
 
-		if (!ProjectManager.instance?.hasStructure()) { return errors; }
+        if (!ProjectManager.instance?.hasStructure()) { return errors; }
 
-		const currentVersion = ProjectManager.instance.getStructure().getStatamicVersion();
+        const currentVersion = ProjectManager.instance.getStructure().getStatamicVersion();
 
-		if (currentVersion == null || currentVersion.trim().length == 0) { return errors; }
+        if (currentVersion == null || currentVersion.trim().length == 0) { return errors; }
 
-		if (!TagManager.instance?.isKnownTag(node.runtimeName())) { return errors; }
+        if (!TagManager.instance?.isKnownTag(node.runtimeName())) { return errors; }
 
-		const tagRef = TagManager.instance?.findTag(node.runtimeName());
+        const tagRef = TagManager.instance?.findTag(node.runtimeName());
 
-		if (tagRef?.introducedIn == null) { return errors; }
+        if (tagRef?.introducedIn == null) { return errors; }
 
-		if (semver.lt(currentVersion, tagRef.introducedIn)) {
-			errors.push(AntlersError.makeSyntaxError(
-				AntlersErrorCodes.LINT_VERSION_NOT_COMPATIBLE,
-				node,
-				node.runtimeName() + ' requires at least Statamic ' + tagRef.introducedIn + '. Current project version: ' + currentVersion,
-				ErrrorLevel.Warning
-			));
-		}
+        if (semver.lt(currentVersion, tagRef.introducedIn)) {
+            errors.push(AntlersError.makeSyntaxError(
+                AntlersErrorCodes.LINT_VERSION_NOT_COMPATIBLE,
+                node,
+                node.runtimeName() + ' requires at least Statamic ' + tagRef.introducedIn + '. Current project version: ' + currentVersion,
+                ErrrorLevel.Warning
+            ));
+        }
 
-		return errors;
-	}
+        return errors;
+    }
 };
 
 export default StatamicVersionHandler;

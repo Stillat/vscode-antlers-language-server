@@ -16,7 +16,7 @@ const Translate: IAntlersTag = {
     requiresClose: false,
     injectParentScope: false,
     allowsContentClose: false,
-	introducedIn: null,
+    introducedIn: null,
     allowsArbitraryParameters: true,
     parameters: [
         {

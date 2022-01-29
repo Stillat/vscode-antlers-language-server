@@ -16,6 +16,6 @@ export function handleReferences(_params: ReferenceParams): Location[] | null {
     }
 
     const request = makeProviderRequest(_params.position, docPath);
-	
-	return VariableReferenceManager.getReferences(request);
+
+    return VariableReferenceManager.getReferences(request);
 }

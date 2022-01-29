@@ -11,7 +11,7 @@ const Loop: IAntlersTag = {
     allowsArbitraryParameters: false,
     allowsContentClose: false,
     requiresClose: true,
-	introducedIn: null,
+    introducedIn: null,
     augmentScope: (node: AntlersNode, scope: Scope) => {
         scope.addVariable({
             name: "value",
@@ -71,7 +71,7 @@ const RangeTag: IAntlersTag = {
     allowsArbitraryParameters: false,
     allowsContentClose: false,
     requiresClose: true,
-	introducedIn: null,
+    introducedIn: null,
     augmentScope: (node: AntlersNode, scope: Scope) => {
         scope.addVariable({
             name: "value",

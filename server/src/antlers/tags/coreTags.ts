@@ -139,7 +139,7 @@ const coreTags = [
     FormSuccess,
     FormErrors,
 
-	SetTag,
+    SetTag,
 
     GetErrors,
     GetError,

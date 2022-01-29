@@ -9,7 +9,7 @@ const MarkdownIndent: IAntlersTag = {
     requiresClose: true,
     allowsArbitraryParameters: false,
     allowsContentClose: false,
-	introducedIn: null,
+    introducedIn: null,
     parameters: [],
     resolveDocumentation: (params?: ISuggestionRequest) => {
         return makeTagDoc(

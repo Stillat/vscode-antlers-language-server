@@ -19,7 +19,7 @@ const UserProfile: IAntlersTag = {
     allowsContentClose: false,
     allowsArbitraryParameters: false,
     parameters: UserProfileParameters,
-	introducedIn: null,
+    introducedIn: null,
     augmentScope: (node: AntlersNode, scope: Scope) => {
         scope.injectBlueprint(node, "user");
 

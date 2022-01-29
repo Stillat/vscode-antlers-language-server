@@ -9,7 +9,7 @@ const Widont: IAntlersTag = {
     injectParentScope: false,
     allowsContentClose: false,
     allowsArbitraryParameters: false,
-	introducedIn: null,
+    introducedIn: null,
     parameters: [],
     resolveDocumentation: (params?: ISuggestionRequest) => {
         return makeTagDocWithCodeSample(

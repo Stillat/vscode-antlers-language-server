@@ -12,7 +12,7 @@ const PartialIfExists: IAntlersTag = {
     requiresClose: false,
     injectParentScope: false,
     parameters: PartialParameters,
-	introducedIn: '3.2.7',
+    introducedIn: '3.2.7',
     resovleParameterCompletionItems: resolvePartialParameterCompletions,
     resolveDocumentation: (params?: ISuggestionRequest) => {
         return makeTagDoc(

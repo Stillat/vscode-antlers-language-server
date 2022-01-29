@@ -9,7 +9,7 @@ const OAuth: IAntlersTag = {
     requiresClose: false,
     allowsArbitraryParameters: false,
     allowsContentClose: false,
-	introducedIn: null,
+    introducedIn: null,
     parameters: [{
         name: 'provider',
         description: 'The OAuth provider to be used',

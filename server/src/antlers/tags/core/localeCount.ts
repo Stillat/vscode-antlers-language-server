@@ -11,7 +11,7 @@ const LocalesCount: IAntlersTag = {
     injectParentScope: false,
     requiresClose: true,
     parameters: LocaleParameters,
-	introducedIn: '3.0.36',
+    introducedIn: '3.0.36',
     resolveDocumentation: (params?: ISuggestionRequest) => {
         return makeTagDoc(
             'locales:count Tag',

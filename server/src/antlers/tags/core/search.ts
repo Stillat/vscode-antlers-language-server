@@ -24,7 +24,7 @@ const SearchResultsTag: IAntlersTag = {
     allowsContentClose: false,
     hideFromCompletions: false,
     injectParentScope: false,
-	introducedIn: null,
+    introducedIn: null,
     parameters: [
         {
             name: "index",
@@ -240,7 +240,7 @@ const BaseSearchTag: IAntlersTag = {
     allowsContentClose: false,
     hideFromCompletions: false,
     injectParentScope: false,
-	introducedIn: null,
+    introducedIn: null,
     parameters: [],
     resolveCompletionItems: (params: ISuggestionRequest) => {
         if (

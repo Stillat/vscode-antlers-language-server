@@ -10,7 +10,7 @@ const NotFound: IAntlersTag = {
     allowsContentClose: false,
     allowsArbitraryParameters: false,
     parameters: [],
-	introducedIn: null,
+    introducedIn: null,
     resolveDocumentation: (params?: ISuggestionRequest) => {
         return makeTagDocWithCodeSample(
             '404 (Not Found) Tag',

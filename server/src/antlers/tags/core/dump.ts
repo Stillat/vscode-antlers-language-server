@@ -10,7 +10,7 @@ const Dump: IAntlersTag = {
     injectParentScope: false,
     allowsContentClose: false,
     allowsArbitraryParameters: false,
-	introducedIn: null,
+    introducedIn: null,
     parameters: [],
     resolveCompletionItems: (params: ISuggestionRequest): ICompletionResult => {
         if (params.leftWord == 'dump' && params.leftChar == ':') {

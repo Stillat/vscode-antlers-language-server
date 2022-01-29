@@ -30,627 +30,627 @@ export interface AssignmentOperatorNodeContract {
 }
 
 export interface INodeInterpolation {
-	content: string,
-	parseContent: string,
-	varContent: string,
-	startOffset: number,
-	endOffset: number
+    content: string,
+    parseContent: string,
+    varContent: string,
+    startOffset: number,
+    endOffset: number
 }
 
 export class AbstractNode {
-	public refId: string | null = null;
-	public index = 0;
-	public parent: AbstractNode | null = null;
-	public content = '';
-	public sourceContent = '';
-	public startPosition: Position | null = null;
-	public endPosition: Position | null = null;
-	public modifierChain: ModifierChainNode | null = null;
-	public originalAbstractNode: AbstractNode | null = null;
+    public refId: string | null = null;
+    public index = 0;
+    public parent: AbstractNode | null = null;
+    public content = '';
+    public sourceContent = '';
+    public startPosition: Position | null = null;
+    public endPosition: Position | null = null;
+    public modifierChain: ModifierChainNode | null = null;
+    public originalAbstractNode: AbstractNode | null = null;
 
-	private positionContexts: PositionContext[] = [];
-	private addedContexts: Map<string, boolean> = new Map();
+    private positionContexts: PositionContext[] = [];
+    private addedContexts: Map<string, boolean> = new Map();
 
-	/* Start: Internal Parser Variables and APIs. */
-	public isVirtual = true;
-	public isPartOfMethodChain = false;
-	public isVirtualGroupMember = false;
-	public isVirtualGroupOperatorResolve = false;
-	public isSwitchGroupMember = false;
-	public isListGroupMember = false;
-	public producesVirtualStatementTerminator = false;
-	public convertedToOperator = false;
-	public scopeVariable: IScopeVariable | null = null;
-	public currentScope: Scope | null = null;
-	public manifestType = '';
-	public scopeName: string | null = null;
-	public sourceType = '';
-	public runtimeType: IRuntimeVariableType | null = null;
+    /* Start: Internal Parser Variables and APIs. */
+    public isVirtual = true;
+    public isPartOfMethodChain = false;
+    public isVirtualGroupMember = false;
+    public isVirtualGroupOperatorResolve = false;
+    public isSwitchGroupMember = false;
+    public isListGroupMember = false;
+    public producesVirtualStatementTerminator = false;
+    public convertedToOperator = false;
+    public scopeVariable: IScopeVariable | null = null;
+    public currentScope: Scope | null = null;
+    public manifestType = '';
+    public scopeName: string | null = null;
+    public sourceType = '';
+    public runtimeType: IRuntimeVariableType | null = null;
 
-	public readonly modifiers: NodeVirtualModifiers = new NodeVirtualModifiers(this);
-	/* End: Internal Parser Variables and APIs. */
+    public readonly modifiers: NodeVirtualModifiers = new NodeVirtualModifiers(this);
+    /* End: Internal Parser Variables and APIs. */
 
-	public prev: AbstractNode | null = null;
-	public next: AbstractNode | null = null;
+    public prev: AbstractNode | null = null;
+    public next: AbstractNode | null = null;
 
-	public methodTarget: MethodInvocationNode | null = null;
-	public libraryTarget: LibraryInvocationConstruct | null = null;
+    public methodTarget: MethodInvocationNode | null = null;
+    public libraryTarget: LibraryInvocationConstruct | null = null;
 
-	private antlersErrors: AntlersError[] = [];
+    private antlersErrors: AntlersError[] = [];
 
-	protected parser: DocumentParser | null = null;
+    protected parser: DocumentParser | null = null;
 
-	getContexts(): PositionContext[] {
-		return this.positionContexts;
-	}
+    getContexts(): PositionContext[] {
+        return this.positionContexts;
+    }
 
-	addContext(context: PositionContext) {
-		if (this.addedContexts.has(context.refId) == false) {
-			this.addedContexts.set(context.refId, true);
-			this.positionContexts.push(context);
-		}
-	}
+    addContext(context: PositionContext) {
+        if (this.addedContexts.has(context.refId) == false) {
+            this.addedContexts.set(context.refId, true);
+            this.positionContexts.push(context);
+        }
+    }
 
-	getRange(): DocumentRange {
-		if (this.originalAbstractNode != null) {
-			return this.originalAbstractNode.getRange();
-		}
+    getRange(): DocumentRange {
+        if (this.originalAbstractNode != null) {
+            return this.originalAbstractNode.getRange();
+        }
 
-		if (this.startPosition == null || this.endPosition == null) {
-			return DocumentRange.Empty;
-		}
+        if (this.startPosition == null || this.endPosition == null) {
+            return DocumentRange.Empty;
+        }
 
-		const range = new DocumentRange();
-		range.start = this.startPosition;
-		range.end = this.endPosition;
+        const range = new DocumentRange();
+        range.start = this.startPosition;
+        range.end = this.endPosition;
 
-		return range;
-	}
+        return range;
+    }
 
-	withParser(parser: DocumentParser) {
-		this.parser = parser;
-	}
+    withParser(parser: DocumentParser) {
+        this.parser = parser;
+    }
 
-	getParser() {
-		return this.parser;
-	}
+    getParser() {
+        return this.parser;
+    }
 
-	pushError(error: AntlersError) {
-		if (this.parent != null) {
-			this.parent.pushError(error);
-		}
+    pushError(error: AntlersError) {
+        if (this.parent != null) {
+            this.parent.pushError(error);
+        }
 
-		this.antlersErrors.push(error);
+        this.antlersErrors.push(error);
 
-		if (this.parent == null) {
-			if (this.parser != null) {
-				this.parser.pushError(error);
-			}
-		}
-	}
+        if (this.parent == null) {
+            if (this.parser != null) {
+                this.parser.pushError(error);
+            }
+        }
+    }
 
-	mergeErrors(errors: AntlersError[]) {
-		errors.forEach((error) => {
-			if (error.node == null) {
-				error.node = this;
-			}
+    mergeErrors(errors: AntlersError[]) {
+        errors.forEach((error) => {
+            if (error.node == null) {
+                error.node = this;
+            }
 
-			this.antlersErrors.push(error);
-		});
-	}
+            this.antlersErrors.push(error);
+        });
+    }
 
-	getErrors() {
-		return this.antlersErrors;
-	}
+    getErrors() {
+        return this.antlersErrors;
+    }
 
-	constructor() {
-		this.refId = uuidv4();
-	}
+    constructor() {
+        this.refId = uuidv4();
+    }
 
-	innerContent() {
-		return this.content;
-	}
+    innerContent() {
+        return this.content;
+    }
 
-	rawContent() {
-		return this.content;
-	}
+    rawContent() {
+        return this.content;
+    }
 }
 
 export class ExecutionBranch extends AbstractNode {
 
-	public head: AntlersNode | null = null;
-	public tail: AntlersNode | null = null;
-	public nodes: AbstractNode[] = [];
+    public head: AntlersNode | null = null;
+    public tail: AntlersNode | null = null;
+    public nodes: AbstractNode[] = [];
 }
 
 export class ConditionNode extends AbstractNode {
-	public logicBranches: ExecutionBranch[] = [];
-	public chain: number[] = [];
+    public logicBranches: ExecutionBranch[] = [];
+    public chain: number[] = [];
 }
 
 export class AntlersNode extends AbstractNode {
-	public isNodeAbanonded = false;
-	public isComment = false;
-	public isTagNode = false;
-	public isConditionNode = false;
-	public runtimeContent = "";
-	public name: TagIdentifier | null = null;
-	public pathReference: VariableReference | null = null;
-	public isClosingTag = false;
-	public isInterpolationNode = false;
-	public isOpenedBy: AntlersNode | null = null;
-	public isClosedBy: AntlersNode | null = null;
-	public isSelfClosing = false;
-	public children: AbstractNode[] = [];
-	public runtimeNodes: AbstractNode[] = [];
-	public parsedRuntimeNodes: AbstractNode[] = [];
-	public hasParsedRuntimeNodes = false;
-	public parameters: ParameterNode[] = [];
-	public hasParameters = false;
-	public contentOffset: Position | null = null;
-	private cachedContent: string | null = null;
-	private cachedInnerContent: string | null = null;
-	public hasRecursiveNode = false;
-	public recursiveReference: RecursiveNode | null = null;
-	public rawStart = "";
-	public rawEnd = "";
-	public originalNode: AntlersNode | null = null;
-	public interpolationRegions: Map<string, INodeInterpolation> = new Map();
-	public processedInterpolationRegions: Map<string, AbstractNode[]> = new Map();
-	public hasProcessedInterpolationRegions = false;
-	public ref = 0;
-	private contentStartRelativeIndex: number | null = null;
-	public antlersNodeIndex = 0;
-	public nameStartsOn: Position | null = null;
-	public nameEndsOn: Position | null = null;
-	public nameMethodPartStartsOn: Position | null = null;
-
-	public readonly structure: NodeVirtualHierarchy = new NodeVirtualHierarchy(this);
-
-	/** Start: Internal Parser State Variables */
-	public mustClose = false;
-	public reference: any | null = null;
-	public _conditionParserAbandonPairing = false;
-	public _isEndVirtual = false;
-
-	nodeAtIndex(index: number): AbstractNode | null {
-		if (this.runtimeNodes.length == 0) {
-			return null;
-		}
-
-		for (let i = 0; i < this.runtimeNodes.length; i++) {
-			if (this.runtimeNodes[i].index == index) {
-				return this.runtimeNodes[i];
-			}
-		}
-
-		return null;
-	}
-
-	isEmpty() {
-		return this.content.trim().length == 0;
-	}
-
-	nameMatches(content: string): boolean {
-		if (this.name == null) {
-			return false;
-		}
-
-		return this.name.content == content;
-	}
-
-	copyBasicDetails() {
-		return this.copyBasicDetailsTo(new AntlersNode());
-	}
-
-	copyBasicDetailsTo(instance: AntlersNode) {
-		instance.refId = this.refId;
-		instance.isComment = this.isComment;
-		instance.isTagNode = this.isTagNode;
-		instance.children = this.children;
-		instance.parameters = this.parameters;
-		instance.isClosingTag = this.isClosingTag;
-		instance.rawStart = this.rawStart;
-		instance.rawEnd = this.rawEnd;
-		instance.startPosition = this.startPosition;
-		instance.endPosition = this.endPosition;
-
-		return instance;
-	}
-
-	id() {
-		return this.refId as string;
-	}
-
-	innerContent() {
-		if (this.cachedInnerContent == null) {
-			this.cachedInnerContent = this.content.replace('"', '\\"');
-		}
-
-		return this.cachedInnerContent;
-	}
-
-	resetContentCache() {
-		this.cachedContent = null;
-		this.cachedInnerContent = null;
-	}
+    public isNodeAbanonded = false;
+    public isComment = false;
+    public isTagNode = false;
+    public isConditionNode = false;
+    public runtimeContent = "";
+    public name: TagIdentifier | null = null;
+    public pathReference: VariableReference | null = null;
+    public isClosingTag = false;
+    public isInterpolationNode = false;
+    public isOpenedBy: AntlersNode | null = null;
+    public isClosedBy: AntlersNode | null = null;
+    public isSelfClosing = false;
+    public children: AbstractNode[] = [];
+    public runtimeNodes: AbstractNode[] = [];
+    public parsedRuntimeNodes: AbstractNode[] = [];
+    public hasParsedRuntimeNodes = false;
+    public parameters: ParameterNode[] = [];
+    public hasParameters = false;
+    public contentOffset: Position | null = null;
+    private cachedContent: string | null = null;
+    private cachedInnerContent: string | null = null;
+    public hasRecursiveNode = false;
+    public recursiveReference: RecursiveNode | null = null;
+    public rawStart = "";
+    public rawEnd = "";
+    public originalNode: AntlersNode | null = null;
+    public interpolationRegions: Map<string, INodeInterpolation> = new Map();
+    public processedInterpolationRegions: Map<string, AbstractNode[]> = new Map();
+    public hasProcessedInterpolationRegions = false;
+    public ref = 0;
+    private contentStartRelativeIndex: number | null = null;
+    public antlersNodeIndex = 0;
+    public nameStartsOn: Position | null = null;
+    public nameEndsOn: Position | null = null;
+    public nameMethodPartStartsOn: Position | null = null;
+
+    public readonly structure: NodeVirtualHierarchy = new NodeVirtualHierarchy(this);
+
+    /** Start: Internal Parser State Variables */
+    public mustClose = false;
+    public reference: any | null = null;
+    public _conditionParserAbandonPairing = false;
+    public _isEndVirtual = false;
+
+    nodeAtIndex(index: number): AbstractNode | null {
+        if (this.runtimeNodes.length == 0) {
+            return null;
+        }
+
+        for (let i = 0; i < this.runtimeNodes.length; i++) {
+            if (this.runtimeNodes[i].index == index) {
+                return this.runtimeNodes[i];
+            }
+        }
+
+        return null;
+    }
+
+    isEmpty() {
+        return this.content.trim().length == 0;
+    }
+
+    nameMatches(content: string): boolean {
+        if (this.name == null) {
+            return false;
+        }
+
+        return this.name.content == content;
+    }
+
+    copyBasicDetails() {
+        return this.copyBasicDetailsTo(new AntlersNode());
+    }
+
+    copyBasicDetailsTo(instance: AntlersNode) {
+        instance.refId = this.refId;
+        instance.isComment = this.isComment;
+        instance.isTagNode = this.isTagNode;
+        instance.children = this.children;
+        instance.parameters = this.parameters;
+        instance.isClosingTag = this.isClosingTag;
+        instance.rawStart = this.rawStart;
+        instance.rawEnd = this.rawEnd;
+        instance.startPosition = this.startPosition;
+        instance.endPosition = this.endPosition;
+
+        return instance;
+    }
+
+    id() {
+        return this.refId as string;
+    }
+
+    innerContent() {
+        if (this.cachedInnerContent == null) {
+            this.cachedInnerContent = this.content.replace('"', '\\"');
+        }
+
+        return this.cachedInnerContent;
+    }
+
+    resetContentCache() {
+        this.cachedContent = null;
+        this.cachedInnerContent = null;
+    }
 
-	hasMethodPart(): boolean {
-		if (this.name == null) {
-			return false;
-		}
+    hasMethodPart(): boolean {
+        if (this.name == null) {
+            return false;
+        }
 
-		const methodPart = this.name.getMethodName();
+        const methodPart = this.name.getMethodName();
 
-		if (methodPart != null) {
-			return true;
-		}
+        if (methodPart != null) {
+            return true;
+        }
 
-		return false;
-	}
+        return false;
+    }
 
-	runtimeName(): string {
-		if (this.name == null) {
-			return "";
-		}
+    runtimeName(): string {
+        if (this.name == null) {
+            return "";
+        }
 
-		return this.name.getCompoundTagName();
-	}
+        return this.name.getCompoundTagName();
+    }
 
-	getTagName(): string {
-		if (this.name == null) {
-			return "";
-		}
+    getTagName(): string {
+        if (this.name == null) {
+            return "";
+        }
 
-		return this.name.name;
-	}
+        return this.name.name;
+    }
 
-	getNameContent() {
-		if (this.name == null) {
-			return "";
-		}
+    getNameContent() {
+        if (this.name == null) {
+            return "";
+        }
 
-		return this.name.content;
-	}
+        return this.name.content;
+    }
 
-	getMethodNameValue(): string {
-		if (this.name == null) {
-			return "";
-		}
+    getMethodNameValue(): string {
+        if (this.name == null) {
+            return "";
+        }
 
-		const methodPart = this.name.getMethodName();
+        const methodPart = this.name.getMethodName();
 
-		if (methodPart != null) {
-			return methodPart as string;
-		}
+        if (methodPart != null) {
+            return methodPart as string;
+        }
 
-		return "";
-	}
+        return "";
+    }
 
-	methodIsEmptyOrMatches(testValue: string): boolean {
-		return this.getMethodNameValue() == testValue;
-	}
-
-	hasParameter(name: string): boolean {
-		const paramMatch = this.findParameter(name);
+    methodIsEmptyOrMatches(testValue: string): boolean {
+        return this.getMethodNameValue() == testValue;
+    }
+
+    hasParameter(name: string): boolean {
+        const paramMatch = this.findParameter(name);
 
-		return paramMatch != null;
-	}
+        return paramMatch != null;
+    }
 
-	/**
-	 * Tests if the AntlersNode contains a parameter with the given value.
-	 *
-	 * @param name
-	 * @param expectedValue
-	 * @returns
-	 */
-	hasParameterWithValue(name: string, expectedValue: string): boolean {
-		const paramMatch = this.findParameter(name);
+    /**
+     * Tests if the AntlersNode contains a parameter with the given value.
+     *
+     * @param name
+     * @param expectedValue
+     * @returns
+     */
+    hasParameterWithValue(name: string, expectedValue: string): boolean {
+        const paramMatch = this.findParameter(name);
 
-		if (paramMatch == null) {
-			return false;
-		}
+        if (paramMatch == null) {
+            return false;
+        }
 
-		return paramMatch.value == expectedValue;
-	}
+        return paramMatch.value == expectedValue;
+    }
 
-	findParameterValue(name: string, defaultValue: string): string {
-		const paramMatch = this.findParameter(name);
+    findParameterValue(name: string, defaultValue: string): string {
+        const paramMatch = this.findParameter(name);
 
-		if (paramMatch == null) {
-			return defaultValue;
-		}
+        if (paramMatch == null) {
+            return defaultValue;
+        }
 
-		return paramMatch.value;
-	}
+        return paramMatch.value;
+    }
 
 
-	findParameterValueOrNull(name: string): string | null {
-		const paramMatch = this.findParameter(name);
+    findParameterValueOrNull(name: string): string | null {
+        const paramMatch = this.findParameter(name);
 
-		if (paramMatch == null) {
-			return null;
-		}
+        if (paramMatch == null) {
+            return null;
+        }
 
-		return paramMatch.value;
-	}
+        return paramMatch.value;
+    }
 
-	findParameter(name: string): ParameterNode | null {
-		if (this.parameters.length == 0) {
-			return null;
-		}
-
-		for (let i = 0; i < this.parameters.length; i++) {
-			if (this.parameters[i].name == name) {
-				return this.parameters[i];
-			}
-		}
-
-		return null;
-	}
-
-	findAnyParameter(names: string[]): ParameterNode | null {
-		for (let i = 0; i < names.length; i++) {
-			const tempValue = this.findParameter(names[i]);
-
-			if (tempValue != null) {
-				return tempValue;
-			}
-		}
-
-		return null;
-	}
-
-	getContentRelativeStartIndex(): number {
-		if (this.contentStartRelativeIndex == null) {
-			const chars = this.content.split("");
-
-			for (let i = 0; i < chars.length; i++) {
-				if (!StringUtilities.ctypeSpace(chars[i])) {
-					this.contentStartRelativeIndex = i;
-					break;
-				}
-			}
-
-			if (this.contentStartRelativeIndex == null) {
-				this.contentStartRelativeIndex = chars.length;
-			}
-
-			this.contentStartRelativeIndex += this.rawStart.length;
-		}
-
-		return this.contentStartRelativeIndex as number;
-	}
-
-	getContent() {
-		if (this.cachedContent == null) {
-			if (this.isComment) {
-				this.cachedContent = this.content;
-				this.contentOffset = this.startPosition;
-			} else {
-				if (this.isTagNode) {
-					let contentToAnalyze = this.content;
-
-					contentToAnalyze = StringUtilities.trimLeft(contentToAnalyze);
-
-					let compoundNameLen = 0;
-
-					if (this.name != null) {
-						compoundNameLen = this.name.compound.length;
-					}
-
-					if (this.parameters.length > 0) {
-						let startPosIndex = 0;
-						const firstParam = this.parameters[0];
-
-						if (firstParam.startPosition != null) {
-							startPosIndex = firstParam.startPosition.index - 1;
-						}
-
-						const leadContent = contentToAnalyze,
-							contentWithoutSpace = leadContent.trimLeft(),
-							leadingWsCount = leadContent.length - contentWithoutSpace.length,
-							leadNameLen = compoundNameLen;
-
-						// Get the content before the first parameter.
-						contentToAnalyze = contentToAnalyze.substr(0, startPosIndex);
-					}
-
-					const contentWithoutSpace = contentToAnalyze.trimLeft(),
-						leadingWsCount =
-							contentToAnalyze.length - contentWithoutSpace.length,
-						leadOffset = compoundNameLen + leadingWsCount + 2;
-
-					if (this.parser != null) {
-						let startPosOffset = 0;
-
-						if (this.startPosition != null) {
-							startPosOffset = this.startPosition.offset;
-						}
-
-						this.contentOffset ==
-							this.parser.positionFromOffset(startPosOffset + leadOffset, 0);
-					}
-
-					if (this.name != null) {
-						if (
-							this.name.name == "if" ||
-							this.name.name == "elseif" ||
-							this.name.name == "unless" ||
-							this.name.name == "elseunless"
-						) {
-							contentToAnalyze = " " + contentToAnalyze.trimLeft();
-							this.cachedContent = contentToAnalyze.substr(
-								this.name.compound.length + 1
-							);
-						} else {
-							this.cachedContent = contentToAnalyze;
-						}
-					} else {
-						this.cachedContent = contentToAnalyze;
-					}
-				} else {
-					if (this.parameters.length > 0) {
-						const firstParam = this.parameters[0];
-
-						let startPosIndex = 0;
-
-						if (firstParam.startPosition != null) {
-							startPosIndex = firstParam.startPosition.index - 1;
-						}
-
-						this.contentOffset = this.startPosition;
-						this.cachedContent = this.content.substr(0, startPosIndex);
-					} else {
-						this.contentOffset = this.startPosition;
-						this.cachedContent = this.content;
-					}
-				}
-			}
-		}
-		return this.cachedContent;
-	}
-
-	relativePositionFromOffset(offset: number, index: number): Position | null {
-		if (this.parser == null) {
-			return null;
-		}
-
-		return this.parser.positionFromOffset(
-			(this.contentOffset?.offset ?? 0) + offset,
-			index
-		);
-	}
-
-	getInterpolationNode(varName: string): AntlersNode | null {
-		if (this.processedInterpolationRegions.has(varName)) {
-			const refRegion = this.processedInterpolationRegions.get(
-				varName
-			) as AbstractNode[];
-
-			if (refRegion.length > 0 && refRegion[0] instanceof AntlersNode) {
-				return refRegion[0];
-			}
-		}
-
-		return null;
-	}
-
-	_lexerRelativeOffset(offset: number, index: number | null = null) {
-		let indexToUse = offset;
-
-		if (index != null) {
-			indexToUse = index;
-		}
-
-		if (this.parser == null) {
-			const position = new Position();
-			position.index = offset;
-			position.offset = offset;
-
-			return position;
-		}
-
-		let relativeIndex = offset + this.rawStart.length + (this.startPosition?.index ?? 0);
-
-		if (this.isTagNode && this.nameStartsOn != null) {
-			relativeIndex = this.nameStartsOn.index + offset;
-		}
-
-		const resolvedOffset = this.parser.positionFromOffset(
-			relativeIndex,
-			relativeIndex,
-			true
-		);
-
-		return resolvedOffset;
-	}
-
-	relativeOffset(offset: number, index: number | null = null) {
-		let indexToUse = offset;
-
-		if (index != null) {
-			indexToUse = index;
-		}
-
-		if (this.parser == null) {
-			const position = new Position();
-			position.index = offset;
-			position.offset = offset;
-
-			return position;
-		}
-
-		const relativeIndex = offset + this.rawStart.length + (this.startPosition?.index ?? 0);
-
-		const resolvedOffset = this.parser.positionFromOffset(
-			relativeIndex,
-			relativeIndex,
-			true
-		);
-
-		return resolvedOffset;
-	}
-
-	isPaired() {
-		if (this.isClosedBy == null) {
-			return false;
-		}
-
-		if (this.isSelfClosing) {
-			return false;
-		}
-
-		return true;
-	}
-
-	rawContent():string {
-		return this.rawStart + this.content + this.rawEnd;
-	}
-
-	getTrueRuntimeNodes(): AbstractNode[] {
-		if (this.originalNode != null && this.originalNode != this) {
-			return this.originalNode.getTrueRuntimeNodes();
-		}
-
-		return this.runtimeNodes;
-	}
-
-	getTrueRawContent():string {
-		if (this.originalNode != null && this.originalNode != this) {
-			return this.originalNode.getTrueRawContent();
-		}
-
-		return this.rawContent();
-	}
-
-	getTrueNode():AntlersNode {
-		if (this.originalNode != null && this.originalNode != this) {
-			return this.originalNode.getTrueNode();
-		}
-
-		return this;
-	}
-
-	getStructuralChildren(): AntlersNode[] {
-		if (this.isClosedBy != null) {
-			// Nodes with children will always have the
-			// closing node added as the last child.
-			return filterStructuralAntlersNodes(this.children.slice(0, -1));
-		}
-
-		return filterStructuralAntlersNodes(this.children);
-	}
+    findParameter(name: string): ParameterNode | null {
+        if (this.parameters.length == 0) {
+            return null;
+        }
+
+        for (let i = 0; i < this.parameters.length; i++) {
+            if (this.parameters[i].name == name) {
+                return this.parameters[i];
+            }
+        }
+
+        return null;
+    }
+
+    findAnyParameter(names: string[]): ParameterNode | null {
+        for (let i = 0; i < names.length; i++) {
+            const tempValue = this.findParameter(names[i]);
+
+            if (tempValue != null) {
+                return tempValue;
+            }
+        }
+
+        return null;
+    }
+
+    getContentRelativeStartIndex(): number {
+        if (this.contentStartRelativeIndex == null) {
+            const chars = this.content.split("");
+
+            for (let i = 0; i < chars.length; i++) {
+                if (!StringUtilities.ctypeSpace(chars[i])) {
+                    this.contentStartRelativeIndex = i;
+                    break;
+                }
+            }
+
+            if (this.contentStartRelativeIndex == null) {
+                this.contentStartRelativeIndex = chars.length;
+            }
+
+            this.contentStartRelativeIndex += this.rawStart.length;
+        }
+
+        return this.contentStartRelativeIndex as number;
+    }
+
+    getContent() {
+        if (this.cachedContent == null) {
+            if (this.isComment) {
+                this.cachedContent = this.content;
+                this.contentOffset = this.startPosition;
+            } else {
+                if (this.isTagNode) {
+                    let contentToAnalyze = this.content;
+
+                    contentToAnalyze = StringUtilities.trimLeft(contentToAnalyze);
+
+                    let compoundNameLen = 0;
+
+                    if (this.name != null) {
+                        compoundNameLen = this.name.compound.length;
+                    }
+
+                    if (this.parameters.length > 0) {
+                        let startPosIndex = 0;
+                        const firstParam = this.parameters[0];
+
+                        if (firstParam.startPosition != null) {
+                            startPosIndex = firstParam.startPosition.index - 1;
+                        }
+
+                        const leadContent = contentToAnalyze,
+                            contentWithoutSpace = leadContent.trimLeft(),
+                            leadingWsCount = leadContent.length - contentWithoutSpace.length,
+                            leadNameLen = compoundNameLen;
+
+                        // Get the content before the first parameter.
+                        contentToAnalyze = contentToAnalyze.substr(0, startPosIndex);
+                    }
+
+                    const contentWithoutSpace = contentToAnalyze.trimLeft(),
+                        leadingWsCount =
+                            contentToAnalyze.length - contentWithoutSpace.length,
+                        leadOffset = compoundNameLen + leadingWsCount + 2;
+
+                    if (this.parser != null) {
+                        let startPosOffset = 0;
+
+                        if (this.startPosition != null) {
+                            startPosOffset = this.startPosition.offset;
+                        }
+
+                        this.contentOffset ==
+                            this.parser.positionFromOffset(startPosOffset + leadOffset, 0);
+                    }
+
+                    if (this.name != null) {
+                        if (
+                            this.name.name == "if" ||
+                            this.name.name == "elseif" ||
+                            this.name.name == "unless" ||
+                            this.name.name == "elseunless"
+                        ) {
+                            contentToAnalyze = " " + contentToAnalyze.trimLeft();
+                            this.cachedContent = contentToAnalyze.substr(
+                                this.name.compound.length + 1
+                            );
+                        } else {
+                            this.cachedContent = contentToAnalyze;
+                        }
+                    } else {
+                        this.cachedContent = contentToAnalyze;
+                    }
+                } else {
+                    if (this.parameters.length > 0) {
+                        const firstParam = this.parameters[0];
+
+                        let startPosIndex = 0;
+
+                        if (firstParam.startPosition != null) {
+                            startPosIndex = firstParam.startPosition.index - 1;
+                        }
+
+                        this.contentOffset = this.startPosition;
+                        this.cachedContent = this.content.substr(0, startPosIndex);
+                    } else {
+                        this.contentOffset = this.startPosition;
+                        this.cachedContent = this.content;
+                    }
+                }
+            }
+        }
+        return this.cachedContent;
+    }
+
+    relativePositionFromOffset(offset: number, index: number): Position | null {
+        if (this.parser == null) {
+            return null;
+        }
+
+        return this.parser.positionFromOffset(
+            (this.contentOffset?.offset ?? 0) + offset,
+            index
+        );
+    }
+
+    getInterpolationNode(varName: string): AntlersNode | null {
+        if (this.processedInterpolationRegions.has(varName)) {
+            const refRegion = this.processedInterpolationRegions.get(
+                varName
+            ) as AbstractNode[];
+
+            if (refRegion.length > 0 && refRegion[0] instanceof AntlersNode) {
+                return refRegion[0];
+            }
+        }
+
+        return null;
+    }
+
+    _lexerRelativeOffset(offset: number, index: number | null = null) {
+        let indexToUse = offset;
+
+        if (index != null) {
+            indexToUse = index;
+        }
+
+        if (this.parser == null) {
+            const position = new Position();
+            position.index = offset;
+            position.offset = offset;
+
+            return position;
+        }
+
+        let relativeIndex = offset + this.rawStart.length + (this.startPosition?.index ?? 0);
+
+        if (this.isTagNode && this.nameStartsOn != null) {
+            relativeIndex = this.nameStartsOn.index + offset;
+        }
+
+        const resolvedOffset = this.parser.positionFromOffset(
+            relativeIndex,
+            relativeIndex,
+            true
+        );
+
+        return resolvedOffset;
+    }
+
+    relativeOffset(offset: number, index: number | null = null) {
+        let indexToUse = offset;
+
+        if (index != null) {
+            indexToUse = index;
+        }
+
+        if (this.parser == null) {
+            const position = new Position();
+            position.index = offset;
+            position.offset = offset;
+
+            return position;
+        }
+
+        const relativeIndex = offset + this.rawStart.length + (this.startPosition?.index ?? 0);
+
+        const resolvedOffset = this.parser.positionFromOffset(
+            relativeIndex,
+            relativeIndex,
+            true
+        );
+
+        return resolvedOffset;
+    }
+
+    isPaired() {
+        if (this.isClosedBy == null) {
+            return false;
+        }
+
+        if (this.isSelfClosing) {
+            return false;
+        }
+
+        return true;
+    }
+
+    rawContent(): string {
+        return this.rawStart + this.content + this.rawEnd;
+    }
+
+    getTrueRuntimeNodes(): AbstractNode[] {
+        if (this.originalNode != null && this.originalNode != this) {
+            return this.originalNode.getTrueRuntimeNodes();
+        }
+
+        return this.runtimeNodes;
+    }
+
+    getTrueRawContent(): string {
+        if (this.originalNode != null && this.originalNode != this) {
+            return this.originalNode.getTrueRawContent();
+        }
+
+        return this.rawContent();
+    }
+
+    getTrueNode(): AntlersNode {
+        if (this.originalNode != null && this.originalNode != this) {
+            return this.originalNode.getTrueNode();
+        }
+
+        return this;
+    }
+
+    getStructuralChildren(): AntlersNode[] {
+        if (this.isClosedBy != null) {
+            // Nodes with children will always have the
+            // closing node added as the last child.
+            return filterStructuralAntlersNodes(this.children.slice(0, -1));
+        }
+
+        return filterStructuralAntlersNodes(this.children);
+    }
 }
 
 export class ParserFailNode extends AntlersNode {
-	static makeWithStartPosition(startPosition: Position) {
-		const newNode = new ParserFailNode();
-		newNode.startPosition = startPosition;
-		newNode.endPosition = startPosition;
+    static makeWithStartPosition(startPosition: Position) {
+        const newNode = new ParserFailNode();
+        newNode.startPosition = startPosition;
+        newNode.endPosition = startPosition;
 
-		return newNode;
-	}
+        return newNode;
+    }
 }
 
 export class AntlersParserFailNode extends ParserFailNode {
@@ -658,8 +658,8 @@ export class AntlersParserFailNode extends ParserFailNode {
 }
 
 export class RecursiveNode extends AntlersNode {
-	public recursiveParent: AntlersNode | null = null;
-	public isNestedRecursive = false;
+    public recursiveParent: AntlersNode | null = null;
+    public isNestedRecursive = false;
 }
 
 export class PhpExecutionNode extends AntlersNode {
@@ -673,96 +673,96 @@ export class CommentParserFailNode extends ParserFailNode {
 export class PhpParserFailNode extends ParserFailNode { }
 
 export class EscapedContentNode extends AntlersNode {
-	public isNoParseRegion = false;
+    public isNoParseRegion = false;
 }
 
 export class ParameterNode extends AbstractNode {
 
-	public modifier: IModifier | null = null;
-	public isModifierParameter = false;
-	public nameDelimiter = '"';
-	public isVariableReference = false;
-	public name = "";
-	public value = "";
+    public modifier: IModifier | null = null;
+    public isModifierParameter = false;
+    public nameDelimiter = '"';
+    public isVariableReference = false;
+    public name = "";
+    public value = "";
 
-	public interpolations: string[] = [];
-	public parent: AntlersNode | null = null;
+    public interpolations: string[] = [];
+    public parent: AntlersNode | null = null;
 
-	public blockPosition: Range | null = null;
-	public namePosition: Range | null = null;
-	public valuePosition: Range | null = null;
+    public blockPosition: Range | null = null;
+    public namePosition: Range | null = null;
+    public valuePosition: Range | null = null;
 
-	containsSimpleValue() {
-		return (
-			this.hasInterpolations() == false && this.isVariableReference == false
-		);
-	}
+    containsSimpleValue() {
+        return (
+            this.hasInterpolations() == false && this.isVariableReference == false
+        );
+    }
 
-	hasInterpolations() {
-		return this.interpolations.length > 0;
-	}
+    hasInterpolations() {
+        return this.interpolations.length > 0;
+    }
 
-	getArrayValue(): string[] {
-		return this.value.split("|");
-	}
+    getArrayValue(): string[] {
+        return this.value.split("|");
+    }
 
-	getValue() {
-		return this.value;
-	}
+    getValue() {
+        return this.value;
+    }
 }
 
 export class ModifierChainNode {
-	public modifierTarget: AbstractNode | null = null;
-	public modifierChain: ModifierNode[] = [];
-	public startPosition: Position | null = null;
-	public endPosition: Position | null = null;
+    public modifierTarget: AbstractNode | null = null;
+    public modifierChain: ModifierNode[] = [];
+    public startPosition: Position | null = null;
+    public endPosition: Position | null = null;
 
-	public lastManifestedModifier: ModifierNode | null = null;
-	public lastModifier: IModifier | null = null;
+    public lastManifestedModifier: ModifierNode | null = null;
+    public lastModifier: IModifier | null = null;
 
-	updateValues() {
-		if (this.modifierChain.length == 0) {
-			this.startPosition = null;
-			this.endPosition = null;
-		} else {
-			const firstModifier = this.modifierChain[0],
-				lastModifier = this.modifierChain[this.modifierChain.length - 1];
-			this.startPosition = firstModifier.startPosition;
-			this.endPosition = lastModifier.endPosition;
-		}
-	}
+    updateValues() {
+        if (this.modifierChain.length == 0) {
+            this.startPosition = null;
+            this.endPosition = null;
+        } else {
+            const firstModifier = this.modifierChain[0],
+                lastModifier = this.modifierChain[this.modifierChain.length - 1];
+            this.startPosition = firstModifier.startPosition;
+            this.endPosition = lastModifier.endPosition;
+        }
+    }
 }
 
 
 export class ModifierNode extends AbstractNode {
 
-	public modifier: IModifier | null = null;
+    public modifier: IModifier | null = null;
 
-	public methodStyleArguments: ArgumentGroup | null = null;
-	public nameNode: ModifierNameNode | null = null;
-	public name = '';
-	public valueNodes: AbstractNode[] = [];
-	public parameters: ModifierParameterNode[] = [];
+    public methodStyleArguments: ArgumentGroup | null = null;
+    public nameNode: ModifierNameNode | null = null;
+    public name = '';
+    public valueNodes: AbstractNode[] = [];
+    public parameters: ModifierParameterNode[] = [];
 
-	getParameterValues() {
-		const values: string[] = [];
+    getParameterValues() {
+        const values: string[] = [];
 
-		this.parameters.forEach((param) => {
-			values.push(param.value);
-		});
+        this.parameters.forEach((param) => {
+            values.push(param.value);
+        });
 
-		return values;
-	}
+        return values;
+    }
 }
 
 export class ValueDirectionNode extends AbstractNode {
-	public order = 0;
-	public name: AbstractNode | null = null;
-	public directionNode: AbstractNode | null = null;
+    public order = 0;
+    public name: AbstractNode | null = null;
+    public directionNode: AbstractNode | null = null;
 }
 
 export class ModifierParameterNode extends AbstractNode {
-	public value = '';
+    public value = '';
 }
 
 export class FalseConstant extends AbstractNode { }
@@ -779,7 +779,7 @@ export class ExponentiationOperator extends AbstractNode implements OperatorNode
 
 }
 export class FactorialOperator extends AbstractNode implements ArithmeticNodeContract {
-	public repeat = 1;
+    public repeat = 1;
 }
 
 export class ModulusOperator extends AbstractNode implements OperatorNodeContract, ArithmeticNodeContract {
@@ -859,7 +859,7 @@ export class StatementSeparatorNode extends AbstractNode {
 
 }
 export class DirectionGroup extends AbstractNode {
-	public orderClauses: ValueDirectionNode[] = [];
+    public orderClauses: ValueDirectionNode[] = [];
 }
 
 export class InlineBranchSeparator extends AbstractNode {
@@ -869,8 +869,8 @@ export class ModifierSeparator extends AbstractNode {
 
 }
 export class NullCoalescenceGroup extends AbstractNode {
-	public left: AbstractNode | null = null;
-	public right: AbstractNode | null = null;
+    public left: AbstractNode | null = null;
+    public right: AbstractNode | null = null;
 }
 export class ModifierValueSeparator extends AbstractNode {
 
@@ -910,36 +910,36 @@ export class LogicGroupBegin extends AbstractNode {
 
 }
 export class ListValueNode extends AbstractNode {
-	public values: AbstractNode[] = [];
-	public isNamedNode = false;
-	public parsedName: StringValueNode | null = null;
+    public values: AbstractNode[] = [];
+    public isNamedNode = false;
+    public parsedName: StringValueNode | null = null;
 }
 export class LogicGroup extends AbstractNode {
-	public start: LogicGroupBegin | null = null;
-	public end: LogicGroupEnd | null = null;
-	public nodes: AbstractNode[] = [];
+    public start: LogicGroupBegin | null = null;
+    public end: LogicGroupEnd | null = null;
+    public nodes: AbstractNode[] = [];
 
-	public scopeOperator: ScopeAssignmentOperator | null = null;
+    public scopeOperator: ScopeAssignmentOperator | null = null;
 }
 
 export class SwitchCase extends AbstractNode {
-	public condition: LogicGroup | null = null;
-	public expression: LogicGroup | null = null;
+    public condition: LogicGroup | null = null;
+    public expression: LogicGroup | null = null;
 }
 export class SwitchGroup extends AbstractNode {
-	public cases: SwitchCase[] = [];
+    public cases: SwitchCase[] = [];
 }
 export class ConditionalFallbackGroup extends AbstractNode {
-	public left: AbstractNode | null = null;
-	public right: AbstractNode | null = null;
+    public left: AbstractNode | null = null;
+    public right: AbstractNode | null = null;
 }
 export class ArrayNode extends AbstractNode {
-	public nodes: (NameValueNode | ArrayNode)[] = [];
+    public nodes: (NameValueNode | ArrayNode)[] = [];
 }
 export class TernaryCondition extends AbstractNode {
-	public head: AbstractNode | null = null;
-	public truthBranch: AbstractNode | null = null;
-	public falseBranch: AbstractNode | null = null;
+    public head: AbstractNode | null = null;
+    public truthBranch: AbstractNode | null = null;
+    public falseBranch: AbstractNode | null = null;
 }
 
 
@@ -947,37 +947,37 @@ export class ArgSeparator extends AbstractNode {
 
 }
 export class SemanticGroup extends AbstractNode {
-	public nodes: AbstractNode[] = [];
-	public separatorToken: StatementSeparatorNode | null = null;
+    public nodes: AbstractNode[] = [];
+    public separatorToken: StatementSeparatorNode | null = null;
 }
 
 export class ScopedLogicGroup extends LogicGroup {
-	public scope: VariableNode | null = null;
+    public scope: VariableNode | null = null;
 
-	extract() {
-		let scopeName: string | null = null;
+    extract() {
+        let scopeName: string | null = null;
 
-		if (this.scope != null) {
-			scopeName = this.scope.name;
-		}
+        if (this.scope != null) {
+            scopeName = this.scope.name;
+        }
 
-		const sematicWrapper = this.nodes[0] as SemanticGroup;
+        const sematicWrapper = this.nodes[0] as SemanticGroup;
 
-		return [
-			scopeName,
-			sematicWrapper.nodes
-		];
-	}
+        return [
+            scopeName,
+            sematicWrapper.nodes
+        ];
+    }
 }
 
 export class AliasedScopeLogicGroup extends ScopedLogicGroup {
-	public alias: StringValueNode | null = null;
+    public alias: StringValueNode | null = null;
 }
 
 export class ArgumentGroup extends AbstractNode {
-	public args: AbstractNode[] = [];
-	public hasNamedArguments = false;
-	public numberOfNamedArguments = 0;
+    public args: AbstractNode[] = [];
+    public hasNamedArguments = false;
+    public numberOfNamedArguments = 0;
 }
 
 export class TupleListStart extends AbstractNode {
@@ -989,17 +989,17 @@ export class TupleList extends AbstractNode {
 }
 
 export class TupleScopedLogicGroup extends LogicGroup {
-	public target: any = null;
-	public name: any = null;
-	public item1: any = null;
-	public item2: any = null;
-	public isDynamicNames = false;
+    public target: any = null;
+    public name: any = null;
+    public item1: any = null;
+    public item2: any = null;
+    public isDynamicNames = false;
 }
 
 export class LibraryInvocationConstruct extends AbstractNode {
-	public libraryName = '';
-	public methodName = '';
-	public arguments: ArgumentGroup | null = null;
+    public libraryName = '';
+    public methodName = '';
+    public arguments: ArgumentGroup | null = null;
 }
 
 export class LiteralNode extends AbstractNode {
@@ -1007,97 +1007,97 @@ export class LiteralNode extends AbstractNode {
 }
 
 export class MethodInvocationNode extends AbstractNode {
-	public method: VariableNode | null = null;
-	public args: ArgumentGroup | null = null;
+    public method: VariableNode | null = null;
+    public args: ArgumentGroup | null = null;
 }
 
 
 export class ModifierNameNode extends AbstractNode {
-	public name = '';
+    public name = '';
 }
 
 export class ModifierValueNode extends AbstractNode {
-	public value = '';
-	public name = '';
+    public value = '';
+    public name = '';
 }
 
 export class NamedArgumentNode extends AbstractNode {
-	public name: AbstractNode | null = null;
-	public value: AbstractNode | null = null;
+    public name: AbstractNode | null = null;
+    public value: AbstractNode | null = null;
 }
 
 export class NameValueNode extends AbstractNode {
-	public name: AbstractNode | null = null;
-	public value: AbstractNode | null = null;
+    public name: AbstractNode | null = null;
+    public value: AbstractNode | null = null;
 }
 
 
 export class NumberNode extends AbstractNode {
-	public value: number | null = null;
+    public value: number | null = null;
 }
 
 export class StringValueNode extends AbstractNode {
-	public value = '';
-	public sourceTerminator = '';
+    public value = '';
+    public sourceTerminator = '';
 }
 
 export class VariableNode extends AbstractNode {
-	public name = '';
-	public mergeRefName = '';
-	public variableReference: VariableReference | null = null;
-	public interpolationNodes: AbstractNode[] = [];
-	public isInterpolationReference = false;
+    public name = '';
+    public mergeRefName = '';
+    public variableReference: VariableReference | null = null;
+    public interpolationNodes: AbstractNode[] = [];
+    public isInterpolationReference = false;
 }
 
 
 export class AccessorNode extends AbstractNode {
-	public name = '';
+    public name = '';
 }
 
 export class PathNode extends AbstractNode {
-	public delimiter = '';
-	public name = '';
-	public isStringVar = false;
-	public isFinal = false;
+    public delimiter = '';
+    public name = '';
+    public isStringVar = false;
+    public isFinal = false;
 }
 
 export class VariableReference {
-	public originalContent = '';
-	public normalizedReference = '';
-	public isStrictTagReference = false;
-	public isStrictVariableReference = false;
-	public isExplicitVariableReference = false;
-	public isVariableVariable = false;
-	public pathParts: PathNode[] | VariableReference[] = [];
-	public isFinal = false;
+    public originalContent = '';
+    public normalizedReference = '';
+    public isStrictTagReference = false;
+    public isStrictVariableReference = false;
+    public isExplicitVariableReference = false;
+    public isVariableVariable = false;
+    public pathParts: PathNode[] | VariableReference[] = [];
+    public isFinal = false;
 
-	/** Start: Internal Parser State Variables */
-	public _isFromEmptyFailState = false;
-	/** End: Internal Parser State Variables */
+    /** Start: Internal Parser State Variables */
+    public _isFromEmptyFailState = false;
+    /** End: Internal Parser State Variables */
 
-	clone() {
-		const reference = new VariableReference();
-		reference.originalContent = this.originalContent;
-		reference.normalizedReference = this.normalizedReference;
-		reference.isStrictVariableReference = this.isStrictVariableReference;
-		reference.isExplicitVariableReference = this.isExplicitVariableReference;
-		reference.pathParts = this.pathParts;
-		reference.isFinal = this.isFinal;
+    clone() {
+        const reference = new VariableReference();
+        reference.originalContent = this.originalContent;
+        reference.normalizedReference = this.normalizedReference;
+        reference.isStrictVariableReference = this.isStrictVariableReference;
+        reference.isExplicitVariableReference = this.isExplicitVariableReference;
+        reference.pathParts = this.pathParts;
+        reference.isFinal = this.isFinal;
 
-		return reference;
-	}
+        return reference;
+    }
 
-	implodePaths() {
-		const stringParts: string[] = [];
+    implodePaths() {
+        const stringParts: string[] = [];
 
-		this.pathParts.forEach((part: any) => {
-			if (part instanceof PathNode) {
-				stringParts.push(part.name);
-			} else if (part instanceof VariableReference) {
-				stringParts.push(part.implodePaths());
-			}
-		});
+        this.pathParts.forEach((part: any) => {
+            if (part instanceof PathNode) {
+                stringParts.push(part.name);
+            } else if (part instanceof VariableReference) {
+                stringParts.push(part.implodePaths());
+            }
+        });
 
-		return stringParts.join('.');
-	}
+        return stringParts.join('.');
+    }
 }

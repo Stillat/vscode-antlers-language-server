@@ -62,7 +62,7 @@ export class DocumentParser {
     private charLen = 0;
     private lastAntlersNode: AntlersNode | null = null;
     private content = '';
-	private originalContent = '';
+    private originalContent = '';
     private currentIndex = 0;
     private currentContent: string[] = [];
     private sourceContent: string[] = [];
@@ -84,7 +84,7 @@ export class DocumentParser {
     private seedStartLine = 1;
     private seedStartchar = 1;
 
-	private frontMatterEndLine = -1;
+    private frontMatterEndLine = -1;
 
     private lastAntlersEndIndex = -1;
     private seedOffset = 0;
@@ -98,13 +98,13 @@ export class DocumentParser {
     private documentPath: string | null = null;
     private pushedErrors: Map<string, AntlersError> = new Map();
     private frontMatter = '';
-	private doesHaveUncloseIfStructures = false;
+    private doesHaveUncloseIfStructures = false;
 
     public readonly structure: VirtualHierarchy = new VirtualHierarchy(this);
 
-	hasUnclosedIfStructures() {
-		return this.doesHaveUncloseIfStructures;
-	}
+    hasUnclosedIfStructures() {
+        return this.doesHaveUncloseIfStructures;
+    }
 
     getFrontMatter() {
         return this.frontMatter;
@@ -114,15 +114,15 @@ export class DocumentParser {
         this.documentPath = path;
     }
 
-	getFrontMatterEndLine(): number {
-		return this.frontMatterEndLine;
-	}
+    getFrontMatterEndLine(): number {
+        return this.frontMatterEndLine;
+    }
 
     pushError(error: AntlersError) {
-		if (error.errorCode == AntlersErrorCodes.TYPE_PARSE_UNCLOSED_CONDITIONAL ||
-			error.errorCode == AntlersErrorCodes.TYPE_PARSE_UNPAIRED_CONDITIONAL) {
-			this.doesHaveUncloseIfStructures = true;
-		}
+        if (error.errorCode == AntlersErrorCodes.TYPE_PARSE_UNCLOSED_CONDITIONAL ||
+            error.errorCode == AntlersErrorCodes.TYPE_PARSE_UNPAIRED_CONDITIONAL) {
+            this.doesHaveUncloseIfStructures = true;
+        }
 
         const errorHash = error.hash();
         if (!this.pushedErrors.has(errorHash)) {
@@ -131,9 +131,9 @@ export class DocumentParser {
         }
     }
 
-	getInterpolationRegions() {
-		return this.interpolationRegions;
-	}
+    getInterpolationRegions() {
+        return this.interpolationRegions;
+    }
 
     getDocumentPath(): string | null {
         return this.documentPath;
@@ -687,28 +687,28 @@ export class DocumentParser {
                     node.parsedRuntimeNodes = this.languageParser.parse(node.runtimeNodes);
                     node.hasParsedRuntimeNodes = true;
 
-					if (! node.isTagNode && node.parsedRuntimeNodes.length > 0) {
-						const principalNode = node.nodeAtIndex(0);
+                    if (!node.isTagNode && node.parsedRuntimeNodes.length > 0) {
+                        const principalNode = node.nodeAtIndex(0);
 
-						if (principalNode != null && principalNode instanceof VariableNode) {
-							if (principalNode.name == node.name?.name) {
-								node.modifierChain = principalNode.modifierChain;
-							}
-						}
-					}
+                        if (principalNode != null && principalNode instanceof VariableNode) {
+                            if (principalNode.name == node.name?.name) {
+                                node.modifierChain = principalNode.modifierChain;
+                            }
+                        }
+                    }
                 }
             }
         });
 
-		this.languageParser.getCreatedModifierChains().forEach((chain) => {
-			if (chain.modifierChain.length > 0) {
-				chain.modifierChain.forEach((modifier) => {
-					if (modifier.nameNode != null && ModifierManager.instance != null && ModifierManager.instance.hasModifier(modifier.nameNode?.name)) {
-						modifier.modifier = ModifierManager.instance?.getModifier(modifier.nameNode.name) as IModifier;
-					}
-				});
-			}
-		});
+        this.languageParser.getCreatedModifierChains().forEach((chain) => {
+            if (chain.modifierChain.length > 0) {
+                chain.modifierChain.forEach((modifier) => {
+                    if (modifier.nameNode != null && ModifierManager.instance != null && ModifierManager.instance.hasModifier(modifier.nameNode?.name)) {
+                        modifier.modifier = ModifierManager.instance?.getModifier(modifier.nameNode.name) as IModifier;
+                    }
+                });
+            }
+        });
 
         let curIndex = 1;
 
@@ -830,9 +830,9 @@ export class DocumentParser {
         return this.content.substr(start, (end - start));
     }
 
-	getOriginalContent() {
-		return this.originalContent;
-	}
+    getOriginalContent() {
+        return this.originalContent;
+    }
 
     getContent() {
         return this.content;
@@ -1045,7 +1045,7 @@ export class DocumentParser {
     }
 
     private processInputText(input: string) {
-		this.originalContent = input;
+        this.originalContent = input;
         this.content = StringUtilities.normalizeLineEndings(input);
         this.inputLen = this.content.length;
 
@@ -1064,7 +1064,7 @@ export class DocumentParser {
                     newLines = newLines.concat(lines.slice(i + 1));
                     this.content = newLines.join("\n");
                     this.frontMatter = frontMatter.join("\n");
-					this.frontMatterEndLine = i + 1;
+                    this.frontMatterEndLine = i + 1;
                     break;
                 } else {
                     frontMatter.push(lineText);
@@ -1543,8 +1543,8 @@ export class DocumentParser {
 
         this.interpolationRegions.forEach((region, key) => {
             if (node.content.includes(key)) {
-				node.interpolationRegions.set(key, region);
-			}
+                node.interpolationRegions.set(key, region);
+            }
         });
 
         return node;
@@ -1607,8 +1607,8 @@ export class DocumentParser {
 
         this.interpolationRegions.forEach((region, key) => {
             if (node.content.includes(key)) {
-				node.interpolationRegions.set(key, region);
-			}
+                node.interpolationRegions.set(key, region);
+            }
         });
 
         const returnNode = this.nodeParser.parseNode(node);
@@ -1676,8 +1676,8 @@ export class DocumentParser {
 
         this.interpolationRegions.forEach((region, key) => {
             if (node.content.includes(key)) {
-				node.interpolationRegions.set(key, region);
-			}
+                node.interpolationRegions.set(key, region);
+            }
         });
 
         const returnNode = this.nodeParser.parseNode(node);

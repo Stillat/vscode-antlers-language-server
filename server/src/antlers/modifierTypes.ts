@@ -59,7 +59,7 @@ export interface IModifier {
      * Indicates if the modifier can appear as a parameter suggestion for applicable variables.
      */
     canBeParameter: boolean;
-	augmentScope?(symbol: AntlersNode, scope: Scope): Scope;
+    augmentScope?(symbol: AntlersNode, scope: Scope): Scope;
 }
 
 export interface IModifierParameter {

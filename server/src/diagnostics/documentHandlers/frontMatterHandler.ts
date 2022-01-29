@@ -6,94 +6,94 @@ import * as yaml from 'js-yaml';
 import { Position, Range } from '../../runtime/nodes/position';
 
 function reformatMessage(text: string) {
-	const parts = text.split(/\r?\n/),
-		newMessageParts: string[] = [];
+    const parts = text.split(/\r?\n/),
+        newMessageParts: string[] = [];
 
-	parts.forEach((part) => {
-		const prefixedParts = part.split('|');
+    parts.forEach((part) => {
+        const prefixedParts = part.split('|');
 
-		if (prefixedParts.length == 1) {
-			newMessageParts.push(part);
-		} else if (prefixedParts.length > 1) {
-			const firstPart = prefixedParts[0];
-		
-			if (parseInt(firstPart.trim()).toString() == firstPart.trim()) {
-				const lineNumber = parseInt(firstPart) + 1;
-				prefixedParts.shift();
-				const remainder = prefixedParts.join('|');
-				const lead = ' '.repeat(firstPart.length - lineNumber.toString().length);
+        if (prefixedParts.length == 1) {
+            newMessageParts.push(part);
+        } else if (prefixedParts.length > 1) {
+            const firstPart = prefixedParts[0];
 
-				newMessageParts.push(lead + lineNumber.toString() + '|' + remainder);
-				
-			} else {
-				newMessageParts.push(part);
-			}
-		}
-	});
+            if (parseInt(firstPart.trim()).toString() == firstPart.trim()) {
+                const lineNumber = parseInt(firstPart) + 1;
+                prefixedParts.shift();
+                const remainder = prefixedParts.join('|');
+                const lead = ' '.repeat(firstPart.length - lineNumber.toString().length);
 
-	return newMessageParts.join("\n");
+                newMessageParts.push(lead + lineNumber.toString() + '|' + remainder);
+
+            } else {
+                newMessageParts.push(part);
+            }
+        }
+    });
+
+    return newMessageParts.join("\n");
 }
 
 const FrontMatterHandler: IDocumentDiagnosticsHandler = {
-	checkDocument(document: AntlersDocument) {
-		const errors: AntlersError[] = [];
+    checkDocument(document: AntlersDocument) {
+        const errors: AntlersError[] = [];
 
-		if (document.hasFrontMatter()) {
-			const frontMatter = document.getFrontMatter();
+        if (document.hasFrontMatter()) {
+            const frontMatter = document.getFrontMatter();
 
-			try {
-				yaml.load(frontMatter, {
-					onWarning: (err) => {
-						const start = new Position(),
-							end = new Position();
+            try {
+                yaml.load(frontMatter, {
+                    onWarning: (err) => {
+                        const start = new Position(),
+                            end = new Position();
 
-						start.line = err.mark.line + 2;
-						start.char = err.mark.column;
-						end.line = err.mark.line + 2;
-						end.char = err.mark.snippet.length + err.mark.column;
+                        start.line = err.mark.line + 2;
+                        start.char = err.mark.column;
+                        end.line = err.mark.line + 2;
+                        end.char = err.mark.snippet.length + err.mark.column;
 
-						const range: Range = {
-							start: start,
-							end: end
-						};
+                        const range: Range = {
+                            start: start,
+                            end: end
+                        };
 
-						const error = new AntlersError();
-						error.errorCode = AntlersErrorCodes.LINT_INVALID_FRONT_MATTER;
-						error.level = ErrrorLevel.Warning;
-						error.message = reformatMessage(err.message);
-						error.range = range;
+                        const error = new AntlersError();
+                        error.errorCode = AntlersErrorCodes.LINT_INVALID_FRONT_MATTER;
+                        error.level = ErrrorLevel.Warning;
+                        error.message = reformatMessage(err.message);
+                        error.range = range;
 
-						errors.push(error);
-					}
-				});
-			} catch (err) {
-				if (err instanceof yaml.YAMLException) {
-					const start = new Position(),
-						end = new Position();
+                        errors.push(error);
+                    }
+                });
+            } catch (err) {
+                if (err instanceof yaml.YAMLException) {
+                    const start = new Position(),
+                        end = new Position();
 
-					start.line = err.mark.line + 2;
-					start.char = err.mark.column;
-					end.line = err.mark.line + 2;
-					end.char = err.mark.snippet.length + err.mark.column;
+                    start.line = err.mark.line + 2;
+                    start.char = err.mark.column;
+                    end.line = err.mark.line + 2;
+                    end.char = err.mark.snippet.length + err.mark.column;
 
-					const range: Range = {
-						start: start,
-						end: end
-					};
+                    const range: Range = {
+                        start: start,
+                        end: end
+                    };
 
-					const error = new AntlersError();
-					error.errorCode = AntlersErrorCodes.LINT_INVALID_FRONT_MATTER;
-					error.level = ErrrorLevel.Error;
-					error.message = reformatMessage(err.message);
-					error.range = range;
+                    const error = new AntlersError();
+                    error.errorCode = AntlersErrorCodes.LINT_INVALID_FRONT_MATTER;
+                    error.level = ErrrorLevel.Error;
+                    error.message = reformatMessage(err.message);
+                    error.range = range;
 
-					errors.push(error);
-				}
-			}
-		}
+                    errors.push(error);
+                }
+            }
+        }
 
-		return errors;
-	}
+        return errors;
+    }
 };
 
 export default FrontMatterHandler;

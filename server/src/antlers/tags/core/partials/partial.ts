@@ -27,7 +27,7 @@ const Partial: IAntlersTag = {
     parameters: PartialParameters,
     requiresClose: false,
     allowsContentClose: true,
-	introducedIn: null,
+    introducedIn: null,
     resolveDocumentation: (params?: ISuggestionRequest) => {
         return `**Partial Tag**  
 Includes another view into the current template.  

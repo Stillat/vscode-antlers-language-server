@@ -11,7 +11,7 @@ const NavBreadcrumbs: IAntlersTag = {
     allowsContentClose: false,
     requiresClose: true,
     hideFromCompletions: false,
-	introducedIn: null,
+    introducedIn: null,
     injectParentScope: false,
     parameters: [
         {

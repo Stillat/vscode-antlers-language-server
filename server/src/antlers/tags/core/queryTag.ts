@@ -7,7 +7,7 @@ const QueryTag: IAntlersTag = {
     requiresClose: true,
     allowsArbitraryParameters: false,
     allowsContentClose: true,
-	introducedIn: null,
+    introducedIn: null,
     parameters: [
         {
             name: 'builder',

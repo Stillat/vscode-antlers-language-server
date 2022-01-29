@@ -20,7 +20,7 @@ export class LanguageOperatorRegistry {
         'pluck',
         'take',
         'arr',
-		'skip',
+        'skip',
         'orderby',
         'groupby',
         'merge',

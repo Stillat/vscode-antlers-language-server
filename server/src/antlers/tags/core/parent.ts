@@ -9,7 +9,7 @@ const Parent: IAntlersTag = {
     allowsContentClose: true,
     allowsArbitraryParameters: false,
     injectParentScope: true,
-	introducedIn: null,
+    introducedIn: null,
     parameters: [],
     resolveDocumentation: (params?: ISuggestionRequest) => {
         return makeTagDoc(

@@ -248,9 +248,9 @@ export class HoverManager {
                 }
             }
 
-			const targetLine = params.position.line + 1,
-				targetChar = params.position.character + 1,
-				targetPos = params.antlersDocument.cursor.position(targetLine, targetChar);
+            const targetLine = params.position.line + 1,
+                targetChar = params.position.character + 1,
+                targetPos = params.antlersDocument.cursor.position(targetLine, targetChar);
 
             if (lastSymbolInScope.scopeVariable != null && targetPos != null && targetPos.isWithin(lastSymbolInScope.startPosition, lastSymbolInScope.endPosition)) {
                 return this.formatScopeVariableHover(lastSymbolInScope.scopeVariable);

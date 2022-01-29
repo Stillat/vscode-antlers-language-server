@@ -21,7 +21,7 @@ const Locales: IAntlersTag = {
     injectParentScope: false,
     requiresClose: true,
     parameters: LocaleParameters,
-	introducedIn: null,
+    introducedIn: null,
     augmentScope: (node: AntlersNode, scope: Scope) => {
         scope.addVariableArray("locale", makeLocaleVariables(node));
 

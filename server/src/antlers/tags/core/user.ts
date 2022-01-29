@@ -49,7 +49,7 @@ const User: IAntlersTag = {
     allowsContentClose: false,
     allowsArbitraryParameters: false,
     parameters: UserProfileParameters,
-	introducedIn: null,
+    introducedIn: null,
     resovleParameterCompletionItems: (parameter: IAntlersParameter, params: ISuggestionRequest) => {
         if (
             params.isPastTagPart == false &&
