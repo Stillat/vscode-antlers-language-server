@@ -7,7 +7,7 @@ The `format` command accepts the following options:
 | Option | Description |
 |---|---|
 | `file` `--f` | The path to the template to format. |
-| `output` `--o` | An optional file path where the formatted results will be saved. When specified, the `file` is not overwritten. |
+| `output` `--out` | An optional file path where the formatted results will be saved. When specified, the `file` is not overwritten. |
 | `dump` `--dd` | When specified, no results are saved to disk. Formatted results are displayed within the terminal. |
 | `options` `--o` | An optional file path to a JSON file containing Antlers formatting settings. |
 
