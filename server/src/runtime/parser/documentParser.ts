@@ -423,7 +423,7 @@ export class DocumentParser {
 
                     if (node.content.length > 0) {
                         node.startPosition = this.positionFromOffset(0, 0);
-                        node.endPosition = this.positionFromOffset(offset, offset);
+                        node.endPosition = this.positionFromOffset(offset, offset - 1);
                         this.nodes.push(node);
                     }
                 }
@@ -545,7 +545,7 @@ export class DocumentParser {
 
                             if (literalNode.content.length > 0) {
                                 literalNode.startPosition = this.positionFromOffset(thisOffset, thisOffset);
-                                literalNode.endPosition = this.positionFromOffset(nextAntlersStart, thisOffset);
+                                literalNode.endPosition = this.positionFromOffset(nextAntlersStart, nextAntlersStart - 1);
                                 this.nodes.push(literalNode);
                             }
 
@@ -574,7 +574,7 @@ export class DocumentParser {
 
                             if (literalNode.content.length > 0) {
                                 literalNode.startPosition = this.positionFromOffset(literalStartIndex, literalStartIndex);
-                                literalNode.endPosition = this.positionFromOffset(nextAntlersStart, thisOffset);
+                                literalNode.endPosition = this.positionFromOffset(nextAntlersStart, nextAntlersStart - 1);
                                 this.nodes.push(literalNode);
                             }
                         }
@@ -612,7 +612,7 @@ export class DocumentParser {
 
                             if (literalNode.content.length > 0) {
                                 literalNode.startPosition = this.positionFromOffset(literalStart, literalStart);
-                                literalNode.endPosition = this.positionFromOffset(this.inputLen - 1, literalStart);
+                                literalNode.endPosition = this.positionFromOffset(this.inputLen - 1, this.inputLen - 1);
                                 this.nodes.push(literalNode);
                             }
 
@@ -1717,7 +1717,7 @@ export class DocumentParser {
         node.content = buffer.join('');
         node.sourceContent = this.sourceContent.join('');
         node.startPosition = this.positionFromOffset(startOffset, startOffset);
-        node.endPosition = this.positionFromOffset(currentOffset, startOffset);
+        node.endPosition = this.positionFromOffset(currentOffset, currentOffset);
 
         node.withParser(this);
 

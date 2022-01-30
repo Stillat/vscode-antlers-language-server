@@ -1,5 +1,4 @@
 import assert = require('assert');
-import { inspect } from 'util';
 import { AntlersFormatter, AntlersFormattingOptions } from '../formatting/antlersFormatter';
 import { IHTMLFormatConfiguration } from '../formatting/htmlCompat';
 import { AntlersDocument } from '../runtime/document/antlersDocument';
@@ -16,11 +15,30 @@ const antlersOptions: AntlersFormattingOptions = {
     maxStatementsPerLine: 3
 };
 
+const antlersOptionsDefault: AntlersFormattingOptions = {
+    htmlOptions: {},
+    tabSize: 4,
+    insertSpaces: true,
+    formatFrontMatter: true,
+    maxStatementsPerLine: 3
+};
+
 function format(text: string): string {
     const doc = AntlersDocument.fromText(text),
         formatter = new AntlersFormatter(antlersOptions);
 
     return formatter.formatDocument(doc);
+}
+
+function formatDefaultHtmlSettings(text: string): string {
+    const doc = AntlersDocument.fromText(text),
+        formatter = new AntlersFormatter(antlersOptionsDefault);
+
+    return formatter.formatDocument(doc);
+}
+
+function assertFormattedMatches(input: string, output: string) {
+    assert.strictEqual(formatDefaultHtmlSettings(input), output);
 }
 
 suite("Document Formatting Test", () => {
@@ -50,14 +68,14 @@ suite("Document Formatting Test", () => {
         assert.strictEqual(format(input), expected);
     });
 
-	test('it wraps multiple language operators', () => {
-		const template = `
-		{{ test = one merge two 
-						where (name == 'name' && type == 'test')
-									 take (1) skip(		5) orderby(name 'desc')
-									 
-							groupby(test) as	 'groupName' groupby(title'name') as 'another')  }}`;
-const output = `{{ test = one merge two
+    test('it wraps multiple language operators', () => {
+        const template = `
+        {{ test = one merge two 
+                        where (name == 'name' && type == 'test')
+                                     take (1) skip(		5) orderby(name 'desc')
+                                     
+                            groupby(test) as	 'groupName' groupby(title'name') as 'another')  }}`;
+        const output = `{{ test = one merge two
             where (name == 'name' && type == 'test')
             take (1)
             skip (5)
@@ -65,8 +83,8 @@ const output = `{{ test = one merge two
             groupby (test) as 'groupName'
             groupby (title 'name') as 'another') }}`;
 
-		assert.strictEqual(format(template), output);
-	});
+        assert.strictEqual(format(template), output);
+    });
 
     test('it does not double up', () => {
         const initial = `{{# Page title #}}
@@ -846,6 +864,155 @@ const output = `{{ test = one merge two
         assert.strictEqual(format(template), expected);
     });
 
+    test('it emits self closing tags', () => {
+        assert.strictEqual(format('{{             test                        /}}'), '{{ test /}}');
+    });
+
+    test('it emits interpolation modifier params', () => {
+        const template = `{{ default_key|ensure_right:{second_key} }}`;
+        const output = `{{ default_key | ensure_right:{second_key} }}`;
+        assert.strictEqual(format(template), output);
+    });
+
+    test('it emits recursive nodes', () => {
+        const template = `
+<ul>{{ recursive_children scope="item" }}<li>{{ item:title }}.{{ item:foo }}.{{ foo }}{{ if item:children }}<ul>{{ *recursive item:children* }}</ul>{{ /if }}</li>{{ /recursive_children }}</ul>
+`;
+        const output = `<ul>
+    {{ recursive_children scope="item" }}
+        <li>{{ item:title }}.{{ item:foo }}.{{ foo }}
+            {{ if item:children }}
+                <ul>{{ *recursive item:children* }}</ul>
+            {{ /if }}
+        </li>
+    {{ /recursive_children }}
+</ul>`;
+        assert.strictEqual(formatDefaultHtmlSettings(template), output);
+    });
+
+    test('it preserves literal node order', () => {
+        const template = `{{ tag as="stuff" }}
+        before
+        {{ stuff }}
+        {{ foo }}
+        {{ /stuff }}
+        after
+        {{ /tag }}`;
+        const output = `{{ tag as="stuff" }}
+    before
+    {{ stuff }}
+        {{ foo }}
+    {{ /stuff }}
+    after
+{{ /tag }}`;
+        assert.strictEqual(formatDefaultHtmlSettings(template), output);
+    });
+
+    test('it produces reasonable indentation on documents without HTML elements', () => {
+        const template = `{{ food }} {{ drink }}
+{{ array scope="s" }}
+-{{ s:food }}- {{ s:drink }} {{ food }} {{ drink }}
+{{ /array }}`;
+        const output = `{{ food }} {{ drink }}
+{{ array scope="s" }}
+    -{{ s:food }}- {{ s:drink }}
+    {{ food }} {{ drink }}
+{{ /array }}`;
+        assert.strictEqual(formatDefaultHtmlSettings(template), output);
+    });
+
+    test('it produces reasonable indentation on documents without HTML elements 2', () => {
+        const template = `{{ drink }} {{ food }} {{ activity }}
+{{ tag }}{{ drink }} {{ food }} -{{ activity }}-{{ /tag }}`;
+        const output = `{{ drink }} {{ food }}
+{{ activity }}
+{{ tag }}
+    {{ drink }} {{ food }}
+    -{{ activity }}-
+{{ /tag }}`;
+        assert.strictEqual(formatDefaultHtmlSettings(template), output);
+    });
+
+    test('it produces reasonable indentation on documents with many nested Antlers regions', () => {
+        const template = `{{ scope:test }}
+drink: {{ drink }}
+food: {{ food }}
+activity: {{ activity }}
+
+{{ array }}
+    array:drink: {{ drink }}
+    array:food: {{ food }}
+    array:activity: -{{ activity }}-
+    array:test:drink: {{ test:drink }}
+    array:test:food: {{ test:food }}
+    array:test:activity: {{ test:activity }}
+{{ /array }}
+{{ /scope:test }}`;
+        const output = `{{ scope:test }}
+    drink: {{ drink }}
+    food: {{ food }}
+    activity: {{ activity }}
+
+    {{ array }}
+        array:drink: {{ drink }}
+        array:food: {{ food }}
+        array:activity: -{{ activity }}-
+        array:test:drink: {{ test:drink }}
+        array:test:food: {{ test:food }}
+        array:test:activity: {{ test:activity }}
+    {{ /array }}
+{{ /scope:test }}`;
+        assert.strictEqual(formatDefaultHtmlSettings(template), output);
+    });
+
+    test('default HTML settings does not randomly break on simple Antlers regions', () => {
+        const template = `var: {{ drink }}
+        page: {{ page:drink }}
+        global: {{ global:drink }}
+        menu: {{ menu:drink }}
+        nested: {{ nested:drink }}
+        augmented: {{ augmented:drink }}
+        nested augmented: {{ nested:augmented:drink }}`;
+        const output = `var: {{ drink }}
+page: {{ page:drink }}
+global: {{ global:drink }}
+menu: {{ menu:drink }}
+nested: {{ nested:drink }}
+augmented: {{ augmented:drink }}
+nested augmented: {{ nested:augmented:drink }}`;
+        assert.strictEqual(formatDefaultHtmlSettings(template), output);
+    });
+
+    test('it does not remove : on simple tags', () => {
+        const template = `{{ tag scope="foo" }}
+        {{ foo:one }} {{ foo:two }}
+        {{ /tag }}`;
+        const output = `{{ tag scope="foo" }}
+    {{ foo:one }} {{ foo:two }}
+{{ /tag }}`;
+        assert.strictEqual(formatDefaultHtmlSettings(template), output);
+    });
+
+    test('additional ifs with nested interpolations', () => {
+        const template = `
+{{ if 'test-wilderness' == 'test-{associative[default_key]}' }}yes{{ else }}nope{{ /if }}
+{{ if 'test-{'wilderness'}'	 == 		'test-{associative[default_key]}' }}yes{{ else }}nope{{ /if }}
+{{ if 'test-wilderness' == 'test-not-{associative[default_key]}' }}yes{{ else }}nope{{ /if }}
+{{ if {truthy} }}yes{{ else }}no{{ /if }}
+`;
+        const output = `{{ if 'test-wilderness' == 'test-{associative[default_key]}' }}yes{{ else }}nope{{ /if }}
+{{ if 'test-{'wilderness'}' == 'test-{associative[default_key]}' }}yes{{ else }}nope{{ /if }}
+{{ if 'test-wilderness' == 'test-not-{associative[default_key]}' }}yes{{ else }}nope{{ /if }}
+{{ if {truthy} }}yes{{ else }}no{{ /if }}`;
+        assert.strictEqual(format(template), output);
+    });
+
+    test('it does not remove whitespace inside string interpolations', () => {
+        const template = `{{ test variable='{ true ? 'Hello wilderness - {{default_key}}' : 'fail' }' }}`;
+        const output = `{{ test variable='{ true ? 'Hello wilderness - {{default_key}}' : 'fail'}' }}`;
+        assert.strictEqual(format(template), output);
+    });
+
     test('it emits variable fallback operator', () => {
         assert.strictEqual(format(`{{ test 
             ?= 			'test' }}				 
@@ -1362,5 +1529,250 @@ hello3: 'wilderness3'
         const expected = `{{ partial:components/button as="button" label="{trans:strings.form_send}" attribute='x-bind:disabled="sending" x-bind:class="&#123;&#39;opacity-25 cursor-default&#39;: sending&#125;"' }}`;
 
         assert.strictEqual(format(input), expected);
+    });
+
+    test('template test 1', () => {
+        const template = `{{ loopvar }}{{ one }}{{ test:some_parsing var="two" }}{{ two }}{{ /test:some_parsing }}{{ /loopvar }}`;
+        const output = `{{ loopvar }}
+    {{ one }}{{ test:some_parsing var="two" }}
+        {{ two }}
+    {{ /test:some_parsing }}
+{{ /loopvar }}`;
+        assert.strictEqual(formatDefaultHtmlSettings(template), output);
+    });
+
+    test('template test 2', () => {
+        const template = `{{ object }}{{ one }} {{ two }}{{ /object }}`;
+        const output = `{{ object }}
+    {{ one }} {{ two }}
+{{ /object }}`;
+        assert.strictEqual(formatDefaultHtmlSettings(template), output);
+    });
+
+    test('template test 3', () => {
+        const template = `before
+{{ complex }}
+    {{ string }}, {{ count or "0" }}, {{ index or "0" }}, {{ total_results }}
+    {{ if first }}first{{ elseif last }}last{{ else }}neither{{ /if }}
+
+
+{{ /complex }}
+after`;
+        const output = `before
+{{ complex }}
+    {{ string }}, {{ count or "0" }},
+    {{ index or "0" }}, {{ total_results }}
+    {{ if first }}first    {{ elseif last }}last    {{ else }}neither{{ /if }}
+{{ /complex }}
+after`;
+        assert.strictEqual(formatDefaultHtmlSettings(template), output);
+    });
+
+    test('template test 4', () => {
+        const template = `{{ if complex_string }}{{ complex_string }}{{ /if }}{{ complex }}{{ /complex }}`;
+        const output = `{{ if complex_string }}{{ complex_string }}{{ /if }}
+{{ complex }}
+
+{{ /complex }}`;
+        assert.strictEqual(formatDefaultHtmlSettings(template), output);
+    });
+
+    test('template test 5', () => {
+        const template = `{{             string          ?       "Pass" : "Fail" }}`;
+        const output = `{{ string ? "Pass" : "Fail" }}`;
+        assert.strictEqual(formatDefaultHtmlSettings(template), output);
+    });
+
+    test('template test 6', () => {
+        const template = `{{ associative[default_key] | upper | lower }}`;
+        const output = `{{ associative[default_key] | upper | lower }}`;
+        assert.strictEqual(formatDefaultHtmlSettings(template), output);
+    });
+
+    test('template test 7', () => {
+        const template = `{{ associative[default_key] upper='true' }}`;
+        const output = `{{ associative[default_key] upper='true' }}`;
+        assert.strictEqual(formatDefaultHtmlSettings(template), output);
+    });
+
+    test('template test 8', () => {
+        const template = `{{ content
+    
+    
+            markdown='true'				      lower='true' }}`;
+        const output = `{{ content markdown='true' lower='true' }}`;
+        assert.strictEqual(formatDefaultHtmlSettings(template), output);
+    });
+
+    test('template test 9', () => {
+        const template = `{{ hello:world }}[{{ baz }}]{{ /hello:world }}`;
+        const output = `{{ hello:world }}
+    [{{ baz }}]
+{{ /hello:world }}`;
+        assert.strictEqual(formatDefaultHtmlSettings(template), output);
+    });
+
+    test('template test 10', () => {
+        const template = `{{ nested:test:foo:nested }}`;
+        const output = `{{ nested:test:foo:nested }}`;
+        assert.strictEqual(formatDefaultHtmlSettings(template), output);
+    });
+
+    test('template test 11', () => {
+        const template = `{{ "Thundercats are Go!" }}`;
+        const output = `{{ "Thundercats are Go!" }}`;
+        assert.strictEqual(formatDefaultHtmlSettings(template), output);
+    });
+
+    test('template test 12', () => {
+        const template = `{{ items | count }}{{ items limit="2" }}<{{ value }}>{{ /items }}`;
+        const output = `{{ items | count }}{{ items limit="2" }}
+    <{{ value }}>
+{{ /items }}`;
+        assert.strictEqual(formatDefaultHtmlSettings(template), output);
+    });
+
+    test('template test 13', () => {
+        const template = `{{ items limit="2" }}<{{ value }}>{{ /items }}{{ items | count }}`;
+        const output = `{{ items limit="2" }}
+    <{{ value }}>
+{{ /items }}{{ items | count }}`;
+        assert.strictEqual(formatDefaultHtmlSettings(template), output);
+    });
+
+    test('template test 14', () => {
+        const template = `{{ if string == "Hello wilderness" && content }}yes{{ endif }}`;
+        const output = `{{ if string == "Hello wilderness" && content }}yes{{ endif }}`;
+        assert.strictEqual(formatDefaultHtmlSettings(template), output);
+    });
+
+    test('template test 15', () => {
+        const template = `{{ drink }} {{ food }} {{ activity }}
+{{ array }}{{ drink }} {{ food }} -{{ activity }}-{{ /array }}`;
+        const output = `{{ drink }} {{ food }}
+{{ activity }}
+{{ array }}
+    {{ drink }} {{ food }}
+    -{{ activity }}-
+{{ /array }}`;
+        assert.strictEqual(formatDefaultHtmlSettings(template), output);
+    });
+
+    test('template test 16', () => {
+        const template = `{{ hello }}{{ value }}, {{ label }}{{ /hello }}`;
+        const output = `{{ hello }}
+    {{ value }}, {{ label }}
+{{ /hello }}`;
+        assert.strictEqual(formatDefaultHtmlSettings(template), output);
+    });
+
+    test('template test 17', () => {
+        const template = `{{ test where="type:yup" }}{{ text }}{{ /test }}`;
+        const output = `{{ test where="type:yup" }}
+    {{ text }}
+{{ /test }}`;
+        assert.strictEqual(formatDefaultHtmlSettings(template), output);
+    });
+
+    test('template test 18', () => {
+        const template = `before
+		{{ simple }}
+			{{ foo }}
+		{{ /simple }}
+		after`;
+        const output = `before
+{{ simple }}
+    {{ foo }}
+{{ /simple }}
+after`;
+        assert.strictEqual(formatDefaultHtmlSettings(template), output);
+    });
+
+    test('template test 19', () => {
+        const template = `{{ string
+			? "Pass"
+				:			 "Fail" }}`;
+        const output = `{{ string ? "Pass" : "Fail" }}`;
+        assert.strictEqual(formatDefaultHtmlSettings(template), output);
+    });
+
+    test('template test 20', () => {
+        const template = `{{ if (date
+			 | modify_date:+3 years | format:Y) ==
+			  "2015" 
+			}}yes{{ endif }}`;
+        const output = `{{ if (date | modify_date:+3 years | format:Y) == "2015" }}yes{{ endif }}`;
+        assert.strictEqual(formatDefaultHtmlSettings(template), output);
+    });
+
+    test('template test 21', () => {
+        assertFormattedMatches('{{ missing or "Pass" }}', '{{ missing or "Pass" }}');
+        assertFormattedMatches('{{ missing || "Pass" }}', '{{ missing || "Pass" }}');
+        assertFormattedMatches(`{{ string ?= "Pass" }}`, `{{ string ?= "Pass" }}`);
+        assertFormattedMatches('{{ associative:one ?= "Pass" }}', '{{ associative:one ?= "Pass" }}');
+        assertFormattedMatches('{{ associative[default_key] ?= "Pass" }}', '{{ associative[default_key] ?= "Pass" }}');
+        assertFormattedMatches('{{ missing ?= "Pass" }}', '{{ missing ?= "Pass" }}');
+        assertFormattedMatches('{{ missing:thing ?= "Pass" }}', '{{ missing:thing ?= "Pass" }}');
+        assertFormattedMatches('{{ missing[thing] ?= "Pass" }}', '{{ missing[thing] ?= "Pass" }}');
+        assertFormattedMatches('{{ !string ?= "Pass" }}', '{{ !string ?= "Pass" }}');
+        assertFormattedMatches('{{ !associative:one ?= "Pass" }}', '{{ !associative:one ?= "Pass" }}');
+        assertFormattedMatches('{{ !associative[default_key] ?= "Pass" }}', '{{ !associative[default_key] ?= "Pass" }}');
+        assertFormattedMatches('{{ !missing ?= "Pass" }}', '{{ !missing ?= "Pass" }}');
+        assertFormattedMatches('{{ !missing:thing ?= "Pass" }}', '{{ !missing:thing ?= "Pass" }}');
+        assertFormattedMatches('{{ !missing[thing] ?= "Pass" }}', '{{ !missing[thing] ?= "Pass" }}');
+        assertFormattedMatches('{{ ! string ?= "Pass" }}', '{{ !string ?= "Pass" }}');
+        assertFormattedMatches('{{ ! string ?= "Pass" }}', '{{ !string ?= "Pass" }}');
+        assertFormattedMatches('{{ !  associative:one ?= "Pass" }}', '{{ !associative:one ?= "Pass" }}');
+        assertFormattedMatches('{{ !    associative[default_key] ?= "Pass" }}', '{{ !associative[default_key] ?= "Pass" }}');
+        assertFormattedMatches('{{ !     missing ?= "Pass" }}', '{{ !missing ?= "Pass" }}');
+        assertFormattedMatches('{{ !       missing:thing ?= "Pass" }}', '{{ !missing:thing ?= "Pass" }}');
+        assertFormattedMatches('{{ !         missing[thing] ?= "Pass" }}', '{{ !missing[thing] ?= "Pass" }}');
+    });
+
+    test('template test 22', () => {
+        const template = `{{ tag:array }}{{ noparse }}{{ string }}{{ /noparse }}{{ /tag:array }}
+{{ tag:loop }}
+    {{ index }} {{ noparse }}{{ string }}{{ /noparse }} {{ string }}
+{{ /tag:loop }}`;
+        const output = `{{ tag:array }}
+    {{ noparse }}
+{{ /tag:array }}
+{{ tag:loop }}
+    {{ index }} {{ noparse }}
+    {{ string }}
+{{ /tag:loop }}`;
+        assert.strictEqual(formatDefaultHtmlSettings(template), output);
+    });
+
+    test('it emits escaped content chars', () => {
+        const template = `start{{articles}}{{test}}@{{ foo }} {{ qux }}
+bar
+{{ baz }}{{ /articles }}end`;
+        const output = `start{{ articles }}
+    {{ test }}@{{ foo }} {{ qux }}
+    bar
+    {{ baz }}
+{{ /articles }}end`;
+        assert.strictEqual(formatDefaultHtmlSettings(template), output);
+    });
+
+    test('it emits escpaed content chars 2', () => {
+        const template = `@{{ foo
+    bar:baz="qux"
+  }} {{ qux }}
+bar
+{{ baz }}`;
+        const output = `@{{ foo
+    bar:baz="qux"
+  }} {{ qux }}
+bar
+{{ baz }}`;
+        assert.strictEqual(formatDefaultHtmlSettings(template), output);
+    });
+
+    test('it emits escaped content chars 3', () => {
+        const template = `@{{ foo bar="{baz}" }}`;
+        const output = `@{{ foo bar="{baz}" }}`;
+        assert.strictEqual(formatDefaultHtmlSettings(template), output);
     });
 });

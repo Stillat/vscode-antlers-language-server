@@ -2,7 +2,7 @@
 const beautify = require("js-beautify").html;
 
 import { AntlersDocument } from '../runtime/document/antlersDocument';
-import { AbstractNode, AdditionOperator, AntlersNode, ArgSeparator, ConditionNode, DivisionOperator, InlineBranchSeparator, InlineTernarySeparator, LeftAssignmentOperator, LiteralNode, LogicGroupBegin, LogicGroupEnd, ModifierNameNode, ModifierSeparator, ModifierValueNode, ModifierValueSeparator, MultiplicationOperator, NumberNode, ParameterNode, ScopeAssignmentOperator, StatementSeparatorNode, StringValueNode, TupleListStart, VariableNode } from '../runtime/nodes/abstractNode';
+import { AbstractNode, AdditionOperator, AntlersNode, ArgSeparator, ConditionNode, DivisionOperator, InlineBranchSeparator, InlineTernarySeparator, LeftAssignmentOperator, LiteralNode, LogicalNegationOperator, LogicGroupBegin, LogicGroupEnd, ModifierNameNode, ModifierSeparator, ModifierValueNode, ModifierValueSeparator, MultiplicationOperator, NumberNode, ParameterNode, ScopeAssignmentOperator, StatementSeparatorNode, StringValueNode, TupleListStart, VariableNode } from '../runtime/nodes/abstractNode';
 import { LanguageParser } from '../runtime/parser/languageParser';
 import { NodeHelpers } from '../runtime/utilities/nodeHelpers';
 import { replaceAllInString } from '../utils/strings';
@@ -79,7 +79,12 @@ class NodeBuffer {
             this.closeString = '}';
         } else {
             this.buffer = '{{ ';
-            this.closeString = ' }}';
+
+            if (node.isSelfClosing) {
+                this.closeString = ' /}}';
+            } else {
+                this.closeString = ' }}';
+            }
         }
 
         if (prepend != null && prepend.trim().length > 0) {
@@ -131,11 +136,11 @@ class NodeBuffer {
         return this;
     }
 
-    appendOS(text:string) {
+    appendOS(text: string) {
         if (this.buffer.endsWith(' ') == false
-                && this.buffer.endsWith('(') == false
-                && this.buffer.endsWith('[') == false
-                && this.buffer.endsWith(':') == false) {
+            && this.buffer.endsWith('(') == false
+            && this.buffer.endsWith('[') == false
+            && this.buffer.endsWith(':') == false) {
             this.buffer += ' ';
         }
 
@@ -508,6 +513,12 @@ export class AntlersFormatter {
                             nodeStatements = 0;
                         }
                     }
+                } else if (node instanceof LogicalNegationOperator) {
+                    if (node.content == 'not') {
+                        nodeBuffer.appendS('not');
+                    } else {
+                        nodeBuffer.append('!');
+                    }
                 } else {
                     nodeBuffer.appendS(node.rawContent());
                 }
@@ -553,7 +564,17 @@ export class AntlersFormatter {
 
         nodes.forEach((node) => {
             if (node instanceof LiteralNode) {
-                rootText += node.rawContent();
+                if (node.startPosition != null && node.endPosition != null) {
+                    const originalDocText = doc.getText(
+                        node.startPosition.index,
+                        node.endPosition.index + 1
+                    );
+
+                    rootText += originalDocText;
+                } else {
+                    rootText += node.rawContent();
+                }
+
                 lastLiteralNode = node;
             } else if (node instanceof AntlersNode) {
                 if (node.isComment) {
