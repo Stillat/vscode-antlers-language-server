@@ -1,6 +1,6 @@
-import { ISymbol } from '../../../types';
+import { AntlersNode } from '../../../../runtime/nodes/abstractNode';
 
 export interface ICacheContext {
-	key: string,
-	reference: ISymbol
+    key: string,
+    reference: AntlersNode
 }

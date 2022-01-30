@@ -1,0 +1,26 @@
+import { makeTagDoc } from '../../../../documentation/utils';
+import { ISuggestionRequest } from '../../../../suggestions/suggestionRequest';
+import { IAntlersTag } from '../../../tagManager';
+import { PartialParameters } from './partialParameters';
+import { resolvePartialParameterCompletions } from './resolvePartialParameterCompletions';
+
+const PartialExists: IAntlersTag = {
+    tagName: 'partial:exists',
+    hideFromCompletions: false,
+    allowsArbitraryParameters: false,
+    allowsContentClose: false,
+    requiresClose: false,
+    injectParentScope: false,
+    parameters: PartialParameters,
+    introducedIn: '3.2.7',
+    resovleParameterCompletionItems: resolvePartialParameterCompletions,
+    resolveDocumentation: (params?: ISuggestionRequest) => {
+        return makeTagDoc(
+            'partial:exists Tag',
+            'The `partial:exists` can be used within conditional statements to test if a partial exists.',
+            'https://statamic.dev/tags/partial-exists'
+        );
+    }
+};
+
+export default PartialExists;

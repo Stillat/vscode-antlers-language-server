@@ -4,7 +4,7 @@
     "description": "Provides Antlers syntax highlighting, and robust language features.",
     "author": "John Koster",
     "license": "MIT",
-    "version": "1.1.4",
+    "version": "2.0.0",
     "repository": {
         "type": "git",
         "url": "https://github.com/Stillat/vscode-antlers-language-server"
@@ -53,7 +53,20 @@
             {
                 "language": "html",
                 "scopeName": "text.html.statamic",
-                "path": "./client/syntaxes/antlers.json"
+                "path": "./client/syntaxes/antlers.json",
+                "embeddedLanguages": {
+                    "meta.embedded.block.frontmatter": "yaml",
+                    "source.php": "php"
+                }
+            }
+        ],
+        "semanticTokenScopes": [
+            {
+                "scopes": {
+                    "antlersAttribute": [
+                        "entity.other.attribute-name"
+                    ]
+                }
             }
         ],
         "configuration": {
@@ -66,11 +79,11 @@
                     "default": false,
                     "description": "When enabled Antlers style block comments will be used in HTML contexts."
                 },
-                "antlersLanguageServer.maxNumberOfProblems": {
+                "antlersFormatWithPrettierFirstIfAvailable": {
                     "scope": "resource",
-                    "type": "number",
-                    "default": 100,
-                    "description": "Controls the maximum number of problems produced by the server."
+                    "type": "boolean",
+                    "default": false,
+                    "description": "When enabled Antlers will be formatted with Prettier first, if available."
                 },
                 "antlersLanguageServer.trace.server": {
                     "scope": "window",
@@ -82,14 +95,43 @@
                     ],
                     "default": "off",
                     "description": "Traces the communication between VS Code and the language server."
+                },
+                "antlersLanguageServer.languageVersion": {
+                    "scope": "window",
+                    "type": "string",
+                    "enum": [
+                        "regex",
+                        "runtime"
+                    ],
+                    "default": "regex",
+                    "description": "The Antlers language version to use."
+                },
+                "antlersLanguageServer.formatFrontMatter": {
+                    "scope": "window",
+                    "type": "boolean",
+                    "default": "false",
+                    "title": "Formatter: Format Front Matter",
+                    "description": "Controls whether YAML frontmatter is formatted."
+                },
+                "antlersLanguageServer.formatterIgnoreExtensions": {
+                    "scope": "window",
+                    "type": "array",
+                    "default": [],
+                    "title": "Formatter: Ignore File Extensions",
+                    "description": "A list of file extensions the Antlers formatter should ignore."
                 }
             }
         },
         "commands": [
             {
+                "command": "extension.antlersLanguageServer.reloadProjectDetails",
+                "title": "Reload Statamic Project Details",
+                "category": "Antlers"
+            },
+            {
                 "command": "extension.antlersLanguageServer.debugEditorContents",
                 "title": "Debug Antlers",
-                "category": "Antlers Debug",
+                "category": "Antlers",
                 "enablement": "!inDebugMode",
                 "icon": "$(debug-alt)"
             }
@@ -110,9 +152,10 @@
         ]
     },
     "scripts": {
-        "publish:grammar": "node client/syntaxes/compile.js && npx js-yaml client/syntaxes/antlers.yaml > client/syntaxes/antlers.json",
         "vscode:prepublish": "npm run compile && php buildAnalyzer.php",
         "compile": "tsc -b",
+        "bundle:format_cli": "npm run compile && npm run esbuild:format_cli",
+        "esbuild:format_cli": "esbuild ./server/src/formatting/cli/index.ts --bundle --outfile=./formatcli/package/index.js --format=cjs --platform=node",
         "watch": "tsc -b -w",
         "postinstall": "cd client && npm install && cd ../server && npm install && cd ../analyzer && composer install && cd ..",
         "test:server": "npm run compile && mocha ./server/out/test/*.js -- -u tdd"
@@ -122,12 +165,16 @@
         "@types/node": "^12.20.21",
         "@typescript-eslint/eslint-plugin": "^4.29.3",
         "@typescript-eslint/parser": "^4.29.3",
+        "esbuild": "^0.14.14",
         "eslint": "^7.32.0",
         "mocha": "^8.4.0",
         "typescript": "^4.4.2"
     },
     "dependencies": {
+        "js-yaml": "^4.1.0",
+        "locutus": "^2.0.15",
         "semver": "^7.3.5",
+        "ts-md5": "^1.2.9",
         "uuid": "^8.3.2"
     }
 }

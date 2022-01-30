@@ -1,37 +1,50 @@
-import { YieldContext } from '../antlers/tags/core/sections/yield';
+import { YieldContext } from "../antlers/tags/core/sections/yield";
 
-export class SectionManager {
-	static knownSections: Map<string, Map<string, YieldContext>> = new Map();
+class SectionManager {
+    private knownSections: Map<string, Map<string, YieldContext>> = new Map();
 
-	static registerDocumentSections(fileContext: string, contexts: YieldContext[]) {
-		if (!this.knownSections.has(fileContext)) {
-			this.knownSections.set(fileContext, new Map());
-		}
+    public static instance: SectionManager | null = null;
 
-		const fileSections = this.knownSections.get(fileContext) as Map<string, YieldContext>;
-		fileSections.clear();
+    registerDocumentSections(
+        fileContext: string,
+        contexts: YieldContext[]
+    ) {
+        if (!this.knownSections.has(fileContext)) {
+            this.knownSections.set(fileContext, new Map());
+        }
 
-		for (let i = 0; i < contexts.length; i++) {
-			const contextRef = contexts[i];
+        const fileSections = this.knownSections.get(fileContext) as Map<
+            string,
+            YieldContext
+        >;
+        fileSections.clear();
 
-			if (contextRef.symbol.methodName != null) {
-				fileSections.set(contextRef.symbol.methodName, contextRef);
-			}
-		}
-	}
+        for (let i = 0; i < contexts.length; i++) {
+            const contextRef = contexts[i];
 
-	static getKnownSectionNames(): string[] {
-		const sectionNames: string[] = [];
+            if (contextRef.node.hasMethodPart()) {
+                fileSections.set(contextRef.node.getMethodNameValue(), contextRef);
+            }
+        }
+    }
 
-		this.knownSections.forEach((mapping: Map<string, YieldContext>) => {
-			mapping.forEach((val: YieldContext, name: string) => {
-				if (sectionNames.includes(name) == false) {
-					sectionNames.push(name);
-				}
-			});
-		});
+    getKnownSectionNames(): string[] {
+        const sectionNames: string[] = [];
 
-		return sectionNames;
-	}
+        this.knownSections.forEach((mapping: Map<string, YieldContext>) => {
+            mapping.forEach((val: YieldContext, name: string) => {
+                if (sectionNames.includes(name) == false) {
+                    sectionNames.push(name);
+                }
+            });
+        });
 
+        return sectionNames;
+    }
 }
+
+if (typeof SectionManager.instance == 'undefined' || SectionManager.instance == null) {
+    SectionManager.instance = new SectionManager();
+}
+
+export default SectionManager;

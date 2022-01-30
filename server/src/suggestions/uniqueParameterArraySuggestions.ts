@@ -1,18 +1,24 @@
-import { CompletionItem, CompletionItemKind } from 'vscode-languageserver-types';
-import { exclusiveResult, ICompletionResult, IParameterAttribute } from '../antlers/tagManager';
-import { getParameterArrayValue } from '../antlers/tags/parameterFetcher';
+import {
+    CompletionItem,
+    CompletionItemKind,
+} from "vscode-languageserver-types";
+import {
+    exclusiveResult,
+    ICompletionResult,
+} from "../antlers/tagManager";
+import { ParameterNode } from '../runtime/nodes/abstractNode';
 
-export function getUniqueParameterArrayValuesSuggestions(paramAttribute: IParameterAttribute, allValues: string[]): ICompletionResult {
-	const items: CompletionItem[] = [],
-		paramValues: string[] = getParameterArrayValue(paramAttribute),
-		valuesToUse = allValues.filter(e => !paramValues.includes(e));
+export function getUniqueParameterArrayValuesSuggestions(paramAttribute: ParameterNode, allValues: string[]): ICompletionResult {
+    const items: CompletionItem[] = [],
+        paramValues: string[] = paramAttribute.getArrayValue(),
+        valuesToUse = allValues.filter((e) => !paramValues.includes(e));
 
-	for (let i = 0; i < valuesToUse.length; i++) {
-		items.push({
-			label: valuesToUse[i],
-			kind: CompletionItemKind.Variable
-		});
-	}
+    for (let i = 0; i < valuesToUse.length; i++) {
+        items.push({
+            label: valuesToUse[i],
+            kind: CompletionItemKind.Variable,
+        });
+    }
 
-	return exclusiveResult(items);
+    return exclusiveResult(items);
 }

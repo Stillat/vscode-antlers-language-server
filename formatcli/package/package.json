@@ -1,0 +1,20 @@
+{
+  "name": "antlers-formatter",
+  "version": "1.0.0",
+  "description": "Formats Antlers template files.",
+  "main": "index.js",
+  "bin": {
+    "antlersformat": "cli.js"
+  },
+  "scripts": {},
+  "keywords": [
+    "Antlers",
+    "Statamic",
+    "format"
+  ],
+  "author": "John Koster",
+  "license": "MIT",
+  "engines": {
+    "node": ">=6.9.0"
+  }
+}

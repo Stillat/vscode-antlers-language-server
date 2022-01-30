@@ -1,54 +1,55 @@
-import { Position } from 'vscode-languageserver-textdocument';
-import { ISymbol } from './types';
+import { Position } from "vscode-languageserver-textdocument";
+import { AntlersNode } from '../runtime/nodes/abstractNode';
 
 export class UnclosedTagManager {
-	static unclosedSymbols: Map<string, ISymbol[]> = new Map();
+    static unclosedNodes: Map<string, AntlersNode[]> = new Map();
 
-	static clear(documentUri: string) {
-		this.unclosedSymbols.delete(documentUri);
-	}
+    static clear(documentUri: string) {
+        this.unclosedNodes.delete(documentUri);
+    }
 
-	static registerSymbols(documentUri: string, symbols: ISymbol[]) {
-		this.unclosedSymbols.set(documentUri, symbols);
-	}
+    static registerNodes(documentUri: string, nodes: AntlersNode[]) {
+        this.unclosedNodes.set(documentUri, nodes);
+    }
 
-	static getUnclosedTags(documentUri: string, position: Position): ISymbol[] {
-		const symbolsToReturn: ISymbol[] = [];
+    static getUnclosedTags(documentUri: string, position: Position): AntlersNode[] {
+        const nodesToReturn: AntlersNode[] = [];
 
-		if (this.unclosedSymbols.has(documentUri) == false) {
-			return symbolsToReturn;
-		}
+        if (this.unclosedNodes.has(documentUri) == false) {
+            return nodesToReturn;
+        }
 
-		const docSymbols = this.unclosedSymbols.get(documentUri) as ISymbol[];
+        const docNodes = this.unclosedNodes.get(documentUri) as AntlersNode[];
 
-		if (docSymbols.length == 0) {
-			return symbolsToReturn;
-		}
+        if (docNodes.length == 0) {
+            return nodesToReturn;
+        }
 
-		const checkLine = position.line - 1;
+        const checkLine = position.line + 1;
 
-		for (let i = 0; i < docSymbols.length; i++) {
-			const thisSymbol = docSymbols[i];
+        for (let i = 0; i < docNodes.length; i++) {
+            const thisNode = docNodes[i];
 
-			if (thisSymbol.endLine == checkLine && position.character > thisSymbol.endOffset) {
-				symbolsToReturn.push(thisSymbol);
-			} else if (checkLine > thisSymbol.endLine) {
-				symbolsToReturn.push(thisSymbol);
-			}
+            if (
+                thisNode.endPosition?.line == checkLine &&
+                position.character > thisNode.endPosition.char
+            ) {
+                nodesToReturn.push(thisNode);
+            } else if (checkLine > (thisNode.endPosition?.line ?? 0)) {
+                nodesToReturn.push(thisNode);
+            }
+        }
 
-		}
+        return nodesToReturn;
+    }
 
-		return symbolsToReturn;
-	}
+    static hasUnclosedTags(documentUri: string, position: Position): boolean {
+        if (this.unclosedNodes.has(documentUri) == false) {
+            return false;
+        }
 
-	static hasUnclosedTags(documentUri: string, position: Position): boolean {
-		if (this.unclosedSymbols.has(documentUri) == false) {
-			return false;
-		}
+        const unclosedNodes = this.getUnclosedTags(documentUri, position);
 
-		const unclosedSymbols = this.getUnclosedTags(documentUri, position);
-
-		return unclosedSymbols.length > 0;
-	}
-
+        return unclosedNodes.length > 0;
+    }
 }

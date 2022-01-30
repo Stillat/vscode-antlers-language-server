@@ -1,4 +1,4 @@
-import { IFieldtypeInjection } from '../fieldtypeManager';
+import { IFieldtypeInjection } from '../../../projects/fieldsets/fieldtypeInjection';
 import ArrayFieldType from './arrayFieldType';
 import BardFieldType from './bardFieldType';
 import FormMultipleFieldtype from './formMultiple';
@@ -17,22 +17,22 @@ import UsersMultipleFieldtype from './usersMultiple';
 import YamlFieldtype from './yamlFieldType';
 
 const CoreFieldtypes: IFieldtypeInjection[] = [
-	ArrayFieldType,
-	BardFieldType,
-	FormMultipleFieldtype,
-	ListFieldtype,
-	ReplicatorFieldtype,
-	SelectMultipleFieldtype,
-	SitesMultiple,
-	StructuresMultipleFieldtype,
-	YamlFieldtype,
-	TableFieldtype,
-	TaxonomiesMultipleFieldtype,
-	TagsFieldtype,
-	TermsMultipleFieldtype,
-	UsersMultipleFieldtype,
-	UserGroupsMultipleFieldtype,
-	UserRolesMultipleFieldtype
+    ArrayFieldType,
+    BardFieldType,
+    FormMultipleFieldtype,
+    ListFieldtype,
+    ReplicatorFieldtype,
+    SelectMultipleFieldtype,
+    SitesMultiple,
+    StructuresMultipleFieldtype,
+    YamlFieldtype,
+    TableFieldtype,
+    TaxonomiesMultipleFieldtype,
+    TagsFieldtype,
+    TermsMultipleFieldtype,
+    UsersMultipleFieldtype,
+    UserGroupsMultipleFieldtype,
+    UserRolesMultipleFieldtype
 ];
 
 export default CoreFieldtypes;

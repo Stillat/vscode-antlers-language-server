@@ -1,28 +1,37 @@
-import { getModifier } from '../../antlers/modifierFetcher';
-import { IReportableError, ISymbol } from '../../antlers/types';
-import { IDiagnosticsHandler } from '../diagnosticsManager';
-import { symbolWarning } from '../utils';
+import { AntlersError, ErrrorLevel } from '../../runtime/errors/antlersError';
+import { AntlersErrorCodes } from '../../runtime/errors/antlersErrorCodes';
+import { AntlersNode } from '../../runtime/nodes/abstractNode';
+import { IDiagnosticsHandler } from '../diagnosticsHandler';
 
 const DataDumpTags: string[] = [
-	'dump', 'dd', 'ddd'
+    'dump', 'dd', 'ddd'
 ];
 
 const DataDumpHandler: IDiagnosticsHandler = {
-	checkSymbol(symbol: ISymbol) {
-		const errors: IReportableError[] = [];
+    checkNode(node: AntlersNode) {
+        const tagName = node.getTagName(),
+            errors: AntlersError[] = [];
 
-		if (DataDumpTags.includes(symbol.name)) {
-			errors.push(symbolWarning(symbol.name + ' exposes data and should be removed after debugging.', symbol));
-		}
+        if (DataDumpTags.includes(tagName)) {
+            errors.push(AntlersError.makeSyntaxError(
+                AntlersErrorCodes.LINT_DEBUG_DATA_EXPOSED,
+                node,
+                tagName + ' exposes data and should be removed after debugging.',
+                ErrrorLevel.Warning
+            ));
+        }
 
-		const dumpModifier = getModifier(symbol, 'dump');
+        if (node.modifiers.hasModifier('dump')) {
+            errors.push(AntlersError.makeSyntaxError(
+                AntlersErrorCodes.LINT_DEBUG_DATA_EXPOSED,
+                node,
+                'dump modifier exposes data and should be removed after debugging.',
+                ErrrorLevel.Warning
+            ));
+        }
 
-		if (dumpModifier != null) {
-			errors.push(symbolWarning('dump modifier exposes data and should be removed after debugging.', symbol));
-		}
-
-		return errors;
-	}
+        return errors;
+    }
 };
 
 export default DataDumpHandler;

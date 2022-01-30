@@ -1,10 +1,10 @@
-import { dynamicParameter, IAntlersParameter } from '../tagManager';
-import { ISymbol } from '../types';
+import { AntlersNode } from '../../runtime/nodes/abstractNode';
+import { dynamicParameter, IAntlersParameter } from "../tagManager";
 
-export function returnDynamicParameter(symbol: ISymbol, paramName: string): IAntlersParameter | null {
-	if (paramName.trim().length > 0) {
-		return dynamicParameter(paramName);
-	}
+export function returnDynamicParameter(node: AntlersNode, paramName: string): IAntlersParameter | null {
+    if (paramName.trim().length > 0) {
+        return dynamicParameter(paramName);
+    }
 
-	return null;
+    return null;
 }

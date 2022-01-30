@@ -1,24 +1,23 @@
-import { Scope } from '../../../scope/engine';
-import { checkSymbolForScopeAndAlias } from '../../../scope/factories/listFactory';
-import { ISymbol } from '../../../types';
-import { makeCollectionVariables } from '../../../variables/collectionVariables';
-import { getCollectionBlueprintFields } from './utils';
+import { AntlersNode } from '../../../../runtime/nodes/abstractNode';
+import { checkSymbolForScopeAndAlias } from "../../../scope/factories/listFactory";
+import { Scope } from '../../../scope/scope';
+import { makeCollectionVariables } from "../../../variables/collectionVariables";
+import { getCollectionBlueprintFields } from "./utils";
 
-export function augmentCollectionScope(symbol: ISymbol, scope: Scope): Scope {
+export function augmentCollectionScope(node: AntlersNode, scope: Scope): Scope {
+    if (node.isClosingTag) {
+        return scope;
+    }
 
-	if (symbol.isClosingTag) {
-		return scope;
-	}
+    if (node.hasMethodPart() && node.getMethodNameValue() != "count") {
+        scope.addVariables(makeCollectionVariables(node));
+    }
 
-	if (symbol.methodName != null && symbol.methodName != 'count') {
-		scope.addVariables(makeCollectionVariables(symbol));
-	}
+    if (node.reference != null) {
+        const fields = getCollectionBlueprintFields(node, scope);
 
-	if (symbol.reference != null) {
-		const fields = getCollectionBlueprintFields(symbol, scope);
+        checkSymbolForScopeAndAlias(node, scope, fields);
+    }
 
-		checkSymbolForScopeAndAlias(symbol, scope, fields);
-	}
-
-	return scope;
+    return scope;
 }

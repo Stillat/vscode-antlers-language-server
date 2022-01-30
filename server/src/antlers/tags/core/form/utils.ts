@@ -1,31 +1,40 @@
-import { getParameter, getParameterFromLists, ISymbol } from '../../../types';
-import { HandleParams } from './parameterCompletions';
+import { AntlersNode } from '../../../../runtime/nodes/abstractNode';
+import { HandleParams } from "./parameterCompletions";
 
 const IgnoreFormTagParts: string[] = [
-	'set', 'create', 'errors', 'success',
-	'submissions', 'submission'
+    "set",
+    "create",
+    "errors",
+    "success",
+    "submissions",
+    "submission",
 ];
 
-export function getFormHandle(symbol: ISymbol): string {
-	if (symbol.reference != null && 'tagPart' in symbol.reference) {
-		const symbolRef = symbol.reference as ISymbol;
+export function getFormHandle(node: AntlersNode): string {
+    if (node.reference != null && "tagPart" in node.reference) {
+        const nodeRef = node.reference as AntlersNode;
 
-		if (symbolRef.tagPart == 'form:set') {
-			return getFormHandle(symbolRef);
-		}
-	}
+        if (nodeRef.nameMatches("form:set")) {
+            return getFormHandle(nodeRef);
+        }
+    }
 
-	const handleParam = getParameterFromLists(HandleParams, symbol);
+    const handleParam = node.findAnyParameter(HandleParams);
 
-	if (symbol.methodName != null && IgnoreFormTagParts.includes(symbol.methodName) == false) {
-		return symbol.methodName;
-	}
+    const nodeMethodName = node.getMethodNameValue();
 
-	if (typeof handleParam !== 'undefined' && handleParam !== null) {
-		if (handleParam.isDynamicBinding == false && handleParam.containsInterpolation == false) {
-			return handleParam.value;
-		}
-	}
+    if (
+        nodeMethodName != null &&
+        IgnoreFormTagParts.includes(nodeMethodName) == false
+    ) {
+        return nodeMethodName as string;
+    }
 
-	return '';
+    if (typeof handleParam !== "undefined" && handleParam !== null) {
+        if (handleParam.containsSimpleValue()) {
+            return handleParam.value;
+        }
+    }
+
+    return "";
 }

@@ -1,17 +1,17 @@
-import { Scope } from '../../scope/engine';
-import { ISymbol } from '../../types';
+import { IFieldtypeInjection } from '../../../projects/fieldsets/fieldtypeInjection';
+import { AntlersNode } from '../../../runtime/nodes/abstractNode';
+import { Scope } from '../../scope/scope';
 import { makeArrayVariables } from '../../variables/arrayVariables';
 import { makeLoopVariables } from '../../variables/loopVariables';
 import { makeTermVariables } from '../../variables/termVariables';
-import { IFieldtypeInjection } from '../fieldtypeManager';
 
 const TaxonomiesMultipleFieldtype: IFieldtypeInjection = {
-	name: 'taxonomies_multiple',
-	augmentScope: (symbol: ISymbol, scope: Scope) => {
-		scope.addVariables(makeArrayVariables(symbol));
-		scope.addVariables(makeLoopVariables(symbol));
-		scope.addVariables(makeTermVariables(symbol));
-	}
+    name: 'taxonomies_multiple',
+    augmentScope: (symbol: AntlersNode, scope: Scope) => {
+        scope.addVariables(makeArrayVariables(symbol));
+        scope.addVariables(makeLoopVariables(symbol));
+        scope.addVariables(makeTermVariables(symbol));
+    }
 };
 
 export default TaxonomiesMultipleFieldtype;

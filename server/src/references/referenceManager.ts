@@ -1,79 +1,89 @@
-import { ISymbol } from '../antlers/types';
+import { AntlersNode } from "../runtime/nodes/abstractNode";
 
-export class ReferenceManager {
-	static partialReferences: Map<string, ISymbol[]> = new Map();
-	static cacheReferences: Map<string, ISymbol[]> = new Map();
-	static removesPageScope: Map<string, ISymbol> = new Map();
+class ReferenceManager {
+    private partialReferences: Map<string, AntlersNode[]> = new Map();
+    private cacheReferences: Map<string, AntlersNode[]> = new Map();
+    private removesPageScope: Map<string, AntlersNode> = new Map();
 
-	static clearAllReferences(documentUri: string) {
-		this.clearPartialReferences(documentUri);
-		this.clearCacheReferences(documentUri);
-	}
+    public static instance: ReferenceManager | null = null;
 
-	static registerPartialReferences(documentUri: string, symbols: ISymbol[]) {
-		if (this.partialReferences.has(documentUri) == false) {
-			this.partialReferences.set(documentUri, []);
-		}
+    clearAllReferences(documentUri: string) {
+        this.clearPartialReferences(documentUri);
+        this.clearCacheReferences(documentUri);
+    }
 
-		this.partialReferences.set(documentUri, symbols);
-	}
+    registerPartialReferences(documentUri: string, nodes: AntlersNode[]) {
+        if (this.partialReferences.has(documentUri) == false) {
+            this.partialReferences.set(documentUri, []);
+        }
 
-	static registerCacheReferences(documentUri: string, symbols: ISymbol[]) {
-		if (this.cacheReferences.has(documentUri) == false) {
-			this.cacheReferences.set(documentUri, []);
-		}
+        this.partialReferences.set(documentUri, nodes);
+    }
 
-		this.cacheReferences.set(documentUri, symbols);
-	}
+    registerCacheReferences(documentUri: string, nodes: AntlersNode[]) {
+        if (this.cacheReferences.has(documentUri) == false) {
+            this.cacheReferences.set(documentUri, []);
+        }
 
-	static clearPartialReferences(documentUri: string) {
-		if (this.partialReferences.has(documentUri)) {
-			this.partialReferences.set(documentUri, []);
-		}
-	}
+        this.cacheReferences.set(documentUri, nodes);
+    }
 
-	static clearRemovesPageScope(documentUri: string) {
-		if (this.removesPageScope.has(documentUri)) {
-			this.removesPageScope.delete(documentUri);
-		}
-	}
+    clearPartialReferences(documentUri: string) {
+        if (this.partialReferences.has(documentUri)) {
+            this.partialReferences.set(documentUri, []);
+        }
+    }
 
-	static pageScopeDisabled(documentUri: string): boolean {
-		return this.removesPageScope.has(documentUri);
-	}
+    clearRemovesPageScope(documentUri: string) {
+        if (this.removesPageScope.has(documentUri)) {
+            this.removesPageScope.delete(documentUri);
+        }
+    }
 
-	static clearCacheReferences(documentUri: string) {
-		if (this.cacheReferences.has(documentUri)) {
-			this.cacheReferences.set(documentUri, []);
-		}
-	}
+    pageScopeDisabled(documentUri: string): boolean {
+        return this.removesPageScope.has(documentUri);
+    }
 
-	static setRemovesPageScope(documentUri: string, symbol: ISymbol) {
-		this.removesPageScope.set(documentUri, symbol);
-	}
+    clearCacheReferences(documentUri: string) {
+        if (this.cacheReferences.has(documentUri)) {
+            this.cacheReferences.set(documentUri, []);
+        }
+    }
 
-	static getPartialReferences(documentUri: string): ISymbol[] {
-		if (this.partialReferences.has(documentUri) == false) {
-			return [];
-		}
+    setRemovesPageScope(documentUri: string, node: AntlersNode) {
+        this.removesPageScope.set(documentUri, node);
+    }
 
-		return this.partialReferences.get(documentUri) as ISymbol[];
-	}
+    getPartialReferences(documentUri: string): AntlersNode[] {
+        if (this.partialReferences.has(documentUri) == false) {
+            return [];
+        }
 
-	static getCacheReferencnes(documentUri: string): ISymbol[] {
-		if (this.cacheReferences.has(documentUri) == false) {
-			return [];
-		}
+        return this.partialReferences.get(documentUri) as AntlersNode[];
+    }
 
-		return this.cacheReferences.get(documentUri) as ISymbol[];
-	}
+    getCacheReferencnes(documentUri: string): AntlersNode[] {
+        if (this.cacheReferences.has(documentUri) == false) {
+            return [];
+        }
 
-	static hasPartialReferences(documentPath: string) {
-		return this.partialReferences.has(documentPath);
-	}
+        return this.cacheReferences.get(documentUri) as AntlersNode[];
+    }
 
-	static hasCacheReferences(documentPath: string) {
-		return this.cacheReferences.has(documentPath);
-	}
+    hasPartialReferences(documentPath: string) {
+        return this.partialReferences.has(documentPath);
+    }
 
+    hasCacheReferences(documentPath: string) {
+        return this.cacheReferences.has(documentPath);
+    }
 }
+
+if (
+    typeof ReferenceManager.instance == "undefined" ||
+    ReferenceManager.instance == null
+) {
+    ReferenceManager.instance = new ReferenceManager();
+}
+
+export default ReferenceManager;

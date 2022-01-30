@@ -1,9 +1,9 @@
 export function suggestAlternativeCollectionParams(unknown: string): string[] {
-	const results: string[] = [];
+    const results: string[] = [];
 
-	if (unknown == 'order') {
-		results.push('sort');
-	}
+    if (unknown == 'order') {
+        results.push('sort');
+    }
 
-	return results;
+    return results;
 }

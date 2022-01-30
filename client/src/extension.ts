@@ -1,17 +1,12 @@
 /* eslint-disable @typescript-eslint/no-namespace */
 import * as path from 'path';
 import { ExtensionContext, FileSystemWatcher, workspace } from 'vscode';
-import {
-	LanguageClient,
-	LanguageClientOptions,
-	ServerOptions,
-	TransportKind
-} from 'vscode-languageclient/node';
+import { LanguageClient, LanguageClientOptions, ServerOptions, TransportKind } from 'vscode-languageclient/node';
 import {
 	languages, SemanticTokensLegend,
-	DocumentSemanticTokensProvider, DocumentRangeSemanticTokensProvider, SemanticTokens, extensions, commands
+	DocumentSemanticTokensProvider, DocumentRangeSemanticTokensProvider, SemanticTokens
 } from 'vscode';
-import { RequestType, TextDocumentIdentifier, RequestType0, Range as LspRange } from 'vscode-languageclient';
+import { RequestType, TextDocumentIdentifier, RequestType0, Range as LspRange, DidOpenTextDocumentNotification } from 'vscode-languageclient';
 import { debounce } from 'ts-debounce';
 import { activateAntlersDebug } from './debug/activateAntlersDebug';
 import { TimingsLensProvider } from './debug/timingsLensProvider';
@@ -23,18 +18,25 @@ interface SemanticTokenParams {
 	ranges?: LspRange[];
 }
 
-interface ReloadAddonParams {
-	extensionPath: string | null
-}
+// eslint-disable-next-line @typescript-eslint/no-empty-interface
+interface ReindexParams { }
 
 // eslint-disable-next-line @typescript-eslint/no-empty-interface
-interface ReindexParams {
+interface LockEditsParams { }
 
-}
-
+// eslint-disable-next-line @typescript-eslint/no-empty-interface
+interface ProjectUpdateParams { }
 
 namespace ReindexRequest {
 	export const type: RequestType<ReindexParams, null, any> = new RequestType('antlers/reindex');
+}
+
+namespace LockEditsRequest {
+	export const type: RequestType<LockEditsParams, null, any> = new RequestType('antlers/lockedits');
+}
+
+namespace ProjectUpdateRequest {
+	export const type: RequestType<ProjectUpdateParams, null, any> = new RequestType('antlers/projectUpdate');
 }
 
 // eslint-disable-next-line @typescript-eslint/no-empty-interface
@@ -45,14 +47,6 @@ interface ManifestAvailableParams {
 namespace ManifestAvailableRequest {
 	export const type: RequestType<ReindexParams, null, any> = new RequestType('antlers/loadManifest');
 }
-
-namespace ReloadAddonRequest {
-	export const type: RequestType<ReloadAddonParams, null, any> = new RequestType('antlers/reloadAddons');
-}
-
-const EmptyAddonParms: ReloadAddonParams = {
-	extensionPath: null
-};
 
 namespace SemanticTokenRequest {
 	export const type: RequestType<SemanticTokenParams, number[] | null, any> = new RequestType('antlers/semanticTokens');
@@ -66,9 +60,16 @@ let didChangeHtmlComments = false;
 let client: LanguageClient;
 let phpWatcher: FileSystemWatcher | null = null,
 	composerWatcher: FileSystemWatcher | null = null,
-	manifestWatcher: FileSystemWatcher | null = null;
+	manifestWatcher: FileSystemWatcher | null = null,
+	projectWatcher: FileSystemWatcher | null = null;
 
 let isClientReady = false;
+
+function askForProjectUpdate() {
+	if (isClientReady) {
+		client.sendRequest(ProjectUpdateRequest.type, {});
+	}
+}
 
 function askForIndex() {
 	if (isClientReady) {
@@ -83,10 +84,18 @@ function sendManifestReloadRequest() {
 }
 
 const debouncedAskForIndex = debounce(askForIndex, 350);
+const debounceAskForProjectUpdate = debounce(askForProjectUpdate, 350);
 const debouncedManifestLoaded = debounce(sendManifestReloadRequest, 350);
 
+let shouldUsePrettierFirst = false;
+
 export function activate(context: ExtensionContext) {
-	const antlersOverrideHtmlComments = workspace.getConfiguration().get('antlersOverrideHtmlComments');
+	const antlersOverrideHtmlComments = workspace.getConfiguration().get('antlersOverrideHtmlComments'),
+		tempShouldUsePrettierFirst = workspace.getConfiguration().get('antlersFormatWithPrettierFirstIfAvailable');
+
+	if (typeof tempShouldUsePrettierFirst !== 'undefined' && tempShouldUsePrettierFirst === true) {
+		shouldUsePrettierFirst = true;
+	}
 
 	// The server is implemented in node
 	const serverModule = context.asAbsolutePath(
@@ -112,12 +121,45 @@ export function activate(context: ExtensionContext) {
 	const clientOptions: LanguageClientOptions = {
 		// Register the server for plain text documents
 		documentSelector: [{ scheme: 'file', language: 'html' }],
+		middleware: {
+			provideDocumentFormattingEdits: async (doc, options, token, next) => {
+				if (shouldUsePrettierFirst) {
+					const prettierVscode = vscode.extensions.getExtension('esbenp.prettier-vscode');
+
+					if (typeof prettierVscode !== 'undefined' && prettierVscode !== null && prettierVscode.isActive) {
+						await client.sendRequest(LockEditsRequest.type, {}).then(async () => {
+							await vscode.commands.executeCommand('prettier.forceFormatDocument');
+							
+							const formattingResults = await next(doc, options, token);
+							const edits = new vscode.WorkspaceEdit();
+							edits.set(doc.uri, formattingResults);
+							vscode.workspace.applyEdit(edits);
+						});
+					}
+				} else {
+					const formattingResults = await next(doc, options, token);
+					const edits = new vscode.WorkspaceEdit();
+					edits.set(doc.uri, formattingResults);
+					vscode.workspace.applyEdit(edits);
+				}
+				return null;
+			}
+		}
 	};
 
 	workspace.onDidChangeConfiguration((e) => {
+		if (e.affectsConfiguration('antlersFormatWithPrettierFirstIfAvailable')) {
+			const newPrettierSetting = workspace.getConfiguration().get('antlersFormatWithPrettierFirstIfAvailable');
+
+			if (typeof newPrettierSetting !== 'undefined' && newPrettierSetting === true) {
+				shouldUsePrettierFirst = true;
+			} else {
+				shouldUsePrettierFirst = false;
+			}
+		}
+
 		if (e.affectsConfiguration('antlersOverrideHtmlComments')) {
-			const newHtmlCommentSetting = workspace.getConfiguration().get('antlersOverrideHtmlComments'),
-				curv = workspace.getConfiguration().inspect('antlersOverrideHtmlComments');
+			const newHtmlCommentSetting = workspace.getConfiguration().get('antlersOverrideHtmlComments');
 
 			if (typeof newHtmlCommentSetting !== 'undefined' && newHtmlCommentSetting === true) {
 				didChangeHtmlComments = true;
@@ -147,6 +189,14 @@ export function activate(context: ExtensionContext) {
 		});
 	}
 
+	context.subscriptions.push(
+		vscode.commands.registerCommand("extension.antlersLanguageServer.reloadProjectDetails", () => {
+			if (isClientReady) {
+				client.sendRequest(ProjectUpdateRequest.type, {});
+			}
+		})
+	);
+
 	// Create the language client and start the client.
 	client = new LanguageClient(
 		'antlersLanguageServer',
@@ -157,21 +207,6 @@ export function activate(context: ExtensionContext) {
 
 	const toDispose = context.subscriptions,
 		documentSelector = ['html', 'antlers'];
-	let addonQueue: ReloadAddonParams[] = [];
-	const reloadAddonsCommand = 'vscodeAntlers.reloadAddons';
-	const reloadAddonHandler = (path: string | null = null) => {
-		const params: ReloadAddonParams = {
-			extensionPath: path
-		};
-
-		if (client != null) {
-			if (client.needsStart() || isClientReady == false) {
-				addonQueue.push(params);
-			} else {
-				client.sendRequest(ReloadAddonRequest.type, params);
-			}
-		}
-	};
 
 	const clDisposable = languages.registerCodeLensProvider(
 		documentSelector,
@@ -180,8 +215,6 @@ export function activate(context: ExtensionContext) {
 
 	toDispose.push(clDisposable);
 
-	context.subscriptions.push(commands.registerCommand(reloadAddonsCommand, reloadAddonHandler));
-		
 	workspace.onDidChangeTextDocument(_e => {
 		resetTimings();
 	});
@@ -189,41 +222,23 @@ export function activate(context: ExtensionContext) {
 	phpWatcher = workspace.createFileSystemWatcher('**/*.php');
 	composerWatcher = workspace.createFileSystemWatcher('**/composer.lock');
 	manifestWatcher = workspace.createFileSystemWatcher('**/.antlers.json');
+	projectWatcher = workspace.createFileSystemWatcher('**/*.yaml');
 
-	manifestWatcher.onDidDelete(() => {
-		debouncedManifestLoaded();
-	});
+	projectWatcher.onDidDelete(() => { debounceAskForProjectUpdate(); });
+	projectWatcher.onDidCreate(() => { debounceAskForProjectUpdate(); });
+	projectWatcher.onDidChange(() => { debounceAskForProjectUpdate(); });
 
-	manifestWatcher.onDidCreate(() => {
-		debouncedManifestLoaded();
-	});
+	manifestWatcher.onDidDelete(() => { debouncedManifestLoaded(); });
+	manifestWatcher.onDidCreate(() => { debouncedManifestLoaded(); });
+	manifestWatcher.onDidChange(() => { debouncedManifestLoaded(); });
 
-	manifestWatcher.onDidChange(() => {
-		debouncedManifestLoaded();
-	});
+	composerWatcher.onDidChange(() => { debouncedAskForIndex(); });
+	composerWatcher.onDidCreate(() => { debouncedAskForIndex(); });
+	composerWatcher.onDidDelete(() => { debouncedAskForIndex(); });
 
-	composerWatcher.onDidChange(() => {
-		debouncedAskForIndex();
-	});
-
-	composerWatcher.onDidCreate(() => {
-		debouncedAskForIndex();
-	});
-
-	composerWatcher.onDidDelete(() => {
-		debouncedAskForIndex();
-	});
-
-	phpWatcher.onDidChange(() => {
-		debouncedAskForIndex();
-	});
-	phpWatcher.onDidCreate(() => {
-		debouncedAskForIndex();
-
-	});
-	phpWatcher.onDidDelete(() => {
-		debouncedAskForIndex();
-	});
+	phpWatcher.onDidChange(() => { debouncedAskForIndex(); });
+	phpWatcher.onDidCreate(() => { debouncedAskForIndex(); });
+	phpWatcher.onDidDelete(() => { debouncedAskForIndex(); });
 
 	activateAntlersDebug(context);
 
@@ -233,19 +248,7 @@ export function activate(context: ExtensionContext) {
 	client.onReady().then(() => {
 		isClientReady = true;
 
-
-		if (addonQueue.length > 0) {
-			for (let i = 0; i < addonQueue.length; i++) {
-				client.sendRequest(ReloadAddonRequest.type, addonQueue[i]);
-			}
-			addonQueue = [];
-		}
-
 		sendManifestReloadRequest();
-
-		extensions.onDidChange(() => {
-			client.sendRequest(ReloadAddonRequest.type, EmptyAddonParms);
-		});
 
 		setTimeout(() => {
 			client.sendRequest(SemanticTokenLegendRequest.type).then(legend => {

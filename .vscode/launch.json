@@ -33,7 +33,14 @@
 				"${workspaceRoot}/client/testFixture"
 			],
 			"outFiles": ["${workspaceRoot}/client/out/test/**/*.js"]
-		}
+		},
+		{
+			"type": "node",
+			"request": "launch",
+			"name": "Document Parser",
+			"program": "${workspaceFolder}/server/src/parser.ts",
+			"outFiles": ["${workspaceFolder}/server/out/**/*.js"]
+		  }
 	],
 	"compounds": [
 		{

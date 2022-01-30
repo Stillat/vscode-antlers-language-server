@@ -1,86 +1,94 @@
-import { CompletionItem, CompletionItemKind } from 'vscode-languageserver-types';
-import { SessionVariableManager } from '../../../references/sessionVariableManager';
-import { ISuggestionRequest } from '../../../suggestions/suggestionManager';
-import { IScopeVariable, Scope } from '../../scope/engine';
-import { EmptyCompletionResult, exclusiveResult, IAntlersTag } from '../../tagManager';
-import { getParameter, ISymbol } from '../../types';
+import { CompletionItem, CompletionItemKind } from "vscode-languageserver-types";
+import SessionVariableManager from "../../../references/sessionVariableManager";
+import { AntlersNode } from '../../../runtime/nodes/abstractNode';
+import { ISuggestionRequest } from '../../../suggestions/suggestionRequest';
+import { tagToCompletionItem } from '../../documentedLabel';
+import { Scope } from '../../scope/scope';
+import { IScopeVariable } from '../../scope/types';
+import { EmptyCompletionResult, exclusiveResult, IAntlersTag } from "../../tagManager";
+import SessionDump from './sessionDump';
+import SessionFlash from './sessionFlash';
+import SessionFlush from './sessionFlush';
+import SessionForget from './sessionForget';
+import SessionHas from './sessionHas';
+import SessionSet from './sessionSet';
 
 const SessionTagCompletionItems: CompletionItem[] = [
-	{ label: 'set', kind: CompletionItemKind.Text },
-	{ label: 'flash', kind: CompletionItemKind.Text },
-	{ label: 'forget', kind: CompletionItemKind.Text },
-	{ label: 'flush', kind: CompletionItemKind.Text },
+    tagToCompletionItem(SessionSet),
+    tagToCompletionItem(SessionFlash),
+    tagToCompletionItem(SessionForget),
+    tagToCompletionItem(SessionFlush),
+    tagToCompletionItem(SessionHas),
+    tagToCompletionItem(SessionDump)
 ];
 
-export class SessionVariableContext {
-	symbol: ISymbol;
-
-	constructor(symbol: ISymbol) {
-		this.symbol = symbol;
-	}
-}
-
 const SessionTag: IAntlersTag = {
-	tagName: 'session',
-	requiresClose: false,
-	allowsContentClose: true,
-	allowsArbitraryParameters: false,
-	hideFromCompletions: false,
-	injectParentScope: false,
-	parameters: [
-		{
-			name: 'as',
-			description: 'An optional alias for the session data',
-			acceptsVariableInterpolation: false,
-			aliases: [],
-			allowsVariableReference: false,
-			expectsTypes: ['string'],
-			isDynamic: false,
-			isRequired: false
-		}
-	],
-	resolveCompletionItems: (params: ISuggestionRequest) => {
-		if (params.isPastTagPart == false && (params.leftWord == 'session' || params.leftWord == '/session') && params.leftChar == ':') {
-			const knownSessionVars = SessionVariableManager.getKnownSessionVariableNames();
-			let sessionCompletions: CompletionItem[] = [];
+    tagName: "session",
+    requiresClose: false,
+    allowsContentClose: true,
+    allowsArbitraryParameters: false,
+    hideFromCompletions: false,
+    injectParentScope: false,
+    introducedIn: null,
+    parameters: [
+        {
+            name: "as",
+            description: "An optional alias for the session data",
+            acceptsVariableInterpolation: false,
+            aliases: [],
+            allowsVariableReference: false,
+            expectsTypes: ["string"],
+            isDynamic: false,
+            isRequired: false,
+        },
+    ],
+    resolveCompletionItems: (params: ISuggestionRequest) => {
+        if (
+            params.isPastTagPart == false &&
+            (params.leftWord == "session" || params.leftWord == "/session") &&
+            params.leftChar == ":"
+        ) {
+            const knownSessionVars =
+                SessionVariableManager.instance?.getKnownSessionVariableNames() ?? [];
+            let sessionCompletions: CompletionItem[] = [];
 
-			sessionCompletions = sessionCompletions.concat(SessionTagCompletionItems);
+            sessionCompletions = sessionCompletions.concat(SessionTagCompletionItems);
 
-			for (let i = 0; i < knownSessionVars.length; i++) {
-				sessionCompletions.push({
-					label: knownSessionVars[i],
-					kind: CompletionItemKind.Variable
-				});
-			}
+            for (let i = 0; i < knownSessionVars.length; i++) {
+                sessionCompletions.push({
+                    label: knownSessionVars[i],
+                    kind: CompletionItemKind.Variable,
+                });
+            }
 
-			return exclusiveResult(sessionCompletions);
-		}
+            return exclusiveResult(sessionCompletions);
+        }
 
-		return EmptyCompletionResult;
-	},
-	augmentScope: (symbol: ISymbol, scope: Scope) => {
-		const asParam = getParameter('as', symbol),
-			knownParams: string[] = SessionVariableManager.getKnownSessionVariableNames(),
-			scopeVariables: IScopeVariable[] = [];
+        return EmptyCompletionResult;
+    },
+    augmentScope: (node: AntlersNode, scope: Scope) => {
+        const asParam = node.findParameter("as"),
+            knownParams: string[] = SessionVariableManager.instance?.getKnownSessionVariableNames() ?? [],
+            scopeVariables: IScopeVariable[] = [];
 
-		for (let i = 0; i < knownParams.length; i++) {
-			scopeVariables.push({
-				dataType: '*',
-				name: knownParams[i],
-				sourceField: null,
-				sourceName: 'project.session',
-				introducedBy: symbol
-			});
-		}
+        for (let i = 0; i < knownParams.length; i++) {
+            scopeVariables.push({
+                dataType: "*",
+                name: knownParams[i],
+                sourceField: null,
+                sourceName: "project.session",
+                introducedBy: node,
+            });
+        }
 
-		if (asParam == null) {
-			scope.addVariables(scopeVariables);
-		} else {
-			scope.addVariableArray(asParam.value, scopeVariables);
-		}
+        if (asParam == null) {
+            scope.addVariables(scopeVariables);
+        } else {
+            scope.addVariableArray(asParam.value, scopeVariables);
+        }
 
-		return scope;
-	}
+        return scope;
+    },
 };
 
 export default SessionTag;

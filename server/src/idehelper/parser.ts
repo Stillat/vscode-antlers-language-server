@@ -1,200 +1,223 @@
-import { IAntlersParameter } from '../antlers/tagManager';
-import { ISymbol } from '../antlers/types';
-import { currentStructure } from '../projects/statamicProject';
-import { DocumentDetailsManager } from './documentDetailsManager';
+import { IAntlersParameter } from "../antlers/tagManager";
+import ProjectManager from '../projects/projectManager';
+import { AntlersNode } from '../runtime/nodes/abstractNode';
+import { DocumentDetailsManager } from "./documentDetailsManager";
 
 export interface IEnvironmentHelper {
-	documentName: string,
-	documentDescription: string,
-	collectionInjections: string[],
-	blueprints: string[],
-	variableHelper: IVariableHelper | null,
-	injectsParameters:IAntlersParameter[],
-	varReferenceNames: Map<string, string>
+    documentName: string;
+    documentDescription: string;
+    collectionInjections: string[];
+    blueprints: string[];
+    variableHelper: IVariableHelper | null;
+    injectsParameters: IAntlersParameter[];
+    varReferenceNames: Map<string, string>;
 }
 
 export interface IVariableHelper {
-	variableName: string,
-	collectionName: string,
-	fieldHandle: string,
-	setHandle: string
+    variableName: string;
+    collectionName: string;
+    fieldHandle: string;
+    setHandle: string;
 }
 
 const EmptyEnvironmentHelper: IEnvironmentHelper = {
-	documentDescription: '',
-	documentName: '',
-	collectionInjections: [],
-	blueprints: [],
-	variableHelper: null,
-	injectsParameters: [],
-	varReferenceNames: new Map()
+    documentDescription: "",
+    documentName: "",
+    collectionInjections: [],
+    blueprints: [],
+    variableHelper: null,
+    injectsParameters: [],
+    varReferenceNames: new Map(),
 };
 
 export { EmptyEnvironmentHelper };
 
-const DocumentName = '@name';
-const DocumentDescription = '@description';
-const DocDescriptionShort = '@desc';
-const EntryPrefix = '@entry';
-const CollectionPrefix = '@collection';
-const BlueprintPrefix = '@blueprint';
-const VariablePrefix = '@var';
-const SetPrefix = '@set';
-const ParamPrefix = '@param';
-const RequiredParamPrefix = '@param*';
-const ParamFromViewDataDirective = '@front';
+const DocumentName = "@name";
+const DocumentDescription = "@description";
+const DocDescriptionShort = "@desc";
+const EntryPrefix = "@entry";
+const CollectionPrefix = "@collection";
+const BlueprintPrefix = "@blueprint";
+const VariablePrefix = "@var";
+const SetPrefix = "@set";
+const ParamPrefix = "@param";
+const RequiredParamPrefix = "@param*";
+const ParamFromViewDataDirective = "@front";
 
-export function parseIdeHelper(documentUri: string, symbol: ISymbol): IEnvironmentHelper {
-	if (symbol == null || symbol.isComment == false) {
-		return EmptyEnvironmentHelper;
-	}
+export function parseIdeHelper(documentUri: string, symbol: AntlersNode): IEnvironmentHelper {
+    if (symbol == null || symbol.isComment == false) {
+        return EmptyEnvironmentHelper;
+    }
 
-	const commentLines: string[] = symbol.content.replace(/(\r\n|\n|\r)/gm, "\n").split("\n").map(r => r.trim()),
-		injectsParameters:IAntlersParameter[] = [],
-		varReferenceNames:Map<string, string> = new Map();
+    const commentLines: string[] = symbol.content
+        .replace(/(\r\n|\n|\r)/gm, "\n")
+        .split("\n")
+        .map((r) => r.trim()),
+        injectsParameters: IAntlersParameter[] = [],
+        varReferenceNames: Map<string, string> = new Map();
 
-	let documentName = '',
-		documentDescription = '',
-		collectionNames: string[] = [],
-		blueprintNames: string[] = [],
-		varReference = '',
-		variableHelper: IVariableHelper | null = null,
-		isParsingDescription = false;
+    let documentName = "",
+        documentDescription = "",
+        collectionNames: string[] = [],
+        blueprintNames: string[] = [],
+        varReference = "",
+        variableHelper: IVariableHelper | null = null,
+        isParsingDescription = false;
 
-	for (let i = 0; i < commentLines.length; i++) {
-		const thisLine = commentLines[i];
+    for (let i = 0; i < commentLines.length; i++) {
+        const thisLine = commentLines[i];
 
-		if (thisLine.startsWith(EntryPrefix)) {
-			collectionNames = collectionNames.concat(thisLine.slice(EntryPrefix.length).split(',').map(f => f.trim()));
-			isParsingDescription = false;
-		} else if (thisLine.startsWith(CollectionPrefix)) {
-			collectionNames = collectionNames.concat(thisLine.slice(CollectionPrefix.length).split(',').map(f => f.trim()));
-			isParsingDescription = false;
-		} else if (thisLine.startsWith(BlueprintPrefix)) {
-			blueprintNames = blueprintNames.concat(thisLine.slice(BlueprintPrefix.length).split(',').map(f => f.trim()));
-			isParsingDescription = false;
-		} else if (thisLine.startsWith(DocumentName)) {
-			documentName = thisLine.slice(DocumentName.length).trim();
-			isParsingDescription = false;
-		} else if (thisLine.startsWith(DocumentDescription)) {
-			documentDescription = thisLine.slice(DocumentDescription.length).trim();
-			isParsingDescription = true;
-		} else if (thisLine.startsWith(DocDescriptionShort)) {
-			documentDescription = thisLine.slice(DocDescriptionShort.length).trim();
-			isParsingDescription = true;
-		} else if (thisLine.startsWith(VariablePrefix)) {
-			varReference = thisLine.slice(VariablePrefix.length).trim();
-			isParsingDescription = false;
-		} else if (thisLine.startsWith(SetPrefix)) {
-			varReference = '@page ' + thisLine.slice(SetPrefix.length).trim();
-			isParsingDescription = false;
-		} else if (thisLine.startsWith(ParamPrefix)) {
-			let sliceLen = ParamPrefix.length,
-				paramRequired = false;
+        if (thisLine.startsWith(EntryPrefix)) {
+            collectionNames = collectionNames.concat(
+                thisLine
+                    .slice(EntryPrefix.length)
+                    .split(",")
+                    .map((f) => f.trim())
+            );
+            isParsingDescription = false;
+        } else if (thisLine.startsWith(CollectionPrefix)) {
+            collectionNames = collectionNames.concat(
+                thisLine
+                    .slice(CollectionPrefix.length)
+                    .split(",")
+                    .map((f) => f.trim())
+            );
+            isParsingDescription = false;
+        } else if (thisLine.startsWith(BlueprintPrefix)) {
+            blueprintNames = blueprintNames.concat(
+                thisLine
+                    .slice(BlueprintPrefix.length)
+                    .split(",")
+                    .map((f) => f.trim())
+            );
+            isParsingDescription = false;
+        } else if (thisLine.startsWith(DocumentName)) {
+            documentName = thisLine.slice(DocumentName.length).trim();
+            isParsingDescription = false;
+        } else if (thisLine.startsWith(DocumentDescription)) {
+            documentDescription = thisLine.slice(DocumentDescription.length).trim();
+            isParsingDescription = true;
+        } else if (thisLine.startsWith(DocDescriptionShort)) {
+            documentDescription = thisLine.slice(DocDescriptionShort.length).trim();
+            isParsingDescription = true;
+        } else if (thisLine.startsWith(VariablePrefix)) {
+            varReference = thisLine.slice(VariablePrefix.length).trim();
+            isParsingDescription = false;
+        } else if (thisLine.startsWith(SetPrefix)) {
+            varReference = "@page " + thisLine.slice(SetPrefix.length).trim();
+            isParsingDescription = false;
+        } else if (thisLine.startsWith(ParamPrefix)) {
+            let sliceLen = ParamPrefix.length,
+                paramRequired = false;
 
-			if (thisLine.startsWith(RequiredParamPrefix)) {
-				sliceLen = RequiredParamPrefix.length;
-				paramRequired = true;
-			}
+            if (thisLine.startsWith(RequiredParamPrefix)) {
+                sliceLen = RequiredParamPrefix.length;
+                paramRequired = true;
+            }
 
-			const directiveDetails = thisLine.slice(sliceLen).trim();
-			
-			const directiveParts = directiveDetails.split(' ');
+            const directiveDetails = thisLine.slice(sliceLen).trim();
 
-			if (directiveParts.length > 0) {
-				if (directiveParts[0] == ParamFromViewDataDirective && directiveParts.length >= 4) {
-					directiveParts.shift();
+            const directiveParts = directiveDetails.split(" ");
 
-					const varName = directiveParts.shift() as string,
-						paramName = directiveParts.shift() as string,
-						paramDesc = directiveParts.join(' ') as string;
+            if (directiveParts.length > 0) {
+                if (
+                    directiveParts[0] == ParamFromViewDataDirective &&
+                    directiveParts.length >= 4
+                ) {
+                    directiveParts.shift();
 
-					injectsParameters.push({
-						acceptsVariableInterpolation: true,
-						aliases: [],
-						allowsVariableReference: true,
-						description: paramDesc,
-						expectsTypes: ['*'],
-						isDynamic: true,
-						isRequired: paramRequired,
-						name: paramName
-					});
+                    const varName = directiveParts.shift() as string,
+                        paramName = directiveParts.shift() as string,
+                        paramDesc = directiveParts.join(" ") as string;
 
-					varReferenceNames.set(paramName, varName);
-				}
-			}
-		} else {
-			if (isParsingDescription) {
-				documentDescription += "\n" + thisLine.trim();
-			}
-		}
-	}
+                    injectsParameters.push({
+                        acceptsVariableInterpolation: true,
+                        aliases: [],
+                        allowsVariableReference: true,
+                        description: paramDesc,
+                        expectsTypes: ["*"],
+                        isDynamic: true,
+                        isRequired: paramRequired,
+                        name: paramName,
+                    });
 
-	if (varReference.length > 0) {
-		const varNameParts = varReference.split(' ');
+                    varReferenceNames.set(paramName, varName);
+                }
+            }
+        } else {
+            if (isParsingDescription) {
+                documentDescription += "\n" + thisLine.trim();
+            }
+        }
+    }
 
-		if (varNameParts.length == 2) {
-			const varName = varNameParts[0],
-				fieldPath = varNameParts[1];
+    if (varReference.length > 0) {
+        const varNameParts = varReference.split(" ");
 
-			if (fieldPath.includes('.')) {
-				const refParts = fieldPath.split('.');
+        if (varNameParts.length == 2) {
+            const varName = varNameParts[0],
+                fieldPath = varNameParts[1];
 
-				if (refParts.length == 2) {
-					const collectionName = refParts[0],
-						fieldHandle = refParts[1];
+            if (fieldPath.includes(".")) {
+                const refParts = fieldPath.split(".");
 
-					variableHelper = {
-						variableName: varName,
-						collectionName: collectionName,
-						fieldHandle: fieldHandle,
-						setHandle: ''
-					};
-				} else if (refParts.length == 3) {
-					const collectionName = refParts[0],
-						fieldHandle = refParts[1],
-						setHandle = refParts[2];
+                if (refParts.length == 2) {
+                    const collectionName = refParts[0],
+                        fieldHandle = refParts[1];
 
-					variableHelper = {
-						variableName: varName,
-						collectionName: collectionName,
-						fieldHandle: fieldHandle,
-						setHandle: setHandle
-					};
-				}
-			} else {
-				variableHelper = {
-					variableName: varName,
-					setHandle: '',
-					collectionName: '',
-					fieldHandle: fieldPath
-				};
-			}
-		}
-	}
+                    variableHelper = {
+                        variableName: varName,
+                        collectionName: collectionName,
+                        fieldHandle: fieldHandle,
+                        setHandle: "",
+                    };
+                } else if (refParts.length == 3) {
+                    const collectionName = refParts[0],
+                        fieldHandle = refParts[1],
+                        setHandle = refParts[2];
 
-	if (currentStructure != null) {
-		const projectView = currentStructure.findView(documentUri);
+                    variableHelper = {
+                        variableName: varName,
+                        collectionName: collectionName,
+                        fieldHandle: fieldHandle,
+                        setHandle: setHandle,
+                    };
+                }
+            } else {
+                variableHelper = {
+                    variableName: varName,
+                    setHandle: "",
+                    collectionName: "",
+                    fieldHandle: fieldPath,
+                };
+            }
+        }
+    }
 
-		if (projectView != null) {
-			projectView.injectsParameters = injectsParameters;
-			projectView.varReferenceNames = varReferenceNames;
-		}
-	}
+    if (ProjectManager.instance != null && ProjectManager.instance.hasStructure()) {
+        const projectView = ProjectManager.instance.getStructure().findView(documentUri);
 
-	const ideHelper: IEnvironmentHelper = {
-		documentName: documentName,
-		documentDescription: documentDescription,
-		collectionInjections: collectionNames,
-		blueprints: blueprintNames,
-		variableHelper: variableHelper,
-		injectsParameters: injectsParameters,
-		varReferenceNames: varReferenceNames
-	};
+        if (projectView != null) {
+            projectView.injectsParameters = injectsParameters;
+            projectView.varReferenceNames = varReferenceNames;
+        }
+    }
 
-	if (symbol.startLine == 0 || symbol.index == 1) {
-		DocumentDetailsManager.registerDetails(documentUri, ideHelper);
-	}
+    const ideHelper: IEnvironmentHelper = {
+        documentName: documentName,
+        documentDescription: documentDescription,
+        collectionInjections: collectionNames,
+        blueprints: blueprintNames,
+        variableHelper: variableHelper,
+        injectsParameters: injectsParameters,
+        varReferenceNames: varReferenceNames,
+    };
 
-	return ideHelper;
+    if (symbol.startPosition != null) {
+        if (symbol.startPosition.line == 0 || symbol.index == 1) {
+            DocumentDetailsManager.registerDetails(documentUri, ideHelper);
+        }
+    }
+
+    return ideHelper;
 }

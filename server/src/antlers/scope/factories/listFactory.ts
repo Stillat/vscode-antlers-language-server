@@ -1,31 +1,36 @@
-import { IBlueprintField, variablesToBlueprintFields } from '../../../projects/blueprints';
-import { getParameter, ISymbol } from '../../types';
-import { makeLoopVariables } from '../../variables/loopVariables';
-import { Scope } from '../engine';
+import { IBlueprintField, variablesToBlueprintFields } from '../../../projects/blueprints/fields';
+import { AntlersNode } from '../../../runtime/nodes/abstractNode';
+import { makeLoopVariables } from "../../variables/loopVariables";
+import { Scope } from '../scope';
 
 /**
- * Analyzes the provided symbol for "as" and "scope" parameters and applies them to the reference scope.
- * @param symbol The symbol to analyze
+ * Analyzes the provided node for "as" and "scope" parameters and applies them to the reference scope.
+ * @param node The node to analyze
  * @param scope The reference scope.
  * @param fields The reference fields.
  */
-export function checkSymbolForScopeAndAlias(symbol: ISymbol, scope: Scope, fields: IBlueprintField[] | undefined | null) {
-	if (typeof fields === 'undefined' || fields === null) {
-		return;
-	}
+export function checkSymbolForScopeAndAlias(node: AntlersNode, scope: Scope, fields: IBlueprintField[] | undefined | null) {
+    if (typeof fields === "undefined" || fields === null) {
+        return;
+    }
 
-	const aliasParam = getParameter('as', symbol),
-		scopeParam = getParameter('scope', symbol);
+    const aliasParam = node.findParameter("as"),
+        scopeParam = node.findParameter("scope");
 
-	fields = fields.concat(variablesToBlueprintFields(makeLoopVariables(symbol)));
+    fields = fields.concat(variablesToBlueprintFields(makeLoopVariables(node)));
 
-	if (aliasParam != null && scopeParam != null) {
-		scope.introduceScopedAliasScope(symbol, scopeParam.value, aliasParam.value, fields);
-	} else if (aliasParam != null) {
-		scope.introduceAliasScope(symbol, aliasParam.value, fields);
-	} else if (scopeParam != null) {
-		scope.introduceDynamicScopeList(symbol, scopeParam.value, fields);
-	} else {
-		scope.addBlueprintFields(symbol, fields);
-	}
+    if (aliasParam != null && scopeParam != null) {
+        scope.introduceScopedAliasScope(
+            node,
+            scopeParam.value,
+            aliasParam.value,
+            fields
+        );
+    } else if (aliasParam != null) {
+        scope.introduceAliasScope(node, aliasParam.value, fields);
+    } else if (scopeParam != null) {
+        scope.introduceDynamicScopeList(node, scopeParam.value, fields);
+    } else {
+        scope.addBlueprintFields(node, fields);
+    }
 }

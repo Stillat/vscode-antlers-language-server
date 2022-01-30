@@ -1,84 +1,95 @@
 import { CompletionItemKind } from 'vscode-languageserver';
 import { CompletionItem } from 'vscode-languageserver-types';
 import { getConditionCompletionItems } from '../../../../suggestions/defaults/conditionItems';
-import { getRoot, ISuggestionRequest } from '../../../../suggestions/suggestionManager';
+import { getRoot } from '../../../../suggestions/suggestionManager';
+import { ISuggestionRequest } from '../../../../suggestions/suggestionRequest';
+import { tagToCompletionItem } from '../../../documentedLabel';
 import { exclusiveResult, nonExclusiveResult, EmptyCompletionResult, ICompletionResult } from '../../../tagManager';
+import { CollectionNewer, CollectionOlder } from './ageDirectional';
+import CollectionCount from './count';
+import CollectionNext from './next';
+import CollectionPrevious from './previous';
 import { getCollectionBlueprintFields, getTaxonomyCompletionItems } from './utils';
 
 export function resolveCollectionCompletions(params: ISuggestionRequest): ICompletionResult {
-	let items: CompletionItem[] = [];
+    let items: CompletionItem[] = [];
 
-	if (params.currentSymbol != null && params.currentSymbol.currentScope != null) {
-		const blueprintFields = getCollectionBlueprintFields(params.currentSymbol, params.currentSymbol.currentScope),
-			fieldNames = blueprintFields.map((f) => f.name),
-			rootLeft = getRoot(params.leftWord);
+    if (params.isPastTagPart == false && (params.leftWord == 'collection' || params.leftWord == '/collection') && params.leftChar == ':') {
+        const collectionNames = params.project.getCollectionNames();
 
-		if (rootLeft === 'taxonomy') {
-			return exclusiveResult(getTaxonomyCompletionItems(params));
-		}
+        for (let i = 0; i < collectionNames.length; i++) {
+            items.push({
+                label: collectionNames[i],
+                kind: CompletionItemKind.Field,
+                sortText: '0'
+            });
+        }
 
-		if (fieldNames.includes(rootLeft)) {
-			items = getConditionCompletionItems(params);
+        items.push(tagToCompletionItem(CollectionCount));
+        items.push(tagToCompletionItem(CollectionNext));
+        items.push(tagToCompletionItem(CollectionPrevious));
+        items.push(tagToCompletionItem(CollectionOlder));
+        items.push(tagToCompletionItem(CollectionNewer));
 
-			return exclusiveResult(items);
-		}
+        return {
+            items: items,
+            analyzeDefaults: false,
+            isExclusiveResult: false,
+        };
+    }
 
-		if (params.isCaretInTag && params.activeParameter == null && ['collection', '/collection'].includes(params.leftWord) == false) {
-			const addedNames: string[] = [];
+    if (params.currentNode != null && params.currentNode.currentScope != null) {
+        const blueprintFields = getCollectionBlueprintFields(params.currentNode, params.currentNode.currentScope),
+            fieldNames = blueprintFields.map((f) => f.name),
+            rootLeft = getRoot(params.leftWord);
 
-			for (let i = 0; i < blueprintFields.length; i++) {
-				const thisField = blueprintFields[i];
+        if (rootLeft === 'taxonomy') {
+            return exclusiveResult(getTaxonomyCompletionItems(params));
+        }
 
-				if (addedNames.includes(thisField.name) == false) {
-					items.push({
-						label: thisField.name,
-						detail: thisField.blueprintName,
-						documentation: thisField.instructionText ?? '',
-						kind: CompletionItemKind.Field
-					});
+        if (fieldNames.includes(rootLeft)) {
+            items = getConditionCompletionItems(params);
 
-					addedNames.push(thisField.name);
-				}
-			}
+            return exclusiveResult(items);
+        }
 
-			items.push({
-				label: 'taxonomy',
-				insertText: 'taxonomy:',
-				kind: CompletionItemKind.Field
-			});
+        if (params.isCaretInTag && !params.context?.isInParameter &&
+            ['collection', '/collection'].includes(params.leftWord) == false &&
+            params.leftChar != ' ') {
+            const addedNames: string[] = [];
 
-			items.push({
-				label: 'status',
-				insertText: 'status:',
-				kind: CompletionItemKind.Field
-			});
+            for (let i = 0; i < blueprintFields.length; i++) {
+                const thisField = blueprintFields[i];
 
-			if (items.length > 0) {
-				return nonExclusiveResult(items);
-			}
-		}
-	}
+                if (addedNames.includes(thisField.name) == false) {
+                    items.push({
+                        label: thisField.name,
+                        detail: thisField.blueprintName,
+                        documentation: thisField.instructionText ?? '',
+                        kind: CompletionItemKind.Field
+                    });
 
-	if (params.isPastTagPart == false && (params.leftWord == 'collection' || params.leftWord == '/collection') && params.leftChar == ':') {
-		for (let i = 0; i < params.project.collectionNames.length; i++) {
-			items.push({
-				label: params.project.collectionNames[i],
-				kind: CompletionItemKind.Field
-			});
-		}
+                    addedNames.push(thisField.name);
+                }
+            }
 
-		items.push({ label: 'count', kind: CompletionItemKind.Text });
-		items.push({ label: 'next', kind: CompletionItemKind.Text });
-		items.push({ label: 'previous', kind: CompletionItemKind.Text });
-		items.push({ label: 'older', kind: CompletionItemKind.Text });
-		items.push({ label: 'newer', kind: CompletionItemKind.Text });
+            items.push({
+                label: 'taxonomy',
+                insertText: 'taxonomy:',
+                kind: CompletionItemKind.Field
+            });
 
-		return {
-			items: items,
-			analyzeDefaults: false,
-			isExclusiveResult: false,
-		};
-	}
+            items.push({
+                label: 'status',
+                insertText: 'status:',
+                kind: CompletionItemKind.Field
+            });
 
-	return EmptyCompletionResult;
+            if (items.length > 0) {
+                return nonExclusiveResult(items);
+            }
+        }
+    }
+
+    return EmptyCompletionResult;
 }
