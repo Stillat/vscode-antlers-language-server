@@ -131,6 +131,17 @@ class NodeBuffer {
         return this;
     }
 
+    appendOS(text:string) {
+        if (this.buffer.endsWith(' ') == false
+                && this.buffer.endsWith('(') == false
+                && this.buffer.endsWith('[') == false
+                && this.buffer.endsWith(':') == false) {
+            this.buffer += ' ';
+        }
+
+        return this.append(text);
+    }
+
     appendS(text: string) {
         let appendBuffer = '';
 
@@ -156,7 +167,7 @@ class NodeBuffer {
     }
 
     addIndent(number: number) {
-        if (number <= 0) { return; }
+        if (number <= 0) { return this; }
 
         this.buffer += ' '.repeat(number);
 
@@ -185,6 +196,15 @@ class NodeBuffer {
 
     newlineIndent() {
         this.newLine();
+        this.indent();
+
+        return this;
+    }
+
+    newlineNDIndent() {
+        this.buffer = this.buffer.trimEnd();
+        this.newLine();
+
         this.indent();
 
         return this;
@@ -250,7 +270,8 @@ export class AntlersFormatter {
         }
 
         const lexerNodes = antlersNode.getTrueRuntimeNodes();
-        let nodeStatements = 0;
+        let nodeStatements = 0,
+            nodeOperators = 0;
 
         if (lexerNodes.length > 0) {
             const nodeBuffer = new NodeBuffer(antlersNode, indent, prepend);
@@ -275,6 +296,10 @@ export class AntlersFormatter {
                             if (node.next instanceof StatementSeparatorNode == false && node.next instanceof InlineBranchSeparator == false) {
                                 if (!node.isSwitchGroupMember && !LanguageParser.isOperatorType(node.next)) {
                                     insertNlAfter = true;
+
+                                    if (node.next instanceof VariableNode && node.next.name == 'as') {
+                                        insertNlAfter = false;
+                                    }
                                 }
                             }
                         }
@@ -316,7 +341,13 @@ export class AntlersFormatter {
                                 break;
                             }
                         } else {
-                            nodeBuffer.appendS(node.name);
+                            nodeOperators += 1;
+
+                            if (nodeOperators > 1) {
+                                nodeBuffer.newlineNDIndent().indent().addIndent(6).appendS(node.name);
+                            } else {
+                                nodeBuffer.appendS(node.name);
+                            }
                         }
                         lastPrintedNode = node;
                         continue;
@@ -324,7 +355,11 @@ export class AntlersFormatter {
                     if (node.mergeRefName != null && node.mergeRefName.trim().length > 0 && node.mergeRefName != node.name) {
                         nodeBuffer.append(node.mergeRefName.trim());
                     } else {
-                        nodeBuffer.append(node.name.trim());
+                        if (node.name == 'as') {
+                            nodeBuffer.appendOS('as');
+                        } else {
+                            nodeBuffer.append(node.name.trim());
+                        }
                     }
                 } else if (node instanceof TupleListStart) {
                     nodeBuffer.appendTS(' list');
@@ -414,9 +449,9 @@ export class AntlersFormatter {
                     if (node.startPosition != null && node.endPosition != null) {
                         const originalDocText = doc.getText(node.startPosition.index, node.endPosition.index + 1);
 
-                        nodeBuffer.append(originalDocText);
+                        nodeBuffer.appendOS(originalDocText);
                     } else {
-                        nodeBuffer.append(node.sourceTerminator + node.value + node.sourceTerminator);
+                        nodeBuffer.appendOS(node.sourceTerminator + node.value + node.sourceTerminator);
                     }
                 } else if (node instanceof ArgSeparator) {
                     if (node.isSwitchGroupMember) {

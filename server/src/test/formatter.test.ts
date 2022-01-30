@@ -50,6 +50,24 @@ suite("Document Formatting Test", () => {
         assert.strictEqual(format(input), expected);
     });
 
+	test('it wraps multiple language operators', () => {
+		const template = `
+		{{ test = one merge two 
+						where (name == 'name' && type == 'test')
+									 take (1) skip(		5) orderby(name 'desc')
+									 
+							groupby(test) as	 'groupName' groupby(title'name') as 'another')  }}`;
+const output = `{{ test = one merge two
+            where (name == 'name' && type == 'test')
+            take (1)
+            skip (5)
+            orderby (name 'desc')
+            groupby (test) as 'groupName'
+            groupby (title 'name') as 'another') }}`;
+
+		assert.strictEqual(format(template), output);
+	});
+
     test('it does not double up', () => {
         const initial = `{{# Page title #}}
         <title>
