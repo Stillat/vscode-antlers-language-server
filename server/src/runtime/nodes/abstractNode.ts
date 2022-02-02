@@ -13,6 +13,7 @@ import { filterStructuralAntlersNodes } from '../document/scanners/nodeFilters';
 import { StringUtilities } from '../utilities/stringUtilities';
 import { NodeVirtualHierarchy } from './antlersVirtualStructures/nodeVirtualHierarchy';
 import { TagIdentifier } from './tagIdentifier';
+import { ConditionPairAnalyzer } from '../analyzers/conditionPairAnalyzer';
 
 /* eslint-disable @typescript-eslint/no-empty-interface */
 export interface ArithmeticNodeContract {
@@ -42,6 +43,7 @@ export class AbstractNode {
     public index = 0;
     public parent: AbstractNode | null = null;
     public content = '';
+    public rawLexContent = '';
     public sourceContent = '';
     public startPosition: Position | null = null;
     public endPosition: Position | null = null;
@@ -555,6 +557,10 @@ export class AntlersNode extends AbstractNode {
 
         if (this.isTagNode && this.nameStartsOn != null) {
             relativeIndex = this.nameStartsOn.index + offset;
+
+            if (!ConditionPairAnalyzer.isConditionalStructure(this)) {
+                relativeIndex -= this.rawStart.length;
+            }
         }
 
         const resolvedOffset = this.parser.positionFromOffset(
@@ -663,7 +669,7 @@ export class RecursiveNode extends AntlersNode {
 }
 
 export class PhpExecutionNode extends AntlersNode {
-
+    public isEchoNode = false;
 }
 
 export class CommentParserFailNode extends ParserFailNode {

@@ -214,7 +214,7 @@ export function parseIdeHelper(documentUri: string, symbol: AntlersNode): IEnvir
     };
 
     if (symbol.startPosition != null) {
-        if (symbol.startPosition.line == 0 || symbol.index == 1) {
+        if (symbol.startPosition.line <= 1 || symbol.index <= 1) {
             DocumentDetailsManager.registerDetails(documentUri, ideHelper);
         }
     }

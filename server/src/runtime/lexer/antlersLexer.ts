@@ -11,6 +11,7 @@ export class AntlersLexer {
     private inputLen = 0;
     private currentIndex = 0;
     private currentContent: string[] = [];
+    private rawContent: string[] = [];
     private startIndex = 0;
     private cur: string | null = null;
     private next: string | null = null;
@@ -32,6 +33,7 @@ export class AntlersLexer {
         this.inputLen = 0;
         this.currentIndex = 0;
         this.currentContent = [];
+        this.rawContent = [];
         this.startIndex = 0;
         this.cur = null;
         this.next = null;
@@ -190,6 +192,10 @@ export class AntlersLexer {
             this.checkCurrentOffsets();
             let addCurrent = true;
 
+            if (this.cur != null) {
+                this.rawContent.push(this.cur);
+            }
+
             if (this.isParsingString == false) {
                 if (this.cur == DocumentParser.String_Terminator_DoubleQuote || this.cur == DocumentParser.String_Terminator_SingleQuote) {
                     if (this.prev == DocumentParser.String_EscapeCharacter) {
@@ -201,6 +207,8 @@ export class AntlersLexer {
                         continue;
                     }
 
+                    this.rawContent = [];
+                    this.rawContent.push(this.cur);
                     terminator = this.cur;
                     this.isParsingString = true;
                     stringStartedOn = this.currentIndex;
@@ -229,6 +237,7 @@ export class AntlersLexer {
                     if (implodedCurrentContent.length > 0) {
                         const parsedValue = implodedCurrentContent;
                         this.currentContent = [];
+                        this.rawContent = [];
 
                         if (parsedValue.trimRight().length == 0) {
                             const nextNonWhitespace = this.nextNonWhitespace();
@@ -236,6 +245,7 @@ export class AntlersLexer {
                             if (nextNonWhitespace == DocumentParser.String_Terminator_SingleQuote ||
                                 nextNonWhitespace == DocumentParser.String_Terminator_DoubleQuote) {
                                 this.currentContent = [];
+                                this.rawContent = [];
                                 continue;
                             }
                         }
@@ -259,6 +269,7 @@ export class AntlersLexer {
                     }
 
                     this.currentContent = [];
+                    this.rawContent = [];
                     this.isInModifierParameterValue = false;
                     continue;
                 }
@@ -291,6 +302,7 @@ export class AntlersLexer {
                     }
 
                     this.currentContent = [];
+                    this.rawContent = [];
 
                     const modifierValueNode = new ModifierValueNode();
                     modifierValueNode.isVirtual = false;
@@ -335,6 +347,7 @@ export class AntlersLexer {
                         this.lastNode = modifierValueNode;
 
                         this.currentContent = [];
+                        this.rawContent = [];
                         this.isParsingString = false;
                         this.isInModifierParameterValue = false;
                         continue;
@@ -352,8 +365,10 @@ export class AntlersLexer {
                     terminator = null;
                     this.isParsingString = false;
                     stringNode.value = this.currentContent.join('');
+                    stringNode.rawLexContent = this.rawContent.join('').trim();
 
                     this.currentContent = [];
+                    this.rawContent = [];
 
                     this.guardAgainstNeighboringTypesInModifier(stringNode);
 
@@ -411,6 +426,7 @@ export class AntlersLexer {
                         endPosition = node._lexerRelativeOffset(this.currentIndex);
 
                     this.currentContent = [];
+                    this.rawContent = [];
 
                     // Check against internal keywords.
                     if (parsedValue == LanguageKeywords.LogicalAnd) {
@@ -516,6 +532,8 @@ export class AntlersLexer {
                             numberNode.value = parseInt(parsedValue);
                         }
 
+                        numberNode.rawLexContent = parsedValue;
+
                         this.guardAgainstNeighboringTypesInModifier(numberNode);
 
                         this.runtimeNodes.push(numberNode);
@@ -586,6 +604,7 @@ export class AntlersLexer {
                     this.runtimeNodes.push(scopeAssignment);
                     this.lastNode = scopeAssignment;
                     this.currentContent = [];
+                    this.rawContent = [];
                     this.currentIndex += 1;
 
                     continue;

@@ -566,6 +566,11 @@ export class DocumentParser {
                                 literalOffset = literalStartIndex;
                             }
 
+                            if (this.lastAntlersNode instanceof PhpExecutionNode) {
+                                literalStartIndex -= 1;
+                                literalLength += 1;
+                            }
+
                             const nodeContent = this.content.substr(literalStartIndex, literalLength);
 
                             const literalNode = new LiteralNode();
@@ -971,11 +976,20 @@ export class DocumentParser {
                     peek = this.peek(this.currentIndex + 2);
                 }
 
+                if (peek == DocumentParser.Punctuation_Question) {
+                    this.isDoubleBrace = true;
+                    this.currentIndex += 3;
+                    this._recoveryStartIndex = this.currentIndex;
+                    this.scanToEndOfPhpRegion(DocumentParser.Punctuation_Question);
+                    this.isDoubleBrace = false;
+                    break;
+                }
+
                 if (peek == DocumentParser.Punctuation_Dollar) {
                     this.isDoubleBrace = true;
                     this.currentIndex += 3;
                     this._recoveryStartIndex = this.currentIndex;
-                    this.scanToEndOfPhpRegion();
+                    this.scanToEndOfPhpRegion(DocumentParser.Punctuation_Dollar);
                     this.isDoubleBrace = false;
                     break;
                 }
@@ -1163,15 +1177,15 @@ export class DocumentParser {
         return content.replace('@{{', '{{');
     }
 
-    private scanToEndOfPhpRegion() {
+    private scanToEndOfPhpRegion(checkChar:string) {
         for (this.currentIndex; this.currentIndex < this.inputLen; this.currentIndex += 1) {
             this.checkCurrentOffsets();
 
-            if (this.cur == DocumentParser.Punctuation_Dollar && this.next != null && this.next == DocumentParser.RightBrace) {
+            if (this.cur == checkChar && this.next != null && this.next == DocumentParser.RightBrace) {
                 const peek = this.peek(this.currentIndex + 2);
 
                 if (peek == DocumentParser.RightBrace) {
-                    const node = this.makeAntlersPhpNode(this.currentIndex);
+                    const node = this.makeAntlersPhpNode(this.currentIndex, checkChar == DocumentParser.Punctuation_Dollar);
 
                     this.currentContent = [];
                     this.sourceContent = [];
@@ -1412,11 +1426,16 @@ export class DocumentParser {
         }
     }
 
-    private makeAntlersPhpNode(index: number) {
+    private makeAntlersPhpNode(index: number, isEcho: boolean) {
         const node = new PhpExecutionNode();
 
-        node.rawStart = '{{$';
-        node.rawEnd = '$}}';
+        if (isEcho) {
+            node.rawStart = '{{$';
+            node.rawEnd = '$}}';
+        } else {
+            node.rawStart = '{{?';
+            node.rawEnd = '?}}';
+        }
 
         node.content = this.currentContent.join('');
         node.sourceContent = this.sourceContent.join('');

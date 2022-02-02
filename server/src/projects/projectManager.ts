@@ -4,7 +4,7 @@ class ProjectManager {
     public static instance: ProjectManager | null = null;
     private currentStructure: IProjectDetailsProvider | null = null;
     private isReloading = false;
-    private isDirtyState = false;
+    private isDirtyState = true;
 
     setActiveProject(project: IProjectDetailsProvider) {
         this.currentStructure = project;
@@ -38,7 +38,7 @@ class ProjectManager {
             this.isReloading = true;
             this.currentStructure = this.currentStructure.reloadDetails();
             this.isReloading = false;
-            // this.isDirtyState = false;
+            this.isDirtyState = false;
         }
     }
 }

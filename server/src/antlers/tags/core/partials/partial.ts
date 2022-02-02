@@ -52,10 +52,9 @@ Includes another view into the current template.
             const partials = params.project.getViews();
 
             partials.forEach((view: IView) => {
-                if (DocumentDetailsManager.hasDetails(view.documentUri)) {
-                    const partialDetails = DocumentDetailsManager.documentDetails.get(
-                        view.documentUri
-                    ) as IEnvironmentHelper;
+                const decodedUri = decodeURIComponent(view.documentUri);
+                if (DocumentDetailsManager.hasDetails(decodedUri)) {
+                    const partialDetails = DocumentDetailsManager.documentDetails.get(decodedUri) as IEnvironmentHelper;
 
                     items.push({
                         label:

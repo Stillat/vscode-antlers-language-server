@@ -332,7 +332,7 @@ connection.onRequest(SemanticTokenRequest.type, (params, token) => {
     return null;
 });
 
-let registeredProjectIndexToken = false;
+const registeredProjectIndexToken = false;
 
 const isFirstRun = true;
 
@@ -358,19 +358,20 @@ export async function collectProjectDetails(textDocument: TextDocument): Promise
         InjectionManager.instance?.updateProject(ProjectManager.instance?.getStructure());
     }
 
-    if (!registeredProjectIndexToken) {
+    /*if (!registeredProjectIndexToken) {
         registeredProjectIndexToken = true;
         await connection.sendRequest(WorkDoneProgressCreateRequest.type, {
             token: projectIndex,
         });
-    }
+    }*/
 
     reloadProjectManifest();
 
-    connection.sendProgress(WorkDoneProgress.type, projectIndex, {
+
+    /*connection.sendProgress(WorkDoneProgress.type, projectIndex, {
         kind: "begin",
         title: "Analyzing Statamic Project",
-    });
+    });*/
     ReferenceManager.instance?.clearPartialReferences(docPath);
     DiagnosticsManager.instance?.clearIssues(docPath);
 
@@ -388,10 +389,10 @@ export async function collectProjectDetails(textDocument: TextDocument): Promise
         }
     }
 
-    connection.sendProgress(WorkDoneProgress.type, projectIndex, {
-        kind: "end",
-        message: "Analysis Complete",
-    });
+    /*    connection.sendProgress(WorkDoneProgress.type, projectIndex, {
+            kind: "end",
+            message: "Analysis Complete",
+        });*/
 }
 
 export function analyzeStructures(document: string) {

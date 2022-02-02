@@ -4,7 +4,7 @@
     "description": "Provides Antlers syntax highlighting, and robust language features.",
     "author": "John Koster",
     "license": "MIT",
-    "version": "2.0.0",
+    "version": "2.0.3",
     "repository": {
         "type": "git",
         "url": "https://github.com/Stillat/vscode-antlers-language-server"
@@ -152,7 +152,7 @@
         ]
     },
     "scripts": {
-        "vscode:prepublish": "npm run compile && php buildAnalyzer.php",
+        "vscode:prepublish": "npm run compile",
         "compile": "tsc -b",
         "bundle:format_cli": "npm run compile && npm run esbuild:format_cli",
         "esbuild:format_cli": "esbuild ./server/src/formatting/cli/index.ts --bundle --outfile=./formatcli/package/index.js --format=cjs --platform=node",

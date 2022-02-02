@@ -45,6 +45,7 @@ Bugs fixed, what's new, and more! :)
 #### Technical Updates
 
 * Removed the extensibility API until the new parser is fully implemented
+* Removed the bundled PHP analyzer to simplify the extension development and management
 * The TextMate grammar was rewritten from the ground up, to provide better interoperability with tools like TorchLight
   * The Semantic Tokens service was also rewritten, and simplified. The Semantic Tokens service now handles the following cases (instead of most things like before):
     * Resolving modifier names in more complicated scenarios

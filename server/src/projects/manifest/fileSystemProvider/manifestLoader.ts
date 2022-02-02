@@ -14,6 +14,8 @@ let hasCheckedForCompatibility = false,
     isRunningIndexer = false;
 
 function runProjectIndexing(directory: string) {
+    return;
+    const tServer = serverDirectory;
     if (hasCheckedForCompatibility && phpIsAvailable) {
         if (fs.existsSync(directory + "/composer.json") && isRunningIndexer == false) {
             isRunningIndexer = true;
@@ -45,6 +47,7 @@ export function safeRunIndexing() {
         runProjectIndexing(workingDirectory);
     }
 }
+
 export function checkForIndexProcessAvailability() {
     if (!hasCheckedForCompatibility) {
         if (fs.existsSync(serverDirectory + "/" + analyzerName)) {
@@ -64,7 +67,8 @@ export function checkForIndexProcessAvailability() {
 }
 
 export function reloadProjectManifest() {
-    if (ProjectManager.instance?.hasStructure()) {
+    return;
+    /*if (ProjectManager.instance?.hasStructure()) {
         const manifestPath = ProjectManager.instance.getStructure().getWorkingDirectory() +
             "/storage/framework/cache/antlers-language-server/.antlers.json";
 
@@ -73,12 +77,13 @@ export function reloadProjectManifest() {
 
             ManifestManager.instance?.load(parsedManifest);
         }
-    }
+    }*/
 }
 
 export class ManifestLoader {
     static loadFromPath(path: string): IAntlersManifest | null {
-        try {
+        return null;
+        /*try {
             const contents = fs.readFileSync(path, { encoding: "utf8" }),
                 parsedManifest = JSON.parse(contents) as IAntlersManifest;
 
@@ -94,6 +99,6 @@ export class ManifestLoader {
                 }
             }
         }
-        return null;
+        return null;*/
     }
 }

@@ -139,6 +139,7 @@ class NodeBuffer {
     appendOS(text: string) {
         if (this.buffer.endsWith(' ') == false
             && this.buffer.endsWith('(') == false
+            && this.buffer.endsWith('{') == false
             && this.buffer.endsWith('[') == false
             && this.buffer.endsWith(':') == false) {
             this.buffer += ' ';
@@ -472,7 +473,13 @@ export class AntlersFormatter {
                         continue;
                     }
 
-                    nodeBuffer.append(node.value?.toString() ?? '');
+                    let valueToPrint = node.value?.toString() ?? '';
+
+                    if (node.rawLexContent != null && node.rawLexContent.trim().length > 0) {
+                        valueToPrint = node.rawLexContent.trim();
+                    }
+
+                    nodeBuffer.append(valueToPrint);
                 } else if (node instanceof LeftAssignmentOperator) {
                     nodeBuffer.appendS('=');
                 } else if (node instanceof ScopeAssignmentOperator) {
@@ -556,7 +563,7 @@ export class AntlersFormatter {
 
     formatDocumentNodes(nodes: AbstractNode[], doc: AntlersDocument): string {
         let rootText = '';
-        const unformatted: string[] = getTagsFormatOption(this.formatOptions.htmlOptions, "unformatted", void 0) ?? [];
+        const unformatted: string[] = getTagsFormatOption(this.formatOptions.htmlOptions, "unformatted", []) ?? [];
         const content_unformatted: string[] = [],
             antlersSingleNodes: Map<string, AntlersNode> = new Map(),
             includesEnd = false;
@@ -637,7 +644,7 @@ export class AntlersFormatter {
             indent_handlebars: getFormatOption(this.formatOptions.htmlOptions, "indentHandlebars", false),
             end_with_newline:
                 includesEnd && getFormatOption(this.formatOptions.htmlOptions, "endWithNewline", false),
-            extra_liners: getTagsFormatOption(this.formatOptions.htmlOptions, "extraLiners", void 0),
+            extra_liners: [], //getTagsFormatOption(this.formatOptions.htmlOptions, "extraLiners", []),
             wrap_attributes: getFormatOption(this.formatOptions.htmlOptions, "wrapAttributes", "auto"),
             wrap_attributes_indent_size: getFormatOption(
                 this.formatOptions.htmlOptions,

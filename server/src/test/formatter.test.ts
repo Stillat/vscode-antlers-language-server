@@ -155,6 +155,49 @@ suite("Document Formatting Test", () => {
         }
     });
 
+    test('it does not do weird things with many chained strings and numeric values', () => {
+        const template = `<html>
+<head>
+</head>
+<body>
+<style>
+:root {
+    --primary-color: {{ thxme:primary_color ?? "#FA\\"7268" 
+    ?? 23.0 }};
+    --secondary-color: {{ thxmed:secondary_color ?? "#C62368" ?? 320.0 ?? "#C62fff368" ?? "#C62368aaa" ?? "#C6236bbb8" ?? null }};
+    --plyr-color-main: {{ thxmedddd:primary_color ?? "#C62368" }};
+}
+
+{{ 			if what_to_add		 == 			'#collection_title' }} {{ /if }}
+</style>
+<script>
+window.primaryColor = '{{ thxmeddddd:primary_color ?? "#FA7268" }}';
+window.secondaryColor = '{{ theme:secondary_color ?? "#C62368" }}';
+</script>
+</body>
+</html>`;
+        const output = `<html>
+<head>
+</head>
+<body>
+    <style>
+        :root {
+            --primary-color: {{ thxme:primary_color ?? "#FA\\"7268" ?? 23.0 }};
+            --secondary-color: {{ thxmed:secondary_color ?? "#C62368" ?? 320.0 ?? "#C62fff368" ?? "#C62368aaa" ?? "#C6236bbb8" ?? null }};
+            --plyr-color-main: {{ thxmedddd:primary_color ?? "#C62368" }};
+        }
+
+        {{ if what_to_add == '#collection_title' }}{{ /if }}
+    </style>
+    <script>
+        window.primaryColor = '{{ thxmeddddd:primary_color ?? "#FA7268" }}';
+        window.secondaryColor = '{{ theme:secondary_color ?? "#C62368" }}';
+    </script>
+</body>
+</html>`;
+        assert.strictEqual(formatDefaultHtmlSettings(template), output);
+    });
+
     test('it does not continue to indent comments', () => {
         const initial = `<div>
         {{#  comment 1 #}}
@@ -618,6 +661,20 @@ suite("Document Formatting Test", () => {
     test('it preserves simple method chains', () => {
         assert.strictEqual(format('<div>{{ hello:there():chained() }}</div>'),
             `<div>{{ hello:there():chained() }}</div>`);
+    });
+
+    test('it emits the php nodes', () => {
+        const template = `{{$ $test = 10; $}}abvc {{? $hello = 10; ?}}`;
+        assert.strictEqual(formatDefaultHtmlSettings(template), `{{$ $test = 10; $}}abvc {{? $hello = 10; ?}}`);
+    });
+
+    test('it emits all parameters', () => {
+        const template = `{{           collection:count                 from="something"  from2="something2"
+
+        from3="something3"
+    }}`;
+        const output = `{{ collection:count from="something" from2="something2" from3="something3" }}`;
+        assert.strictEqual(formatDefaultHtmlSettings(template), output);
     });
 
     test('it preserves at params', () => {
@@ -1676,10 +1733,10 @@ after`;
 
     test('template test 18', () => {
         const template = `before
-		{{ simple }}
-			{{ foo }}
-		{{ /simple }}
-		after`;
+        {{ simple }}
+            {{ foo }}
+        {{ /simple }}
+        after`;
         const output = `before
 {{ simple }}
     {{ foo }}
@@ -1690,17 +1747,17 @@ after`;
 
     test('template test 19', () => {
         const template = `{{ string
-			? "Pass"
-				:			 "Fail" }}`;
+            ? "Pass"
+                :			 "Fail" }}`;
         const output = `{{ string ? "Pass" : "Fail" }}`;
         assert.strictEqual(formatDefaultHtmlSettings(template), output);
     });
 
     test('template test 20', () => {
         const template = `{{ if (date
-			 | modify_date:+3 years | format:Y) ==
-			  "2015" 
-			}}yes{{ endif }}`;
+             | modify_date:+3 years | format:Y) ==
+              "2015" 
+            }}yes{{ endif }}`;
         const output = `{{ if (date | modify_date:+3 years | format:Y) == "2015" }}yes{{ endif }}`;
         assert.strictEqual(formatDefaultHtmlSettings(template), output);
     });
@@ -1767,6 +1824,84 @@ bar
   }} {{ qux }}
 bar
 {{ baz }}`;
+        assert.strictEqual(formatDefaultHtmlSettings(template), output);
+    });
+
+    test('it emits strings when appearning after ternary nodes', () => {
+        const template = `<html>
+<head>
+</head>
+<body>
+<style>
+:root {
+    --primary-color: {{ theme:primary_color ?? "#FA7268" }};
+    --secondary-color: {{ theme:secondary_color ?? "#C62368" }};
+    --plyr-color-main: {{ theme:primary_color ?? "#C62368" }};
+}
+</style>
+<script>
+window.primaryColor = '{{ theme:primary_color ?? "#FA7268" }}';
+window.secondaryColor = '{{ theme:secondary_color ?? "#C62368" }}';
+</script>
+</body>
+</html>`;
+        const output = `<html>
+<head>
+</head>
+<body>
+    <style>
+        :root {
+            --primary-color: {{ theme:primary_color ?? "#FA7268" }};
+            --secondary-color: {{ theme:secondary_color ?? "#C62368" }};
+            --plyr-color-main: {{ theme:primary_color ?? "#C62368" }};
+        }
+    </style>
+    <script>
+        window.primaryColor = '{{ theme:primary_color ?? "#FA7268" }}';
+        window.secondaryColor = '{{ theme:secondary_color ?? "#C62368" }}';
+    </script>
+</body>
+</html>`;
+        assert.strictEqual(formatDefaultHtmlSettings(template), output);
+    });
+
+    test('it does not do weird things with spacing on things not flagged as tags', () => {
+        const template = `<html>
+        <head>
+        </head>
+        <body>
+        <style>
+        :root {
+            --primary-color: {{ thxme:primary_color ?? "#FA\\"7268" 
+            ?? 23 }};
+            --secondary-color: {{ thxmed:secondary_color ?? "#C62368" }};
+            --plyr-color-main:    {{ thxmedddd:primary_color
+                 ?? "#C62368@@@@@@@@" }};
+        }
+        </style>
+        <script>
+        window.primaryColor = '{{ thxmeddddd:primary_color ?? "#FA7268" }}';
+        window.secondaryColor = '{{ theme:secondary_color ?? "#C62368" }}';
+        </script>
+        </body>
+        </html>`;
+        const output = `<html>
+<head>
+</head>
+<body>
+    <style>
+        :root {
+            --primary-color: {{ thxme:primary_color ?? "#FA\\"7268" ?? 23 }};
+            --secondary-color: {{ thxmed:secondary_color ?? "#C62368" }};
+            --plyr-color-main: {{ thxmedddd:primary_color ?? "#C62368@@@@@@@@" }};
+        }
+    </style>
+    <script>
+        window.primaryColor = '{{ thxmeddddd:primary_color ?? "#FA7268" }}';
+        window.secondaryColor = '{{ theme:secondary_color ?? "#C62368" }}';
+    </script>
+</body>
+</html>`;
         assert.strictEqual(formatDefaultHtmlSettings(template), output);
     });
 

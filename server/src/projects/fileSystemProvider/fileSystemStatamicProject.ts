@@ -216,7 +216,7 @@ function getProjectViews(viewPath: string): IView[] {
         views.push({
             displayName: workingFileName,
             fileName: fileName,
-            documentUri: encodeURIComponent(convertPathToUri(thisFile)),
+            documentUri: convertPathToUri(thisFile),
             originalDocumentUri: convertPathToUri(thisFile),
             isAntlers: isAntlers,
             isBlade: isBlade,
