@@ -157,7 +157,7 @@
         "bundle:format_cli": "npm run compile && npm run esbuild:format_cli",
         "esbuild:format_cli": "esbuild ./server/src/formatting/cli/index.ts --bundle --outfile=./formatcli/package/index.js --format=cjs --platform=node",
         "watch": "tsc -b -w",
-        "postinstall": "cd client && npm install && cd ../server && npm install && cd ../analyzer && composer install && cd ..",
+        "postinstall": "npm install && cd client && npm install && cd ../server && npm install && cd ..",
         "test:server": "npm run compile && mocha ./server/out/test/*.js -- -u tdd"
     },
     "devDependencies": {
