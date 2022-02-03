@@ -334,6 +334,7 @@ export class AntlersNodeParser {
     private getParameters(node: AntlersNode) {
         const content = node.getContent() ?? '',
             chars = content.split(''),
+            improperStringCandidates: string[] = [],
             parameters: ParameterNode[] = [],
             charCount = chars.length;
 
@@ -516,6 +517,10 @@ export class AntlersNodeParser {
                 }
             }
 
+            if (hasFoundName == false && ((terminator != null && current == terminator) || (terminator == null && StringUtilities.ctypeSpace(current)))) {
+                improperStringCandidates.push(currentChars.join(''));
+            }
+
             if (hasFoundName && (
                 (terminator != null && current == terminator) ||
                 (terminator == null && StringUtilities.ctypeSpace(current))
@@ -599,10 +604,25 @@ export class AntlersNodeParser {
         }
 
         if (terminator != null) {
+            let nodeToUse: AbstractNode = node;
+
+            if (improperStringCandidates.length > 0) {
+                const lastCandidate = improperStringCandidates[improperStringCandidates.length - 1],
+                    relativeIndex = node.content.indexOf(lastCandidate);
+
+                if (relativeIndex >= 0) {
+                    const fakeNode = new AbstractNode();
+
+                    fakeNode.startPosition = node.relativeOffset(relativeIndex - 2, relativeIndex - 2);
+                    fakeNode.endPosition = node.relativeOffset(relativeIndex + lastCandidate.length, relativeIndex + lastCandidate.length);
+                    nodeToUse = fakeNode;
+                }
+            }
+
             this.pushError(AntlersError.makeSyntaxError(
                 AntlersErrorCodes.TYPE_UNEXPECTED_END_OF_INPUT,
-                node,
-                'Unexpected end of input while parsing string.'
+                nodeToUse,
+                'Unexpected string literal while parsing parameters.'
             ));
         }
 
