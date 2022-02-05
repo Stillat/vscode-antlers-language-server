@@ -24,6 +24,7 @@ import { getUserRoles, getUserGroups } from './userPermissions';
 import { IProjectDetailsProvider } from '../projectDetailsProvider';
 import { JsonSourceProject } from '../jsonSourceProject';
 import { normalizePath } from '../../utils/uris';
+import { replaceAllInString } from '../../utils/strings';
 
 function getRootProjectPath(path: string): string {
     const parts = normalizePath(path).split("/");
@@ -227,6 +228,7 @@ function getProjectViews(viewPath: string): IView[] {
             relativePath: relativePath,
             injectsCollections: [],
             injectsParameters: [],
+            templateName: replaceAllInString(displayName, '/', '.'),
             varReferenceNames: new Map(),
         });
     }

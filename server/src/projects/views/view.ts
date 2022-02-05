@@ -51,4 +51,5 @@ export interface IView {
     isBlade: boolean;
     injectsParameters: IAntlersParameter[];
     varReferenceNames: Map<string, string>;
+    templateName: string;
 }

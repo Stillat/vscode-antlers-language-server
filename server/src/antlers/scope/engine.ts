@@ -117,7 +117,7 @@ export class ScopeEngine {
             }
         }
 
-        let documentCollectionNames = this.statamicProject.getCollectionNamesForView(encodeURIComponent(this.documentUri));
+        let documentCollectionNames = this.statamicProject.getCollectionNamesForView(this.documentUri);
 
         if (ideHelper != null) {
             if (ideHelper.collectionInjections.length > 0) {

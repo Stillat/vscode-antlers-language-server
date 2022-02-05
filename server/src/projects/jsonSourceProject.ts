@@ -18,6 +18,22 @@ import { IUserGroup } from './users/users';
 import ViewModelManager from './viewModelManager';
 import { IView } from './views/view';
 
+function makeBlueprintField(blueprintName: string, fieldName: string, fieldType: string):IBlueprintField {
+    return {
+        blueprintName: blueprintName,
+        displayName: '',
+        import: null,
+        instructionText: '',
+        maxItems: null,
+        name: fieldName,
+        refFieldSetField: null,
+        sets: null,
+        type: fieldType
+    };
+}
+
+
+
 class JsonSourceProject implements IProjectDetailsProvider {
     public isMocked = false;
     public rootPath = "";
@@ -461,7 +477,12 @@ class JsonSourceProject implements IProjectDetailsProvider {
 
     getBlueprintDetails(handle: string): IBlueprintField[] {
         if (this.blueprintRef.has(handle) == false) {
-            return [];
+            const defaultItems:IBlueprintField[] = [];
+            defaultItems.push(makeBlueprintField(handle, 'title', 'text'));
+            defaultItems.push(makeBlueprintField(handle, 'content', 'markdown'));
+            defaultItems.push(makeBlueprintField(handle, 'slug', 'slug'));
+
+            return defaultItems;
         }
 
         return this.blueprintRef.get(handle) as IBlueprintField[];
