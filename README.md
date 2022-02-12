@@ -18,11 +18,11 @@ The extension will automatically activate the next time you open an Antlers HTML
 
 Want to take your install even further? Consider checking out the documentation at [https://antlers.dev/](https://antlers.dev/).
 
-## Reloading Project Details {#reloading-project-details}
+## Reloading Project Details
 
 If you have made significant changes to your project's blueprints, globals, etc. and have Visual Studio Code open to just the `resources/` directory, you may want to force the extension to reload your project's details. This can be done from Visual Studio Code's [Command Palette](https://code.visualstudio.com/docs/getstarted/userinterface#_command-palette) and searching for "Antlers: Reload Statamic Project Details".
 
-## Migrating from Version 1 {#migrating-from-version-1}
+## Migrating from Version 1
 
 Antlers Toolbox versions 1.x shipped with a bundled PHP analyzer. This has been removed with version 2, and may be replaced with a standalone Composer package at a later date. This bundled PHP analyzer would create an `.antlers.json` file at the root of your project, and may have created a `/storage/antlers-language-server/` directory.
 
