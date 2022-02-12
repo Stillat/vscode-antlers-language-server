@@ -1,8 +1,8 @@
 {
   "name": "antlers-formatter",
-  "version": "1.0.1",
+  "version": "1.0.3",
   "description": "Formats Antlers template files.",
-  "main": "index.js",
+  "main": "cli.js",
   "bin": {
     "antlersformat": "cli.js"
   },

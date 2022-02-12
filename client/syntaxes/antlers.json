@@ -472,7 +472,7 @@
 		"language-operators": {
 			"patterns": [
 				{
-					"match": "(?i)\\b(pluck|take|skip|arr|orderby|groupby|merge|where|switch|bwa|bwo|bxor|bnot|bsl|bsr|if|elseif|else|return)\\b",
+					"match": "(?i)\\b(pluck|take|skip|arr|orderby|groupby|merge|where|switch|bwa|bwo|bxor|bnot|bsl|bsr|if|elseif|else)\\b",
 					"name": "support.function.array.statamic"
 				}
 			]

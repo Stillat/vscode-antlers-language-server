@@ -1,16 +1,16 @@
 {
     "name": "vscode-antlers",
-    "displayName": "Antlers Language for Statamic",
-    "description": "Provides Antlers syntax highlighting, and robust language features.",
+    "displayName": "Antlers Toolbox",
+    "description": "Provides Antlers syntax highlighting, formatting, error reporting, project-specific suggestions, and more.",
     "author": "John Koster",
     "license": "MIT",
-    "version": "2.0.3",
+    "version": "2.0.5",
     "repository": {
         "type": "git",
         "url": "https://github.com/Stillat/vscode-antlers-language-server"
     },
     "publisher": "stillat-llc",
-    "icon": "icon.png",
+    "icon": "toolbox-icon.png",
     "keywords": [
         "statamic",
         "intellisense",
@@ -155,9 +155,9 @@
         "vscode:prepublish": "npm run compile",
         "compile": "tsc -b",
         "bundle:format_cli": "npm run compile && npm run esbuild:format_cli",
-        "esbuild:format_cli": "esbuild ./server/src/formatting/cli/index.ts --bundle --outfile=./formatcli/package/index.js --format=cjs --platform=node",
+        "esbuild:format_cli": "esbuild ./server/src/formatting/cli/index.ts --bundle --minify --outfile=./formatcli/package/cli.js --format=cjs --platform=node",
         "watch": "tsc -b -w",
-        "postinstall": "npm install && cd client && npm install && cd ../server && npm install && cd ..",
+        "postinstall": "cd client && npm install && cd ../server && npm install && cd ..",
         "test:server": "npm run compile && mocha ./server/out/test/*.js -- -u tdd"
     },
     "devDependencies": {

@@ -389,13 +389,17 @@ export class Scope {
             return this;
         }
 
-        scope.values.forEach((value: IScopeVariable, name: string) => {
-            this.values.set(name, value);
-        });
+        if (typeof scope.values !== 'undefined' && scope.values !== null) {
+            scope.values.forEach((value: IScopeVariable, name: string) => {
+                this.values.set(name, value);
+            });
+        }
 
-        scope.lists.forEach((value: Scope, name: string) => {
-            this.lists.set(name, value);
-        });
+        if (typeof scope.lists !== 'undefined' && scope.lists !== null) {
+            scope.lists.forEach((value: Scope, name: string) => {
+                this.lists.set(name, value);
+            });
+        }
 
         return this;
     }

@@ -11,6 +11,7 @@ export interface IEnvironmentHelper {
     variableHelper: IVariableHelper | null;
     injectsParameters: IAntlersParameter[];
     varReferenceNames: Map<string, string>;
+    formatterEnabled: boolean;
 }
 
 export interface IVariableHelper {
@@ -28,6 +29,7 @@ const EmptyEnvironmentHelper: IEnvironmentHelper = {
     variableHelper: null,
     injectsParameters: [],
     varReferenceNames: new Map(),
+    formatterEnabled: true
 };
 
 export { EmptyEnvironmentHelper };
@@ -43,6 +45,7 @@ const SetPrefix = "@set";
 const ParamPrefix = "@param";
 const RequiredParamPrefix = "@param*";
 const ParamFromViewDataDirective = "@front";
+const FormatterPrefix = '@format';
 
 export function parseIdeHelper(documentUri: string, symbol: AntlersNode): IEnvironmentHelper {
     if (symbol == null || symbol.isComment == false) {
@@ -62,7 +65,8 @@ export function parseIdeHelper(documentUri: string, symbol: AntlersNode): IEnvir
         blueprintNames: string[] = [],
         varReference = "",
         variableHelper: IVariableHelper | null = null,
-        isParsingDescription = false;
+        isParsingDescription = false,
+        formatterEnabled = true;
 
     for (let i = 0; i < commentLines.length; i++) {
         const thisLine = commentLines[i];
@@ -144,6 +148,14 @@ export function parseIdeHelper(documentUri: string, symbol: AntlersNode): IEnvir
                     varReferenceNames.set(paramName, varName);
                 }
             }
+        } else if (thisLine.startsWith(FormatterPrefix)) {
+            const formatterDetails = thisLine.slice(FormatterPrefix.length).trim().toLowerCase();
+
+            if (formatterDetails == 'true') {
+                formatterEnabled = true;
+            } else {
+                formatterEnabled = false;
+            }
         } else {
             if (isParsingDescription) {
                 documentDescription += "\n" + thisLine.trim();
@@ -194,7 +206,7 @@ export function parseIdeHelper(documentUri: string, symbol: AntlersNode): IEnvir
         }
     }
 
-    if (ProjectManager.instance != null && ProjectManager.instance.hasStructure()) {
+    if (documentUri.trim().length > 0 && ProjectManager.instance != null && ProjectManager.instance.hasStructure()) {
         const projectView = ProjectManager.instance.getStructure().findView(documentUri);
 
         if (projectView != null) {
@@ -211,9 +223,10 @@ export function parseIdeHelper(documentUri: string, symbol: AntlersNode): IEnvir
         variableHelper: variableHelper,
         injectsParameters: injectsParameters,
         varReferenceNames: varReferenceNames,
+        formatterEnabled: formatterEnabled
     };
 
-    if (symbol.startPosition != null) {
+    if (documentUri.trim().length > 0 && symbol.startPosition != null) {
         if (symbol.startPosition.line <= 1 || symbol.index <= 1) {
             DocumentDetailsManager.registerDetails(documentUri, ideHelper);
         }

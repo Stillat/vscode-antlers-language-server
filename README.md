@@ -19,107 +19,32 @@ The extension will automatically activate the next time you open an Antlers HTML
 
 Want to take your install even further? Consider checking out the documentation at [https://antlers.dev/](https://antlers.dev/).
 
-## Change Log
+## Reloading Project Details {#reloading-project-details}
 
-Bugs fixed, what's new, and more! :)
+If you have made significant changes to your project's blueprints, globals, etc. and have Visual Studio Code open to just the `resources/` directory, you may want to force the extension to reload your project's details. This can be done from Visual Studio Code's [Command Palette](https://code.visualstudio.com/docs/getstarted/userinterface#_command-palette) and searching for "Antlers: Reload Statamic Project Details".
 
-### v2.0.0 (Not Released)
+## Migrating from Version 1 {#migrating-from-version-1}
 
-#### User Experience Updates
+Antlers Toolbox versions 1.x shipped with a bundled PHP analyzer. This has been removed with version 2, and may be replaced with a standalone Composer package at a later date. This bundled PHP analyzer would create an `.antlers.json` file at the root of your project, and may have created a `/storage/antlers-language-server/` directory.
 
-* Dramatically improves accuracy of the out-of-box syntax highlighting experience
-  * Antlers is now highlighted within HTML attributes
-  * Modifier value colors now longer "flow" into the next token type
-  * All default Statamic variables are no longer given any special preference over user variables for consistency
-  * The default style for tag names has been subtly adjusted, to make them more distinct from method names
-* Adds support for Front Matter YAML syntax highlighting
-* Adds support for inline PHP syntax highlighting
-* The Antlers Outline panel was completely rewritten to provide better accuracy, and provide a more thorough overview of your Antlers template
-* Antlers code folding engine has been greatly improved
-* Pagination parameter analysis will now apply to numeric values in addition to boolean values
-* Document diagnostics analysis for debug tags and modifiers are now more reactive
-* Improved detection of partial document links
-* Improves partial document link generation such that partial tag parameters are no longer links
-* Improves the Antlers formatter
+The file(s) and directorie(s) created by the PHP analyzer from version 1 can be safely removed without any issues.
 
-#### Technical Updates
+Some features like auto-detecting your project's custom tags, modifiers, etc. (as well as those from your Composer dependencies) will no longer work starting with version 2 because of the analyzer's removal.
 
-* Removed the extensibility API until the new parser is fully implemented
-* Removed the bundled PHP analyzer to simplify the extension development and management
-* The TextMate grammar was rewritten from the ground up, to provide better interoperability with tools like TorchLight
-  * The Semantic Tokens service was also rewritten, and simplified. The Semantic Tokens service now handles the following cases (instead of most things like before):
-    * Resolving modifier names in more complicated scenarios
-    * Resolving user-provided tag names
-    * Resolving numeric values
-* A new backend parser and reflection API
-* The backend services are now capable of handling more complex fault scenarios such as incomplete Antlers tags, incorrectly paired tags, etc. while continuing to provide document analysis
-* The project's `publish:grammar` NPM script has been removed in favor of editing the `antlers.json` syntax file directly
+This analyzer was removed to reduce the complexity (slightly) and bundle size of the extension.
 
-### v1.1.4
+## Reporting Issues
 
-* Prevents the formatter from adding `undefined` to templates when conditional line leading whitespace is unknown ([#15](https://github.com/Stillat/vscode-antlers-language-server/issues/15))
+If you come across an issue, or have a suggestion to improve Antlers Toolbox, feel free to create an issue on the project's GitHub repository here:
 
-### v1.1.3
+[https://github.com/Stillat/vscode-antlers-language-server/issues](https://github.com/Stillat/vscode-antlers-language-server/issues)
 
-* Improves the formatting behavior of `unless` conditionals ([#14](https://github.com/Stillat/vscode-antlers-language-server/issues/14))
+If you are looking to report a security vulnerability, please **do not** create an issue on the GitHub repository.
 
-### v1.1.2
+To report sensitive issues or a security vulnerability please email [security@stillat.com](mailto:security@stillat.com) with the relevant details.
 
-* Adds support for the `all` and `self` locale tag parameters
-* Improves default variable support for the `locale` tag
-
-### v1.1.1
-
-* Adds support for the `array` when using the `foreach` and `iterate` tags
-
-### v1.1.0
-
-* Adds a new `antlersOverrideHtmlComments` configuration option that can be used to always use Antlers comments in HTML documents
-* Adds support for the `split` array modifier
-* Adds support for the `format_translated` date modifier
-* Adds support for the `add_slashes` string modifier
-* Adds additional scope variables for the `nav` tag
-* Adds support for `exists` and `if_exists` methods on the `partial` tag
-* Improves completions for manifested array variables when using parameter-style modifiers
-
-### v1.0.32
-
-* Improves internal scope resolution
-
-### v1.0.31
-
-* Improves validation warnings with the `glide` tag
-
-### v1.0.30
-
-* Makes improvements to partial suggestions
-
-### v1.0.29
-
-* Background work to support an eventual Antlers Debugger
-
-### v1.0.28
-
-* Developers can now use VS Code's document links to navigate to detected partial files
-* Developers can now see an overview/outline of their Antlers document within the Outline panel
-
-### v1.0.24
-
-* Removes `name` from the list of `statamic-tag-native-variable` to improve out-of-box syntax highlighting consistency [#11](https://github.com/Stillat/vscode-antlers-language-server/issues/11)
-
-### v1.0.23
-
-* The extension will no longer display warnings for unknown parameters (based on user feedback)
-* Adds support for the field set prefixes when importing field-sets in auto-completion
-* Adds support for the `installed` tag, with composer package autocompletions
-* Automatically detects variable names within partials and adds them to the tag's parameter auto complete list.
-
-## System PHP Configuration
-
-If your development machine has PHP7+ installed and available in the `PATH` system variable, the extension will utilize a built-in PHP analyzer to help find details about your custom tags, view models, augmentation and Composer dependencies.
-
-Having this enabled is not a requirement to use the extension's main features.
+Emails requesting information on bounties, etc. will not be responded to.
 
 ## License
 
-This language extension is open-sourced software licensed under the [MIT license](https://opensource.org/licenses/MIT).
+Antlers Toolbox is open-sourced software licensed under the [MIT license](https://opensource.org/licenses/MIT).

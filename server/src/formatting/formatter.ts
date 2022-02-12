@@ -30,7 +30,8 @@ export function formatAntlersDocument(params: DocumentFormattingParams): TextEdi
                 formatFrontMatter: settings.formatFrontMatter,
                 insertSpaces: params.options.insertSpaces,
                 tabSize: params.options.tabSize,
-                maxStatementsPerLine: 3
+                maxStatementsPerLine: 3,
+                formatExtensions: []
             };
 
         AntlersFormatter.applyPositionsFromDocument(sessionDocument, antlersDoc);

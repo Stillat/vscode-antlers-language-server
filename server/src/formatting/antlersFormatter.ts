@@ -15,7 +15,8 @@ export interface AntlersFormattingOptions {
     tabSize: number,
     insertSpaces: boolean,
     formatFrontMatter: boolean,
-    maxStatementsPerLine: number
+    maxStatementsPerLine: number,
+    formatExtensions:string []
 }
 
 interface IExtractedFrontMatter {
@@ -719,7 +720,7 @@ export class AntlersFormatter {
     }
 
     formatDocument(doc: AntlersDocument) {
-        if (doc.hasInvalidControlFlowStructures()) {
+        if (doc.hasInvalidControlFlowStructures() || doc.isFormattingEnabled() == false) {
             return doc.getOriginalContent();
         }
 

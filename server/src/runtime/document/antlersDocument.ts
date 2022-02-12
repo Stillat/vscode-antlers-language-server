@@ -2,6 +2,7 @@ import { ScopeEngine } from '../../antlers/scope/engine';
 import { Scope } from '../../antlers/scope/scope';
 import TagManager from '../../antlers/tagManagerInstance';
 import { resolveTypedTree } from '../../antlers/tags';
+import { IEnvironmentHelper, parseIdeHelper } from '../../idehelper/parser';
 import { IProjectDetailsProvider } from '../../projects/projectDetailsProvider';
 import { AbstractNode, AntlersNode } from '../nodes/abstractNode';
 import { Position } from "../nodes/position";
@@ -34,6 +35,30 @@ export class AntlersDocument {
         }
 
         return document.loadString(text);
+    }
+
+    getDocumentOptions(): IEnvironmentHelper | null {
+        const nodes = this.getAllNodes();
+
+        if (nodes.length == 0 || (nodes[0] instanceof AntlersNode) == false) {
+            return null;
+        }
+
+        const checkNode = nodes[0] as AntlersNode;
+
+        if (checkNode.isComment == false) {
+            return null;
+        }
+
+        return parseIdeHelper(this.documentUri, checkNode);
+    }
+
+    isFormattingEnabled(): boolean {
+        const options = this.getDocumentOptions();
+
+        if (options == null) { return true; }
+
+        return options.formatterEnabled;
     }
 
     hasInvalidControlFlowStructures() {
