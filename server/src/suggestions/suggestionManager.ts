@@ -13,7 +13,7 @@ import TagManager from '../antlers/tagManagerInstance';
 import { UnclosedTagManager } from "../antlers/unclosedTagManager";
 import { ContentVariableNames } from "../antlers/variables/contentVariables";
 import { IBlueprintField } from '../projects/blueprints/fields';
-import { AntlersNode, StringValueNode, EqualCompOperator, VariableNode } from '../runtime/nodes/abstractNode';
+import { AntlersNode, StringValueNode, EqualCompOperator, VariableNode, PhpExecutionNode } from '../runtime/nodes/abstractNode';
 import { trimLeft, trimRight } from "../utils/strings";
 import { DocumentPropertySuggestions } from './comments/documentPropertySuggestions';
 import LanguageConstructs from "./defaults/languageConstructs";
@@ -214,6 +214,10 @@ export class SuggestionManager {
         }
 
         const lastScopeItem = params.nodesInScope[params.nodesInScope.length - 1];
+
+        if (lastScopeItem instanceof PhpExecutionNode) {
+            return [];
+        }
 
         let completionItems: CompletionItem[] = [],
             injectParentScope = true;
