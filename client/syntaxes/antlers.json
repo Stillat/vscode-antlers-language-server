@@ -70,13 +70,13 @@
 					]
 				},
                 {
-                    "begin": "(?<!@){{(\\$\\s?)",
+                    "begin": "(?<!@){{([\\$\\?]\\s?)",
 					"beginCaptures": {
 						"0": {
 							"name": "punctuation.section.embedded.begin.statamic"
 						}
 					},
-                    "end": "(\\s?)\\$}}",
+                    "end": "(\\s?)[\\$\\?]}}",
 					"endCaptures": {
 						"0": {
 							"name": "punctuation.section.embedded.end.statamic"
