@@ -12,6 +12,7 @@ const DocumentPropertySuggestions: CompletionItem[] = [
     { label: 'param', kind: CompletionItemKind.Property },
     { label: 'param*', kind: CompletionItemKind.Property },
     { label: 'front', kind: CompletionItemKind.Property },
+    { label: 'format', kind: CompletionItemKind.Property }
 ];
 
 export { DocumentPropertySuggestions };
