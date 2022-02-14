@@ -377,7 +377,7 @@ export class SuggestionManager {
                     }
 
                     const specialVarNames = [
-                        'collection', 'current_template', 'status'
+                        'collection', 'current_template', 'status', 'blueprint'
                     ];
 
                     if (specialVarNames.includes(params.context.feature.prev.prev.name)) {
@@ -392,6 +392,8 @@ export class SuggestionManager {
                                 varItems = params.project.getTemplateNames();
                             } else if (specialVarName == 'status') {
                                 varItems = ['draft', 'scheduled', 'expired', 'published'];
+                            } else if (specialVarName == 'blueprint') {
+                                varItems = params.project.getBlueprintNames();
                             }
 
                             varItems.forEach((name) => {
