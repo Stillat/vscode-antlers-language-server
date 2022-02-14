@@ -2,7 +2,7 @@
 const beautify = require("js-beautify").html;
 
 import { AntlersDocument } from '../runtime/document/antlersDocument';
-import { AbstractNode, AdditionOperator, AntlersNode, ArgSeparator, ConditionNode, DivisionOperator, InlineBranchSeparator, InlineTernarySeparator, LeftAssignmentOperator, LiteralNode, LogicalNegationOperator, LogicGroupBegin, LogicGroupEnd, ModifierNameNode, ModifierSeparator, ModifierValueNode, ModifierValueSeparator, MultiplicationOperator, NumberNode, ParameterNode, ScopeAssignmentOperator, StatementSeparatorNode, StringValueNode, TupleListStart, VariableNode } from '../runtime/nodes/abstractNode';
+import { AbstractNode, AdditionOperator, AntlersNode, ArgSeparator, ConditionNode, DivisionOperator, InlineBranchSeparator, InlineTernarySeparator, LeftAssignmentOperator, LiteralNode, LogicalNegationOperator, LogicGroupBegin, LogicGroupEnd, ModifierNameNode, ModifierSeparator, ModifierValueNode, ModifierValueSeparator, MultiplicationOperator, NumberNode, ParameterNode, ScopeAssignmentOperator, StatementSeparatorNode, StringValueNode, SubtractionOperator, TupleListStart, VariableNode } from '../runtime/nodes/abstractNode';
 import { LanguageParser } from '../runtime/parser/languageParser';
 import { NodeHelpers } from '../runtime/utilities/nodeHelpers';
 import { replaceAllInString } from '../utils/strings';
@@ -487,6 +487,21 @@ export class AntlersFormatter {
                     nodeBuffer.appendS('=>');
                 } else if (node instanceof AdditionOperator) {
                     nodeBuffer.appendS('+');
+                } else if (node instanceof SubtractionOperator) {
+                    if (node.prev != null && node.next != null) {
+                        if (NodeHelpers.distance(node.prev, node) <= 1 && NodeHelpers.distance(node.next, node) <= 1) {
+                            if (node.next instanceof NumberNode && node.prev instanceof NumberNode) {
+                                nodeBuffer.appendS('-');
+                            } else {
+                                nodeBuffer.append('-');
+                            }
+
+                            lastPrintedNode = node;
+                            continue;
+                        }
+                    }
+
+                    nodeBuffer.appendS('-');
                 } else if (node instanceof MultiplicationOperator) {
                     nodeBuffer.appendS('*');
                 } else if (node instanceof DivisionOperator) {
