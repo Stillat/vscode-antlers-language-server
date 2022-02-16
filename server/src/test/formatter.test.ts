@@ -137,7 +137,7 @@ suite("Document Formatting Test", () => {
             {{ collection:title }}
         {{ elseif what_to_add == 'custom_text' }}
             {{ custom_text }}
-         {{ /if }}
+        {{ /if }}
         {{ seo:title_separator ? seo:title_separator : " &#124; " }}
     {{ /seo:change_page_title }}
     {{ seo:site_name ? seo:site_name : config:app:name }}
@@ -239,7 +239,7 @@ window.secondaryColor = '{{ theme:secondary_color ?? "#C62368" }}';
         <div>
             <label></label>
         </div>
-     {{ /if }}
+    {{ /if }}
 {{ /fields }}`;
 
         assert.strictEqual(format(`{{ fields }}
@@ -1229,7 +1229,7 @@ nested augmented: {{ nested:augmented:drink }}`;
     
     {{ else }}
         <p>Else- inner literal three..</p>
-     {{ /if }}
+    {{ /if }}
     <p>end</p>
 {{ /articles }}
 <p>Outer end</p>`;
@@ -1273,19 +1273,19 @@ nested augmented: {{ nested:augmented:drink }}`;
             {{ elseif false == true }}
                 {{ if abc == 'abc' }}
                     
-                 {{ /if }}
-             {{ /if }}
+                {{ /if }}
+            {{ /if }}
         
         {{ else }}
             
-         {{ /if }}
+        {{ /if }}
     
     {{ elseif 5 < 10 }}
         <p>Inner literal two.</p>
     
     {{ else }}
         <p>Else- inner literal three..</p>
-     {{ /if }}
+    {{ /if }}
     <p>end</p>
 {{ /articles }}
 <p>Outer end</p>`;
@@ -2025,5 +2025,32 @@ window.secondaryColor = '{{ theme:secondary_color ?? "#C62368" }}';
             <!-- End: /page_builder/_form.antlers.html -->`;
 
         assert.strictEqual(formatDefaultHtmlSettings(input), input);
+    });
+
+    test('it does not remove simple literals from simple ifs', () => {
+        const expected = `<head>
+    {{ if something }}
+        wat
+    {{ /if }}
+</head>`;
+
+        const input = `<head>
+{{ if something }}
+wat
+{{ /if }}
+</head>`;
+        assert.strictEqual(formatDefaultHtmlSettings(input), expected);
+    });
+
+    test('it does not attempt to format documents with unclosed regions', () => {
+        const input = `<head>
+        {{ if something }}
+                {{ seo:_pro 
+        {{ /if }}
+        </head>`;
+
+        for (let i = 0; i < 10; i++) {
+            assert.strictEqual(formatDefaultHtmlSettings(input), input);
+        }
     });
 });

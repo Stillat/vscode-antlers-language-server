@@ -65,6 +65,10 @@ export class AntlersDocument {
         return this.documentParser.hasUnclosedIfStructures();
     }
 
+    hasUnclosedStructures() {
+        return this.documentParser.hasUnclosedStructures();
+    }
+
     getFrontMatterDoc(): YamlDocument | null {
         if (this.hasFrontMatter()) {
             const yamlDoc = new YamlDocument();

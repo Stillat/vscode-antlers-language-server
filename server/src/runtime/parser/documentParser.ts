@@ -99,11 +99,16 @@ export class DocumentParser {
     private pushedErrors: Map<string, AntlersError> = new Map();
     private frontMatter = '';
     private doesHaveUncloseIfStructures = false;
+    private doesHaveUnclosedStructures = false;
 
     public readonly structure: VirtualHierarchy = new VirtualHierarchy(this);
 
     hasUnclosedIfStructures() {
         return this.doesHaveUncloseIfStructures;
+    }
+
+    hasUnclosedStructures() {
+        return this.doesHaveUnclosedStructures;
     }
 
     getFrontMatter() {
@@ -1208,6 +1213,7 @@ export class DocumentParser {
                 this.nodes.push(failNode);
                 this.lastAntlersNode = failNode;
 
+                this.doesHaveUnclosedStructures = true;
                 this.antlersErrors.push(AntlersError.makeSyntaxError(
                     AntlersErrorCodes.TYPE_INCOMPLETE_PHP_EVALUATION_REGION,
                     failNode,
@@ -1257,6 +1263,7 @@ export class DocumentParser {
                 this.nodes.push(failNode);
                 this.lastAntlersNode = failNode;
 
+                this.doesHaveUnclosedStructures = true;
                 this.antlersErrors.push(AntlersError.makeSyntaxError(
                     AntlersErrorCodes.TYPE_INCOMPLETE_ANTELRS_COMMENT_REGION,
                     failNode,
@@ -1410,6 +1417,7 @@ export class DocumentParser {
                 this.nodes.push(failNode);
                 this.lastAntlersNode = failNode;
 
+                this.doesHaveUnclosedStructures = true;
                 let message = 'Unexpected end of input while parsing Antlers region.';
 
                 if (this.isScanningInterpolations) {
@@ -1447,6 +1455,7 @@ export class DocumentParser {
         if (index + 3 > this.inputLen) {
             node.endPosition = this.positionFromOffset(this.inputLen, this.inputLen - 1);
 
+            this.doesHaveUnclosedStructures = true;
             this.antlersErrors.push(AntlersError.makeSyntaxError(
                 AntlersErrorCodes.TYPE_UNEXPECTED_EOI_WHILE_MANIFESTING_ANTLERS_NODE,
                 node,
@@ -1671,6 +1680,7 @@ export class DocumentParser {
                 this.inputLen - 1
             );
 
+            this.doesHaveUnclosedStructures = true;
             this.antlersErrors.push(AntlersError.makeSyntaxError(
                 AntlersErrorCodes.TYPE_UNEXPECTED_EOI_WHILE_MANIFESTING_ANTLERS_NODE,
                 node,

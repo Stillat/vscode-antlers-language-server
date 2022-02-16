@@ -735,7 +735,7 @@ export class AntlersFormatter {
     }
 
     formatDocument(doc: AntlersDocument) {
-        if (doc.hasInvalidControlFlowStructures() || doc.isFormattingEnabled() == false) {
+        if (doc.hasInvalidControlFlowStructures() || doc.hasUnclosedStructures() || doc.isFormattingEnabled() == false) {
             return doc.getOriginalContent();
         }
 
@@ -806,7 +806,7 @@ export class AntlersFormatter {
                 let tClosePrefix = '';
 
                 if (pushClose) {
-                    let closeConstructIndex = constructionIndex;
+                    let closeConstructIndex = constructionIndex - 1;
 
                     if (closeConstructIndex == 1) { closeConstructIndex = 0; }
                     tClosePrefix = "{{@cond_break@}}\n" + ' '.repeat(closeConstructIndex);
