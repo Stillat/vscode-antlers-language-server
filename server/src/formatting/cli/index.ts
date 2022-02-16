@@ -23,6 +23,12 @@ const argv = yargs.command('format', 'Formats a file and writes the changes to d
         alias: 'd',
         type: 'string'
     },
+    stdin: {
+        description: 'Indicates that the formatter should use stdin input',
+        alias: 's',
+        type: 'boolean',
+        default: false
+    },
     output: {
         description: 'An optional output path',
         alias: 'out',
@@ -83,6 +89,17 @@ function getFiles(directory: string, extension: string, callback: fileCallback) 
     }
 }
 
+function formatString(contents: string, savePath: string|null, dumpContents: boolean, options: AntlersFormattingOptions) {
+    const doc = AntlersDocument.fromText(contents),
+        formatter = new AntlersFormatter(options),
+        formatResults = formatter.formatDocument(doc);
+    if (dumpContents === true) {
+        console.log(formatResults);
+    } else if (savePath != null) {
+        fs.writeFileSync(savePath, formatResults, { encoding: 'utf8' });
+    }
+}
+
 function formatFile(path: string, savePath: string, dumpContents: boolean, options: AntlersFormattingOptions) {
     if (fs.existsSync(path)) {
         try { fs.accessSync(path, fs.constants.R_OK | fs.constants.W_OK); } catch (err) { console.error(err); process.exit(EXIT_PATH_PERMISSIONS_ISSUE); }
@@ -93,7 +110,7 @@ function formatFile(path: string, savePath: string, dumpContents: boolean, optio
                 formatter = new AntlersFormatter(options),
                 formatResults = formatter.formatDocument(doc);
 
-            if (argv.dump === true) {
+            if (dumpContents === true) {
                 console.log(formatResults);
             } else {
                 fs.writeFileSync(savePath, formatResults, { encoding: 'utf8' });
@@ -134,6 +151,13 @@ if (argv._.includes('format')) {
     }
 
     if (additionalArgs.length == 1) {
+        if (argv.stdin === true) {
+            const contents = fs.readFileSync(0, 'utf-8');
+            
+            formatString(contents, argv.output, argv.dump === true, settingsToUse);
+            process.exit(EXIT_SUCCESS);
+        }
+
         if (argv.dir !== null) {
             let extensionsToUse: string[] = ['.antlers.html'];
 
@@ -142,6 +166,7 @@ if (argv._.includes('format')) {
             }
 
             formatDirectory(argv.dir, settingsToUse, extensionsToUse, argv.dump === true);
+            process.exit(EXIT_SUCCESS);
         }
 
         if (argv.path !== null) {
