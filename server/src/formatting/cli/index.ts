@@ -1,14 +1,11 @@
 #!/usr/bin/env node
 
 // eslint-disable-next-line @typescript-eslint/no-var-requires
-const yargs = require('yargs'), path = require('path'), os = require('os');
+const yargs = require('yargs'), path = require('path');
 
 import * as fs from 'fs';
 import { AntlersDocument } from '../../runtime/document/antlersDocument';
-import { StringUtilities } from '../../runtime/utilities/stringUtilities';
 import { AntlersFormatter, AntlersFormattingOptions } from '../antlersFormatter';
-
-const processRoot = (os.platform == "win32") ? StringUtilities.trimRight(process.cwd().split(path.sep)[0], '/') : "/";
 
 const EXIT_SUCCESS = 0,
     EXIT_FILE_NOT_FOUND = 3,
@@ -144,27 +141,23 @@ function formatDirectory(dir: string, options: AntlersFormattingOptions, extensi
 }
 
 function findSettings(root:string): string | null {
-    const searchPath = path.dirname(root),
-        settingsPath = path.join(searchPath, AUTO_FORMAT_CONFIG_PATH);
+    let searchPath = path.dirname(root);
 
-    if (fs.existsSync(settingsPath)) {
-        return settingsPath;
+    if (searchPath == '.') {
+        searchPath = process.cwd();
     }
 
-    const  next = path.resolve(searchPath, '.'),
-        checkNext = StringUtilities.trimRight(next, '/\\\\');
+    const parts  = searchPath.split(path.sep);
 
-    if (checkNext == processRoot) {
-        const rootCheck = path.join(next, AUTO_FORMAT_CONFIG_PATH);
-        if (fs.existsSync(rootCheck)) {
-            return rootCheck;
+    while (parts.length > 0) {
+        const newPath = parts.join(path.sep),
+            formatFileCandidate = path.join(newPath, AUTO_FORMAT_CONFIG_PATH);
+        
+            if (fs.existsSync(formatFileCandidate)) {
+            return formatFileCandidate;
         }
 
-        return null;
-    }
-
-    if (fs.existsSync(next)) {
-        return findSettings(next);
+        parts.pop();
     }
 
     return null;
