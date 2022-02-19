@@ -1,16 +1,20 @@
 #!/usr/bin/env node
 
 // eslint-disable-next-line @typescript-eslint/no-var-requires
-const yargs = require('yargs'), path = require('path');
+const yargs = require('yargs'), path = require('path'), os = require('os');
 
 import * as fs from 'fs';
 import { AntlersDocument } from '../../runtime/document/antlersDocument';
+import { StringUtilities } from '../../runtime/utilities/stringUtilities';
 import { AntlersFormatter, AntlersFormattingOptions } from '../antlersFormatter';
+
+const processRoot = (os.platform == "win32") ? StringUtilities.trimRight(process.cwd().split(path.sep)[0], '/') : "/";
 
 const EXIT_SUCCESS = 0,
     EXIT_FILE_NOT_FOUND = 3,
     EXIT_GENERAL_FAILURE = 1,
-    EXIT_PATH_PERMISSIONS_ISSUE = 4;
+    EXIT_PATH_PERMISSIONS_ISSUE = 4,
+    AUTO_FORMAT_CONFIG_PATH = '.antlers.format.json';
 
 const argv = yargs.command('format', 'Formats a file and writes the changes to disk', {
     path: {
@@ -139,14 +143,63 @@ function formatDirectory(dir: string, options: AntlersFormattingOptions, extensi
     }
 }
 
+function findSettings(root:string): string | null {
+    const searchPath = path.dirname(root),
+        settingsPath = path.join(searchPath, AUTO_FORMAT_CONFIG_PATH);
+
+    if (fs.existsSync(settingsPath)) {
+        return settingsPath;
+    }
+
+    const  next = path.resolve(searchPath, '.'),
+        checkNext = StringUtilities.trimRight(next, '/\\\\');
+
+    if (checkNext == processRoot) {
+        const rootCheck = path.join(next, AUTO_FORMAT_CONFIG_PATH);
+        if (fs.existsSync(rootCheck)) {
+            return rootCheck;
+        }
+
+        return null;
+    }
+
+    if (fs.existsSync(next)) {
+        return findSettings(next);
+    }
+
+    return null;
+}
+
 if (argv._.includes('format')) {
     let settingsToUse: AntlersFormattingOptions = defaultSettings;
 
-    if (argv.options !== null) {
+    if (typeof argv.options !== 'undefined' && argv.options !== null) {
         const fileSettings = resolveSettings(argv.options);
 
         if (fileSettings != null) {
             settingsToUse = fileSettings;
+        }
+    } else {
+        let pathToUse = '';
+
+        if (additionalArgs.length == 1) {
+            if (typeof argv.dir !== 'undefined' && argv.dir !== null) {
+                pathToUse = argv.dir;
+            } else if (typeof argv.path !== 'undefined' && argv.path !== null) {
+                pathToUse = argv.path;
+            }
+        } else {
+            pathToUse = additionalArgs[1] as string;
+        }
+
+        const foundSettings = findSettings(pathToUse);
+
+        if (foundSettings != null) {
+            const resolvedSettings = resolveSettings(foundSettings);
+
+            if (resolvedSettings != null) {
+                settingsToUse = resolvedSettings;
+            }
         }
     }
 
