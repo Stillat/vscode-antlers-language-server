@@ -1,0 +1,20 @@
+{
+  "name": "antlers-language-server",
+  "version": "1.0.7",
+  "description": "Formats Antlers template files.",
+  "main": "server.js",
+  "bin": {
+    "antlersls": "server.js"
+  },
+  "scripts": {},
+  "keywords": [
+    "Antlers",
+    "Statamic",
+    "format"
+  ],
+  "author": "John Koster",
+  "license": "MIT",
+  "engines": {
+    "node": ">=6.9.0"
+  }
+}
