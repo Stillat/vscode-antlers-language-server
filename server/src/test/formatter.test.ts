@@ -2053,4 +2053,18 @@ wat
             assert.strictEqual(formatDefaultHtmlSettings(input), input);
         }
     });
+
+
+    test('typing sim', () => {
+        const template = `{{ if something == 'true' }}Yes{{ else }}No{{ /if }}`,
+            chars = template.split(''),
+            inputChars:string[] = [];
+
+        chars.forEach((char) => {
+            inputChars.push(char);
+            const input = inputChars.join('');
+
+            assert.strictEqual(formatDefaultHtmlSettings(input), input);
+        });
+    });
 });

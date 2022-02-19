@@ -1183,6 +1183,10 @@ export class DocumentParser {
     }
 
     private scanToEndOfPhpRegion(checkChar:string) {
+        if (this.currentIndex == this.inputLen) {
+            this.doesHaveUnclosedStructures = true;
+        }
+
         for (this.currentIndex; this.currentIndex < this.inputLen; this.currentIndex += 1) {
             this.checkCurrentOffsets();
 
@@ -1234,6 +1238,10 @@ export class DocumentParser {
     }
 
     private scanToEndOfAntlersCommentRegion() {
+        if (this.currentIndex == this.inputLen) {
+            this.doesHaveUnclosedStructures = true;
+        }
+
         for (this.currentIndex; this.currentIndex < this.inputLen; this.currentIndex += 1) {
             this.checkCurrentOffsets();
 
@@ -1275,6 +1283,10 @@ export class DocumentParser {
     }
 
     private scanToEndOfInterpolatedRegion(): InterpolationScanResult {
+        if (this.currentIndex == this.inputLen) {
+            this.doesHaveUnclosedStructures = true;
+        }
+
         const subContent: string[] = [];
         this.isScanningInterpolations = true;
         // We will enter this method when the parser hits the first {.
@@ -1362,6 +1374,10 @@ export class DocumentParser {
     }
 
     private scanToEndOfAntlersRegion() {
+        if (this.currentIndex == this.inputLen) {
+            this.doesHaveUnclosedStructures = true;
+        }
+        
         for (this.currentIndex; this.currentIndex < this.inputLen; this.currentIndex += 1) {
             this.checkCurrentOffsets();
 
