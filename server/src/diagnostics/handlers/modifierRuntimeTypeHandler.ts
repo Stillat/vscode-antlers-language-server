@@ -1,6 +1,6 @@
 import { AntlersError, ErrrorLevel } from '../../runtime/errors/antlersError';
 import { AntlersErrorCodes } from '../../runtime/errors/antlersErrorCodes';
-import { AntlersNode, ParameterNode, ModifierNode } from '../../runtime/nodes/abstractNode';
+import { AntlersNode, ParameterNode, ModifierNode, AbstractNode } from '../../runtime/nodes/abstractNode';
 import { IDiagnosticsHandler } from "../diagnosticsHandler";
 
 const ModifierRuntimeTypeHandler: IDiagnosticsHandler = {
@@ -10,6 +10,8 @@ const ModifierRuntimeTypeHandler: IDiagnosticsHandler = {
         if (node.modifiers == null) {
             return issues;
         }
+
+        const reportedNodes:string[] = [];
 
         if (node.modifiers.hasParameterModifiers()) {
             let lastModifier: ParameterNode | null = null;
@@ -101,13 +103,82 @@ const ModifierRuntimeTypeHandler: IDiagnosticsHandler = {
                         }
 
                         if (!typeOverlap) {
-                            issues.push(AntlersError.makeSyntaxError(
-                                AntlersErrorCodes.LINT_MODIFIER_UNEXPECTED_TYPE,
-                                thisModifier,
-                                "Unexpected type supplied to modifier " + thisModifier.name + ". Expected " + expectedGuess + " got " + recievedGuess + ".",
-                                ErrrorLevel.Warning
-                            ));
+                            if (thisModifier.refId != null && !reportedNodes.includes(thisModifier.refId)) {
+                                issues.push(AntlersError.makeSyntaxError(
+                                    AntlersErrorCodes.LINT_MODIFIER_UNEXPECTED_TYPE,
+                                    thisModifier,
+                                    "Unexpected type supplied to modifier " + thisModifier.name + ". Expected " + expectedGuess + " got " + recievedGuess + ".",
+                                    ErrrorLevel.Warning
+                                ));
+                                reportedNodes.push(thisModifier.refId);
+                            }
                             break;
+                        }
+                    }
+                }
+            }
+        }
+
+        if (node.runtimeNodes != null && node.runtimeNodes.length > 0) {
+            for (let j = 0; j < node.runtimeNodes.length; j++) {
+                const checkRuntimeNode = node.runtimeNodes[j] as AbstractNode;
+
+                let lastModifier: ModifierNode | null = null;
+
+                if (checkRuntimeNode.modifierChain == null) {
+                    continue;
+                }
+
+                for (let i = 0; i < checkRuntimeNode.modifierChain.modifierChain.length; i++) {
+                    const thisModifier = checkRuntimeNode.modifierChain.modifierChain[i];
+
+                    if (lastModifier == null) {
+                        lastModifier = thisModifier;
+                        continue;
+                    }
+
+                    if (
+                        lastModifier != null &&
+                        lastModifier.modifier != null &&
+                        thisModifier.modifier != null
+                    ) {
+                        if (
+                            lastModifier.modifier.returnsType.includes("*") ||
+                            thisModifier.modifier.acceptsType.includes("*")
+                        ) {
+                            continue;
+                        } else {
+                            const lastModifierReturns = lastModifier.modifier.returnsType;
+                            let recievedGuess = "void",
+                                expectedGuess = "void";
+
+                            const typeOverlap = thisModifier.modifier.acceptsType.some((r) =>
+                                lastModifierReturns.includes(r)
+                            );
+
+                            if (lastModifierReturns.length > 0) {
+                                recievedGuess =
+                                    lastModifierReturns[lastModifierReturns.length - 1];
+                            }
+
+                            if (thisModifier.modifier.acceptsType.length > 0) {
+                                expectedGuess = thisModifier.modifier.acceptsType[0];
+                            }
+
+                            if (!typeOverlap) {
+                                if (thisModifier.refId != null) {
+                                    if (reportedNodes.includes(thisModifier.refId) == false ) {
+                                        issues.push(AntlersError.makeSyntaxError(
+                                            AntlersErrorCodes.LINT_MODIFIER_UNEXPECTED_TYPE,
+                                            thisModifier,
+                                            "Unexpected type supplied to modifier " + thisModifier.name + ". Expected " + expectedGuess + " got " + recievedGuess + ".",
+                                            ErrrorLevel.Warning
+                                        ));
+                                        reportedNodes.push(thisModifier.refId);
+                                    }
+                                }
+                                break;
+                            }
                         }
                     }
                 }

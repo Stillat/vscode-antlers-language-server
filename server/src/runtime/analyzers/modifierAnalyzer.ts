@@ -4,10 +4,6 @@ import { AntlersNode } from '../nodes/abstractNode';
 
 export class ModifierAnalyzer {
     static analyzeModifierNodeParameters(node: AntlersNode) {
-        if (!node.hasParameters) {
-            return;
-        }
-
         node.parameters.forEach((parameter) => {
             parameter.isModifierParameter =
                 ModifierManager.instance?.hasModifier(parameter.name) ?? false;
@@ -48,6 +44,40 @@ export class ModifierAnalyzer {
             if (node.modifiers.parameterModifiers.length > 0) {
                 node.modifiers.hasMixedModifierStyles = true;
             }
+        }
+
+        if (node.runtimeNodes.length > 0) {
+            node.runtimeNodes.forEach((runtimeNode) => {
+                if (runtimeNode.modifierChain != null && runtimeNode.modifierChain.modifierChain.length > 0) {
+                    let lastModifier: IModifier | null = null;
+
+                    runtimeNode.modifierChain.modifierChain.forEach((modifier) => {
+                        if (modifier.nameNode != null) {
+                            modifier.modifier = ModifierManager.instance?.getModifier(modifier.nameNode.content) ?? null;
+        
+                            if (node.modifiers.modifierNames.includes(modifier.nameNode.content) == false) {
+                                node.modifiers.modifierNames.push(modifier.nameNode.content);
+                            }
+        
+                            if (modifier.modifier != null) {
+                                lastModifier = modifier.modifier;
+        
+                                if (node.modifierChain != null) {
+                                    node.modifierChain.lastManifestedModifier = modifier;
+                                }
+                            }
+                        }
+                    });
+        
+                    if (node.modifierChain != null) {
+                        node.modifierChain.lastModifier = lastModifier;
+                    }
+        
+                    if (node.modifiers.parameterModifiers.length > 0) {
+                        node.modifiers.hasMixedModifierStyles = true;
+                    }
+                }
+            });
         }
 
         const lastManifestModifier = node.modifiers.getLastManifestedModifier();
