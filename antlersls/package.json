@@ -1,7 +1,7 @@
 {
   "name": "antlers-language-server",
-  "version": "1.0.7",
-  "description": "Formats Antlers template files.",
+  "version": "1.0.1",
+  "description": "The Antlers language server.",
   "main": "server.js",
   "bin": {
     "antlersls": "server.js"
