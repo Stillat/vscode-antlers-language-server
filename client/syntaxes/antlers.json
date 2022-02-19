@@ -445,7 +445,7 @@
 			}
 		},
 		"antlers-language-operators": {
-			"match": "\\s(\\w+)[\\s]",
+			"match": "(\\w+)[\\s]",
 			"captures": {
 				"1": {
 					"name": "variable.statamic",
@@ -499,7 +499,7 @@
 		"language-operators": {
 			"patterns": [
 				{
-					"match": "(?i)\\b(pluck|take|skip|arr|orderby|groupby|merge|where|switch|bwa|bwo|bxor|bnot|bsl|bsr|if|elseif|else)\\b",
+					"match": "(?i)\\b(pluck|take|skip|arr|orderby|groupby|merge|where|switch|bwa|bwo|bxor|bnot|bsl|bsr|if|elseif|else|void)(\\b)",
 					"name": "support.function.array.statamic"
 				}
 			]
