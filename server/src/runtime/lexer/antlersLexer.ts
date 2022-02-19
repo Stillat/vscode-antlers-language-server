@@ -548,6 +548,7 @@ export class AntlersLexer {
                             const modifierNameNode = new ModifierNameNode();
                             modifierNameNode.isVirtual = false;
                             modifierNameNode.name = parsedValue;
+                            modifierNameNode.content = parsedValue;
                             modifierNameNode.startPosition = startPosition;
                             modifierNameNode.endPosition = endPosition;
                             modifierNameNode.parent = this.activeNode;
