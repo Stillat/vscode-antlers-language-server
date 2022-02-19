@@ -27,13 +27,20 @@ export function getSystemVariables(): IScopeVariable[] {
     systemVariables.push({ dataType: 'string', name: 'homepage', sourceField: null, sourceName: '*internal.system', introducedBy: null });
     systemVariables.push({ dataType: 'string', name: 'current_uri', sourceField: null, sourceName: '*internal.system', introducedBy: null });
     systemVariables.push({ dataType: 'string', name: 'current_url', sourceField: null, sourceName: '*internal.system', introducedBy: null });
+    systemVariables.push({ dataType: 'string', name: 'amp_url', sourceField: null, sourceName: '*internal.system', introducedBy: null });
+    systemVariables.push({ dataType: 'string', name: 'api_url', sourceField: null, sourceName: '*internal.system', introducedBy: null });
+    systemVariables.push({ dataType: 'string', name: 'current_full_url', sourceField: null, sourceName: '*internal.system', introducedBy: null });
     systemVariables.push({ dataType: 'string', name: 'current_template', sourceField: null, sourceName: '*internal.system', introducedBy: null });
+    systemVariables.push({ dataType: 'boolean', name: 'logged_in', sourceField: null, sourceName: '*internal.system', introducedBy: null });
+    systemVariables.push({ dataType: 'boolean', name: 'logged_out', sourceField: null, sourceName: '*internal.system', introducedBy: null });
     systemVariables.push({ dataType: 'boolean', name: 'is_homepage', sourceField: null, sourceName: '*internal.system', introducedBy: null });
+
+    /* Waiting to see what https://github.com/statamic/cms/pull/5109 looks like once its ready. */
+    /*systemVariables.push({ dataType: 'boolean', name: 'is_live_previewing', sourceField: null, sourceName: '*internal.system', introducedBy: null });*/
 
     systemVariables.push({ dataType: 'date', name: 'now', sourceField: null, sourceName: '*internal.system', introducedBy: null });
     systemVariables.push({ dataType: 'date', name: 'today', sourceField: null, sourceName: '*internal.system', introducedBy: null });
     systemVariables.push({ dataType: 'date', name: 'current_date', sourceField: null, sourceName: '*internal.system', introducedBy: null });
-
 
     systemVariables.push({ dataType: 'array', name: 'get', sourceField: null, sourceName: '*internal.system', introducedBy: null });
     systemVariables.push({ dataType: 'array', name: 'get_post', sourceField: null, sourceName: '*internal.system', introducedBy: null });
