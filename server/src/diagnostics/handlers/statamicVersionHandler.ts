@@ -24,13 +24,17 @@ const StatamicVersionHandler: IDiagnosticsHandler = {
 
         if (tagRef?.introducedIn == null) { return errors; }
 
-        if (semver.lt(currentVersion, tagRef.introducedIn)) {
-            errors.push(AntlersError.makeSyntaxError(
-                AntlersErrorCodes.LINT_VERSION_NOT_COMPATIBLE,
-                node,
-                node.runtimeName() + ' requires at least Statamic ' + tagRef.introducedIn + '. Current project version: ' + currentVersion,
-                ErrrorLevel.Warning
-            ));
+        try {
+            if (semver.lt(currentVersion, tagRef.introducedIn)) {
+                errors.push(AntlersError.makeSyntaxError(
+                    AntlersErrorCodes.LINT_VERSION_NOT_COMPATIBLE,
+                    node,
+                    node.runtimeName() + ' requires at least Statamic ' + tagRef.introducedIn + '. Current project version: ' + currentVersion,
+                    ErrrorLevel.Warning
+                ));
+            }
+        } catch (err) {
+            // Ignore the invalid version to prevent things crashing.
         }
 
         return errors;

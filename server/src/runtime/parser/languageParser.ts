@@ -2271,8 +2271,8 @@ export class LanguageParser {
 
                 const right = nodes[i + 1];
 
-                right.isVirtualGroupMember = true;
-                poppedLeft.isVirtualGroupMember = true;
+                if (typeof right !== 'undefined') { right.isVirtualGroupMember = true; }
+                if (typeof poppedLeft !== 'undefined') { poppedLeft.isVirtualGroupMember = true; }
                 node.isVirtualGroupMember = true;
 
 
@@ -2336,8 +2336,8 @@ export class LanguageParser {
 
                 this.flagNodeAsOperatorResolve(right);
 
-                poppedLeft.isVirtualGroupMember = true;
-                right.isVirtualGroupMember = true;
+                if (typeof poppedLeft !== 'undefined') { poppedLeft.isVirtualGroupMember = true; }
+                if (typeof right !== 'undefined') { right.isVirtualGroupMember = true; }
                 node.isVirtualGroupMember = true;
 
                 const logicGroup = new LogicGroup();
@@ -2380,8 +2380,8 @@ export class LanguageParser {
                 const wrapperGroup = new LogicGroup();
                 wrapperGroup.startPosition = lastNode.startPosition;
 
-                lastNode.isVirtualGroupMember = true;
-                thisNode.isVirtualGroupMember = true;
+                if (typeof lastNode !== 'undefined') { lastNode.isVirtualGroupMember = true; }
+                if (typeof thisNode !== 'undefined') { thisNode.isVirtualGroupMember = true; }
 
                 wrapperGroup.nodes.push(lastNode);
                 wrapperGroup.nodes.push(thisNode);
@@ -2389,6 +2389,7 @@ export class LanguageParser {
                 if (i != lastNodeIndex) {
                     for (let j = i + 1; j < nodeLen; j++) {
                         if (nodes[j] instanceof MethodInvocationNode) {
+                            if (typeof nodes[j] === 'undefined') { continue; }
                             nodes[j].isVirtualGroupMember = true;
                             wrapperGroup.nodes.push(nodes[j]);
 
