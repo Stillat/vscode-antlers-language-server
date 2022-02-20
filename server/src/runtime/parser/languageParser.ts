@@ -2175,6 +2175,12 @@ export class LanguageParser {
             if (node instanceof InlineTernarySeparator) {
                 const separator = this.seek(InlineBranchSeparator, i + 1);
 
+                if (separator.node?.originalAbstractNode != null) {
+                    if (separator.node.originalAbstractNode instanceof ModifierValueSeparator) {
+                        separator.node.originalAbstractNode.isTenaryBranchSeparator = true;
+                    }
+                }
+
                 if (separator.found == false) {
                     node.pushError(AntlersError.makeSyntaxError(
                         AntlersErrorCodes.TYPE_TERNARY_EXPECTING_BRANCH_SEPARATOR,

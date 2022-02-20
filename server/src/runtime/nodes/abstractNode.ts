@@ -879,7 +879,7 @@ export class NullCoalescenceGroup extends AbstractNode {
     public right: AbstractNode | null = null;
 }
 export class ModifierValueSeparator extends AbstractNode {
-
+    public isTenaryBranchSeparator = false;
 }
 export class InlineTernarySeparator extends AbstractNode {
 

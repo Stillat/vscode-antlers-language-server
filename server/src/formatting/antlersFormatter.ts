@@ -435,6 +435,13 @@ export class AntlersFormatter {
                     if (doc.getDocumentParser().getLanguageParser().isMergedVariableComponent(node)) {
                         continue;
                     }
+
+                    if (node.isTenaryBranchSeparator) {
+                        nodeBuffer.appendS(':');
+                        lastPrintedNode = node;
+                        continue;
+                    }
+
                     if (doc.getDocumentParser().getLanguageParser().isActualModifierSeparator(node)) {
                         nodeBuffer.append(':');
                         lastPrintedNode = node;

@@ -2054,6 +2054,11 @@ wat
         }
     });
 
+    test('it does not collapse branch separators', () => {
+        const input = `{{ excerpt ? excerpt | widont : content | strip_tags | safe_truncate:160:... }}`;
+
+        assert.strictEqual(formatDefaultHtmlSettings(input), input);
+    });
 
     test('typing sim', () => {
         const template = `{{ if something == 'true' }}Yes{{ else }}No{{ /if }}`,
