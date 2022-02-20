@@ -1,9 +1,9 @@
 {
     "name": "antlers-statamic",
-    "description": "Provides Antlers syntax highlighting, and robust language features.",
+    "description": "Provides Antlers syntax highlighting, formatting, error reporting, project-specific suggestions, and more.",
     "author": "John Koster",
     "license": "MIT",
-    "version": "0.1.22",
+    "version": "0.1.23",
     "publisher": "stillat",
     "engines": {
         "vscode": "^1.52.0"
