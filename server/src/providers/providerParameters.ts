@@ -38,7 +38,8 @@ function getInterpolatedAncestors(node: AntlersNode, startPosition: antlr.Positi
 
 export function makeProviderRequest(
     position: Position,
-    documentUri: string
+    documentUri: string,
+    showGeneralSnippetCompletions = true
 ): ISuggestionRequest | null {
 
 
@@ -97,6 +98,7 @@ export function makeProviderRequest(
         currentNode: features?.node ?? null,
         isCaretInTag: features?.node != null,
         isPastTagPart: isPastTagPart,
+        showGeneralSnippets: showGeneralSnippetCompletions
     };
 
     return suggestionRequest;

@@ -9,6 +9,7 @@ export interface ISuggestionRequest {
      * The adjusted document URI.
      */
     document: string;
+    showGeneralSnippets: boolean;
     antlersDocument: AntlersDocument;
     /**
      * Indicates if the user's caret is within an Antlers tag.

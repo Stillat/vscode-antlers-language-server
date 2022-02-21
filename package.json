@@ -96,6 +96,12 @@
                     "default": "off",
                     "description": "Traces the communication between VS Code and the language server."
                 },
+                "antlersLanguageServer.showGeneralSnippetCompletions": {
+                    "scope": "window",
+                    "type": "boolean",
+                    "default": true,
+                    "description": "When enabled general Antlers snippets will appear in completion suggestions outside of Antlers tags."
+                },
                 "antlersLanguageServer.languageVersion": {
                     "scope": "window",
                     "type": "string",

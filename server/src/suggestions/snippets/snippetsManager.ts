@@ -24,6 +24,10 @@ function makeSnippet(name: string, description: string, content: string, range: 
 function getGenericAntlersSnippets(params: ISuggestionRequest): CompletionItem[] {
     const items: CompletionItem[] = [];
 
+    if (params.showGeneralSnippets == false) {
+        return items;
+    }
+
     const range: Range = {
         start: {
             line: params.position.line,

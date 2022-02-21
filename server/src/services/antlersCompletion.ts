@@ -5,6 +5,7 @@ import {
 import { sessionDocuments } from '../languageService/documents';
 import ProjectManager from '../projects/projectManager';
 import { makeProviderRequest } from "../providers/providerParameters";
+import { globalSettings } from '../server';
 import SnippetsManager from "../suggestions/snippets/snippetsManager";
 import { SuggestionManager } from "../suggestions/suggestionManager";
 
@@ -28,7 +29,7 @@ export function handleOnCompletion(_textDocumentPosition: TextDocumentPositionPa
         return [];
     }
 
-    const suggestionRequest = makeProviderRequest(_textDocumentPosition.position, docPath);
+    const suggestionRequest = makeProviderRequest(_textDocumentPosition.position, docPath, globalSettings.showGeneralSnippetCompletions);
 
     if (suggestionRequest == null) {
         return [];
