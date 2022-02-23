@@ -1,5 +1,6 @@
 {
 	"name": "Antlers (Statamic Syntax)",
+    "fileTypes": ["antlers.html", "html", "htm", "xhtml"],
 	"scopeName": "text.html.statamic",
 	"injections": {
 		"text.html.statamic - (meta.embedded | meta.tag), L:((text.html.statamic meta.tag) - (meta.embedded.block.php | meta.embedded.line.php)), L:(source.js - (meta.embedded.block.php | meta.embedded.line.php)), L:(source.css - (meta.embedded.block.php | meta.embedded.line.php))": {
