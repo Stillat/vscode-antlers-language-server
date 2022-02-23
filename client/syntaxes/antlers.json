@@ -243,6 +243,9 @@
 					"match": "->",
 					"name": "keyword.operator.class.statamic"
 				},
+                {
+                    "include": "#statamic-explicit-tags"
+                },
 				{
 					"include": "#statamic-core-tags"
 				},
@@ -431,6 +434,14 @@
 				}
 			}
 		},
+        "statamic-explicit-tags": {
+			"match": "\\G(/?%\\w+)+",
+			"captures": {
+				"1": {
+                    "name": "entity.name.tag.statamic"
+				}
+			}
+        },
 		"statamic-core-closing-tags": {
 			"match": "\\/(\\w+)+",
 			"captures": {
