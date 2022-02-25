@@ -2072,4 +2072,13 @@ wat
             assert.strictEqual(formatDefaultHtmlSettings(input), input);
         });
     });
+
+    test('it does not format incorrect tag pairs', () => {
+        const template = `{{ collection:articles }}
+{{ articles }}
+{{ /collection:articles }}
+
+{{ /articles }}`;
+        assert.strictEqual(format(template), template);
+    });
 });

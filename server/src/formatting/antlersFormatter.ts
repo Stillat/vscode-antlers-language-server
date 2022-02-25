@@ -1,6 +1,7 @@
 // eslint-disable-next-line @typescript-eslint/no-var-requires
 const beautify = require("js-beautify").html;
 
+import InterleavedNodeHandler from '../diagnostics/handlers/interleavedNodes';
 import { AntlersDocument } from '../runtime/document/antlersDocument';
 import { AbstractNode, AdditionOperator, AntlersNode, ArgSeparator, ConditionNode, DivisionOperator, InlineBranchSeparator, InlineTernarySeparator, LeftAssignmentOperator, LiteralNode, LogicalNegationOperator, LogicGroupBegin, LogicGroupEnd, ModifierNameNode, ModifierSeparator, ModifierValueNode, ModifierValueSeparator, MultiplicationOperator, NumberNode, ParameterNode, ScopeAssignmentOperator, StatementSeparatorNode, StringValueNode, SubtractionOperator, TupleListStart, VariableNode } from '../runtime/nodes/abstractNode';
 import { LanguageParser } from '../runtime/parser/languageParser';
@@ -744,6 +745,14 @@ export class AntlersFormatter {
     formatDocument(doc: AntlersDocument) {
         if (doc.hasInvalidControlFlowStructures() || doc.hasUnclosedStructures() || doc.isFormattingEnabled() == false) {
             return doc.getOriginalContent();
+        }
+
+        const antlersNodes = doc.getAllAntlersNodes();
+
+        for (let i = 0; i < antlersNodes.length; i++) {
+            if (InterleavedNodeHandler.checkNode(antlersNodes[i]).length > 0) {
+                return doc.getOriginalContent();
+            }
         }
 
         const rootNodes = doc.getDocumentParser().getRenderNodes();

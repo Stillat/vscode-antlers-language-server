@@ -1,6 +1,7 @@
 import { IDiagnosticsHandler } from '../diagnosticsHandler';
 import DataDumpHandler from './dataDumpHandler';
 import DoubleColonHandler from './doubleColonHandler';
+import InterleavedNodeHandler from './interleavedNodes';
 import MixedModifierHandler from './mixedModifierHandler';
 import ModifierRuntimeTypeHandler from './modifierRuntimeTypeHandler';
 import RelateTagHandler from './relateHandler';
@@ -16,7 +17,8 @@ const CoreHandlers: IDiagnosticsHandler[] = [
     RelateTagHandler,
     TagsThatErrorHandler,
     ShorthandModifierHandler,
-    StatamicVersionHandler
+    StatamicVersionHandler,
+    InterleavedNodeHandler
 ];
 
 export default CoreHandlers;
