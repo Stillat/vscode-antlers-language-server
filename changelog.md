@@ -2,7 +2,7 @@
 
 Bugs fixed, what's new, and more! :)
 
-## v2.0.0 (Not Released)
+## v2.0.6
 
 ## User Experience Updates
 
