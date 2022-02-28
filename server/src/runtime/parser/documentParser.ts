@@ -641,6 +641,10 @@ export class DocumentParser {
         });
 
         this.nodes.forEach((node) => {
+            if (node instanceof AntlersNode && node.isComment) {
+                return;
+            }
+
             if (node instanceof AntlersNode && node.interpolationRegions.size > 0) {
                 node.interpolationRegions.forEach((content, varName) => {
                     const docParser = new DocumentParser();
@@ -667,6 +671,10 @@ export class DocumentParser {
         RecursiveParentAnalyzer.associateRecursiveParent(this.nodes);
 
         this.nodes.forEach((node) => {
+            if (node instanceof AntlersNode && node.isComment) {
+                return;
+            }
+
             if (node instanceof AntlersNode || node instanceof AntlersParserFailNode) {
                 node.isInterpolationNode = this.isInterpolatedParser;
             }
@@ -724,6 +732,10 @@ export class DocumentParser {
 
         this.nodes.forEach((node) => {
             if (node instanceof AntlersNode) {
+                if (node.isComment) {
+                    return;
+                }
+
                 node.isTagNode = TagManager.instance?.isKnownTag(node.runtimeName()) ?? false;
                 node.scopeName = node.findParameterValue('scope', '');
                 node.antlersNodeIndex = curIndex;
@@ -1724,6 +1736,10 @@ export class DocumentParser {
                 node.interpolationRegions.set(key, region);
             }
         });
+
+        if (node.isComment) {
+            return node;
+        }
 
         const returnNode = this.nodeParser.parseNode(node);
         this.mergeErrors(returnNode.getErrors());

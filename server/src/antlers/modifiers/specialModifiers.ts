@@ -31,7 +31,7 @@ const specialModifiers: IModifier[] = [
     },
     {
         name: 'url',
-        acceptsType: ['string'],
+        acceptsType: ['string', '*'],
         returnsType: ['string'],
         description: 'Locates the URL of an asset, page, entry, or taxonomy term based on the variable contents.',
         docLink: 'https://statamic.dev/modifiers/url',

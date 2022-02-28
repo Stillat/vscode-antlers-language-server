@@ -2,6 +2,13 @@
 
 Bugs fixed, what's new, and more! :)
 
+## v2.0.7
+
+
+### Bug Fixes
+
+- Prevents comments from being parsed as Antlers [#23](https://github.com/Stillat/vscode-antlers-language-server/issues/23)
+
 ## v2.0.6
 
 ## User Experience Updates

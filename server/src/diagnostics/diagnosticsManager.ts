@@ -78,6 +78,9 @@ class DiagnosticsManager {
 
     checkNode(node: AntlersNode) {
         const errors: AntlersError[] = [];
+
+        if (node.isComment) { return errors; }
+
         this.handlers.forEach((handler) => {
             handler.checkNode(node).forEach((error) => {
                 errors.push(error);

@@ -10,6 +10,11 @@ const DuplicateNeighboringTags: IDocumentDiagnosticsHandler = {
         let lastNode: AntlersNode | null = null;
 
         document.getAllAntlersNodes().forEach((node) => {
+
+            if (node.isComment) {
+                return;
+            }
+
             if (lastNode == null && node.isTagNode) {
                 lastNode = node;
                 return;
