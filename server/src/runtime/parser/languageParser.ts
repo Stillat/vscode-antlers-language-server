@@ -414,6 +414,27 @@ export class LanguageParser {
                 } else {
                     newNodes.push(node);
                 }
+            } else if (node instanceof SubtractionOperator && newNodeCount > 0) {
+                const left = newNodes[newNodeCount - 1],
+                    right  = tokens[i + 1];
+                
+                if (left instanceof VariableNode && right instanceof VariableNode) {
+                    const lDistance = NodeHelpers.distance(left, node),
+                        rDistance = NodeHelpers.distance(node, right);
+                    if (lDistance <= 1 && rDistance <= 1) {
+                        //NodeHelpers.mergeVarContentLeft('-', node, left);
+                        //NodeHelpers.mergeVarContentLeft(right.name, right, left);
+                        left.endPosition = right.endPosition;
+                        this.mergedComponents.set(node, left);
+                        this.mergedComponents.set(left, left);
+                        this.mergedComponents.set(right, left);
+                        i += 1;
+                    } else {
+                        newNodes.push(node);
+                    }
+                } else {
+                    newNodes.push(node);
+                }
             } else {
                 newNodes.push(node);
             }

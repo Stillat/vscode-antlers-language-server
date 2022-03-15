@@ -45,6 +45,15 @@ function assertFormattedMatches(input: string, output: string) {
 
 suite("Document Formatting Test", () => {
 
+    test('it preserves hyphens in variables', () => {
+        const input = `{{ tag:test-hyphens 
+        
+}} {{ 5-5 }} {{ test-var - another-var }}`;
+        const output = `{{ tag:test-hyphens }} {{ 5 - 5 }}
+{{ test-var - another-var }}`;
+        assert.strictEqual(formatDefaultHtmlSettings(input), output);
+    });
+
     test('it preserves hyphens in tags', () => {
         const input = `{{ tag:test-hyphens 
         

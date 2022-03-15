@@ -2,8 +2,9 @@
 
 Bugs fixed, what's new, and more! :)
 
-## v2.0.7
+## v2.0.8
 
+- Adds hyphenated variable support to the Antlers formatter
 
 ### Bug Fixes
 
