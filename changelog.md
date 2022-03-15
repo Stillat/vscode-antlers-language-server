@@ -2,6 +2,10 @@
 
 Bugs fixed, what's new, and more! :)
 
+## v2.0.9
+
+- Renames the `ANTLER_507` linter error code to `ANTLR_507` for consistency
+
 ## v2.0.8
 
 - Adds hyphenated variable support to the Antlers formatter
