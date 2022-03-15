@@ -496,6 +496,11 @@ export class AntlersFormatter {
                 } else if (node instanceof AdditionOperator) {
                     nodeBuffer.appendS('+');
                 } else if (node instanceof SubtractionOperator) {
+                    if (doc.getDocumentParser().getLanguageParser().isMergedVariableComponent(node)) {
+                        nodeBuffer.append('-');
+                        continue;
+                    }
+
                     if (node.prev != null && node.next != null) {
                         if (NodeHelpers.distance(node.prev, node) <= 1 && NodeHelpers.distance(node.next, node) <= 1) {
                             if (node.next instanceof NumberNode && node.prev instanceof NumberNode) {
