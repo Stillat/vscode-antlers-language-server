@@ -227,6 +227,10 @@ class NodeBuffer {
     getContent() {
         return this.buffer;
     }
+
+    endsWith(value:string):boolean {
+        return this.buffer.endsWith(value);
+    }
 }
 
 export class AntlersFormatter {
@@ -404,6 +408,9 @@ export class AntlersFormatter {
                     }
 
                     if (doc.getDocumentParser().getLanguageParser().isMergedVariableComponent(node)) {
+                        if (!nodeBuffer.endsWith(':')) {
+                            nodeBuffer.append(':');
+                        }
                         continue;
                     }
 

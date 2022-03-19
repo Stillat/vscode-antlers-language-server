@@ -45,6 +45,14 @@ function assertFormattedMatches(input: string, output: string) {
 
 suite("Document Formatting Test", () => {
 
+    test('it doesnt remove variable parts with neighboring numeric nodes', () => {
+        assert.strictEqual(formatDefaultHtmlSettings('{{ assets:0 }}'), '{{ assets:0 }}');
+        assert.strictEqual(formatDefaultHtmlSettings('{{ assets:0:0 }}'), '{{ assets:0:0 }}');
+        assert.strictEqual(formatDefaultHtmlSettings('{{ assets:0:0:test }}'), '{{ assets:0:0:test }}');
+        assert.strictEqual(formatDefaultHtmlSettings('{{ assets.0:0:test }}'), '{{ assets.0:0:test }}');
+        assert.strictEqual(formatDefaultHtmlSettings('{{ assets.0:0.test }}'), '{{ assets.0:0.test }}');
+    });
+
     test('it preserves hyphens in variables', () => {
         const input = `{{ tag:test-hyphens 
         

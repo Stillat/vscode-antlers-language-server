@@ -2,6 +2,10 @@
 
 Bugs fixed, what's new, and more! :)
 
+## v2.0.10
+
+- Corrects an issue where the formatter would not emit `:` or `.` when used as variable components [#24](https://github.com/Stillat/vscode-antlers-language-server/issues/24)
+
 ## v2.0.9
 
 - Renames the `ANTLER_507` linter error code to `ANTLR_507` for consistency
