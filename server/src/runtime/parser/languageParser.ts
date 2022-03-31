@@ -2605,6 +2605,18 @@ export class LanguageParser {
                 }
             }
 
+            if (subToken instanceof StringValueNode || subToken instanceof VariableNode || subToken instanceof NumberNode) {
+                const subTokenCount = subTokens.length;
+
+                if (subTokenCount > 0) {
+                    const last = subTokens[subTokenCount - 1];
+
+                    if (last instanceof LogicGroup) {
+                        break;
+                    }
+                }
+            }
+
             if (subToken instanceof ModifierSeparator ||
                 subToken instanceof LogicGroupEnd ||
                 subToken instanceof LogicGroupBegin ||

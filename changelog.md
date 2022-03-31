@@ -2,6 +2,11 @@
 
 Bugs fixed, what's new, and more! :)
 
+## v2.0.11
+
+- Improves error reporting when using modifiers within the `groupby` operator
+- Adds `stack` and `push` to the syntax highlighting tag list
+
 ## v2.0.10
 
 - Corrects an issue where the formatter would not emit `:` or `.` when used as variable components [#24](https://github.com/Stillat/vscode-antlers-language-server/issues/24)

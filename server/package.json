@@ -1,7 +1,7 @@
 {
 	"name": "statamic-antlers-lsp",
 	"description": "Language server for Antlers.",
-	"version": "1.1.52",
+	"version": "1.1.53",
 	"author": "John Koster",
 	"license": "MIT",
 	"engines": {
