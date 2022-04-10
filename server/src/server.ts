@@ -51,11 +51,15 @@ import SectionManager from './references/sectionManager';
 import SessionVariableManager from './references/sessionVariableManager';
 import { AntlersError } from './runtime/errors/antlersError';
 import { setServerDirectory } from './languageService/serverDirectory';
-import { updateHtmlFormatterSettings } from './languageService/htmlFormatterSettings';
+import { htmlFormatterSettings, updateHtmlFormatterSettings } from './languageService/htmlFormatterSettings';
 import { AntlersNode } from './runtime/nodes/abstractNode';
 import { SessionVariableContext } from './antlers/tags/core/contexts/sessionContext';
 import { handleReferences } from './services/antlersVariableReferences';
 import { handleDocumentHighlight } from './services/antlersDocumentHighlight';
+import DocumentTransformer from './runtime/parser/documentTransformer';
+import { AntlersFormatter } from './formatting/antlersFormatter';
+import { IHTMLFormatConfiguration } from './formatting/htmlCompat';
+import { AntlersDocument } from './runtime/document/antlersDocument';
 
 const projectIndex = "antlers-project-index";
 
@@ -118,6 +122,27 @@ interface LockEditsParams { }
 // eslint-disable-next-line @typescript-eslint/no-empty-interface
 interface ProjectUpdateParams { }
 
+interface ForcedFormatParams {
+    content: string,
+    tabSize: number,
+    insertSpaces: boolean
+}
+
+interface DocumentTransformParams {
+    content: string
+}
+
+interface TransformReplacement {
+    find: string,
+    replace: string
+}
+
+interface DocumentTransformResult {
+    shouldParse: boolean,
+    transformedText: string,
+    replacements:TransformReplacement[]
+}
+
 namespace ReindexRequest {
     export const type: RequestType<ReindexParams, null, any> = new RequestType("antlers/reindex");
 }
@@ -125,8 +150,16 @@ namespace LockEditsRequest {
     export const type: RequestType<LockEditsParams, null, any> = new RequestType("antlers/lockedits");
 }
 
+namespace ForcedFormatRequest {
+    export const type: RequestType<ForcedFormatParams, string, any> = new RequestType('antlers/forcedFormat');
+}
+
 namespace ProjectUpdateRequest {
     export const type: RequestType<ProjectUpdateParams, null, any> = new RequestType('antlers/projectUpdate');
+}
+
+namespace DocumentTransformRequest {
+    export const type: RequestType<DocumentTransformParams, DocumentTransformResult, any> = new RequestType('antlers/transform');
 }
 
 namespace SemanticTokenLegendRequest {
@@ -303,6 +336,44 @@ connection.onRequest(SemanticTokenLegendRequest.type, (token) => {
 
 connection.onRequest(ReindexRequest.type, () => {
     safeRunIndexing();
+});
+
+connection.onRequest(ForcedFormatRequest.type, (params) => {
+    const settings = getAntlersSettings(),
+        options = htmlFormatterSettings.format as IHTMLFormatConfiguration;
+    
+    const formatter = new AntlersFormatter({
+        tabSize: params.tabSize,
+        formatFrontMatter: settings.formatFrontMatter,
+        insertSpaces: params.insertSpaces,
+        formatExtensions: [],
+        maxStatementsPerLine: 3,
+        htmlOptions: options
+    });
+
+    return formatter.formatDocument(AntlersDocument.fromText(params.content));
+});
+
+connection.onRequest(DocumentTransformRequest.type, (params) => {
+    const transformer = new DocumentTransformer();
+    transformer.load(params.content);
+
+    const transformReplacements:TransformReplacement[] = [];
+
+    transformer.getMapping().forEach((value, replacement) => {
+        transformReplacements.push({
+            find: replacement,
+            replace: value
+        });
+    });
+
+    const response:DocumentTransformResult = {
+        shouldParse: transformer.getShouldFormat(),
+        transformedText: transformer.getBuffer(),
+        replacements: transformReplacements
+    };
+
+    return response;
 });
 
 connection.onRequest(ProjectUpdateRequest.type, () => {
