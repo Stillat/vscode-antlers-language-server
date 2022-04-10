@@ -1,18 +1,22 @@
+import { AntlersDocument } from '../document/antlersDocument';
 import { AbstractNode, AntlersNode } from '../nodes/abstractNode';
-import { DocumentParser } from './documentParser';
 
 class DocumentTransformer {
 
-    private _parser:DocumentParser = new DocumentParser();
     private _nodes:AbstractNode[] = [];
     private _extractedAntlers:Map<string, string> = new Map();
     private _buffer = '';
+    private _shouldFormat = true;
 
     load(text: string)
     {
-        this._parser.parse(text);
-        this._nodes = this._parser.getNodes();
-        this._buffer = this._parser.getParsedContent();
+        const tempDoc = AntlersDocument.fromText(text);
+        this._nodes = tempDoc.getAllNodes();
+        this._buffer = tempDoc.getParsedContent();
+
+        if (! tempDoc.isValid() || ! tempDoc.isFormattingEnabled()) {
+            this._shouldFormat = false;
+        }
 
         this._nodes.forEach((node) => {
             if (node instanceof AntlersNode) {
@@ -24,6 +28,18 @@ class DocumentTransformer {
         });
 
         return this;
+    }
+
+    getShouldFormat() {
+        return this._shouldFormat;
+    }
+
+    getBuffer() {
+        return this._buffer;
+    }
+
+    getMapping() {
+        return this._extractedAntlers;
     }
 
     transform(callable:(document:string) => string) {

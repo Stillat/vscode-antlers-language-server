@@ -37,6 +37,14 @@ export class AntlersDocument {
         return document.loadString(text);
     }
 
+    isValid() {
+        if (this.hasInvalidControlFlowStructures() || this.hasUnclosedStructures()) {
+            return false;
+        }
+
+        return true;
+    }
+
     getDocumentOptions(): IEnvironmentHelper | null {
         const nodes = this.getAllNodes();
 
@@ -171,6 +179,10 @@ export class AntlersDocument {
 
     getDocumentParser() {
         return this.documentParser;
+    }
+
+    getParsedContent() {
+        return this.documentParser.getParsedContent();
     }
 
     getAllNodes() {

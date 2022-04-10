@@ -812,7 +812,7 @@ export class AntlersFormatter {
     }
 
     formatDocument(doc: AntlersDocument) {
-        if (doc.hasInvalidControlFlowStructures() || doc.hasUnclosedStructures() || doc.isFormattingEnabled() == false) {
+        if (!doc.isValid() || doc.isFormattingEnabled() == false) {
             return doc.getOriginalContent();
         }
 
