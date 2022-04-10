@@ -2,6 +2,12 @@
 
 Bugs fixed, what's new, and more! :)
 
+## v2.0.12
+
+- Improves behavior of `noparse` regions
+- Improves formatting of `switch` operators
+- Removes Antlers before formatting with Prettier (if enabled)
+
 ## v2.0.11
 
 - Improves error reporting when using modifiers within the `groupby` operator
