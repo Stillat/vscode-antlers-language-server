@@ -102,7 +102,7 @@ export class TagPairAnalyzer {
 
                         const compound = node.name?.compound ?? '';
 
-                        if (node.isClosingTag == false && tagName == compound) {
+                        if (node.isClosingTag == false && tagName == compound && ! node.isSelfClosing) {
                             if (this.openTagIndexCount.has(this.stackCount) == false) {
                                 this.openTagIndexCount.set(this.stackCount, new Map());
                             }
