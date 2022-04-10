@@ -204,7 +204,7 @@ if (argv._.includes('format')) {
             process.exit(EXIT_SUCCESS);
         }
 
-        if (argv.dir !== null) {
+        if (typeof argv.dir !== 'undefined' && argv.dir !== null) {
             let extensionsToUse: string[] = ['.antlers.html'];
 
             if (settingsToUse.formatExtensions.length > 0) {
@@ -215,7 +215,7 @@ if (argv._.includes('format')) {
             process.exit(EXIT_SUCCESS);
         }
 
-        if (argv.path !== null) {
+        if (typeof argv.path !== 'undefined' && argv.path !== null) {
             let writePath = argv.path;
 
             if (argv.output !== null) {
