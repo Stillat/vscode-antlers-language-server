@@ -1309,6 +1309,56 @@ nested augmented: {{ nested:augmented:drink }}`;
         assert.strictEqual(format(input), expected);
     });
 
+    test('switch groups do not have crazy spacing', () => {
+        const input = `<div class="container w-full py-32 space-y-24">
+{{ entries = {collection:possibilities sort="order"} }}
+{{ test }}
+{{ one }}
+{{ two }}
+{{ three }}
+{{ four }}
+{{ five }}
+{{ six }}
+{{ parity = switch(
+((index | mod:2) == 0) => 'even',
+((index | mod:2) == 1) => 'odd',
+) }}
+{{ /six }}
+{{ /five }}
+{{ /four }}
+{{ /three }}
+{{ /two }}
+{{ /one }}
+{{ /test }}
+{{ partial:possibilities/preview :side="parity" }}
+{{ /entries }}
+</div>`;
+        const expected = `<div class="container w-full py-32 space-y-24">
+    {{ entries = {collection:possibilities sort="order"} }}
+        {{ test }}
+            {{ one }}
+                {{ two }}
+                    {{ three }}
+                        {{ four }}
+                            {{ five }}
+                                {{ six }}
+                                    {{ parity = switch(
+                                                   ((index | mod:2) == 0) => 'even',
+                                                   ((index | mod:2) == 1) => 'odd',
+                                                   ) }}
+                                {{ /six }}
+                            {{ /five }}
+                        {{ /four }}
+                    {{ /three }}
+                {{ /two }}
+            {{ /one }}
+        {{ /test }}
+        {{ partial:possibilities/preview :side="parity" }}
+    {{ /entries }}
+</div>`;
+        assert.strictEqual(formatDefaultHtmlSettings(input), expected);
+    });
+
     test('it emits switch groups', () => {
         const input = `{{ test variable="{switch(
 (size == 'sm') => '(min-width: 768px) 35vw, 90vw',
