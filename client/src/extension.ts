@@ -156,7 +156,6 @@ export function activate(context: ExtensionContext) {
                     const prettierVscode = vscode.extensions.getExtension('esbenp.prettier-vscode');
 
                     if (typeof prettierVscode !== 'undefined' && prettierVscode !== null && prettierVscode.isActive) {
-                        // Send a request to Antlers LS to get a transformation document first? Hm.
                         await client.sendRequest(LockEditsRequest.type, {}).then(async () => {
                             const transformParams: DocumentTransformParams = {
                                 content: doc.getText()
