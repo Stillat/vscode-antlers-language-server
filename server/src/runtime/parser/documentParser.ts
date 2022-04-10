@@ -93,6 +93,7 @@ export class DocumentParser {
     private chunkSize = 5;
     private maxLine = 1;
     private currentChunkOffset = 0;
+    private isNoParse = false;
     private antlersErrors: AntlersError[] = [];
     private languageParser: LanguageParser = new LanguageParser();
     private documentPath: string | null = null;
@@ -145,6 +146,13 @@ export class DocumentParser {
     }
 
     private checkCurrentOffsets() {
+        if (this.currentIndex > this.chars.length) {
+            this.cur = null;
+            this.prev = null;
+            this.next = null;
+            return;
+        }
+
         this.cur = this.chars[this.currentIndex];
 
         this.prev = null;
@@ -175,7 +183,7 @@ export class DocumentParser {
                 });
             }
 
-            if (doPeek) {
+            if (doPeek && (this.currentIndex + 1) < this.chars.length) {
                 this.next = this.chars[this.currentIndex + 1];
             }
         }
@@ -407,7 +415,7 @@ export class DocumentParser {
         const indexCount = this.antlersStartIndex.length;
         const lastIndex = indexCount - 1;
 
-        if (indexCount == 0) {
+        if (indexCount == 0 && !this.isNoParse) {
             const fullDocumentLiteral = new LiteralNode();
             fullDocumentLiteral.withParser(this);
             fullDocumentLiteral.content = this.prepareLiteralContent(this.content);
@@ -419,7 +427,7 @@ export class DocumentParser {
                 const offset = this.antlersStartIndex[i];
                 this.seedOffset = offset;
 
-                if (i == 0 && offset > 0) {
+                if (i == 0 && offset > 0 && !this.isNoParse) {
                     const node = new LiteralNode();
                     node.withParser(this);
                     node.content = this.prepareLiteralContent(
@@ -464,7 +472,7 @@ export class DocumentParser {
                                         this.content.substr(this.lastAntlersNode.endPosition.offset + 1)
                                     );
 
-                                    if (nodeContent.length > 0) {
+                                    if (nodeContent.length > 0 && !this.isNoParse) {
                                         const literalNode = new LiteralNode();
                                         literalNode.withParser(this);
                                         literalNode.content = nodeContent;
@@ -494,7 +502,7 @@ export class DocumentParser {
 
                                         const nodeContent = this.content.substr(spanStart, spanLen);
 
-                                        if (nodeContent.length > 0) {
+                                        if (nodeContent.length > 0 && !this.isNoParse) {
                                             const literalNode = new LiteralNode();
                                             literalNode.withParser(this);
                                             literalNode.content = nodeContent;
@@ -540,6 +548,9 @@ export class DocumentParser {
                         }
 
                         if (i + 1 == lastIndex && (nextAntlersStart <= this.lastAntlersEndIndex)) {
+                            if (this.isNoParse) {
+                                break;
+                            }
                             // In this scenario, we will create the last trailing literal node and break.
                             const thisOffset = this.currentChunkOffset,
                                 nodeContent = this.content.substr(literalStartIndex);
@@ -558,7 +569,7 @@ export class DocumentParser {
                         } else {
                             let literalLength = nextAntlersStart - this.lastAntlersEndIndex - 1;
 
-                            if (literalLength == 0) {
+                            if (literalLength == 0 || this.isNoParse) {
                                 continue;
                             }
 
@@ -614,7 +625,7 @@ export class DocumentParser {
                     if (i == lastIndex) {
                         const literalStart = this.currentIndex + offset;
 
-                        if (literalStart < this.inputLen) {
+                        if (literalStart < this.inputLen && !this.isNoParse) {
                             const literalNode = new LiteralNode();
                             literalNode.withParser(this);
 
@@ -926,6 +937,20 @@ export class DocumentParser {
         this.interpolationEndOffsets.clear();
     }
 
+    private fetch(count:number) {
+        const start = this.currentChunkOffset + this.chunkSize - this.chars.length;
+
+        return StringUtilities.substring(
+            this.content,
+            start,
+            count
+        );
+    }
+
+    getParsedContent(): string {
+        return this.content;
+    }
+
     private peek(count: number) {
         if (count == this.charLen) {
             const nextChunk = StringUtilities.split(
@@ -993,7 +1018,7 @@ export class DocumentParser {
                     peek = this.peek(this.currentIndex + 2);
                 }
 
-                if (peek == DocumentParser.Punctuation_Question) {
+                if (peek == DocumentParser.Punctuation_Question && !this.isNoParse) {
                     this.isDoubleBrace = true;
                     this.currentIndex += 3;
                     this._recoveryStartIndex = this.currentIndex;
@@ -1002,7 +1027,7 @@ export class DocumentParser {
                     break;
                 }
 
-                if (peek == DocumentParser.Punctuation_Dollar) {
+                if (peek == DocumentParser.Punctuation_Dollar && !this.isNoParse) {
                     this.isDoubleBrace = true;
                     this.currentIndex += 3;
                     this._recoveryStartIndex = this.currentIndex;
@@ -1011,7 +1036,7 @@ export class DocumentParser {
                     break;
                 }
 
-                if (peek == DocumentParser.Punctuation_Octothorp) {
+                if (peek == DocumentParser.Punctuation_Octothorp && !this.isNoParse) {
                     this.isDoubleBrace = true;
                     this.currentIndex += 3;
                     this._recoveryStartIndex = this.currentIndex;
@@ -1022,14 +1047,34 @@ export class DocumentParser {
                     break;
                 }
 
-                // Advances over the {{.
-                this.startIndex = this.currentIndex;
-                this._recoveryStartIndex = this.currentIndex;
-                this.isDoubleBrace = true;
-                this.currentIndex += 2;
-                this._recoveryStartIndex = this.currentIndex;
-                this.scanToEndOfAntlersRegion();
-                this.isDoubleBrace = false;
+                if (! this.isNoParse) {
+                    // Advances over the {{.
+                    this.startIndex = this.currentIndex;
+                    this._recoveryStartIndex = this.currentIndex;
+                    this.isDoubleBrace = true;
+                    this.currentIndex += 2;
+                    this._recoveryStartIndex = this.currentIndex;
+                    this.scanToEndOfAntlersRegion();
+                    this.isDoubleBrace = false;
+                } else {
+                    const contentPeek = this.fetch(11).replace(' ', '').toLocaleLowerCase();
+
+                    if (contentPeek.startsWith('{{/noparse')) {
+                        // Advances over the {{.
+                        this.startIndex = this.currentIndex;
+                        this._recoveryStartIndex = this.currentIndex;
+                        this.isDoubleBrace = true;
+                        this.currentIndex += 2;
+                        this._recoveryStartIndex = this.currentIndex;
+                        this.scanToEndOfAntlersRegion();
+                        this.isDoubleBrace = false;
+                        this.isNoParse = false;
+                        break;
+                    } else {
+                        this.currentContent.push(this.cur);
+                        continue;
+                    }
+                }
 
                 break;
             }
@@ -1430,6 +1475,11 @@ export class DocumentParser {
             if (this.cur == DocumentParser.RightBrace && this.next != null
                 && this.next == DocumentParser.RightBrace) {
                 const node = this.makeAntlersTagNode(this.currentIndex, false);
+
+                if (node.name != null && node.name.name == 'noparse') {
+                    this.isNoParse = true;
+                }
+
                 this.currentIndex += 2;
                 this.nodes.push(node);
 
@@ -1764,6 +1814,10 @@ export class DocumentParser {
     }
 
     private dumpLiteralNode(index: number) {
+        if (this.isNoParse) {
+            return;
+        }
+
         if (this.currentContent.length > 0) {
             this.nodes.push(this.makeLiteralNode(this.currentContent, this.startIndex, index));
         }

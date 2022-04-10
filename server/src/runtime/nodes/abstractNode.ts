@@ -215,6 +215,35 @@ export class AntlersNode extends AbstractNode {
     public _conditionParserAbandonPairing = false;
     public _isEndVirtual = false;
 
+    getOriginalContent() {
+        if (this.startPosition == null || this.endPosition == null || this.parser == null) {
+            return '';
+        }
+
+        if (this.isClosedBy != null) {
+            if (this.isClosedBy.startPosition == null || this.isClosedBy.endPosition == null) {
+                return '';
+            }
+
+            return this.parser.getText(
+                this.startPosition.index,
+                this.isClosedBy.endPosition.index + 1
+            );
+        }
+
+        return this.parser.getText(
+            this.startPosition.index, this.endPosition.index + 1
+        );
+    }
+
+    getNodeDocumentText() {
+        if (this.startPosition == null || this.endPosition == null || this.parser == null) {
+            return '';
+        }
+
+        return this.parser.getText(this.startPosition.index, this.endPosition.index + 1);
+    }
+
     nodeAtIndex(index: number): AbstractNode | null {
         if (this.runtimeNodes.length == 0) {
             return null;
@@ -227,6 +256,28 @@ export class AntlersNode extends AbstractNode {
         }
 
         return null;
+    }
+
+    getDepthCount(): number {
+        if (this.parent == null) {
+            return 1;
+        }
+
+        let parent:AbstractNode|null = this.parent,
+            depth = 1;
+
+        while (parent != null) {
+            depth += 1;
+
+            if (parent.parent === parent) {
+                parent = null;
+                break;
+            }
+
+            parent = parent.parent;
+        }
+
+        return depth;
     }
 
     isEmpty() {

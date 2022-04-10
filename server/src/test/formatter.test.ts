@@ -1317,10 +1317,10 @@ nested augmented: {{ nested:augmented:drink }}`;
 (size == 'xl') => '90vw'
 )}" }}`;
         const expected = `{{ test variable="{switch(
-      (size == 'sm') => '(min-width: 768px) 35vw, 90vw',
-      (size == 'md') => '(min-width: 768px) 55vw, 90vw',
-      (size == 'lg') => '(min-width: 768px) 75vw, 90vw',
-      (size == 'xl') => '90vw')}" }}`;
+    (size == 'sm') => '(min-width: 768px) 35vw, 90vw',
+    (size == 'md') => '(min-width: 768px) 55vw, 90vw',
+    (size == 'lg') => '(min-width: 768px) 75vw, 90vw',
+    (size == 'xl') => '90vw')}" }}`;
 
         assert.strictEqual(format(input), expected);
     });
@@ -1819,23 +1819,19 @@ after`;
     {{ index }} {{ noparse }}{{ string }}{{ /noparse }} {{ string }}
 {{ /tag:loop }}`;
         const output = `{{ tag:array }}
-    {{ noparse }}
+    {{ noparse }}{{ string }}{{ /noparse }}
 {{ /tag:array }}
 {{ tag:loop }}
-    {{ index }} {{ noparse }}
-    {{ string }}
+    {{ index }} {{ noparse }}{{ string }}{{ /noparse }}
+                                         {{ string }}
 {{ /tag:loop }}`;
         assert.strictEqual(formatDefaultHtmlSettings(template), output);
     });
 
     test('it emits escaped content chars', () => {
-        const template = `start{{articles}}{{test}}@{{ foo }} {{ qux }}
-bar
-{{ baz }}{{ /articles }}end`;
+        const template =`start{{articles}}{{test}}@{{ foo }} {{ qux }} bar {{ /articles }}end`;
         const output = `start{{ articles }}
-    {{ test }}@{{ foo }} {{ qux }}
-    bar
-    {{ baz }}
+    {{ test }}@{{ foo }} {{ qux }} bar
 {{ /articles }}end`;
         assert.strictEqual(formatDefaultHtmlSettings(template), output);
     });
@@ -2088,5 +2084,17 @@ wat
 
             assert.strictEqual(formatDefaultHtmlSettings(input), input);
         });
+    });
+
+    test('it will not format documents with interleaved tags', () => {
+        const template = `{{# {{ partial:layouts/some-layout }} #}}
+        {{ section:intro }}
+        {{ partial:intro }}
+        {{ /section:intro }}
+        {{ partial:background }}
+            {{# code #}}
+        {{ /partial:intro }}`;
+
+        assert.strictEqual(formatDefaultHtmlSettings(template), template);
     });
 });

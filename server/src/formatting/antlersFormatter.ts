@@ -10,6 +10,7 @@ import { replaceAllInString } from '../utils/strings';
 import { FrontMatterFormatter } from './frontMatterFormatter';
 import { getFormatOption, getTagsFormatOption, IHTMLFormatConfiguration } from './htmlCompat';
 import { GenericPrinters } from './printers/genericPrinters';
+import { v4 as uuidv4 } from 'uuid';
 
 export interface AntlersFormattingOptions {
     htmlOptions: IHTMLFormatConfiguration,
@@ -72,6 +73,8 @@ class NodeBuffer {
     private baseIndent: number;
     private buffer = '';
     private closeString = '';
+    private relativeIndentSize = 0;
+    private indentSeed = 0;
 
     constructor(node: AntlersNode, indent: number, prepend: string | null) {
         this.baseIndent = indent;
@@ -92,6 +95,12 @@ class NodeBuffer {
         if (prepend != null && prepend.trim().length > 0) {
             this.buffer += prepend + ' ';
         }
+    }
+
+    setIndentSeed(indent:number) {
+        this.indentSeed = indent;
+
+        return this;
     }
 
     close() {
@@ -169,6 +178,10 @@ class NodeBuffer {
 
         if (repeatCount == 0) { repeatCount = 1; } else { repeatCount += 2; }
 
+        if (this.relativeIndentSize > 0) {
+            repeatCount += this.relativeIndentSize;
+        }
+
         this.buffer += ' '.repeat(repeatCount);
 
         return this;
@@ -198,6 +211,32 @@ class NodeBuffer {
 
     replace(find: string, replace: string) {
         this.buffer = replaceAllInString(this.buffer, find, replace);
+
+        return this;
+    }
+
+    relativeIndent(relativeTo:string) {
+        const bufferLines = this.buffer.split("\n");
+
+        if (bufferLines.length == 0) {
+            return this;
+        }
+
+        let lastLine = bufferLines[bufferLines.length - 1].trimEnd();
+
+        if (lastLine.endsWith('(')) {
+            lastLine = lastLine.slice(0, -1);
+        }
+
+        if (lastLine.endsWith(relativeTo) == false) {
+            return this;
+        }
+
+        this.relativeIndentSize = lastLine.lastIndexOf(relativeTo);
+
+      //  this.relativeIndentSize += Math.ceil(relativeTo.length / 2);
+
+       // this.relativeIndentSize += 4;
 
         return this;
     }
@@ -237,10 +276,12 @@ export class AntlersFormatter {
     private antlersRegions: Map<string, AntlersNode> = new Map();
     private conditionRegions: Map<string, AntlersNode> = new Map();
     private commentRegions: Map<string, AntlersNode> = new Map();
+    private noParseRegions: Map<string, AntlersNode> = new Map();
     private pruneList: string[] = [];
     private chopList: string[] = [];
     private formatOptions: AntlersFormattingOptions;
     private commentCount = 0;
+    private safeReplacements: Map<string, string> = new Map()
 
     constructor(options: AntlersFormattingOptions) {
         this.formatOptions = options;
@@ -276,7 +317,7 @@ export class AntlersFormatter {
         return '{{# ' + commentText + ' #}}';
     }
 
-    private prettyPrintNode(antlersNode: AntlersNode, doc: AntlersDocument, indent: number, prepend: string | null): string {
+    private prettyPrintNode(antlersNode: AntlersNode, doc: AntlersDocument, indent: number, prepend: string | null, seedIndent:number | null): string {
         if (antlersNode.isComment) {
             return this.printComment(antlersNode);
         }
@@ -287,6 +328,10 @@ export class AntlersFormatter {
 
         if (lexerNodes.length > 0) {
             const nodeBuffer = new NodeBuffer(antlersNode, indent, prepend);
+
+            if (seedIndent != null) {
+                nodeBuffer.setIndentSeed(seedIndent);
+            }
 
             let lastPrintedNode: AbstractNode | null = null;
 
@@ -344,7 +389,9 @@ export class AntlersFormatter {
 
                                 nodeBuffer.append('(');
                                 if (node.name != 'list') {
-                                    nodeBuffer.newlineIndent().indent();
+                                    nodeBuffer
+                                        .relativeIndent(node.name)
+                                        .newLine().indent();
                                 }
                                 i += 1;
                                 lastPrintedNode = lexerNodes[i + 1];
@@ -478,8 +525,7 @@ export class AntlersFormatter {
                 } else if (node instanceof ArgSeparator) {
                     if (node.isSwitchGroupMember) {
                         nodeBuffer.append(',')
-                            .newlineIndent()
-                            .indent();
+                            .newlineIndent();
                     } else {
                         nodeBuffer.append(', ');
                     }
@@ -603,7 +649,6 @@ export class AntlersFormatter {
         const content_unformatted: string[] = [],
             antlersSingleNodes: Map<string, AntlersNode> = new Map(),
             includesEnd = false;
-        let lastLiteralNode: AbstractNode | null = null;
 
         nodes.forEach((node) => {
             if (node instanceof LiteralNode) {
@@ -617,10 +662,12 @@ export class AntlersFormatter {
                 } else {
                     rootText += node.rawContent();
                 }
-
-                lastLiteralNode = node;
             } else if (node instanceof AntlersNode) {
-                if (node.isComment) {
+                if (node.name != null && node.name.name == 'noparse') {
+                    const noParseConstruction = '__ANTLR_NOPARSE' + node.refId;
+                    this.noParseRegions.set(noParseConstruction, node);
+                    rootText += noParseConstruction;
+                } else if (node.isComment) {
                     this.commentCount += 1;
                     const commentConstruction = '__ANTLR_COMMENT' + this.commentCount.toString() + 'C';
                     this.commentRegions.set(commentConstruction, node);
@@ -634,7 +681,15 @@ export class AntlersFormatter {
                     } else if (node.children.length > 0) {
                         const formatChildren = node.children;
                         formatChildren.pop(); // Remove self-reference closing tag pair.
-                        const tChildResult = this.formatDocumentNodes(formatChildren, doc);
+                        let tChildResult = this.formatDocumentNodes(formatChildren, doc);
+
+                        if (tChildResult.startsWith('{{') && tChildResult.endsWith('}}')) {
+                            const replacementId = '__ANTLERS_PRESERVE_' + uuidv4();
+
+                            this.safeReplacements.set(replacementId, tChildResult);
+                            tChildResult = replacementId;
+                        }
+                        
                         const elementConstruction = '<ANTLR_' + node.refId + '>';
                         const closeConstruct = '</ANTLR_' + node.refId + '>';
 
@@ -699,8 +754,10 @@ export class AntlersFormatter {
         const indentLines = tResult.replace(/(\r\n|\n|\r)/gm, "\n").split("\n");
 
         antlersSingleNodes.forEach((node, construction) => {
-            const constructionIndex = this.getIndent(construction, indentLines);
-            tResult = replaceAllInString(tResult, construction, this.prettyPrintNode(node, doc, constructionIndex, null));
+            const constructionIndex = this.getIndent(construction, indentLines),
+                printedResult = this.prettyPrintNode(node, doc, constructionIndex, null, node.getDepthCount());
+            tResult = replaceAllInString(tResult, construction, printedResult);
+            const hm = 'asdf';
         });
 
 
@@ -775,7 +832,7 @@ export class AntlersFormatter {
 
         this.antlersRegions.forEach((node, construction) => {
             const constructionIndex = this.getIndent(construction, indentLines);
-            const tOpenPrettyPrint = this.prettyPrintNode(node, doc, constructionIndex, null),
+            const tOpenPrettyPrint = this.prettyPrintNode(node, doc, constructionIndex, null, null),
                 closeConstruct = '</ANTLR_' + node.refId + '>';
             let tCloseContent = '';
 
@@ -789,7 +846,7 @@ export class AntlersFormatter {
 
         this.commentRegions.forEach((comment, construction) => {
             const constructionIndex = this.getIndent(construction, indentLines);
-            const cPrettyPrint = this.prettyPrintNode(comment, doc, constructionIndex, null);
+            const cPrettyPrint = this.prettyPrintNode(comment, doc, constructionIndex, null, null);
             documentRootFormatted = replaceAllInString(documentRootFormatted, construction, cPrettyPrint);
         });
 
@@ -816,7 +873,7 @@ export class AntlersFormatter {
             }
 
 
-            let tOpenPrettyPrint = this.prettyPrintNode(tOpenTrue, doc, constructionIndex, tOpenTrue.runtimeName());
+            let tOpenPrettyPrint = this.prettyPrintNode(tOpenTrue, doc, constructionIndex, tOpenTrue.runtimeName(), null);
             let pushClose = false;
             if (node.isClosedBy != null) {
                 const tCloseTrue = node.isClosedBy;
@@ -897,8 +954,53 @@ export class AntlersFormatter {
             }
         }
 
+        if (this.safeReplacements.size > 0) {
+            const reflowIndentLines = documentRootFormatted.replace(/(\r\n|\n|\r)/gm, "\n").split("\n");
+            this.safeReplacements.forEach((replacement, replacementId) => {
+                const reflowIndent = this.getIndent(replacementId, reflowIndentLines);
+
+                documentRootFormatted = documentRootFormatted.replace(replacementId, this.reindent(replacement, reflowIndent, this.formatOptions.tabSize));
+            });
+        }
+
+        if (this.noParseRegions.size > 0) {
+            this.noParseRegions.forEach((node, replacement) => {
+                documentRootFormatted = documentRootFormatted.replace(
+                    replacement,
+                    node.getOriginalContent()
+                );
+            });
+        }
 
         return documentRootFormatted;
     }
 
+    private reindent(value:string, indent:number, tabSize:number):string {
+        const newLines:string[] = [],
+            sourceLines = value.replace(/(\r\n|\n|\r)/gm, "\n").split("\n"),
+            newIndent = ' '.repeat(indent);
+
+        let relativeIndent = ' '.repeat(tabSize);
+        
+        for (let i = 0; i < sourceLines.length; i++) {
+            const thisLine = sourceLines[i];
+
+            if (i == 0) {
+                const appendLine = thisLine.trimLeft();
+                // Trim off the leading whitespace since it will already be in the document.
+                newLines.push(appendLine);
+                const checkParts = thisLine.trim().split(' ');
+                if (checkParts.length == 0) {
+                    relativeIndent = ' '.repeat(Math.ceil(thisLine.trim().length / 2) + tabSize);
+                } else {
+                    const lastPart = checkParts[checkParts.length - 1];
+                    relativeIndent = ' '.repeat(appendLine.lastIndexOf(lastPart) + Math.floor(lastPart.trim().length / 2) - 1);
+                }
+            } else {
+                newLines.push(newIndent + relativeIndent + thisLine.trimLeft());
+            }
+        }
+
+        return newLines.join("\n");
+    }
 }
