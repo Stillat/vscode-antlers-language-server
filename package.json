@@ -42,6 +42,8 @@
                 ],
                 "extensions": [
                     ".antlers.html",
+                    ".antlers.php",
+                    ".antlers.xml",
                     ".html",
                     ".htm",
                     ".xhtml"
