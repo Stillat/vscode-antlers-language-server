@@ -12,6 +12,7 @@ const GlideFormats: string[] = [
     "png",
     "gif",
     "webp",
+    "avif",
     "tif",
     "bmp",
     "psd",
