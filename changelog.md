@@ -2,6 +2,11 @@
 
 Bugs fixed, what's new, and more! :)
 
+## v2.0.13
+
+- Adds `.antlers.php` and `.antlers.xml` extensions
+- Adds `AVIF` option to Glide suggestions
+
 ## v2.0.12
 
 - Improves behavior of `noparse` regions
