@@ -26,8 +26,8 @@ const markupModifiers: IModifier[] = [
     },
     {
         name: 'first',
-        acceptsType: ['string'],
-        returnsType: ['string'],
+        acceptsType: ['string', 'array'],
+        returnsType: ['*'],
         description: 'Returns the specified number of characters from the beginning of the string.',
         docLink: 'https://statamic.dev/modifiers/first',
         parameters: [
@@ -40,8 +40,8 @@ const markupModifiers: IModifier[] = [
     },
     {
         name: 'last',
-        acceptsType: ['string'],
-        returnsType: ['string'],
+        acceptsType: ['string', 'array'],
+        returnsType: ['*'],
         description: 'Returns the specified number of characters from the end of the string.',
         docLink: 'https://statamic.dev/modifiers/last',
         parameters: [

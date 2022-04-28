@@ -2,6 +2,10 @@
 
 Bugs fixed, what's new, and more! :)
 
+## v2.0.14
+
+- Updates types supported by the `first` and `last` modifier to improve error reporting
+
 ## v2.0.13
 
 - Adds `.antlers.php` and `.antlers.xml` extensions
