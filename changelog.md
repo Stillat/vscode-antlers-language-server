@@ -2,6 +2,10 @@
 
 Bugs fixed, what's new, and more! :)
 
+## v2.0.16
+
+- Improves formatting of Antlers inside `<script>` tags
+
 ## v2.0.14
 
 - Updates types supported by the `first` and `last` modifier to improve error reporting

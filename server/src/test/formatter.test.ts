@@ -182,6 +182,15 @@ suite("Document Formatting Test", () => {
         }
     });
 
+    test('it preserves antlers inside scripts', () => {
+        const input = `<script>const element = {{ value }};</script>`;
+        const expected = `<script>
+    const element = {{ value }};
+</script>`;
+        assert.strictEqual(format(input), expected);
+        
+    });
+
     test('it does not do weird things with many chained strings and numeric values', () => {
         const template = `<html>
 <head>

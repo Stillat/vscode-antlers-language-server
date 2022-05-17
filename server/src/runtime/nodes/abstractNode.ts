@@ -14,6 +14,7 @@ import { StringUtilities } from '../utilities/stringUtilities';
 import { NodeVirtualHierarchy } from './antlersVirtualStructures/nodeVirtualHierarchy';
 import { TagIdentifier } from './tagIdentifier';
 import { ConditionPairAnalyzer } from '../analyzers/conditionPairAnalyzer';
+import { replaceAllInString } from '../../utils/strings';
 
 /* eslint-disable @typescript-eslint/no-empty-interface */
 export interface ArithmeticNodeContract {
@@ -146,7 +147,7 @@ export class AbstractNode {
     }
 
     constructor() {
-        this.refId = uuidv4();
+        this.refId = replaceAllInString(uuidv4(), '-', '_');
     }
 
     innerContent() {
