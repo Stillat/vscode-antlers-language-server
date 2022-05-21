@@ -3,7 +3,7 @@ const beautify = require("js-beautify").html;
 
 import InterleavedNodeHandler from '../diagnostics/handlers/interleavedNodes';
 import { AntlersDocument } from '../runtime/document/antlersDocument';
-import { AbstractNode, AdditionOperator, AntlersNode, ArgSeparator, ConditionNode, DivisionOperator, InlineBranchSeparator, InlineTernarySeparator, LeftAssignmentOperator, LiteralNode, LogicalNegationOperator, LogicGroupBegin, LogicGroupEnd, ModifierNameNode, ModifierSeparator, ModifierValueNode, ModifierValueSeparator, MultiplicationOperator, NumberNode, ParameterNode, ScopeAssignmentOperator, StatementSeparatorNode, StringValueNode, SubtractionOperator, TupleListStart, VariableNode } from '../runtime/nodes/abstractNode';
+import { AbstractNode, AdditionOperator, AntlersNode, ArgSeparator, ConditionNode, DivisionOperator, InlineBranchSeparator, InlineTernarySeparator, LeftAssignmentOperator, LiteralNode, LogicalNegationOperator, LogicGroupBegin, LogicGroupEnd, ModifierNameNode, ModifierSeparator, ModifierValueNode, ModifierValueSeparator, MultiplicationOperator, NumberNode, ParameterNode, ParserFailNode, RecursiveNode, ScopeAssignmentOperator, StatementSeparatorNode, StringValueNode, SubtractionOperator, TupleListStart, VariableNode } from '../runtime/nodes/abstractNode';
 import { LanguageParser } from '../runtime/parser/languageParser';
 import { NodeHelpers } from '../runtime/utilities/nodeHelpers';
 import { replaceAllInString } from '../utils/strings';
@@ -277,6 +277,7 @@ export class AntlersFormatter {
     private conditionRegions: Map<string, AntlersNode> = new Map();
     private commentRegions: Map<string, AntlersNode> = new Map();
     private noParseRegions: Map<string, AntlersNode> = new Map();
+    private antlersSingleNodes: Map<string, AntlersNode> = new Map();
     private pruneList: string[] = [];
     private chopList: string[] = [];
     private formatOptions: AntlersFormattingOptions;
@@ -643,6 +644,51 @@ export class AntlersFormatter {
         return antlersNode.getTrueRawContent();
     }
 
+    private replaceDocumentsNodes(text: string, nodes: AbstractNode[]): string {
+        nodes.forEach((node) => {
+            if (node instanceof RecursiveNode ||
+                node instanceof ParserFailNode) {
+                return;
+            }
+            if (node instanceof AntlersNode) {
+                if (node.name != null && node.name.name == 'noparse') {
+                    const noParseConstruction = '__ANTLR_NOPARSE' + node.refId;
+                    this.noParseRegions.set(noParseConstruction, node);
+                    text = replaceAllInString(text, node.getNodeDocumentText(), noParseConstruction);
+                } else if (node.isComment) {
+                    this.commentCount += 1;
+                    const commentConstruction = '__ANTLR_COMMENT' + this.commentCount.toString() + 'C';
+                    this.commentRegions.set(commentConstruction, node);
+                    
+                    text = replaceAllInString(text, node.getNodeDocumentText(), commentConstruction);
+                } else {
+                    if (node.isSelfClosing || node.isClosedBy == null) {
+                        const elementConstruction = '__ANTLR_' + node.refId;
+
+                        text = replaceAllInString(text, node.getNodeDocumentText(), elementConstruction);
+                        this.antlersSingleNodes.set(elementConstruction, node);
+                    }
+                }
+            } else if (node instanceof ConditionNode) {
+                node.logicBranches.forEach((branch) => {
+                    text = this.replaceDocumentsNodes(text, branch.nodes);
+                });
+            }
+        });
+
+        return text;
+    }
+
+    private isAllLiterals(nodes:AbstractNode[]):boolean {
+        for (let i = 0; i < nodes.length; i++) {
+            if (nodes[i] instanceof LiteralNode == false) {
+                return false;
+            }
+        }
+
+        return true;
+    }
+
     formatDocumentNodes(nodes: AbstractNode[], doc: AntlersDocument): string {
         let rootText = '';
         const unformatted: string[] = getTagsFormatOption(this.formatOptions.htmlOptions, "unformatted", []) ?? [];
@@ -684,7 +730,7 @@ export class AntlersFormatter {
                         let tChildResult = this.formatDocumentNodes(formatChildren, doc);
 
                         if (tChildResult.startsWith('{{') && tChildResult.endsWith('}}')) {
-                            const replacementId = '__ANTLERS_PRESERVE_' + uuidv4();
+                            const replacementId = '__ANTLERS_PRESERVE_' + replaceAllInString(uuidv4(), '-', '_');
 
                             this.safeReplacements.set(replacementId, tChildResult);
                             tChildResult = replacementId;
@@ -707,10 +753,32 @@ export class AntlersFormatter {
                     logicChildren.pop();
 
                     const tChildResult = this.formatDocumentNodes(logicChildren, doc);
+                    const tReplacedResult = this.replaceDocumentsNodes(tChildResult, node.logicBranches[i].nodes);
                     const elementConstruction = '<ANTLER_COND' + logicBranch.head.refId + '>';
                     const closeConstruct = '</ANTLER_COND' + logicBranch.head.refId + '>';
                     this.conditionRegions.set(elementConstruction, logicBranch.head);
-                    rootText += elementConstruction + tChildResult + closeConstruct;
+
+                    const lowerCheck = tChildResult.toLocaleLowerCase();
+
+                    if (lowerCheck.includes('<script') || lowerCheck.includes('<style')) {
+                        let shouldOverrideNewline = false;
+
+                        if (node.logicBranches[i].nodes.length > 0) {
+                            const lastNode = node.logicBranches[i].nodes[node.logicBranches[i].nodes.length - 1];
+    
+                            if (lastNode.startPosition?.line != node.logicBranches[i].endPosition?.line) {
+                                shouldOverrideNewline = true;
+                            }
+                        }
+    
+                        if (this.isAllLiterals(node.logicBranches[i].nodes) || shouldOverrideNewline) {
+                            rootText += elementConstruction + tReplacedResult.trim() + closeConstruct;
+                        } else {
+                            rootText += elementConstruction + "\n" + tReplacedResult.trim() + "\n" + closeConstruct;
+                        }
+                    } else {
+                        rootText += elementConstruction + tChildResult + closeConstruct;
+                    }
                 }
             }
         });
@@ -757,9 +825,13 @@ export class AntlersFormatter {
             const constructionIndex = this.getIndent(construction, indentLines),
                 printedResult = this.prettyPrintNode(node, doc, constructionIndex, null, node.getDepthCount());
             tResult = replaceAllInString(tResult, construction, printedResult);
-            const hm = 'asdf';
         });
 
+        this.antlersSingleNodes.forEach((node, construction) => {
+            const constructionIndex = this.getIndent(construction, indentLines),
+                printedResult = this.prettyPrintNode(node, doc, constructionIndex, null, node.getDepthCount());
+            tResult = replaceAllInString(tResult, construction, printedResult);
+        });
 
         tResult = replaceAllInString(tResult, '<ANTLER_COMMON_ALIAS', '<{{ as');
         tResult = replaceAllInString(tResult, '</ANTLER_COMMON_ALIAS', '</{{ as');

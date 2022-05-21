@@ -2,6 +2,10 @@
 
 Bugs fixed, what's new, and more! :)
 
+## v2.0.17
+
+- Improves formatting of Antlers inside conditions containing `<script>` tags
+
 ## v2.0.16
 
 - Improves formatting of Antlers inside `<script>` tags
