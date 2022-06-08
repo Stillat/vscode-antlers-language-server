@@ -110,6 +110,7 @@ import GetErrors from './core/getErrors/getErrors';
 import GetAllErrors from './core/getErrors/getAllErrors';
 import GetError from './core/getErrors/getError';
 import SetTag from './core/set';
+import MountTag from './core/mount';
 
 const coreTags = [
     If,
@@ -174,6 +175,7 @@ const coreTags = [
     LocalesCount,
 
     Mix,
+    MountTag,
     NavTag,
     StructureTag,
     NavBreadcrumbs,

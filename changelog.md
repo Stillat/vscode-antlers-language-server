@@ -2,6 +2,10 @@
 
 Bugs fixed, what's new, and more! :)
 
+## v2.0.18
+
+- Adds support for the `mount` tag
+
 ## v2.0.17
 
 - Improves formatting of Antlers inside conditions containing `<script>` tags
