@@ -2,6 +2,10 @@
 
 Bugs fixed, what's new, and more! :)
 
+## v2.1.1
+
+- Adds support for detecting recursive partials
+
 ## v2.1.0
 
 - Renames `mount` tag to `mount_url` tag
