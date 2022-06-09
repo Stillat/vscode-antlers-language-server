@@ -86,6 +86,15 @@ const utilityModifiers: IModifier[] = [
         parameters: [],
         canBeParameter: false
     },
+    {
+        name: 'to_bool',
+        acceptsType: ['*'],
+        returnsType: ['boolean'],
+        description: 'Converst the data to a boolean',
+        parameters: [],
+        canBeParameter: false,
+        docLink: null
+    }
 ];
 
 export { utilityModifiers };

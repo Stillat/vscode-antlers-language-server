@@ -146,6 +146,20 @@ export function parseIdeHelper(documentUri: string, symbol: AntlersNode): IEnvir
                     });
 
                     varReferenceNames.set(paramName, varName);
+                } else {
+                    const paramName = directiveParts.shift() as string,
+                        paramDesc = directiveParts.join(" ") as string;
+
+                    injectsParameters.push({
+                        acceptsVariableInterpolation: true,
+                        aliases: [],
+                        allowsVariableReference: true,
+                        description: paramDesc,
+                        expectsTypes: ["*"],
+                        isDynamic: true,
+                        isRequired: paramRequired,
+                        name: paramName,
+                    });
                 }
             }
         } else if (thisLine.startsWith(FormatterPrefix)) {

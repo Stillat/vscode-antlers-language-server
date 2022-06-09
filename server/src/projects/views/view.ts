@@ -1,4 +1,5 @@
 import { IAntlersParameter } from '../../antlers/tagManager';
+import { AntlersDocument } from '../../runtime/document/antlersDocument';
 
 export interface IView {
     /**
@@ -52,4 +53,5 @@ export interface IView {
     injectsParameters: IAntlersParameter[];
     varReferenceNames: Map<string, string>;
     templateName: string;
+    document:AntlersDocument|null;
 }

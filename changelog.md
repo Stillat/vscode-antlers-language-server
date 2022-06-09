@@ -2,6 +2,15 @@
 
 Bugs fixed, what's new, and more! :)
 
+## v2.1.0
+
+- Renames `mount` tag to `mount_url` tag
+- Adds support for the `to_bool` modifier
+- Improves parsing of Front Matter variables within partials
+- Validates required partial parameters when marked required using `@param*` IDE hints
+- Fixes a handful of bugs related to IDE hints and partials
+- Fixes partial parameter suggestions not appearing
+
 ## v2.0.18
 
 - Adds support for the `mount` tag

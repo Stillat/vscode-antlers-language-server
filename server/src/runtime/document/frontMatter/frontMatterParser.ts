@@ -1,5 +1,5 @@
 import * as YAML from "yaml";
-import { Pair, Node, YAMLMap, Scalar } from 'yaml/types';
+import { Pair, Node, YAMLMap, Scalar, YAMLSeq } from 'yaml/types';
 import { Scope } from '../../../antlers/scope/scope';
 import { IProjectDetailsProvider } from '../../../projects/projectDetailsProvider';
 
@@ -23,6 +23,8 @@ export class FrontMatterParser {
         if (node instanceof Scalar) {
             return node.value;
         } else if (node instanceof YAMLMap) {
+            return this.analyzeDocument(node.items);
+        } else if (node instanceof YAMLSeq) {
             return this.analyzeDocument(node.items);
         }
 
@@ -54,6 +56,21 @@ export class FrontMatterParser {
                         sourceField: null,
                         sourceName: '*frontmatter'
                     });
+                } else if (item.value instanceof YAMLSeq && item.key instanceof Scalar) {
+                    const sequenceVariables = new Scope(this.project);
+
+                    item.value.items.forEach((seqValue) => {
+                        const sValue = this.getNodeValue(seqValue);
+
+                        sequenceVariables.addVariable({
+                            dataType: this.getScalarRuntimeType(sValue),
+                            introducedBy: null,
+                            name: seqValue.value,
+                            sourceField: null,
+                            sourceName: '*frontmatter'});
+                    });
+
+                    nestedScope.addScopeList(item.key.value, sequenceVariables);
                 } else {
                     nestedScope.addScopeList(varName, varValue);
                 }

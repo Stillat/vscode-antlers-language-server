@@ -7,11 +7,12 @@ import { IView } from "../../../../projects/views/view";
 import { AntlersNode } from '../../../../runtime/nodes/abstractNode';
 import { ISuggestionRequest } from '../../../../suggestions/suggestionRequest';
 import { tagToCompletionItem } from '../../../documentedLabel';
-import { IAntlersTag, nonExclusiveResult, } from "../../../tagManager";
+import { IAntlersParameter, IAntlersTag, nonExclusiveResult, } from "../../../tagManager";
 import { returnDynamicParameter } from "../../dynamicParameterResolver";
 import PartialExists from './partialExists';
 import PartialIfExists from './partialIfExists';
 import { PartialParameters } from './partialParameters';
+import { getViewName } from './partialUtilities';
 import { resolvePartialParameterCompletions } from './resolvePartialParameterCompletions';
 
 const PartialCompletionItems: CompletionItem[] = [
@@ -112,8 +113,40 @@ Includes another view into the current template.
                                 });
                             }
 
+                            const completionItems: CompletionItem[] = [];
+
+                            if (viewRef.injectsParameters.length > 0) {
+                                const range: Range = {
+                                    start: {
+                                        line: params.position.line,
+                                        character: params.position.character - 0,
+                                    },
+                                    end: params.position,
+                                };
+
+                                viewRef.injectsParameters.forEach((parameter: IAntlersParameter) => {
+                                    const paramSnippet = parameter.name + '="$1"';
+
+                                    if (addedNames.includes(parameter.name)) {
+                                        return;
+                                    }
+
+                                    addedNames.push(parameter.name);
+
+                                    completionItems.push({
+                                        label: parameter.name,
+                                        kind: CompletionItemKind.Value,
+                                        insertTextFormat: InsertTextFormat.Snippet,
+                                        textEdit: TextEdit.replace(range, paramSnippet),
+                                        command: {
+                                            title: "Suggest",
+                                            command: "editor.action.triggerSuggest",
+                                        },
+                                    });
+                                });
+                            }
+
                             if (variableNames.length > 0) {
-                                const completionItems: CompletionItem[] = [];
                                 const range: Range = {
                                     start: {
                                         line: params.position.line,
@@ -142,9 +175,9 @@ Includes another view into the current template.
                                         },
                                     });
                                 });
-
-                                return nonExclusiveResult(completionItems);
                             }
+
+                            return nonExclusiveResult(completionItems);
                         }
                     }
                 }
@@ -159,25 +192,7 @@ Includes another view into the current template.
     },
 };
 
-function getViewName(node: AntlersNode) {
-    if (node.getTagName() != "partial") {
-        return null;
-    }
 
-    let partialName = "";
-
-    if (node.hasMethodPart()) {
-        partialName = node.getMethodNameValue();
-    } else {
-        const srcParam = node.findParameter("src");
-
-        if (srcParam != null) {
-            partialName = srcParam.value;
-        }
-    }
-
-    return partialName;
-}
 
 function getVariableNames(symbols: AntlersNode[]): string[] {
     const namesToReturn: string[] = [];

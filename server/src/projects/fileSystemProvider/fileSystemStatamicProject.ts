@@ -230,6 +230,7 @@ function getProjectViews(viewPath: string): IView[] {
             injectsParameters: [],
             templateName: replaceAllInString(displayName, '/', '.'),
             varReferenceNames: new Map(),
+            document: null
         });
     }
 

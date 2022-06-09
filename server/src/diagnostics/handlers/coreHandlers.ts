@@ -4,6 +4,7 @@ import DoubleColonHandler from './doubleColonHandler';
 import InterleavedNodeHandler from './interleavedNodes';
 import MixedModifierHandler from './mixedModifierHandler';
 import ModifierRuntimeTypeHandler from './modifierRuntimeTypeHandler';
+import PartialParametersHandler from './partialParametersHandler';
 import RelateTagHandler from './relateHandler';
 import ShorthandModifierHandler from './shorthandModifierHandler';
 import StatamicVersionHandler from './statamicVersionHandler';
@@ -18,7 +19,8 @@ const CoreHandlers: IDiagnosticsHandler[] = [
     TagsThatErrorHandler,
     ShorthandModifierHandler,
     StatamicVersionHandler,
-    InterleavedNodeHandler
+    InterleavedNodeHandler,
+    PartialParametersHandler
 ];
 
 export default CoreHandlers;

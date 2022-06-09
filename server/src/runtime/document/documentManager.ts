@@ -1,4 +1,5 @@
 import { IProjectDetailsProvider } from '../../projects/projectDetailsProvider';
+import ProjectManager from '../../projects/projectManager';
 import { AntlersError } from '../errors/antlersError';
 import { AntlersDocument } from './antlersDocument';
 
@@ -59,6 +60,12 @@ class DocumentManager {
             const document = this.loadedDocuments.get(uri) as AntlersDocument;
 
             document.loadString(text);
+
+            const viewRef = ProjectManager.instance?.getStructure()?.findView(uri);
+
+            if (viewRef != null) {
+                viewRef.document = document;
+            }
         }
     }
 

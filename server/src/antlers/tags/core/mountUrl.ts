@@ -4,14 +4,14 @@ import { ISuggestionRequest } from '../../../suggestions/suggestionRequest';
 import { exclusiveResult, IAntlersParameter, IAntlersTag, ICompletionResult } from '../../tagManager';
 import { makeCollectionNameSuggestions } from './collection/utils';
 
-const MountTag: IAntlersTag = {
-    tagName: 'mount',
+const MountUrlTag: IAntlersTag = {
+    tagName: 'mount_url',
     hideFromCompletions: false,
     allowsArbitraryParameters: true,
     allowsContentClose: false,
     requiresClose: false,
     injectParentScope: false,
-    introducedIn: '3.3.14',
+    introducedIn: '3.3.15',
     parameters: [
         {
             isRequired: false,
@@ -43,7 +43,7 @@ const MountTag: IAntlersTag = {
     resolveCompletionItems: (params: ISuggestionRequest): ICompletionResult => {
         const items: CompletionItem[] = [];
 
-        if (params.isPastTagPart == false && (params.leftWord == 'mount' || params.leftWord == '/mount') && params.leftChar == ':') {
+        if (params.isPastTagPart == false && (params.leftWord == 'mount_url' || params.leftWord == '/mount_url') && params.leftChar == ':') {
             const collectionNames = params.project.getCollectionNames();
 
             for (let i = 0; i < collectionNames.length; i++) {
@@ -63,4 +63,4 @@ const MountTag: IAntlersTag = {
     }
 };
 
-export default MountTag;
+export default MountUrlTag;

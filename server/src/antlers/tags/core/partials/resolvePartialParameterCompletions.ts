@@ -25,11 +25,18 @@ export function resolvePartialParameterCompletions(parameter: IAntlersParameter,
                             parameter.name
                         ) as string;
 
-                        if (params.antlersDocument.hasFrontMatter()) {
-                            const frontMatterScope = params.antlersDocument.getFrontMatterScope();
 
-                            if (frontMatterScope != null) {
-                                return resultList(frontMatterScope.getVariableNames());
+                        if (projectView.document != null) {
+                            if (projectView.document.hasFrontMatter()) {
+                                const frontMatterScope = projectView.document.getFrontMatterScope();
+    
+                                if (frontMatterScope != null) {
+                                    const scopeRef = frontMatterScope.getList(viewDataRef);
+
+                                    if (scopeRef != null) {
+                                        return resultList(scopeRef.getVariableNames());
+                                    }
+                                }
                             }
                         }
                     }
