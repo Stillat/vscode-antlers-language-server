@@ -699,6 +699,20 @@ export class AntlersNode extends AbstractNode {
 
         return filterStructuralAntlersNodes(this.children);
     }
+
+    findParentOfType(types:string[]) : AntlersNode | null {
+        if (this.parent == null) { return null; }
+
+        if (this.parent instanceof AntlersNode) {
+            if (this.parent.name != null && types.includes(this.parent.getTagName())) {
+                return this.parent;
+            }
+
+            return this.parent.findParentOfType(types);
+        }
+
+        return null;
+    }
 }
 
 export class ParserFailNode extends AntlersNode {
