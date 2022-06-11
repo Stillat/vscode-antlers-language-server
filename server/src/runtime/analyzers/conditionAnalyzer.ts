@@ -5,15 +5,41 @@ import IFlattenedCondition from './structures/flattenedCondition';
 class ConditionAnalyzer {
 
     static isFlatCondition(condition: ConditionNode): boolean {
-        if (condition.chain.length > 1) { return false; }
+        if (condition.chain.length > 1) {
+            if (condition.logicBranches[1].head?.getTagName() != 'else') {
+                return false;
+            }
+        }
 
         const headNodes = condition.logicBranches[0].nodes;
+
+        let hasAnyConditions = false;
+
+        for (let i = 0; i < headNodes.length; i++) {
+            if (headNodes[i] instanceof ConditionNode) {
+                hasAnyConditions = true;
+                break;
+            }
+        }
+
+        if (hasAnyConditions) {
+            for (let i = 0; i < headNodes.length; i++) {
+                const thisNode = headNodes[i];
+
+                if (thisNode instanceof LiteralNode) {
+                    if (thisNode.content.trim().length != 0) {
+                        return false;
+                    }
+                }
+            }
+        }
 
         for (let i = 0; i < headNodes.length; i++) {
             const thisNode = headNodes[i];
 
+
             if (thisNode instanceof ConditionNode) {
-                if (! ConditionAnalyzer.isFlatCondition(thisNode)) {
+                if (!ConditionAnalyzer.isFlatCondition(thisNode)) {
                     return false;
                 }
             }
@@ -24,27 +50,26 @@ class ConditionAnalyzer {
                 }
             }
 
-            return true;
         }
 
-        return false;
+        return true;
     }
 
     static getCleanChildren(branch: ExecutionBranch): AbstractNode[] {
-        const nodes:AbstractNode[] = [],
-            observedIndex:number[] = [];
-        
-        for (let i  = 0; i < branch.nodes.length; i++) {
+        const nodes: AbstractNode[] = [],
+            observedIndex: number[] = [];
+
+        for (let i = 0; i < branch.nodes.length; i++) {
             const thisNode = branch.nodes[i];
 
             if (thisNode.startPosition == null) { break; }
 
-            if (! observedIndex.includes(thisNode.startPosition.index)) {
+            if (!observedIndex.includes(thisNode.startPosition.index)) {
                 if (thisNode instanceof LiteralNode) {
                     if (thisNode.content.trim().length > 0) {
                         nodes.push(thisNode);
                     }
-                }else {
+                } else {
                     nodes.push(thisNode);
                 }
 
@@ -60,7 +85,7 @@ class ConditionAnalyzer {
     }
 
     static unwrapFlattenedConditions(condition: ConditionNode) {
-        const returnValue:IFlattenedCondition = {
+        const returnValue: IFlattenedCondition = {
             body: [],
             conditions: []
         };

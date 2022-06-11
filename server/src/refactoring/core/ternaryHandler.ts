@@ -20,12 +20,19 @@ class TernaryHandler implements IRefactorHandler {
         return 'Convert Condition to Ternary';
     }
     canHandle(request: IRefactoringRequest): boolean {
+        if (request.selectedDocument.hasUnclosedStructures() || request.selectedDocument.hasUnclosedStructures()) {
+            return false;
+        }
+
+        if (request.selectedDocument.errors.hasAny()) {
+            return false;
+        }
+
         const allNodes = request.selectedDocument.getAllAntlersNodes();
         const tagPairer = new TagPairAnalyzer();
 
         let closingTagCount = 0;
         let conditionalStructures = 0;
-
 
         for (let i = 0; i < allNodes.length; i++) {
             if (allNodes[i].isClosingTag) {
@@ -53,7 +60,7 @@ class TernaryHandler implements IRefactorHandler {
 
                 if (! isFlat) {
                     this.isNestedConditions = false;
-                    return true;
+                    return false;
                 }
 
                 this.isNestedConditions = true;
