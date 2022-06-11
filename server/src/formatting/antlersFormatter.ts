@@ -18,7 +18,7 @@ export interface AntlersFormattingOptions {
     insertSpaces: boolean,
     formatFrontMatter: boolean,
     maxStatementsPerLine: number,
-    formatExtensions:string []
+    formatExtensions: string[]
 }
 
 interface IExtractedFrontMatter {
@@ -97,7 +97,7 @@ class NodeBuffer {
         }
     }
 
-    setIndentSeed(indent:number) {
+    setIndentSeed(indent: number) {
         this.indentSeed = indent;
 
         return this;
@@ -215,7 +215,7 @@ class NodeBuffer {
         return this;
     }
 
-    relativeIndent(relativeTo:string) {
+    relativeIndent(relativeTo: string) {
         const bufferLines = this.buffer.split("\n");
 
         if (bufferLines.length == 0) {
@@ -234,9 +234,9 @@ class NodeBuffer {
 
         this.relativeIndentSize = lastLine.lastIndexOf(relativeTo);
 
-      //  this.relativeIndentSize += Math.ceil(relativeTo.length / 2);
+        //  this.relativeIndentSize += Math.ceil(relativeTo.length / 2);
 
-       // this.relativeIndentSize += 4;
+        // this.relativeIndentSize += 4;
 
         return this;
     }
@@ -267,7 +267,7 @@ class NodeBuffer {
         return this.buffer;
     }
 
-    endsWith(value:string):boolean {
+    endsWith(value: string): boolean {
         return this.buffer.endsWith(value);
     }
 }
@@ -318,7 +318,7 @@ export class AntlersFormatter {
         return '{{# ' + commentText + ' #}}';
     }
 
-    private prettyPrintNode(antlersNode: AntlersNode, doc: AntlersDocument, indent: number, prepend: string | null, seedIndent:number | null): string {
+    private prettyPrintNode(antlersNode: AntlersNode, doc: AntlersDocument, indent: number, prepend: string | null, seedIndent: number | null): string {
         if (antlersNode.isComment) {
             return this.printComment(antlersNode);
         }
@@ -659,7 +659,7 @@ export class AntlersFormatter {
                     this.commentCount += 1;
                     const commentConstruction = '__ANTLR_COMMENT' + this.commentCount.toString() + 'C';
                     this.commentRegions.set(commentConstruction, node);
-                    
+
                     text = replaceAllInString(text, node.getNodeDocumentText(), commentConstruction);
                 } else {
                     if (node.isSelfClosing || node.isClosedBy == null) {
@@ -679,7 +679,7 @@ export class AntlersFormatter {
         return text;
     }
 
-    private isAllLiterals(nodes:AbstractNode[]):boolean {
+    private isAllLiterals(nodes: AbstractNode[]): boolean {
         for (let i = 0; i < nodes.length; i++) {
             if (nodes[i] instanceof LiteralNode == false) {
                 return false;
@@ -693,8 +693,7 @@ export class AntlersFormatter {
         let rootText = '';
         const unformatted: string[] = getTagsFormatOption(this.formatOptions.htmlOptions, "unformatted", []) ?? [];
         const content_unformatted: string[] = [],
-            antlersSingleNodes: Map<string, AntlersNode> = new Map(),
-            includesEnd = false;
+            antlersSingleNodes: Map<string, AntlersNode> = new Map();
 
         nodes.forEach((node) => {
             if (node instanceof LiteralNode) {
@@ -735,7 +734,7 @@ export class AntlersFormatter {
                             this.safeReplacements.set(replacementId, tChildResult);
                             tChildResult = replacementId;
                         }
-                        
+
                         const elementConstruction = '<ANTLR_' + node.refId + '>';
                         const closeConstruct = '</ANTLR_' + node.refId + '>';
 
@@ -765,12 +764,12 @@ export class AntlersFormatter {
 
                         if (node.logicBranches[i].nodes.length > 0) {
                             const lastNode = node.logicBranches[i].nodes[node.logicBranches[i].nodes.length - 1];
-    
+
                             if (lastNode.startPosition?.line != node.logicBranches[i].endPosition?.line) {
                                 shouldOverrideNewline = true;
                             }
                         }
-    
+
                         if (this.isAllLiterals(node.logicBranches[i].nodes) || shouldOverrideNewline) {
                             rootText += elementConstruction + tReplacedResult.trim() + closeConstruct;
                         } else {
@@ -801,8 +800,7 @@ export class AntlersFormatter {
                 32786
             ),
             indent_handlebars: getFormatOption(this.formatOptions.htmlOptions, "indentHandlebars", false),
-            end_with_newline:
-                includesEnd && getFormatOption(this.formatOptions.htmlOptions, "endWithNewline", false),
+            end_with_newline: getFormatOption(this.formatOptions.htmlOptions, "endWithNewline", false),
             extra_liners: [], //getTagsFormatOption(this.formatOptions.htmlOptions, "extraLiners", []),
             wrap_attributes: getFormatOption(this.formatOptions.htmlOptions, "wrapAttributes", "auto"),
             wrap_attributes_indent_size: getFormatOption(
@@ -1047,13 +1045,13 @@ export class AntlersFormatter {
         return documentRootFormatted;
     }
 
-    private reindent(value:string, indent:number, tabSize:number):string {
-        const newLines:string[] = [],
+    private reindent(value: string, indent: number, tabSize: number): string {
+        const newLines: string[] = [],
             sourceLines = value.replace(/(\r\n|\n|\r)/gm, "\n").split("\n"),
             newIndent = ' '.repeat(indent);
 
         let relativeIndent = ' '.repeat(tabSize);
-        
+
         for (let i = 0; i < sourceLines.length; i++) {
             const thisLine = sourceLines[i];
 
