@@ -24,6 +24,7 @@ export interface IProjectDetailsProvider {
     getCollectionNames(): string[],
     getCollectionNamesForView(documentUri: string): string[],
     getPublicAssetPaths(): string[],
+    getViewPath(): string,
     getTaxonomyTerms(name: string): string[],
     hasTaxonomy(name: string): boolean,
     getCollectionQueryScopes(): ICollectionScope[],

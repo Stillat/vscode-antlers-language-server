@@ -245,8 +245,7 @@ export class AntlersNode extends AbstractNode {
         return this.parser.getText(this.startPosition.index, this.endPosition.index + 1);
     }
 
-    getInnerDocumentText()
-    {
+    getInnerDocumentText() {
         if (this.startPosition == null || this.endPosition == null || this.parser == null) {
             return '';
         }
@@ -283,7 +282,7 @@ export class AntlersNode extends AbstractNode {
             return 1;
         }
 
-        let parent:AbstractNode|null = this.parent,
+        let parent: AbstractNode | null = this.parent,
             depth = 1;
 
         while (parent != null) {
@@ -493,6 +492,16 @@ export class AntlersNode extends AbstractNode {
         }
 
         return this.contentStartRelativeIndex as number;
+    }
+
+    getContentAfterName() {
+        let start = 0;
+
+        if (this.nameEndsOn != null) {
+            start = this.nameEndsOn.char - this.rawStart.length - 1;
+        }
+
+        return this.content.substring(start);
     }
 
     getContent() {
@@ -719,7 +728,7 @@ export class AntlersNode extends AbstractNode {
         return filterStructuralAntlersNodes(this.children);
     }
 
-    findParentOfType(types:string[]) : AntlersNode | null {
+    findParentOfType(types: string[]): AntlersNode | null {
         if (this.parent == null) { return null; }
 
         if (this.parent instanceof AntlersNode) {
@@ -1193,13 +1202,12 @@ export class VariableReference {
     }
 }
 
-export class StaticTracedAssignment
-{
-    public target:AbstractNode;
-    public value:AbstractNode;
-    public operator:AbstractNode;
+export class StaticTracedAssignment {
+    public target: AbstractNode;
+    public value: AbstractNode;
+    public operator: AbstractNode;
 
-    constructor(target:AbstractNode, value:AbstractNode, operator:AbstractNode) {
+    constructor(target: AbstractNode, value: AbstractNode, operator: AbstractNode) {
         this.target = target;
         this.value = value;
         this.operator = operator;

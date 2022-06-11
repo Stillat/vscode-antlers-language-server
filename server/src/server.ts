@@ -6,6 +6,7 @@ import * as fs from 'fs';
 /* eslint-disable @typescript-eslint/no-namespace */
 import { Range, TextDocument } from "vscode-languageserver-textdocument";
 import {
+    ApplyWorkspaceEditParams,
     createConnection,
     DidChangeConfigurationNotification,
     DocumentLinkParams,
@@ -17,8 +18,7 @@ import {
     TextDocumentIdentifier,
     TextDocuments,
     TextDocumentSyncKind,
-    WorkDoneProgress,
-    WorkDoneProgressCreateRequest,
+    WorkspaceEdit,
 } from "vscode-languageserver/node";
 import {
     handleOnCompletion,
@@ -60,6 +60,8 @@ import DocumentTransformer from './runtime/parser/documentTransformer';
 import { AntlersFormatter } from './formatting/antlersFormatter';
 import { IHTMLFormatConfiguration } from './formatting/htmlCompat';
 import { AntlersDocument } from './runtime/document/antlersDocument';
+import { handleCodeActions } from './services/antlersRefactoring';
+import ExtractPartialHandler from './refactoring/core/extractPartialHandler';
 
 const projectIndex = "antlers-project-index";
 
@@ -76,10 +78,7 @@ export interface AntlersSettings {
     languageVersion: string;
 }
 
-// The global settings, used when the `workspace/configuration` request is not supported by the client.
-// Please note that this is not the case when using this server with the client provided in this example
-// but could happen with other clients.
-const defaultSettings: AntlersSettings = { formatFrontMatter: false, showGeneralSnippetCompletions: true, trace: { server: 'off' }, formatterIgnoreExtensions: ['xml'], languageVersion: 'regex' };
+const defaultSettings: AntlersSettings = { formatFrontMatter: false, showGeneralSnippetCompletions: true, trace: { server: 'off' }, formatterIgnoreExtensions: ['xml'], languageVersion: 'runtime' };
 let globalSettings: AntlersSettings = defaultSettings;
 
 function updateGlobalSettings(settings: AntlersSettings) {
@@ -140,7 +139,7 @@ interface TransformReplacement {
 interface DocumentTransformResult {
     shouldParse: boolean,
     transformedText: string,
-    replacements:TransformReplacement[]
+    replacements: TransformReplacement[]
 }
 
 namespace ReindexRequest {
@@ -215,7 +214,11 @@ connection.onInitialize((params: InitializeParams) => {
             definitionProvider: {},
             documentSymbolProvider: {},
             referencesProvider: {},
-            documentHighlightProvider: {}
+            documentHighlightProvider: {},
+            codeActionProvider: {},
+            executeCommandProvider: {
+                commands: ['antlers.extractToPartial']
+            }
         },
     };
     if (hasWorkspaceFolderCapability) {
@@ -252,6 +255,18 @@ connection.onInitialized(() => {
                 updateGlobalSettings(defaultSettings);
             }
         });
+});
+
+connection.onExecuteCommand(async (params) => {
+    if (params.command == 'antlers.extractToPartial' && ExtractPartialHandler.currentAction != null) {
+        if (params.arguments?.length == 3) {
+            ExtractPartialHandler.currentAction.completeRefactor({
+                path: params.arguments[1],
+                fsPath: params.arguments[2]
+            });
+        }
+    }
+    return;
 });
 
 connection.onDidChangeConfiguration((change) => {
@@ -341,7 +356,7 @@ connection.onRequest(ReindexRequest.type, () => {
 connection.onRequest(ForcedFormatRequest.type, (params) => {
     const settings = getAntlersSettings(),
         options = htmlFormatterSettings.format as IHTMLFormatConfiguration;
-    
+
     const formatter = new AntlersFormatter({
         tabSize: params.tabSize,
         formatFrontMatter: settings.formatFrontMatter,
@@ -358,7 +373,7 @@ connection.onRequest(DocumentTransformRequest.type, (params) => {
     const transformer = new DocumentTransformer();
     transformer.load(params.content);
 
-    const transformReplacements:TransformReplacement[] = [];
+    const transformReplacements: TransformReplacement[] = [];
 
     transformer.getMapping().forEach((value, replacement) => {
         transformReplacements.push({
@@ -367,7 +382,7 @@ connection.onRequest(DocumentTransformRequest.type, (params) => {
         });
     });
 
-    const response:DocumentTransformResult = {
+    const response: DocumentTransformResult = {
         shouldParse: transformer.getShouldFormat(),
         transformedText: transformer.getBuffer(),
         replacements: transformReplacements
@@ -375,6 +390,8 @@ connection.onRequest(DocumentTransformRequest.type, (params) => {
 
     return response;
 });
+
+connection.onCodeAction(handleCodeActions);
 
 connection.onRequest(ProjectUpdateRequest.type, () => {
     ProjectManager.instance?.setDirtyState(true);
@@ -465,6 +482,14 @@ export async function collectProjectDetails(textDocument: TextDocument): Promise
             kind: "end",
             message: "Analysis Complete",
         });*/
+}
+
+export function requestEdits(edit: WorkspaceEdit) {
+    const params:ApplyWorkspaceEditParams = {
+        edit: edit
+    };
+
+    connection.sendRequest("workspace/applyEdit", params);
 }
 
 export function analyzeStructures(document: string) {

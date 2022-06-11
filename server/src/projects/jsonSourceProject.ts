@@ -171,6 +171,10 @@ class JsonSourceProject implements IProjectDetailsProvider {
         }
     }
 
+    getViewPath(): string {
+        return this.viewsPath;
+    }
+
     export(): IStatamicStructure {
         const exportStructure = this.sourceStructure;
 
