@@ -6,6 +6,9 @@ import * as fs from 'fs';
 /* eslint-disable @typescript-eslint/no-namespace */
 import { Range, TextDocument } from "vscode-languageserver-textdocument";
 import {
+    CodeAction,
+    CodeActionKind,
+    CodeActionParams,
     createConnection,
     DidChangeConfigurationNotification,
     DocumentLinkParams,
@@ -17,6 +20,7 @@ import {
     TextDocumentIdentifier,
     TextDocuments,
     TextDocumentSyncKind,
+    TextEdit,
     WorkDoneProgress,
     WorkDoneProgressCreateRequest,
 } from "vscode-languageserver/node";
@@ -60,6 +64,9 @@ import DocumentTransformer from './runtime/parser/documentTransformer';
 import { AntlersFormatter } from './formatting/antlersFormatter';
 import { IHTMLFormatConfiguration } from './formatting/htmlCompat';
 import { AntlersDocument } from './runtime/document/antlersDocument';
+import DocumentManager from './runtime/document/documentManager';
+import ConditionTernaryRefactor from './runtime/refactoring/conditionTernaryRefactor';
+import { handleCodeActions } from './services/antlersRefactoring';
 
 const projectIndex = "antlers-project-index";
 
@@ -140,7 +147,7 @@ interface TransformReplacement {
 interface DocumentTransformResult {
     shouldParse: boolean,
     transformedText: string,
-    replacements:TransformReplacement[]
+    replacements: TransformReplacement[]
 }
 
 namespace ReindexRequest {
@@ -215,7 +222,8 @@ connection.onInitialize((params: InitializeParams) => {
             definitionProvider: {},
             documentSymbolProvider: {},
             referencesProvider: {},
-            documentHighlightProvider: {}
+            documentHighlightProvider: {},
+            codeActionProvider: {}
         },
     };
     if (hasWorkspaceFolderCapability) {
@@ -341,7 +349,7 @@ connection.onRequest(ReindexRequest.type, () => {
 connection.onRequest(ForcedFormatRequest.type, (params) => {
     const settings = getAntlersSettings(),
         options = htmlFormatterSettings.format as IHTMLFormatConfiguration;
-    
+
     const formatter = new AntlersFormatter({
         tabSize: params.tabSize,
         formatFrontMatter: settings.formatFrontMatter,
@@ -358,7 +366,7 @@ connection.onRequest(DocumentTransformRequest.type, (params) => {
     const transformer = new DocumentTransformer();
     transformer.load(params.content);
 
-    const transformReplacements:TransformReplacement[] = [];
+    const transformReplacements: TransformReplacement[] = [];
 
     transformer.getMapping().forEach((value, replacement) => {
         transformReplacements.push({
@@ -367,7 +375,7 @@ connection.onRequest(DocumentTransformRequest.type, (params) => {
         });
     });
 
-    const response:DocumentTransformResult = {
+    const response: DocumentTransformResult = {
         shouldParse: transformer.getShouldFormat(),
         transformedText: transformer.getBuffer(),
         replacements: transformReplacements
@@ -375,6 +383,8 @@ connection.onRequest(DocumentTransformRequest.type, (params) => {
 
     return response;
 });
+
+connection.onCodeAction(handleCodeActions);
 
 connection.onRequest(ProjectUpdateRequest.type, () => {
     ProjectManager.instance?.setDirtyState(true);
