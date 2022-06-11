@@ -2,9 +2,13 @@
 
 Bugs fixed, what's new, and more! :)
 
-## Unreleased
+## v2.1.2
 
 - User created Antlers variables will now appear within completion suggestions
+- Tag pairs within interpolations will now report their errors properly
+- Adds support for the `[ANTLR_131] Unpaired closing tag` error
+- Improves error message reporting (reduces multiple warning variants, removes some duplicates, etc.)
+- Fixes inconsistent final newline formatting
 
 ## v2.1.1
 

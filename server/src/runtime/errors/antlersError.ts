@@ -22,7 +22,7 @@ export class AntlersError {
                 (this.node.startPosition?.offset ?? 0).toString() + "|";
         }
 
-        return Md5.hashStr(positionSlug + "|" + this.errorCode + "|" + this.message);
+        return Md5.hashStr(positionSlug + "|" + this.errorCode);
     }
 
     static makeSyntaxError(errorCode: string, node: AbstractNode | null, message: string, level?: ErrrorLevel) {

@@ -26,6 +26,13 @@ export class DocumentErrors {
             });
         });
 
+        this.doc.getDocumentParser().getAntlersErrors().forEach((error) => {
+            if (errorHashes.includes(error.hash()) == false) {
+                errorHashes.push(error.hash());
+                errors.push(error);
+            }
+        });
+
         return errors;
     }
 }

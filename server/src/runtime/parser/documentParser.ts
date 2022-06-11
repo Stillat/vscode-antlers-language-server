@@ -669,6 +669,14 @@ export class DocumentParser {
                         }
                     }
 
+                    if (docParser.hasUnclosedIfStructures()) {
+                        this.doesHaveUncloseIfStructures = true;
+                    }
+
+                    if (docParser.hasUnclosedStructures()) {
+                        this.doesHaveUnclosedStructures = true;
+                    }
+
                     node.processedInterpolationRegions.set(varName, parseResults);
                     this.mergeErrors(docParser.getAntlersErrors());
                 });
@@ -679,6 +687,23 @@ export class DocumentParser {
 
         const tagPairAnalyzer = new TagPairAnalyzer();
         this.renderNodes = tagPairAnalyzer.associate(this.nodes, this);
+
+        this.nodes.forEach((node) => {
+            if (node instanceof AntlersNode && node.isClosingTag && node.isOpenedBy == null) {
+                let errorMessage = 'Unpaired closing tag.';
+
+                if (node.isInterpolationNode) {
+                    errorMessage += ' Tag pairs are not supported within Antlers tags.';
+                }
+
+                node.pushError(AntlersError.makeSyntaxError(
+                    AntlersErrorCodes.TYPE_UNPAIRED_CLOSING_TAG,
+                    node,
+                    errorMessage
+                ));
+            }
+        });
+
         RecursiveParentAnalyzer.associateRecursiveParent(this.nodes);
 
         this.nodes.forEach((node) => {
@@ -937,7 +962,7 @@ export class DocumentParser {
         this.interpolationEndOffsets.clear();
     }
 
-    private fetch(count:number) {
+    private fetch(count: number) {
         const start = this.currentChunkOffset + this.chunkSize - this.chars.length;
 
         return StringUtilities.substring(
@@ -1047,7 +1072,7 @@ export class DocumentParser {
                     break;
                 }
 
-                if (! this.isNoParse) {
+                if (!this.isNoParse) {
                     // Advances over the {{.
                     this.startIndex = this.currentIndex;
                     this._recoveryStartIndex = this.currentIndex;
@@ -1239,7 +1264,7 @@ export class DocumentParser {
         return content.replace('@{{', '{{');
     }
 
-    private scanToEndOfPhpRegion(checkChar:string) {
+    private scanToEndOfPhpRegion(checkChar: string) {
         if (this.currentIndex == this.inputLen) {
             this.doesHaveUnclosedStructures = true;
         }
@@ -1434,7 +1459,7 @@ export class DocumentParser {
         if (this.currentIndex == this.inputLen) {
             this.doesHaveUnclosedStructures = true;
         }
-        
+
         for (this.currentIndex; this.currentIndex < this.inputLen; this.currentIndex += 1) {
             this.checkCurrentOffsets();
 
@@ -1741,12 +1766,12 @@ export class DocumentParser {
             isSelfClosing = true;
         }
 
+        node.isInterpolationNode = this.isInterpolatedParser;
         node.isComment = isComment;
         node.isSelfClosing = isSelfClosing;
         node.withParser(this);
         node.content = this.currentContent.join('');
         node.sourceContent = this.sourceContent.join('');
-        const t_CHars = this.content.split('');
         node.startPosition = this.positionFromOffset(
             this.startIndex + this.seedOffset,
             this.startIndex + this.seedOffset
