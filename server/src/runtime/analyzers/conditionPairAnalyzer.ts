@@ -188,19 +188,32 @@ export class ConditionPairAnalyzer {
 
                     if ((nodeName == 'elseif' || nodeName == 'else') &&
                         curNode.isOpenedBy == null) {
+                        let baseMessage = 'Unpaired "' + NodeHelpers.getTrueName(curNode) + '" control structure.';
+
+
+                        if (curNode.isInterpolationNode) {
+                            baseMessage += ' Tag pairs are not supported within Antlers tags.'; 
+                        }
+
                         curNode.pushError(AntlersError.makeSyntaxError(
                             AntlersErrorCodes.TYPE_PARSE_UNPAIRED_CONDITIONAL,
                             curNode,
-                            'Unpaired "' + NodeHelpers.getTrueName(curNode) + '" control structure.'
+                            baseMessage
                         ));
                         curNode._conditionParserAbandonPairing = true;
                     }
 
                     if (curNode.isClosedBy == null && ConditionPairAnalyzer.requiresClose(curNode)) {
+                        let baseMessage = 'Unclosed "' + NodeHelpers.getTrueName(curNode) + '" control structure.';
+
+                        if (curNode.isInterpolationNode) {
+                            baseMessage += ' Tag pairs are not supported within Antlers tags.'; 
+                        }
+
                         curNode.pushError(AntlersError.makeSyntaxError(
                             AntlersErrorCodes.TYPE_PARSE_UNCLOSED_CONDITIONAL,
                             curNode,
-                            'Unclosed "' + NodeHelpers.getTrueName(curNode) + '" control structure.'
+                            baseMessage
                         ));
                         curNode._conditionParserAbandonPairing = true;
                     }
