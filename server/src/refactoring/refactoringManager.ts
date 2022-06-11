@@ -1,5 +1,5 @@
 import { CodeAction } from 'vscode-languageserver';
-import PartialHandler from './core/partialHandler';
+import ExtractPartialHandler from './core/extractPartialHandler';
 import TernaryHandler from './core/ternaryHandler';
 import IRefactorHandler from './refactorHandler';
 import IRefactoringRequest from './refactoringRequest';
@@ -7,13 +7,13 @@ import IRefactoringRequest from './refactoringRequest';
 class RefactoringManager {
 
     static getRefactors(params: IRefactoringRequest): CodeAction[] {
-        const actions: CodeAction[] = [];
-        const tempHandlers: IRefactorHandler[] = [];
+        const actions: CodeAction[] = [],
+            handlers: IRefactorHandler[] = [];
 
-        tempHandlers.push(new TernaryHandler());
-        tempHandlers.push(new PartialHandler());
+        handlers.push(new ExtractPartialHandler());
+        handlers.push(new TernaryHandler());
 
-        tempHandlers.forEach((handler) => {
+        handlers.forEach((handler) => {
             if (handler.canHandle(params)) {
                 handler.refactor(params).forEach((refactor) => {
                     actions.push(refactor);

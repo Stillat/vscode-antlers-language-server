@@ -7,10 +7,6 @@ import * as fs from 'fs';
 import { Range, TextDocument } from "vscode-languageserver-textdocument";
 import {
     ApplyWorkspaceEditParams,
-    ApplyWorkspaceEditRequest,
-    CodeAction,
-    CodeActionKind,
-    CodeActionParams,
     createConnection,
     DidChangeConfigurationNotification,
     DocumentLinkParams,
@@ -22,9 +18,6 @@ import {
     TextDocumentIdentifier,
     TextDocuments,
     TextDocumentSyncKind,
-    TextEdit,
-    WorkDoneProgress,
-    WorkDoneProgressCreateRequest,
     WorkspaceEdit,
 } from "vscode-languageserver/node";
 import {
@@ -67,10 +60,8 @@ import DocumentTransformer from './runtime/parser/documentTransformer';
 import { AntlersFormatter } from './formatting/antlersFormatter';
 import { IHTMLFormatConfiguration } from './formatting/htmlCompat';
 import { AntlersDocument } from './runtime/document/antlersDocument';
-import DocumentManager from './runtime/document/documentManager';
-import ConditionTernaryRefactor from './runtime/refactoring/conditionTernaryRefactor';
 import { handleCodeActions } from './services/antlersRefactoring';
-import PartialHandler from './refactoring/core/partialHandler';
+import ExtractPartialHandler from './refactoring/core/extractPartialHandler';
 
 const projectIndex = "antlers-project-index";
 
@@ -270,9 +261,9 @@ connection.onInitialized(() => {
 });
 
 connection.onExecuteCommand(async (params) => {
-    if (params.command == 'antlers.extractToPartial' && PartialHandler.currentAction != null) {
+    if (params.command == 'antlers.extractToPartial' && ExtractPartialHandler.currentAction != null) {
         if (params.arguments?.length == 3) {
-            PartialHandler.currentAction.completeRefactor({
+            ExtractPartialHandler.currentAction.completeRefactor({
                 path: params.arguments[1],
                 fsPath: params.arguments[2]
             });

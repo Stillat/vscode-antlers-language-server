@@ -103,7 +103,7 @@ export default class ConditionTernaryRefactor {
         contentText = replaceAllInString(contentText, '{{', '{');
         contentText = replaceAllInString(contentText, '}}', '}');
 
-        return '\'' + replaceAllInString(contentText, '\'', '\\\'') + ' \'';
+        return '\'' + replaceAllInString(contentText, '\'', '\\\'') + '\'';
     }
 
     private createTernary(node: ConditionNode) {
@@ -128,7 +128,8 @@ export default class ConditionTernaryRefactor {
 
     private createGatekeeper(node: ConditionNode): string {
         const head = node.logicBranches[0].head as AntlersNode,
-            conditionContent = this.convertToString(head.getInnerDocumentText() ?? '');
+            innerText = head.getInnerDocumentText() ?? '',
+            conditionContent = this.convertToString(innerText);
 
         let conditionOpen = '';
 
