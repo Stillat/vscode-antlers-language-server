@@ -81,7 +81,7 @@ export interface AntlersSettings {
 // The global settings, used when the `workspace/configuration` request is not supported by the client.
 // Please note that this is not the case when using this server with the client provided in this example
 // but could happen with other clients.
-const defaultSettings: AntlersSettings = { formatFrontMatter: false, showGeneralSnippetCompletions: true, trace: { server: 'off' }, formatterIgnoreExtensions: ['xml'], languageVersion: 'regex' };
+const defaultSettings: AntlersSettings = { formatFrontMatter: false, showGeneralSnippetCompletions: true, trace: { server: 'off' }, formatterIgnoreExtensions: ['xml'], languageVersion: 'runtime' };
 let globalSettings: AntlersSettings = defaultSettings;
 
 function updateGlobalSettings(settings: AntlersSettings) {
