@@ -42,6 +42,18 @@ export class NodeQueries {
         return subNodes;
     }
 
+    static isBefore(node: AbstractNode, position: Position) {
+        if (node.startPosition == null) { return false; }
+
+        return node.startPosition.index < position.index;
+    }
+
+    static isAfter(node: AbstractNode, position: Position) {
+        if (node.startPosition == null) { return false; }
+
+        return node.startPosition.index > position.index;
+    }
+
     static findNodesBeforePosition(position: Position | null, nodes: AbstractNode[]): AbstractNode[] {
         const beforeNodes: AbstractNode[] = [];
 

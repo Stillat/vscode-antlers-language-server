@@ -5,7 +5,7 @@ import { ContextResolver } from './contexts/contextResolver';
 import { TagIdentifier } from '../nodes/tagIdentifier';
 import { Scope } from '../../antlers/scope/scope';
 import { AntlersNodeQueries } from './scanners/antlersNodeQueries';
-import { AntlersNode, AbstractNode } from '../nodes/abstractNode';
+import { AntlersNode, AbstractNode, StaticTracedAssignment } from '../nodes/abstractNode';
 
 export class DocumentCursor {
     private doc: AntlersDocument;
@@ -74,6 +74,38 @@ export class DocumentCursor {
             this.position(line, char),
             this.doc.getDocumentParser().getNodes()
         );
+    }
+
+    getAssignmentsBefore(line: number, char: number): StaticTracedAssignment[] {
+        const assignments = this.doc.getDocumentParser().getLanguageParser().getRuntimeAssignments(),
+            returnNodes: StaticTracedAssignment[] = [],
+            pos = this.position(line, char);
+
+        if (pos != null) {
+            assignments.forEach((assignment) => {
+                if (NodeQueries.isBefore(assignment.target, pos)) {
+                    returnNodes.push(assignment);
+                }
+            });
+        }
+
+        return returnNodes;
+    }
+
+    getAssignmentsAfter(line: number, char: number): StaticTracedAssignment[] {
+        const assignments = this.doc.getDocumentParser().getLanguageParser().getRuntimeAssignments(),
+            returnNodes: StaticTracedAssignment[] = [],
+            pos = this.position(line, char);
+
+        if (pos != null) {
+            assignments.forEach((assignment) => {
+                if (NodeQueries.isAfter(assignment.target, pos)) {
+                    returnNodes.push(assignment);
+                }
+            });
+        }
+
+        return returnNodes;
     }
 
     getNodesAfter(line: number, char: number): AbstractNode[] {

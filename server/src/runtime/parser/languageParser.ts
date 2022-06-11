@@ -2,7 +2,7 @@ import { AntlersError } from '../errors/antlersError';
 import { AntlersErrorCodes } from '../errors/antlersErrorCodes';
 import { LineRetriever } from '../errors/lineRetriever';
 import { TypeLabeler } from '../errors/typeLabeler';
-import { AbstractNode, AdditionAssignmentOperator, AdditionOperator, AliasedScopeLogicGroup, AntlersNode, ArgSeparator, ArgumentGroup, ArrayNode, ConditionalVariableFallbackOperator, DirectionGroup, DivisionAssignmentOperator, DivisionOperator, EqualCompOperator, ExponentiationOperator, FactorialOperator, FalseConstant, GreaterThanCompOperator, GreaterThanEqualCompOperator, InlineBranchSeparator, InlineTernarySeparator, LanguageOperatorConstruct, LeftAssignmentOperator, LessThanCompOperator, LessThanEqualCompOperator, LibraryInvocationConstruct, ListValueNode, LogicalAndOperator, LogicalNegationOperator, LogicalOrOperator, LogicalXorOperator, LogicGroup, LogicGroupBegin, LogicGroupEnd, MethodInvocationNode, ModifierChainNode, ModifierNameNode, ModifierNode, ModifierSeparator, ModifierValueNode, ModifierValueSeparator, ModulusAssignmentOperator, ModulusOperator, MultiplicationAssignmentOperator, MultiplicationOperator, NamedArgumentNode, NameValueNode, NotEqualCompOperator, NotStrictEqualCompOperator, NullCoalescenceGroup, NullCoalesceOperator, NullConstant, NumberNode, PathNode, ScopeAssignmentOperator, ScopedLogicGroup, SemanticGroup, SpaceshipCompOperator, StatementSeparatorNode, StrictEqualCompOperator, StringConcatenationOperator, StringValueNode, SubtractionAssignmentOperator, SubtractionOperator, SwitchCase, SwitchGroup, TernaryCondition, TrueConstant, TupleListStart, TupleScopedLogicGroup, ValueDirectionNode, VariableNode } from '../nodes/abstractNode';
+import { AbstractNode, AdditionAssignmentOperator, AdditionOperator, AliasedScopeLogicGroup, AntlersNode, ArgSeparator, ArgumentGroup, ArrayNode, ConditionalVariableFallbackOperator, DirectionGroup, DivisionAssignmentOperator, DivisionOperator, EqualCompOperator, ExponentiationOperator, FactorialOperator, FalseConstant, GreaterThanCompOperator, GreaterThanEqualCompOperator, InlineBranchSeparator, InlineTernarySeparator, LanguageOperatorConstruct, LeftAssignmentOperator, LessThanCompOperator, LessThanEqualCompOperator, LibraryInvocationConstruct, ListValueNode, LogicalAndOperator, LogicalNegationOperator, LogicalOrOperator, LogicalXorOperator, LogicGroup, LogicGroupBegin, LogicGroupEnd, MethodInvocationNode, ModifierChainNode, ModifierNameNode, ModifierNode, ModifierSeparator, ModifierValueNode, ModifierValueSeparator, ModulusAssignmentOperator, ModulusOperator, MultiplicationAssignmentOperator, MultiplicationOperator, NamedArgumentNode, NameValueNode, NotEqualCompOperator, NotStrictEqualCompOperator, NullCoalescenceGroup, NullCoalesceOperator, NullConstant, NumberNode, PathNode, ScopeAssignmentOperator, ScopedLogicGroup, SemanticGroup, SpaceshipCompOperator, StatementSeparatorNode, StaticTracedAssignment, StrictEqualCompOperator, StringConcatenationOperator, StringValueNode, SubtractionAssignmentOperator, SubtractionOperator, SwitchCase, SwitchGroup, TernaryCondition, TrueConstant, TupleListStart, TupleScopedLogicGroup, ValueDirectionNode, VariableNode } from '../nodes/abstractNode';
 import { LibraryManager } from '../runtime/libraries/libraryManager';
 import { LanguageOperatorRegistry } from '../runtime/sandbox/languageOperatorRegistry';
 import { NodeHelpers } from '../utilities/nodeHelpers';
@@ -18,6 +18,7 @@ export class LanguageParser {
     private createdModifierChains: ModifierChainNode[] = [];
     private createdLanguageOperators: LanguageOperatorConstruct[] = [];
     private createdArrays: ArrayNode[] = [];
+    private tracedAssignments:StaticTracedAssignment[] = [];
     private mergedVariablePaths: VariableNode[] = [];
     private mergedComponents: Map<AbstractNode, VariableNode> = new Map();
     private modifierNameMapping: Map<ModifierNameNode, ModifierNode> = new Map();
@@ -61,6 +62,45 @@ export class LanguageParser {
         return this.createdArrays;
     }
 
+    public getRuntimeAssignments(): StaticTracedAssignment[] {
+        return this.tracedAssignments;
+    }
+
+    public getAssignedVariables(): VariableNode[] {
+        const variables:VariableNode[] = [],
+            addedVariableNames:string[] = [];
+
+        for (let i = 0; i < this.tracedAssignments.length; i++) {
+            const thisAssignment = this.tracedAssignments[i];
+
+            if (thisAssignment.target instanceof VariableNode) {
+                if (addedVariableNames.includes(thisAssignment.target.name) == false) {
+                    addedVariableNames.push(thisAssignment.target.name);
+
+                    variables.push(thisAssignment.target);
+                }
+            }
+        }
+
+        return variables;
+    }
+
+    public getAssignedVariableNames(): string[] {
+        const addedVariableNames:string[] = [];
+
+        for (let i = 0; i < this.tracedAssignments.length; i++) {
+            const thisAssignment = this.tracedAssignments[i];
+
+            if (thisAssignment.target instanceof VariableNode) {
+                if (addedVariableNames.includes(thisAssignment.target.name) == false) {
+                    addedVariableNames.push(thisAssignment.target.name);
+                }
+            }
+        }
+
+        return addedVariableNames;
+    }
+
     reset() {
         this.tokens = [];
         this.createdModifierChains = [];
@@ -68,6 +108,7 @@ export class LanguageParser {
         this.createdArrays = [];
         this.createdModifierChains = [];
         this.createdLanguageOperators = [];
+        this.tracedAssignments = [];
         this.createdArrays = [];
         this.mergedVariablePaths = [];
         this.mergedComponents.clear();
@@ -2362,6 +2403,10 @@ export class LanguageParser {
                 const right = nodes[i + 1];
 
                 this.flagNodeAsOperatorResolve(right);
+
+                if (LanguageParser.isAssignmentOperator(node)) {
+                    this.tracedAssignments.push(new StaticTracedAssignment(poppedLeft, right, node));
+                }
 
                 if (typeof poppedLeft !== 'undefined') { poppedLeft.isVirtualGroupMember = true; }
                 if (typeof right !== 'undefined') { right.isVirtualGroupMember = true; }

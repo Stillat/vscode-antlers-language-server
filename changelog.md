@@ -2,6 +2,10 @@
 
 Bugs fixed, what's new, and more! :)
 
+## Unreleased
+
+- User created Antlers variables will now appear within completion suggestions
+
 ## v2.1.1
 
 - Adds support for detecting recursive partials

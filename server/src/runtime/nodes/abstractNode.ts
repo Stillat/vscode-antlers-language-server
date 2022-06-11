@@ -245,6 +245,25 @@ export class AntlersNode extends AbstractNode {
         return this.parser.getText(this.startPosition.index, this.endPosition.index + 1);
     }
 
+    getInnerDocumentText()
+    {
+        if (this.startPosition == null || this.endPosition == null || this.parser == null) {
+            return '';
+        }
+
+        if (this.isClosedBy == null) {
+            return this.getNodeDocumentText();
+        }
+
+        const closeStart = this.isClosedBy.startPosition;
+
+        if (closeStart == null) {
+            return '';
+        }
+
+        return this.parser.getText(this.endPosition.index + 1, closeStart.index);
+    }
+
     nodeAtIndex(index: number): AbstractNode | null {
         if (this.runtimeNodes.length == 0) {
             return null;
@@ -1171,5 +1190,18 @@ export class VariableReference {
         });
 
         return stringParts.join('.');
+    }
+}
+
+export class StaticTracedAssignment
+{
+    public target:AbstractNode;
+    public value:AbstractNode;
+    public operator:AbstractNode;
+
+    constructor(target:AbstractNode, value:AbstractNode, operator:AbstractNode) {
+        this.target = target;
+        this.value = value;
+        this.operator = operator;
     }
 }

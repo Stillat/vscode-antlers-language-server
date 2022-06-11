@@ -343,6 +343,21 @@ export class SuggestionManager {
                 return [];
             }
 
+            if (params.antlersDocument != null) {
+                const userVariables = params.antlersDocument.cursor.getAssignmentsBefore(params.position.line, params.position.character);
+
+                if (userVariables.length > 0) {
+                    userVariables.forEach((assignment) => {
+                        if (assignment.target instanceof VariableNode) {
+                            completionItems.push({
+                                label: assignment.target.name,
+                                kind: CompletionItemKind.Variable
+                            });
+                        }
+                    });
+                }
+            }
+
             if (ConditionalCompletionTriggers.includes(lastScopeItem.getTagName())) {
                 if (params.context.feature != null &&
                     params.context.feature instanceof StringValueNode &&
