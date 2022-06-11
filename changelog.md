@@ -2,6 +2,11 @@
 
 Bugs fixed, what's new, and more! :)
 
+## v2.1.3
+
+- Adds "Refactor to partial..." code action
+- Adds convert condition to ternary or gatekeeper operator refactors
+
 ## v2.1.2
 
 - User created Antlers variables will now appear within completion suggestions
