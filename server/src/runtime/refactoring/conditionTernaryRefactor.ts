@@ -73,6 +73,10 @@ export default class ConditionTernaryRefactor {
                 if (branchContent.endsWith(')') == false) {
                     branchContent = branchContent + ')';
                 }
+
+                if (this.shouldAddEndingParenthesis(branch)) {
+                    branchContent += ')';
+                }
             }
 
             conditionParts.push(branchContent);
@@ -123,7 +127,21 @@ export default class ConditionTernaryRefactor {
             conditionOpen = conditionOpen + ')';
         }
 
+        if (this.shouldAddEndingParenthesis(head)) {
+            conditionOpen += ')';
+        }
+
         return conditionOpen + ' ? ' + conditionContent + ' : ' + elseContent;
+    }
+
+    private shouldAddEndingParenthesis(node: AntlersNode) {
+        if (node.originalNode == null) { return false; }
+
+        if (node.originalNode.getTagName() == 'unless') {
+            return true;
+        }
+
+        return false;
     }
 
     private createGatekeeper(node: ConditionNode): string {

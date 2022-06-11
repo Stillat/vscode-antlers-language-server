@@ -47,6 +47,10 @@ suite("Condition Refactor Test", () => {
     });
 
     test('it can refactor unless', () => {
-        assert.strictEqual(true, true);
+        let template = `{{ unless first }}branch-one{{ else }}branch-two{{ /unless }}`;
+        assert.strictEqual(refactor(template), "{{ (!( first )) ? 'branch-one' : 'branch-two' }}");
+
+        template = `{{ unless first && 5 < 10 }}{{ if no_results != true }}yes{{ /if }}{{ /if }}`;
+        assert.strictEqual(refactor(template, false, true), `{{ ((!( first && 5 < 10 )) && (no_results != true)) ?= 'yes' }}`);
     });
 });
