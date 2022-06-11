@@ -55,7 +55,7 @@ class TernaryHandler implements IRefactorHandler {
             this.condition = pairedNodes[0];
             this.isNestedConditions = false;
 
-            if (conditionalStructures > 1) {
+            if (conditionalStructures > 2) {
                 const isFlat = ConditionAnalyzer.isFlatCondition(this.condition);
 
                 if (! isFlat) {
