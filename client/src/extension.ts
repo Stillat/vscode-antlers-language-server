@@ -216,6 +216,16 @@ export function activate(context: ExtensionContext) {
                     vscode.workspace.applyEdit(edits);
                 }
                 return null;
+            },
+            executeCommand: async (command, args, next) => {
+                if (command == 'antlers.extractToPartial') {
+                    const targetPath = await vscode.window.showSaveDialog({
+                        title: 'Extract to Partial',
+                    });
+                    args.push(targetPath.path);
+                    args.push(targetPath.fsPath);
+                }
+                return next(command, args);
             }
         }
     };

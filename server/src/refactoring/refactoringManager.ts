@@ -1,4 +1,5 @@
 import { CodeAction } from 'vscode-languageserver';
+import PartialHandler from './core/partialHandler';
 import TernaryHandler from './core/ternaryHandler';
 import IRefactorHandler from './refactorHandler';
 import IRefactoringRequest from './refactoringRequest';
@@ -10,6 +11,7 @@ class RefactoringManager {
         const tempHandlers: IRefactorHandler[] = [];
 
         tempHandlers.push(new TernaryHandler());
+        tempHandlers.push(new PartialHandler());
 
         tempHandlers.forEach((handler) => {
             if (handler.canHandle(params)) {

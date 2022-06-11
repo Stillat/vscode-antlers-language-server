@@ -6,6 +6,8 @@ import * as fs from 'fs';
 /* eslint-disable @typescript-eslint/no-namespace */
 import { Range, TextDocument } from "vscode-languageserver-textdocument";
 import {
+    ApplyWorkspaceEditParams,
+    ApplyWorkspaceEditRequest,
     CodeAction,
     CodeActionKind,
     CodeActionParams,
@@ -23,6 +25,7 @@ import {
     TextEdit,
     WorkDoneProgress,
     WorkDoneProgressCreateRequest,
+    WorkspaceEdit,
 } from "vscode-languageserver/node";
 import {
     handleOnCompletion,
@@ -67,6 +70,7 @@ import { AntlersDocument } from './runtime/document/antlersDocument';
 import DocumentManager from './runtime/document/documentManager';
 import ConditionTernaryRefactor from './runtime/refactoring/conditionTernaryRefactor';
 import { handleCodeActions } from './services/antlersRefactoring';
+import PartialHandler from './refactoring/core/partialHandler';
 
 const projectIndex = "antlers-project-index";
 
@@ -223,7 +227,10 @@ connection.onInitialize((params: InitializeParams) => {
             documentSymbolProvider: {},
             referencesProvider: {},
             documentHighlightProvider: {},
-            codeActionProvider: {}
+            codeActionProvider: {},
+            executeCommandProvider: {
+                commands: ['antlers.extractToPartial']
+            }
         },
     };
     if (hasWorkspaceFolderCapability) {
@@ -260,6 +267,18 @@ connection.onInitialized(() => {
                 updateGlobalSettings(defaultSettings);
             }
         });
+});
+
+connection.onExecuteCommand(async (params) => {
+    if (params.command == 'antlers.extractToPartial' && PartialHandler.currentAction != null) {
+        if (params.arguments?.length == 3) {
+            PartialHandler.currentAction.completeRefactor({
+                path: params.arguments[1],
+                fsPath: params.arguments[2]
+            });
+        }
+    }
+    return;
 });
 
 connection.onDidChangeConfiguration((change) => {
@@ -475,6 +494,14 @@ export async function collectProjectDetails(textDocument: TextDocument): Promise
             kind: "end",
             message: "Analysis Complete",
         });*/
+}
+
+export function requestEdits(edit: WorkspaceEdit) {
+    const params:ApplyWorkspaceEditParams = {
+        edit: edit
+    };
+
+    connection.sendRequest("workspace/applyEdit", params);
 }
 
 export function analyzeStructures(document: string) {
