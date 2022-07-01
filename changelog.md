@@ -2,6 +2,11 @@
 
 Bugs fixed, what's new, and more! :)
 
+## v2.1.5
+
+- Adds support for the `{{ vite }}` tag
+- Improves linting of tag parameters that utilize dynamic binding
+
 ## v2.1.4
 
 - Adds "Refactor to partial..." code action

@@ -111,6 +111,7 @@ import GetAllErrors from './core/getErrors/getAllErrors';
 import GetError from './core/getErrors/getError';
 import SetTag from './core/set';
 import MountUrlTag from './core/mountUrl';
+import Vite from './core/vite';
 
 const coreTags = [
     If,
@@ -251,6 +252,7 @@ const coreTags = [
     Markdown,
     MarkdownIndent,
     Widont,
+    Vite
 ];
 
 export { coreTags };

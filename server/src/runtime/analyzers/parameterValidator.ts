@@ -54,6 +54,10 @@ export class ParameterValidator {
                         attemptedToResolve = false,
                         paramName = paramToAnalyze.name.trim();
 
+                    if (paramToAnalyze.isVariableReference) {
+                        continue;
+                    }
+
                     paramName = trimLeft(paramName, ":");
 
                     // TagManager.getParameter(node.name, paramToAnalyze.name);
