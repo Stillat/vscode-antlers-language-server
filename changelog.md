@@ -2,6 +2,10 @@
 
 Bugs fixed, what's new, and more! :)
 
+## v2.1.6
+
+- Improves parsing of parameters that begin with numbers
+
 ## v2.1.5
 
 - Adds support for the `{{ vite }}` tag

@@ -410,7 +410,7 @@ export class AntlersNodeParser {
 
             if (hasFoundName == false && current == DocumentParser.Punctuation_Equals) {
                 if (currentChars.length > 0) {
-                    if ((StringUtilities.ctypeAlpha(currentChars[0]) || currentChars[0] == DocumentParser.Punctuation_Colon || currentChars[0] == DocumentParser.AtChar) == false) {
+                    if ((StringUtilities.ctypeAlpha(currentChars[0]) || StringUtilities.ctypeDigit(currentChars[0]) || currentChars[0] == DocumentParser.Punctuation_Colon || currentChars[0] == DocumentParser.AtChar) == false) {
                         currentChars = [];
                         continue;
                     }
