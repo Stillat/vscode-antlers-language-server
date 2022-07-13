@@ -1,7 +1,8 @@
 import * as YAML from 'yaml';
 import { Pair, Scalar, YAMLMap, YAMLSeq } from 'yaml/types';
 import { Position } from '../nodes/position';
-import { DocumentOffset, LineOffset } from '../parser/documentParser';
+import { DocumentOffset } from '../parser/documentOffset';
+import { LineOffset } from '../parser/lineOffset';
 import { StringUtilities } from '../utilities/stringUtilities';
 
 export class YamlDocument {

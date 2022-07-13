@@ -1,6 +1,6 @@
 import { AntlersError } from '../errors/antlersError';
 import { AntlersErrorCodes } from '../errors/antlersErrorCodes';
-import { AbstractNode, AntlersNode, AntlersParserFailNode, CommentParserFailNode, EscapedContentNode, INodeInterpolation, LiteralNode, PhpExecutionNode, PhpParserFailNode, VariableNode } from '../nodes/abstractNode';
+import { AbstractNode, AntlersNode, AntlersParserFailNode, CommentParserFailNode, EscapedContentNode, FragmentPosition, INodeInterpolation, LiteralNode, PhpExecutionNode, PhpParserFailNode, VariableNode } from '../nodes/abstractNode';
 import { Position } from '../nodes/position';
 import { GlobalRuntimeState } from '../runtime/globalRuntimeState';
 import { StringUtilities } from '../utilities/stringUtilities';
@@ -17,6 +17,12 @@ import { ModifierAnalyzer } from '../analyzers/modifierAnalyzer';
 import { ParameterValidator } from '../analyzers/parameterValidator';
 import ModifierManager from '../../antlers/modifierManager';
 import { IModifier } from '../../antlers/modifierTypes';
+import { DocumentOffset } from './documentOffset';
+import { LineOffset } from './lineOffset';
+import { DocumentIndex } from './documentIndex';
+import { FragmentsParser } from './fragmentsParser';
+import { IndexRange } from './indexRange';
+import { FragmentPositionAnalyzer } from '../analyzers/fragmentPositionAnalyzer';
 
 export class DocumentParser {
     static readonly K_CHAR = 'char';
@@ -101,6 +107,13 @@ export class DocumentParser {
     private frontMatter = '';
     private doesHaveUncloseIfStructures = false;
     private doesHaveUnclosedStructures = false;
+    private fragmentsParser:FragmentsParser;
+    private fragmentsAnalyzer:FragmentPositionAnalyzer;
+
+    constructor() {
+        this.fragmentsParser = new FragmentsParser();
+        this.fragmentsAnalyzer = new FragmentPositionAnalyzer(this, this.fragmentsParser);
+    }
 
     public readonly structure: VirtualHierarchy = new VirtualHierarchy(this);
 
@@ -782,8 +795,29 @@ export class DocumentParser {
             }
         });
 
+        if (this.content.length > 0) {
+            this.fragmentsParser.setIndexRanges(this.getNodeIndexRanges())
+                .parse(this.content);
+        }
+
+        this.fragmentsAnalyzer.analyze();
 
         return this.renderNodes;
+    }
+
+    getNodeIndexRanges() {
+        const indexRanges: IndexRange[] = [];
+
+        this.nodes.forEach((node) => {
+            if ((node instanceof LiteralNode) == false) {
+                indexRanges.push({
+                    start: node.startPosition?.index ?? 0,
+                    end: node.endPosition?.index ?? 0
+                });
+            }
+        });
+
+        return indexRanges;
     }
 
     positionFromOffset(offset: number, index: number, isRelativeOffset = false) {
@@ -894,6 +928,18 @@ export class DocumentParser {
 
     getContent() {
         return this.content;
+    }
+
+    getFragments() {
+        return this.fragmentsParser.getFragments();
+    }
+
+    getFragmentsParser() {
+        return this.fragmentsParser;
+    }
+
+    getFragmentsContainingStructures() {
+        return this.fragmentsParser.getFragmentsContainingStructures();
     }
 
     setIsInterpolatedParser(isInterpolation: boolean) {
@@ -1832,6 +1878,18 @@ export class DocumentParser {
         return this.nodes;
     }
 
+    getNodesBetween(start: Position, end: Position): AbstractNode[] {
+        const returnNodes: AbstractNode[] = [];
+
+        this.nodes.forEach((node) => {
+            if ((node.startPosition?.offset ?? 0) > start.offset && (node.endPosition?.offset ?? 0) < end.offset) {
+                returnNodes.push(node);
+            }
+        });
+
+        return returnNodes;
+    }
+
     public antlersNodes(): AntlersNode[] {
         return this.nodes.filter(function (node) {
             return node instanceof AntlersNode;
@@ -1871,23 +1929,6 @@ export class DocumentParser {
     getAntlersErrors() {
         return this.antlersErrors;
     }
-}
-
-export interface DocumentIndex {
-    start: number,
-    end: number
-}
-
-export interface DocumentOffset {
-    char: number;
-    line: number;
-}
-
-export interface LineOffset {
-    startIndex: number;
-    endIndex: number;
-    char: number;
-    line: number;
 }
 
 interface InterpolationScanResult {

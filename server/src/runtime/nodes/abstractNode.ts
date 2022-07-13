@@ -16,6 +16,10 @@ import { TagIdentifier } from './tagIdentifier';
 import { ConditionPairAnalyzer } from '../analyzers/conditionPairAnalyzer';
 import { replaceAllInString } from '../../utils/strings';
 
+function newRefId() {
+    return replaceAllInString(uuidv4(), '-', '_');
+}
+
 /* eslint-disable @typescript-eslint/no-empty-interface */
 export interface ArithmeticNodeContract {
 
@@ -39,6 +43,40 @@ export interface INodeInterpolation {
     endOffset: number
 }
 
+export interface StructuralFragment {
+    start: FragmentNode,
+    end: FragmentNode
+}
+
+export enum FragmentPosition {
+    IsDynamicFragmentName,
+    InsideFragmentParameter,
+    InsideFragment,
+    Unresolved
+}
+
+export class FragmentNode {
+    public startPosition: Position | null = null;
+    public endPosition: Position | null = null;
+    public index = 0;
+    public embeddedIndex = 0;
+    public refId: string | null = null;
+    public parameters: FragmentParameterNode[] = [];
+    public isSelfClosing = false;
+    public isClosingFragment = false;
+    public name = '';
+    public containsStructures = false;
+
+    constructor() {
+        this.refId = newRefId();
+    }
+}
+
+export class FragmentParameterNode {
+    public startPosition: Position | null = null;
+    public endPosition: Position | null = null;
+}
+
 export class AbstractNode {
     public refId: string | null = null;
     public index = 0;
@@ -54,6 +92,18 @@ export class AbstractNode {
     private positionContexts: PositionContext[] = [];
     private addedContexts: Map<string, boolean> = new Map();
 
+    public fragment: FragmentNode | null = null;
+    public fragmentPosition: FragmentPosition = FragmentPosition.Unresolved;
+    public containsAnyFragments = false;
+    public containsChildStructures = false;
+    
+    public isInScriptTag = false;
+    public isInStyleTag = false;
+
+    isEmbedded(): boolean {
+        return this.isInScriptTag || this.isInStyleTag;
+    }
+    
     /* Start: Internal Parser Variables and APIs. */
     public isVirtual = true;
     public isPartOfMethodChain = false;
@@ -147,7 +197,7 @@ export class AbstractNode {
     }
 
     constructor() {
-        this.refId = replaceAllInString(uuidv4(), '-', '_');
+        this.refId = newRefId();
     }
 
     innerContent() {
