@@ -492,6 +492,11 @@ export class TagPairAnalyzer {
                     conditionNode.index = node.index;
                     conditionNode.chain.push(node.index);
 
+                    const conditionStart = (node.startPosition?.offset ?? 0),
+                        finalClosing = node.getFinalClosingTag(),
+                        conditionEnd = (finalClosing.endPosition?.offset ?? 0) + 1;
+                    conditionNode.nodeContent = document.getText(conditionStart, conditionEnd);
+
                     if (this.parentNode != null) {
                         conditionNode.parent = this.parentNode;
                     }

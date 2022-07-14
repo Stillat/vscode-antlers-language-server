@@ -227,6 +227,7 @@ export class ExecutionBranch extends AbstractNode {
 export class ConditionNode extends AbstractNode {
     public logicBranches: ExecutionBranch[] = [];
     public chain: number[] = [];
+    public nodeContent = '';
 }
 
 export class AntlersNode extends AbstractNode {
@@ -754,6 +755,12 @@ export class AntlersNode extends AbstractNode {
         }
 
         return true;
+    }
+
+    getFinalClosingTag(): AntlersNode {
+        if (this.isClosedBy == null) { return this; }
+
+        return this.isClosedBy.getFinalClosingTag();
     }
 
     rawContent(): string {
