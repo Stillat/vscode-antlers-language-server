@@ -228,6 +228,10 @@ export class ConditionNode extends AbstractNode {
     public logicBranches: ExecutionBranch[] = [];
     public chain: number[] = [];
     public nodeContent = '';
+    public fragment: FragmentNode | null = null;
+    public fragmentPosition: FragmentPosition = FragmentPosition.Unresolved;
+    public containsAnyFragments = false;
+    public containsChildStructures = false;
 }
 
 export class AntlersNode extends AbstractNode {

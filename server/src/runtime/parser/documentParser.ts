@@ -712,6 +712,13 @@ export class DocumentParser {
             }
         });
 
+        if (this.content.length > 0) {
+            this.fragmentsParser.setIndexRanges(this.getNodeIndexRanges())
+                .parse(this.content);
+        }
+
+        this.fragmentsAnalyzer.analyze();
+
         const tagPairAnalyzer = new TagPairAnalyzer();
         this.renderNodes = tagPairAnalyzer.associate(this.nodes, this);
 
@@ -808,13 +815,6 @@ export class DocumentParser {
                 ParameterValidator.validateParameters(node);
             }
         });
-
-        if (this.content.length > 0) {
-            this.fragmentsParser.setIndexRanges(this.getNodeIndexRanges())
-                .parse(this.content);
-        }
-
-        this.fragmentsAnalyzer.analyze();
 
         this.nodes.forEach((node) => {
             if (node instanceof AntlersNode) {

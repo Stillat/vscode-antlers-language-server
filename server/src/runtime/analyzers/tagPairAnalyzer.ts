@@ -492,6 +492,11 @@ export class TagPairAnalyzer {
                     conditionNode.index = node.index;
                     conditionNode.chain.push(node.index);
 
+                    conditionNode.fragment = node.fragment;
+                    conditionNode.fragmentPosition = node.fragmentPosition;
+                    conditionNode.containsAnyFragments = node.containsAnyFragments;
+                    conditionNode.containsChildStructures = node.containsChildStructures;
+
                     const conditionStart = (node.startPosition?.offset ?? 0),
                         finalClosing = node.getFinalClosingTag(),
                         conditionEnd = (finalClosing.endPosition?.offset ?? 0) + 1;
