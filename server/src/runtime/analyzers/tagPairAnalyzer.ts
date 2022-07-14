@@ -1,6 +1,8 @@
+import { AntlersDocument } from '../document/antlersDocument';
 import { AntlersError } from '../errors/antlersError';
 import { AntlersErrorCodes } from '../errors/antlersErrorCodes';
 import { AbstractNode, AntlersNode, AntlersParserFailNode, ConditionNode, EscapedContentNode, ExecutionBranch, RecursiveNode } from '../nodes/abstractNode';
+import { getStartPosition } from '../nodes/helpers';
 import { TagIdentifier } from '../nodes/tagIdentifier';
 import { DocumentParser } from '../parser/documentParser';
 import { NoParseManager } from '../runtime/noParseManager';
@@ -102,7 +104,7 @@ export class TagPairAnalyzer {
 
                         const compound = node.name?.compound ?? '';
 
-                        if (node.isClosingTag == false && tagName == compound && ! node.isSelfClosing) {
+                        if (node.isClosingTag == false && tagName == compound && !node.isSelfClosing) {
                             if (this.openTagIndexCount.has(this.stackCount) == false) {
                                 this.openTagIndexCount.set(this.stackCount, new Map());
                             }
@@ -333,7 +335,7 @@ export class TagPairAnalyzer {
                 }
             });
 
-            nestedNodes = this.reduceConditionals(nestedNodes);
+            nestedNodes = this.reduceConditionals(nestedNodes, document);
             const nestedNodeKeyMap: Map<string, number> = new Map();
 
             nodes.forEach((node) => {
@@ -398,7 +400,7 @@ export class TagPairAnalyzer {
             }
 
             if (this.parentNode != null && (this.parentNode instanceof AntlersParserFailNode || this.parentNode instanceof AntlersNode)) {
-                this.parentNode.children = nestedNodes;
+                this.parentNode.children = this.cleanNodes(nestedNodes);
 
                 if (this.parentNode.parent != null && this.parentNode.parent instanceof AntlersNode) {
                     const ancestorNodes = this.parentNode.parent.children,
@@ -414,7 +416,7 @@ export class TagPairAnalyzer {
                         }
                     });
 
-                    this.parentNode.parent.children = newAncestorNodes;
+                    this.parentNode.parent.children = this.cleanNodes(newAncestorNodes);
                 }
             }
 
@@ -435,6 +437,22 @@ export class TagPairAnalyzer {
         }
 
         return nodesToReturn;
+    }
+
+    private cleanNodes(nodes: AbstractNode[]): AbstractNode[] {
+        const cleaned: AbstractNode[] = [],
+            ids: string[] = [];
+
+        for (let i = 0; i < nodes.length; i++) {
+            const child = nodes[i],
+                refId = child.refId as string;
+
+            if (ids.includes(refId)) { break; }
+            cleaned.push(child);
+            ids.push(refId);
+        }
+
+        return cleaned;
     }
 
     private findEndOfBranch(nodes: AbstractNode[], start: AntlersNode, startedAt: number) {
@@ -460,7 +478,7 @@ export class TagPairAnalyzer {
         };
     }
 
-    private reduceConditionals(nodes: AbstractNode[]) {
+    private reduceConditionals(nodes: AbstractNode[], document: DocumentParser) {
         const reduced: AbstractNode[] = [];
 
         for (let i = 0; i < nodes.length; i++) {
@@ -501,7 +519,17 @@ export class TagPairAnalyzer {
 
                             executionBranch.head = node;
                             executionBranch.tail = tail;
-                            executionBranch.nodes = node.children;
+                            executionBranch.nodes = this.cleanNodes(node.children);
+
+                            const branchStart = (node.endPosition?.offset ?? 0) + 1,
+                                branchEnd = (node.isClosedBy?.startPosition?.offset) ?? 0,
+                                documentText = document.getText(branchStart, branchEnd);
+                            
+                            executionBranch.documentText = documentText;
+
+                            if (document.shouldParseChildDocument()) {
+                                executionBranch.childDocument = AntlersDocument.childFromText(executionBranch.documentText, getStartPosition(executionBranch.nodes));
+                            }
 
                             if (tail == null) {
                                 tail = executionBranch.head.isClosedBy;

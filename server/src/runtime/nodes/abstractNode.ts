@@ -15,6 +15,7 @@ import { NodeVirtualHierarchy } from './antlersVirtualStructures/nodeVirtualHier
 import { TagIdentifier } from './tagIdentifier';
 import { ConditionPairAnalyzer } from '../analyzers/conditionPairAnalyzer';
 import { replaceAllInString } from '../../utils/strings';
+import { AntlersDocument } from '../document/antlersDocument';
 
 function newRefId() {
     return replaceAllInString(uuidv4(), '-', '_');
@@ -53,6 +54,12 @@ export enum FragmentPosition {
     InsideFragmentParameter,
     InsideFragment,
     Unresolved
+}
+
+export interface ChildDocument {
+    renderNodes: AbstractNode[],
+    content: string,
+    document: AntlersDocument
 }
 
 export class FragmentNode {
@@ -96,14 +103,14 @@ export class AbstractNode {
     public fragmentPosition: FragmentPosition = FragmentPosition.Unresolved;
     public containsAnyFragments = false;
     public containsChildStructures = false;
-    
+
     public isInScriptTag = false;
     public isInStyleTag = false;
 
     isEmbedded(): boolean {
         return this.isInScriptTag || this.isInStyleTag;
     }
-    
+
     /* Start: Internal Parser Variables and APIs. */
     public isVirtual = true;
     public isPartOfMethodChain = false;
@@ -210,10 +217,11 @@ export class AbstractNode {
 }
 
 export class ExecutionBranch extends AbstractNode {
-
     public head: AntlersNode | null = null;
     public tail: AntlersNode | null = null;
     public nodes: AbstractNode[] = [];
+    public documentText = '';
+    public childDocument: ChildDocument | null = null;
 }
 
 export class ConditionNode extends AbstractNode {
@@ -257,6 +265,8 @@ export class AntlersNode extends AbstractNode {
     public nameStartsOn: Position | null = null;
     public nameEndsOn: Position | null = null;
     public nameMethodPartStartsOn: Position | null = null;
+    public documentText = '';
+    public childDocument: ChildDocument | null = null;
 
     public readonly structure: NodeVirtualHierarchy = new NodeVirtualHierarchy(this);
 
@@ -376,6 +386,12 @@ export class AntlersNode extends AbstractNode {
         instance.rawEnd = this.rawEnd;
         instance.startPosition = this.startPosition;
         instance.endPosition = this.endPosition;
+
+        instance.originalAbstractNode = this;
+        instance.containsAnyFragments = this.containsAnyFragments;
+        instance.containsChildStructures = this.containsChildStructures;
+        instance.isInScriptTag = this.isInScriptTag;
+        instance.isInStyleTag = this.isInStyleTag;
 
         return instance;
     }
@@ -827,7 +843,6 @@ export class EscapedContentNode extends AntlersNode {
 }
 
 export class ParameterNode extends AbstractNode {
-
     public modifier: IModifier | null = null;
     public isModifierParameter = false;
     public nameDelimiter = '"';

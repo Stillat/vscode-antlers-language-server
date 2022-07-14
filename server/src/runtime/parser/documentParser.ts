@@ -23,6 +23,8 @@ import { DocumentIndex } from './documentIndex';
 import { FragmentsParser } from './fragmentsParser';
 import { IndexRange } from './indexRange';
 import { FragmentPositionAnalyzer } from '../analyzers/fragmentPositionAnalyzer';
+import { AntlersDocument } from '../document/antlersDocument';
+import { getStartPosition } from '../nodes/helpers';
 
 export class DocumentParser {
     static readonly K_CHAR = 'char';
@@ -105,10 +107,12 @@ export class DocumentParser {
     private documentPath: string | null = null;
     private pushedErrors: Map<string, AntlersError> = new Map();
     private frontMatter = '';
+    private shiftLine = 0;
     private doesHaveUncloseIfStructures = false;
     private doesHaveUnclosedStructures = false;
     private fragmentsParser:FragmentsParser;
     private fragmentsAnalyzer:FragmentPositionAnalyzer;
+    private parseChildDocuments = false;
 
     constructor() {
         this.fragmentsParser = new FragmentsParser();
@@ -116,6 +120,16 @@ export class DocumentParser {
     }
 
     public readonly structure: VirtualHierarchy = new VirtualHierarchy(this);
+
+    withChildDocuments(parseChildDocuments:boolean) {
+        this.parseChildDocuments = parseChildDocuments;
+
+        return this;
+    }
+
+    shouldParseChildDocument(): boolean { 
+        return this.parseChildDocuments;
+    }
 
     hasUnclosedIfStructures() {
         return this.doesHaveUncloseIfStructures;
@@ -802,6 +816,20 @@ export class DocumentParser {
 
         this.fragmentsAnalyzer.analyze();
 
+        this.nodes.forEach((node) => {
+            if (node instanceof AntlersNode) {
+                if (node.isClosedBy != null) {
+                    const startOffset = (node.endPosition?.offset ?? 0) + 1,
+                        endOffset = node.isClosedBy.startPosition?.offset ?? 0;
+                    node.documentText = this.content.substr(startOffset, endOffset - startOffset);
+
+                    if (this.parseChildDocuments) {
+                        node.childDocument = AntlersDocument.childFromText(node.documentText, getStartPosition(node.children));
+                    }
+                }
+            }
+        });
+
         return this.renderNodes;
     }
 
@@ -908,7 +936,7 @@ export class DocumentParser {
 
         position.index = index;
         position.offset = offset;
-        position.line = lineToUse;
+        position.line = lineToUse + this.shiftLine;
         position.char = charToUse;
 
         return position;
@@ -969,6 +997,16 @@ export class DocumentParser {
         this.cur = null;
         this.next = null;
         this.prev = null;
+    }
+
+    setSeedPosition(position: Position | null) {
+        if (position == null) {
+            this.shiftLine = 0;
+        } else {
+            this.shiftLine = position.line;
+        }
+
+        return this;
     }
 
     resetState() {

@@ -4,7 +4,7 @@ import TagManager from '../../antlers/tagManagerInstance';
 import { resolveTypedTree } from '../../antlers/tags';
 import { IEnvironmentHelper, parseIdeHelper } from '../../idehelper/parser';
 import { IProjectDetailsProvider } from '../../projects/projectDetailsProvider';
-import { AbstractNode, AntlersNode } from '../nodes/abstractNode';
+import { AbstractNode, AntlersNode, ChildDocument } from '../nodes/abstractNode';
 import { Position } from "../nodes/position";
 import { TagIdentifier } from "../nodes/tagIdentifier";
 import { DocumentIndex } from '../parser/documentIndex';
@@ -36,6 +36,22 @@ export class AntlersDocument {
         }
 
         return document.loadString(text);
+    }
+
+    static childFromText(text: string, seedPosition: Position | null = null): ChildDocument {
+        const document = new AntlersDocument();
+        
+        if (seedPosition != null) {
+            document.getDocumentParser().setSeedPosition(seedPosition);
+        }
+
+        document.loadString(text);
+
+        return {
+            renderNodes: document.getDocumentParser().getRenderNodes(),
+            content: text,
+            document: document
+        };
     }
 
     isValid() {
