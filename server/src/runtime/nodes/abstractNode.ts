@@ -271,10 +271,10 @@ export class AntlersNode extends AbstractNode {
     public nameEndsOn: Position | null = null;
     public nameMethodPartStartsOn: Position | null = null;
     public documentText = '';
+    public nodeContent = '';
     public childDocument: ChildDocument | null = null;
-
     public readonly structure: NodeVirtualHierarchy = new NodeVirtualHierarchy(this);
-
+    public isInlineAntlers = false;
     /** Start: Internal Parser State Variables */
     public mustClose = false;
     public reference: any | null = null;
@@ -308,6 +308,33 @@ export class AntlersNode extends AbstractNode {
         }
 
         return this.parser.getText(this.startPosition.index, this.endPosition.index + 1);
+    }
+
+    getImmediateChildren(): AbstractNode[] {
+        const immediateChildren: AbstractNode[] = [];
+
+        this.children.forEach((node) => {
+            if (node.parent == this) {
+                immediateChildren.push(node);
+            }
+        });
+
+        return immediateChildren;
+    }
+
+    getChildren(): AbstractNode[] {
+        if (this.isClosedBy == null) { return []; }
+
+        const newChildren: AbstractNode[] = [];
+
+        for (let i = 0; i < this.children.length; i++) {
+            const child = this.children[i];
+
+            if (child instanceof AntlersNode && child.refId == this.isClosedBy.refId) { break; }
+            newChildren.push(child);
+        }
+
+        return newChildren;
     }
 
     getInnerDocumentText() {
@@ -908,7 +935,6 @@ export class ModifierChainNode {
         }
     }
 }
-
 
 export class ModifierNode extends AbstractNode {
 

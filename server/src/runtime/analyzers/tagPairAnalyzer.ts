@@ -395,6 +395,7 @@ export class TagPairAnalyzer {
                     noParseNode.originalNode = node;
                     noParseNode.isClosedBy = node.isClosedBy;
 
+
                     nestedNodes[i] = noParseNode;
                 }
             }

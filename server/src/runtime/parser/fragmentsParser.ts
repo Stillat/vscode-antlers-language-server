@@ -71,6 +71,10 @@ export class FragmentsParser implements StringIterator {
     }
 
     getClosingFragmentAfter(fragment: FragmentNode): FragmentNode | null {
+        if (typeof fragment === 'undefined') {
+            return null;
+        }
+
         const lowerName = fragment.name.toLowerCase();
 
         for (let i = 0; i < this.fragments.length; i++) {

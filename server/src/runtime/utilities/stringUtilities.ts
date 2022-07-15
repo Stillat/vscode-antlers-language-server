@@ -6,6 +6,11 @@ export class StringUtilities {
     static normalizeLineEndings(string: string, to = "\n") {
         return string.replace(/\r?\n/g, to);
     }
+
+    static breakByNewLine(value: string): string[] {
+        return value.replace(/(\r\n|\n|\r)/gm, "\n").split("\n") as string[];
+    }
+
     static split(text: string) {
         return text.split('');
     }
@@ -45,5 +50,21 @@ export class StringUtilities {
     static substringCount(haystack: string, needle: string) {
         const subStr = needle.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
         return (haystack.match(new RegExp(subStr, 'gi')) || []).length;
+    }
+
+    static getLastLine(content: string): string {
+        const lines = StringUtilities.breakByNewLine(content);
+
+        if (lines.length == 0) { return ''; }
+
+        return lines[lines.length - 1];
+    }
+
+    static getFirstLine(content: string): string {
+        const lines = StringUtilities.breakByNewLine(content);
+
+        if (lines.length == 0) { return ''; }
+
+        return lines[0];
     }
 }

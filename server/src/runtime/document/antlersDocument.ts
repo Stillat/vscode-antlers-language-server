@@ -16,10 +16,12 @@ import { DocumentErrors } from "./documentErrors";
 import { FrontMatterParser } from './frontMatter/frontMatterParser';
 import { NodeScanner } from "./scanners/nodeScanner";
 import { RangeScanner } from "./scanners/rangeScanner";
+import { Transformer } from './transformer';
 import { YamlDocument } from "./yamlDocument";
 
 export class AntlersDocument {
     private documentParser: DocumentParser = new DocumentParser();
+    private transformer: Transformer | null = null;
 
     public readonly ranges: RangeScanner = new RangeScanner(this);
     public readonly nodes: NodeScanner = new NodeScanner(this);
@@ -45,6 +47,7 @@ export class AntlersDocument {
             document.getDocumentParser().setSeedPosition(seedPosition);
         }
 
+        document.getDocumentParser().withChildDocuments(true);
         document.loadString(text);
 
         return {
@@ -299,5 +302,13 @@ export class AntlersDocument {
         }
 
         return null;
+    }
+
+    transform() {
+        if (this.transformer == null) {
+            this.transformer = new Transformer(this);
+        }
+
+        return this.transformer;
     }
 }

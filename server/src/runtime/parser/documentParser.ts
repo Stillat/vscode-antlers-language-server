@@ -1,6 +1,6 @@
 import { AntlersError } from '../errors/antlersError';
 import { AntlersErrorCodes } from '../errors/antlersErrorCodes';
-import { AbstractNode, AntlersNode, AntlersParserFailNode, CommentParserFailNode, EscapedContentNode, FragmentPosition, INodeInterpolation, LiteralNode, PhpExecutionNode, PhpParserFailNode, VariableNode } from '../nodes/abstractNode';
+import { AbstractNode, AntlersNode, AntlersParserFailNode, CommentParserFailNode, ConditionNode, EscapedContentNode, FragmentPosition, INodeInterpolation, LiteralNode, PhpExecutionNode, PhpParserFailNode, VariableNode } from '../nodes/abstractNode';
 import { Position } from '../nodes/position';
 import { GlobalRuntimeState } from '../runtime/globalRuntimeState';
 import { StringUtilities } from '../utilities/stringUtilities';
@@ -25,6 +25,7 @@ import { IndexRange } from './indexRange';
 import { FragmentPositionAnalyzer } from '../analyzers/fragmentPositionAnalyzer';
 import { AntlersDocument } from '../document/antlersDocument';
 import { getStartPosition } from '../nodes/helpers';
+import { InlineNodeAnalyzer } from '../analyzers/inlineNodeAnalyzer';
 
 export class DocumentParser {
     static readonly K_CHAR = 'char';
@@ -110,8 +111,8 @@ export class DocumentParser {
     private shiftLine = 0;
     private doesHaveUncloseIfStructures = false;
     private doesHaveUnclosedStructures = false;
-    private fragmentsParser:FragmentsParser;
-    private fragmentsAnalyzer:FragmentPositionAnalyzer;
+    private fragmentsParser: FragmentsParser;
+    private fragmentsAnalyzer: FragmentPositionAnalyzer;
     private parseChildDocuments = false;
 
     constructor() {
@@ -121,13 +122,13 @@ export class DocumentParser {
 
     public readonly structure: VirtualHierarchy = new VirtualHierarchy(this);
 
-    withChildDocuments(parseChildDocuments:boolean) {
+    withChildDocuments(parseChildDocuments: boolean) {
         this.parseChildDocuments = parseChildDocuments;
 
         return this;
     }
 
-    shouldParseChildDocument(): boolean { 
+    shouldParseChildDocument(): boolean {
         return this.parseChildDocuments;
     }
 
@@ -686,6 +687,7 @@ export class DocumentParser {
             if (node instanceof AntlersNode && node.interpolationRegions.size > 0) {
                 node.interpolationRegions.forEach((content, varName) => {
                     const docParser = new DocumentParser();
+                    docParser.withChildDocuments(this.parseChildDocuments);
                     docParser.setIsInterpolatedParser(true);
 
                     let parseResults = docParser.parse(content.parseContent);
@@ -712,15 +714,39 @@ export class DocumentParser {
             }
         });
 
-        if (this.content.length > 0) {
+        if (this.parseChildDocuments && this.content.length > 0) {
             this.fragmentsParser.setIndexRanges(this.getNodeIndexRanges())
                 .parse(this.content);
         }
 
-        this.fragmentsAnalyzer.analyze();
-
         const tagPairAnalyzer = new TagPairAnalyzer();
         this.renderNodes = tagPairAnalyzer.associate(this.nodes, this);
+
+        if (this.parseChildDocuments) {
+            this.createChildDocuments(this.renderNodes);
+            this.fragmentsAnalyzer.analyze();
+            InlineNodeAnalyzer.analyze(this.nodes);
+
+            this.nodes.forEach((node) => {
+                if (node instanceof AntlersNode) {
+                    if (node.isClosedBy != null) {
+                        const nodeChildren = node.getImmediateChildren();
+
+                        for (let i = 0; i < nodeChildren.length; i++) {
+                            const child = nodeChildren[i];
+
+                            if (child instanceof AntlersNode && child.isClosedBy != null) {
+                                node.containsChildStructures = true;
+                                break;
+                            } else if (child instanceof ConditionNode) {
+                                node.containsChildStructures = true;
+                                break;
+                            }
+                        }
+                    }
+                }
+            });
+        }
 
         this.nodes.forEach((node) => {
             if (node instanceof AntlersNode && node.isClosingTag && node.isOpenedBy == null) {
@@ -820,8 +846,11 @@ export class DocumentParser {
             if (node instanceof AntlersNode) {
                 if (node.isClosedBy != null) {
                     const startOffset = (node.endPosition?.offset ?? 0) + 1,
-                        endOffset = node.isClosedBy.startPosition?.offset ?? 0;
+                        endOffset = node.isClosedBy.startPosition?.offset ?? 0,
+                        nodeStartOffset = (node.startPosition?.offset ?? 0),
+                        nodeEndOffset = (node.isClosedBy.endPosition?.offset ?? 0) + 1;
                     node.documentText = this.content.substr(startOffset, endOffset - startOffset);
+                    node.nodeContent = this.content.substr(nodeStartOffset, nodeEndOffset - nodeStartOffset);
 
                     if (this.parseChildDocuments) {
                         node.childDocument = AntlersDocument.childFromText(node.documentText, getStartPosition(node.children));
@@ -831,6 +860,23 @@ export class DocumentParser {
         });
 
         return this.renderNodes;
+    }
+
+    private createChildDocuments(renderNodes: AbstractNode[]) {
+        renderNodes.forEach((node) => {
+            if (node instanceof AntlersNode && node.isClosedBy != null) {
+                const isClosedBy = node.isClosedBy as AntlersNode,
+                    docStart = (node.startPosition?.index ?? 0) - 1,
+                    docLength = (isClosedBy.endPosition?.index ?? 0) - docStart;
+
+                node.documentText = this.content.substr(docStart, docLength);
+
+                const startOffset = (node.endPosition?.index ?? 0),
+                    length = ((isClosedBy.startPosition?.index ?? 0) - 1) - startOffset,
+                    childText = this.content.substr(startOffset, length);
+                node.childDocument = AntlersDocument.childFromText(childText, getStartPosition(node.getChildren()));
+            }
+        });
     }
 
     getNodeIndexRanges() {

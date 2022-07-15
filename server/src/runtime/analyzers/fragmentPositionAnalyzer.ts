@@ -1,6 +1,7 @@
 import { AntlersNode, ConditionNode, FragmentPosition, LiteralNode } from '../nodes/abstractNode';
 import { DocumentParser } from '../parser/documentParser';
 import { FragmentsParser } from '../parser/fragmentsParser';
+import { ConditionPairAnalyzer } from './conditionPairAnalyzer';
 
 export class FragmentPositionAnalyzer {
     private documentParser: DocumentParser;
@@ -60,7 +61,7 @@ export class FragmentPositionAnalyzer {
             if (node instanceof LiteralNode) { return; }
             if (node.startPosition == null) { return; }
 
-            if (node instanceof AntlersNode && !node.isClosingTag && node.isClosedBy != null) {
+            if (node instanceof AntlersNode && (ConditionPairAnalyzer.isConditionalStructure(node) || !node.isClosingTag) && node.isClosedBy != null) {
                 node.containsAnyFragments = this.doesContainFragments(node);
             }
 
