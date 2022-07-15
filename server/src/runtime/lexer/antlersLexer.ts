@@ -357,6 +357,9 @@ export class AntlersLexer {
                     stringNode.isVirtual = false;
                     stringNode.startPosition = node._lexerRelativeOffset(stringStartedOn ?? 0);
                     stringNode.endPosition = node._lexerRelativeOffset(this.currentIndex);
+                    if (this.referenceParser != null) {
+                        stringNode.sourceContent = this.referenceParser.getText(stringNode.startPosition.index, stringNode.endPosition.index + 1);
+                    }
                     stringNode.parent = this.activeNode;
 
                     if (terminator != null) {

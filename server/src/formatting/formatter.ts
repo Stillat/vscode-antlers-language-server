@@ -4,7 +4,8 @@ import { documentMap, sessionDocuments } from '../languageService/documents';
 import { htmlFormatterSettings } from '../languageService/htmlFormatterSettings';
 import { AntlersDocument } from '../runtime/document/antlersDocument';
 import { getAntlersSettings } from '../server';
-import { AntlersFormatter, AntlersFormattingOptions } from './antlersFormatter';
+import { AntlersFormatter } from './antlersFormatter';
+import { AntlersFormattingOptions } from './antlersFormattingOptions';
 import { IHTMLFormatConfiguration } from "./htmlCompat";
 
 export function formatAntlersDocument(params: DocumentFormattingParams): TextEdit[] | null {

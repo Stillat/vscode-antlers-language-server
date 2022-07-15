@@ -222,6 +222,12 @@ export class ExecutionBranch extends AbstractNode {
     public nodes: AbstractNode[] = [];
     public documentText = '';
     public childDocument: ChildDocument | null = null;
+
+    getImmediateChildren(): AbstractNode[] {
+        if (this.head == null) { return []; }
+
+        return this.head.getImmediateChildren();
+    }
 }
 
 export class ConditionNode extends AbstractNode {
@@ -1205,7 +1211,7 @@ export class LibraryInvocationConstruct extends AbstractNode {
 }
 
 export class LiteralNode extends AbstractNode {
-
+    public sourceContent = '';
 }
 
 export class MethodInvocationNode extends AbstractNode {
@@ -1241,6 +1247,7 @@ export class NumberNode extends AbstractNode {
 export class StringValueNode extends AbstractNode {
     public value = '';
     public sourceTerminator = '';
+    public sourceContent = '';
 }
 
 export class VariableNode extends AbstractNode {

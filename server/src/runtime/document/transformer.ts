@@ -1,4 +1,6 @@
+import { HTMLFormatter, PHPFormatter, YAMLFormatter } from '../../formatting/formatters';
 import { replaceAllInString } from '../../utils/strings';
+import { ConditionPairAnalyzer } from '../analyzers/conditionPairAnalyzer';
 import { AbstractNode, AntlersNode, ConditionNode, EscapedContentNode, ExecutionBranch, FragmentPosition, LiteralNode, PhpExecutionNode } from '../nodes/abstractNode';
 import { StringUtilities } from '../utilities/stringUtilities';
 import { AntlersDocument } from './antlersDocument';
@@ -52,6 +54,11 @@ interface TransformedTagPair {
 
 export class Transformer {
     private doc: AntlersDocument;
+    
+    private htmlFormatter: HTMLFormatter | null = null;
+    private yamlFormatter: YAMLFormatter | null = null;
+    private phpFormatter: PHPFormatter | null = null;
+
     private slugs: string[] = [];
     private removeLines: string[] = [];
     private virtualStructureOpens: string[] = [];
@@ -74,6 +81,7 @@ export class Transformer {
     private dynamicElementPairedAntlersNodes: Map<string, AntlersNode> = new Map();
     private dynamicElementConditionAntlers: Map<string, string> = new Map();
     private dynamicElementConditionAntlersNodes: Map<string, ConditionNode> = new Map();
+    private noParses:Map<string, EscapedContentNode> = new Map();
     private options: TransformOptions;
 
     constructor(doc: AntlersDocument) {
@@ -85,6 +93,24 @@ export class Transformer {
             maxAntlersStatementsPerLine: 3,
             endNewline: true
         };
+    }
+
+    withHtmlFormatter(formatter: HTMLFormatter | null) {
+        this.htmlFormatter = formatter;
+
+        return this;
+    }
+
+    withYamlFormatter(formatter: YAMLFormatter | null) {
+        this.yamlFormatter = formatter;
+
+        return this;
+    }
+
+    withPhpFormatter(formatter: PHPFormatter | null) {
+        this.phpFormatter = formatter;
+
+        return this;
     }
 
     withOptions(options: TransformOptions) {
@@ -182,20 +208,21 @@ export class Transformer {
         }
     }
 
+    private registerNoParse(slug:string, node:EscapedContentNode) {
+        if (this.parentTransformer != null) {
+            this.parentTransformer.registerNoParse(slug, node);
+        } else {
+            this.noParses.set(slug, node);
+        }
+    }
+
     private prepareNoParse(node: EscapedContentNode): string {
-        const slug = this.makeSlug(35),
-            open = this.open(slug),
-            close = this.close(slug),
-            virtualElement = this.makeSlug(25);
+        const slug = this.makeSlug(35);
 
-        this.registerVirtualBlock({
-            pairOpen: open,
-            pairClose: close,
-            virtualElement: virtualElement,
-            node: node
-        });
+        this.registerNoParse(slug, node);
+        // TODO: INside fragments etc.
 
-        return this.pair(slug, this.pair(virtualElement));
+        return slug;
     }
 
     private transformVirtualStructures(content: string): string {
@@ -211,9 +238,7 @@ export class Transformer {
             }
 
             if (block.node instanceof EscapedContentNode) {
-                const replaceNoParse = "{{ noparse }}\n" + IndentLevel.shiftClean(
-                    block.node.getInnerDocumentText(), this.options.tabSize
-                );
+                const replaceNoParse = "{{ noparse }}" + block.node.getInnerDocumentText();
                 value = value.replace(block.pairOpen, replaceNoParse);
             }
 
@@ -227,11 +252,41 @@ export class Transformer {
             }
         });
 
+        this.noParses.forEach((node, slug) => {
+            value = value.replace(slug, `{{ noparse }}${node.getInnerDocumentText()}{{ /noparse }}`);
+        });
+
         return value;
     }
 
     private printNode(node: AntlersNode) {
-        return NodePrinter.prettyPrintNode(node, this.doc, 0, this.options, null, null);
+        const printNode = node.getTrueNode();
+
+        let doc = this.doc;
+
+        if (node.childDocument != null) {
+            doc = node.childDocument.document;
+        }
+
+        let prepend : string| null = null;
+
+        if (ConditionPairAnalyzer.isConditionalStructure(node)) {
+            prepend = printNode.runtimeName();
+
+            if (node.isClosingTag && (prepend == 'if' || prepend == 'unless')) {
+                return `{{ /${prepend} }}`;
+            }
+        }
+
+        if (node.isClosingTag) {
+            if (printNode.runtimeName() == 'endunless') {
+                return `{{ /unless }}`;
+            }
+
+            return `{{ ${printNode.content.trim()} }}`;
+        }
+
+        return NodePrinter.prettyPrintNode(printNode, doc, 0, this.options, prepend, null);
     }
 
     private transformConditions(content: string): string {
@@ -259,6 +314,7 @@ export class Transformer {
                     value = value.replace(structure.pairOpen, this.printNode(structureTag));
                 } else {
                     value = value.replace(structure.pairOpen, this.printNode(structureTag));
+                    const hmmmmm = this.printNode(structureTag.isClosedBy as AntlersNode);
                     value = value.replace(structure.pairClose, this.printNode(structureTag.isClosedBy as AntlersNode));
                 }
             });
@@ -290,10 +346,21 @@ export class Transformer {
         return value;
     }
 
+    private getAntlersChildDoc(node:AntlersNode|ExecutionBranch): string {
+        if (node.childDocument != null) {
+            return node.childDocument.document.transform().setParentTransformer(this).toStructure();
+        }
+
+        // Fall back into the node based approach on very large documents.
+        const result = this.clone().toStructure(node.getImmediateChildren());
+
+        return result;
+    }
+
     private prepareCondition(node: ConditionNode) {
         const headNode = node.logicBranches[0].head as AntlersNode;
 
-        if (headNode.fragmentPosition == FragmentPosition.InsideFragment) {
+        if (headNode.fragmentPosition == FragmentPosition.InsideFragment || headNode.fragmentPosition == FragmentPosition.InsideFragmentParameter) {
             const slug = this.makeSlug(node.nodeContent.length);
 
             this.registerInlineCondition(slug, node);
@@ -310,7 +377,7 @@ export class Transformer {
 
         node.logicBranches.forEach((branch, index) => {
             const tag = branch.head as AntlersNode,
-                innerDoc = branch.childDocument?.document.transform().setParentTransformer(this).toStructure() as string;
+                innerDoc = this.getAntlersChildDoc(branch);
             const openSlug = this.makeSlug(tag.sourceContent.length),
                 virtualSlug = this.makeSlug(10);
 
@@ -395,15 +462,54 @@ export class Transformer {
 
     private preparePairedAntlers(node: AntlersNode): string {
         const slug = this.makeSlug(node.getOriginalContent().length),
-            innerDoc = node.childDocument?.document.transform().setParentTransformer(this).toStructure() as string;
+            innerDoc = this.getAntlersChildDoc(node);
 
         if (node.fragmentPosition != FragmentPosition.IsDynamicFragmentName) {
             let virtualSlug = '';
             let result = `${this.open(slug)}\n`;
 
             if (node.containsChildStructures == false && node.containsAnyFragments == false) {
-                virtualSlug = this.makeSlug(15);
-                result += this.pair(virtualSlug, innerDoc);
+                let createVirtual = false;
+
+                for (let i = 0; i < node.children.length; i++) {
+                    const thisNode = node.children[i];
+
+                    if (thisNode instanceof LiteralNode) {
+                        if (thisNode.sourceContent.trim().length > 0) {
+                            createVirtual = true;
+                            break;
+                        }
+                    }
+                }
+
+                if (node.children.length == 2 && node.children[0] instanceof AntlersNode) {
+                    createVirtual = true;
+                }
+
+                let inlineAntlers = 0, emptyLiterals = 0;
+
+                for (let i = 0; i < node.children.length - 1; i++) {
+                    const thisNode = node.children[i];
+
+                    if (thisNode instanceof LiteralNode && thisNode.sourceContent.trim().length == 0) {
+                        emptyLiterals += 1;
+                    }
+
+                    if (thisNode instanceof AntlersNode && thisNode.isInlineAntlers) {
+                        inlineAntlers += 1;
+                    }
+                }
+
+                if (inlineAntlers == 0) {
+                    createVirtual = true;
+                }
+
+                if (createVirtual) {
+                    virtualSlug = this.makeSlug(15);
+                    result += this.pair(virtualSlug, innerDoc);
+                } else {
+                    result += innerDoc;
+                }
             } else {
                 result += innerDoc;
             }
@@ -534,20 +640,20 @@ export class Transformer {
 
     private registerDynamicAntlers(slug: string, node: AntlersNode) {
         if (this.parentTransformer != null) {
-            this.dynamicElementAntlers.set(node.documentText, slug);
+            this.dynamicElementAntlers.set(node.content, slug);
             this.parentTransformer.registerDynamicAntlers(slug, node);
         } else {
-            this.dynamicElementAntlers.set(node.documentText, slug);
+            this.dynamicElementAntlers.set(node.content, slug);
             this.dynamicElementAntlersNodes.set(slug, node);
         }
     }
 
     private prepareConditionalAntlers(node: AntlersNode): string {
-        if (this.dynamicElementAntlers.has(node.documentText)) {
-            return this.dynamicElementAntlers.get(node.documentText) as string;
+        if (this.dynamicElementAntlers.has(node.content)) {
+            return this.dynamicElementAntlers.get(node.content) as string;
         }
 
-        const slug = this.makeSlug(node.documentText.length);
+        const slug = this.makeSlug(node.content.length);
 
         this.registerDynamicAntlers(slug, node);
 
@@ -609,7 +715,7 @@ export class Transformer {
 
             value = value.replace(open, this.printNode(originalTag));
 
-            value = value.replace(close, originalTag.isClosedBy?.getOriginalContent() as string);
+            value = value.replace(close, this.printNode(originalTag.isClosedBy as AntlersNode));
         });
 
         return value;
@@ -666,14 +772,23 @@ export class Transformer {
         return slug;
     }
 
-    toStructure(): string {
+    clone(): Transformer {
+        const cloned = new Transformer(this.doc);
+        cloned.withOptions(this.options).setParentTransformer(this);
+
+        return cloned;
+    }
+
+    toStructure(renderNodes: AbstractNode[] | null = null): string {
         let result = '';
 
-        // TODO: Php nodes/etc.
-        const nodes = this.doc.getDocumentParser().getRenderNodes();
-        nodes.forEach((node) => {
+        if (renderNodes == null) {
+            renderNodes = this.doc.getDocumentParser().getRenderNodes();
+        }
+
+        renderNodes.forEach((node) => {
             if (node instanceof LiteralNode) {
-                result += node.content;
+                result += node.sourceContent;
             } else if (node instanceof ConditionNode) {
                 result += this.prepareCondition(node);
             } else if (node instanceof EscapedContentNode) {
@@ -687,17 +802,21 @@ export class Transformer {
             }
         });
 
-
-
         const structures = this.doc.getDocumentParser().getFragmentsContainingStructures();
 
         if (structures.length > 0) {
-            const referenceDocument = AntlersDocument.fromText(result);
+            const referenceDocument = new AntlersDocument();
+            referenceDocument.loadString(result);
 
             structures.forEach((pair) => {
                 const ref = this.doc.getDocumentParser().getText((pair.start.endPosition?.offset ?? 0) + 1, pair.end.startPosition?.offset ?? 0),
-                    refOpen = referenceDocument.getDocumentParser().getFragmentsParser().getEmbeddedFragment(pair.start.embeddedIndex),
-                    refClose = referenceDocument.getDocumentParser().getFragmentsParser().getClosingFragmentAfter(refOpen),
+                    refOpen = referenceDocument.getDocumentParser().getFragmentsParser().getEmbeddedFragment(pair.start.embeddedIndex);
+
+                if (refOpen == null) { return; }
+                const refClose = referenceDocument.getDocumentParser().getFragmentsParser().getClosingFragmentAfter(refOpen);
+                if (refClose == null) { return; }
+
+                const
                     curRef = referenceDocument.getDocumentParser().getText((refOpen.endPosition?.offset ?? 0) + 1, refClose?.startPosition?.offset ?? 0),
                     refSlug = this.makeSlug(16),
                     isScript = pair.start.name.toLowerCase() == 'script';
@@ -888,8 +1007,15 @@ export class Transformer {
         results = this.cleanStructuralNewLines(results);
 
         if (this.doc.hasFrontMatter()) {
-            const frontMatter = this.doc.getFrontMatter(),
-                insertFrontMatter = `---\n${frontMatter}\n---\n` + "\n".repeat(this.options.newlinesAfterFrontMatter);
+            let frontMatter = this.doc.getFrontMatter();
+
+            const frontMatterDoc = this.doc.getFrontMatterDoc();
+
+            if (frontMatterDoc != null && frontMatterDoc.isValid && this.yamlFormatter != null) {
+                frontMatter = this.yamlFormatter(frontMatter);
+            }
+            
+            const insertFrontMatter = `---\n${frontMatter}\n---\n` + "\n".repeat(this.options.newlinesAfterFrontMatter);
 
             results = insertFrontMatter + results.trimLeft();
         }

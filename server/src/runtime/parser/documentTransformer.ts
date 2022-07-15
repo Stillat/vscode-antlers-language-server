@@ -10,7 +10,9 @@ class DocumentTransformer {
 
     load(text: string)
     {
-        const tempDoc = AntlersDocument.fromText(text);
+        const tempDoc = new AntlersDocument();
+        tempDoc.getDocumentParser().withChildDocuments(true);
+        tempDoc.loadString(text);
         this._nodes = tempDoc.getAllNodes();
         this._buffer = tempDoc.getParsedContent();
 

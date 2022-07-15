@@ -15,9 +15,9 @@ export class CommentPrinter {
             });
 
             const content = reflowedLines.join("\n");
-            let newComment = "{{--\n";
+            let newComment = "{{#\n";
             newComment += content;
-            newComment += "\n" + ' '.repeat(targetIndent) + '--}}';
+            newComment += "\n" + ' '.repeat(targetIndent) + '#}}';
 
             return newComment;
         }

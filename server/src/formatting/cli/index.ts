@@ -5,7 +5,8 @@ const yargs = require('yargs'), path = require('path');
 
 import * as fs from 'fs';
 import { AntlersDocument } from '../../runtime/document/antlersDocument';
-import { AntlersFormatter, AntlersFormattingOptions } from '../antlersFormatter';
+import { AntlersFormatter } from '../antlersFormatter';
+import { AntlersFormattingOptions } from '../antlersFormattingOptions';
 
 const EXIT_SUCCESS = 0,
     EXIT_FILE_NOT_FOUND = 3,
@@ -126,7 +127,7 @@ function formatFile(path: string, savePath: string, dumpContents: boolean, optio
 }
 
 function formatDirectory(dir: string, options: AntlersFormattingOptions, extensionsToUse: string[], dump: boolean) {
-    if (fs.existsSync(dir) && fs.statSync(dir).isDirectory) {
+    if (fs.existsSync(dir) && fs.statSync(dir).isDirectory()) {
         try { fs.accessSync(dir, fs.constants.R_OK | fs.constants.W_OK); } catch (err) { console.error(err); process.exit(EXIT_PATH_PERMISSIONS_ISSUE); }
 
         extensionsToUse.forEach((extension) => {

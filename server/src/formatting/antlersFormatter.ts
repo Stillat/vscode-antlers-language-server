@@ -11,63 +11,7 @@ import { FrontMatterFormatter } from './frontMatterFormatter';
 import { getFormatOption, getTagsFormatOption, IHTMLFormatConfiguration } from './htmlCompat';
 import { GenericPrinters } from './printers/genericPrinters';
 import { v4 as uuidv4 } from 'uuid';
-
-export interface AntlersFormattingOptions {
-    htmlOptions: IHTMLFormatConfiguration,
-    tabSize: number,
-    insertSpaces: boolean,
-    formatFrontMatter: boolean,
-    maxStatementsPerLine: number,
-    formatExtensions: string[]
-}
-
-interface IExtractedFrontMatter {
-    frontMatter: string;
-    documentContents: string;
-}
-
-function extractFrontMatter(contents: string): IExtractedFrontMatter {
-    if (contents.trim().length == 0) {
-        return {
-            documentContents: contents,
-            frontMatter: "",
-        };
-    }
-    const analysisDocument = contents.trim();
-
-    let lines = analysisDocument.replace(/(\r\n|\n|\r)/gm, "\n").split("\n");
-
-    if (lines.length <= 1) {
-        return {
-            documentContents: contents,
-            frontMatter: "",
-        };
-    }
-
-    if (lines[0].trim().startsWith("---") == false) {
-        return {
-            documentContents: contents,
-            frontMatter: "",
-        };
-    }
-
-    let breakAtIndex = 0;
-    for (let i = 1; i < lines.length; i++) {
-        if (lines[i].trim().startsWith("---")) {
-            breakAtIndex = i;
-            break;
-        }
-    }
-
-    const frontMatterLines = lines.slice(0, breakAtIndex + 1);
-
-    lines = lines.slice(breakAtIndex + 1);
-
-    return {
-        documentContents: lines.join("\n"),
-        frontMatter: frontMatterLines.join("\n"),
-    };
-}
+import { AntlersFormattingOptions } from './antlersFormattingOptions';
 
 class NodeBuffer {
     private baseIndent: number;

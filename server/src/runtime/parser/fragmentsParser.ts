@@ -307,6 +307,12 @@ export class FragmentsParser implements StringIterator {
         const structures: StructuralFragment[] = [];
 
         this.fragments.forEach((fragment) => {
+            const lowerName = fragment.name.toLowerCase();
+
+            if (lowerName != 'script' && lowerName != 'style') {
+                return;
+            }
+
             if (!fragment.isClosingFragment && !fragment.isSelfClosing && fragment.containsStructures) {
                 const close = this.getClosingFragmentAfter(fragment);
 
@@ -384,7 +390,11 @@ export class FragmentsParser implements StringIterator {
         return this.indexedFragments.get(index) as FragmentNode;
     }
 
-    getEmbeddedFragment(index: number): FragmentNode {
+    getEmbeddedFragment(index: number): FragmentNode | null {
+        if (! this.embeddedIndexedFragments.has(index)) {
+            return null;
+        }
+
         return this.embeddedIndexedFragments.get(index) as FragmentNode;
     }
 

@@ -203,10 +203,8 @@ export class NodePrinter {
                         continue;
                     }
 
-                    if (node.startPosition != null && node.endPosition != null) {
-                        const originalDocText = doc.getText(node.startPosition.index, node.endPosition.index + 1);
-
-                        nodeBuffer.appendOS(originalDocText);
+                    if (node.sourceContent != '') {
+                        nodeBuffer.appendOS(node.sourceContent);
                     } else {
                         nodeBuffer.appendOS(node.sourceTerminator + node.value + node.sourceTerminator);
                     }
@@ -320,8 +318,7 @@ export class NodePrinter {
 
             if (antlersNode.processedInterpolationRegions.size > 0) {
                 antlersNode.processedInterpolationRegions.forEach((region, key) => {
-                    //const iTResult = this.formatDocumentNodes(region, doc);
-                    const iTResult = 'TODO';
+                    const iTResult = NodePrinter.prettyPrintNode(region[0] as AntlersNode, doc, indent, options, null, null );
                     bContent = replaceAllInString(bContent, key, iTResult);
                 });
             }

@@ -449,6 +449,7 @@ export class DocumentParser {
             fullDocumentLiteral.content = this.prepareLiteralContent(this.content);
             fullDocumentLiteral.startPosition = this.positionFromOffset(0, 0);
             fullDocumentLiteral.endPosition = this.positionFromOffset(this.inputLen - 1, this.inputLen - 1);
+            fullDocumentLiteral.sourceContent = this.content;
             this.nodes.push(fullDocumentLiteral);
         } else {
             for (let i = 0; i < indexCount; i += 1) {
@@ -465,6 +466,9 @@ export class DocumentParser {
                     if (node.content.length > 0) {
                         node.startPosition = this.positionFromOffset(0, 0);
                         node.endPosition = this.positionFromOffset(offset, offset - 1);
+                        const startOffset = (node.startPosition.index ?? 0),
+                                    endOffset = (node.endPosition.index) + 1;
+                        node.sourceContent = this.content.substr(startOffset, endOffset - startOffset);
                         this.nodes.push(node);
                     }
                 }
@@ -509,6 +513,9 @@ export class DocumentParser {
 
                                         literalNode.startPosition = this.positionFromOffset(literalStartOffset, literalStartOffset);
                                         literalNode.endPosition = this.positionFromOffset(this.inputLen, this.inputLen);
+                                        const startOffset = (literalNode.startPosition.index ?? 0),
+                                            endOffset = (literalNode.endPosition.index) + 1;
+                                        literalNode.sourceContent = this.content.substr(startOffset, endOffset - startOffset);
                                         this.nodes.push(literalNode);
                                     }
 
@@ -537,6 +544,9 @@ export class DocumentParser {
 
                                             literalNode.startPosition = this.positionFromOffset(spanStart, spanStart);
                                             literalNode.endPosition = this.positionFromOffset(spanEnd, spanEnd);
+                                            const startOffset = (literalNode.startPosition.index ?? 0),
+                                                endOffset = (literalNode.endPosition.index) + 1;
+                                            literalNode.sourceContent = this.content.substr(startOffset, endOffset - startOffset);
                                             this.nodes.push(literalNode);
                                         }
 
@@ -590,6 +600,9 @@ export class DocumentParser {
                             if (literalNode.content.length > 0) {
                                 literalNode.startPosition = this.positionFromOffset(thisOffset, thisOffset);
                                 literalNode.endPosition = this.positionFromOffset(nextAntlersStart, nextAntlersStart - 1);
+                                const startOffset = (literalNode.startPosition.index ?? 0),
+                                    endOffset = (literalNode.endPosition.index) + 1;
+                                literalNode.sourceContent = this.content.substr(startOffset, endOffset - startOffset);
                                 this.nodes.push(literalNode);
                             }
 
@@ -624,6 +637,9 @@ export class DocumentParser {
                             if (literalNode.content.length > 0) {
                                 literalNode.startPosition = this.positionFromOffset(literalStartIndex, literalStartIndex);
                                 literalNode.endPosition = this.positionFromOffset(nextAntlersStart, nextAntlersStart - 1);
+                                const startOffset = (literalNode.startPosition.index ?? 0),
+                                    endOffset = (literalNode.endPosition.index) + 1;
+                                literalNode.sourceContent = this.content.substr(startOffset, endOffset - startOffset);
                                 this.nodes.push(literalNode);
                             }
                         }
@@ -662,9 +678,13 @@ export class DocumentParser {
                             if (literalNode.content.length > 0) {
                                 literalNode.startPosition = this.positionFromOffset(literalStart, literalStart);
                                 literalNode.endPosition = this.positionFromOffset(this.inputLen - 1, this.inputLen - 1);
+                                
+                                const startOffset = (literalNode.startPosition.index ?? 0),
+                                    endOffset = (literalNode.endPosition.index) + 1;
+                                literalNode.sourceContent = this.content.substr(startOffset, endOffset - startOffset);
+
                                 this.nodes.push(literalNode);
                             }
-
                             break;
                         }
                     }
@@ -678,6 +698,10 @@ export class DocumentParser {
             node.index = index;
             index += 1;
         });
+
+        if (this.nodes.length > 500) {
+            this.parseChildDocuments = false;
+        }
 
         this.nodes.forEach((node) => {
             if (node instanceof AntlersNode && node.isComment) {
@@ -714,7 +738,7 @@ export class DocumentParser {
             }
         });
 
-        if (this.parseChildDocuments && this.content.length > 0) {
+        if (this.content.length > 0) {
             this.fragmentsParser.setIndexRanges(this.getNodeIndexRanges())
                 .parse(this.content);
         }
@@ -724,29 +748,48 @@ export class DocumentParser {
 
         if (this.parseChildDocuments) {
             this.createChildDocuments(this.renderNodes);
-            this.fragmentsAnalyzer.analyze();
-            InlineNodeAnalyzer.analyze(this.nodes);
+        }
 
-            this.nodes.forEach((node) => {
-                if (node instanceof AntlersNode) {
-                    if (node.isClosedBy != null) {
-                        const nodeChildren = node.getImmediateChildren();
+        let lastNode:AbstractNode|null = null,
+            nextNode:AbstractNode|null = null;
 
-                        for (let i = 0; i < nodeChildren.length; i++) {
-                            const child = nodeChildren[i];
+        for (let i = 0; i < this.nodes.length; i++) {
+            const thisNode = this.nodes[i];
 
-                            if (child instanceof AntlersNode && child.isClosedBy != null) {
-                                node.containsChildStructures = true;
-                                break;
-                            } else if (child instanceof ConditionNode) {
-                                node.containsChildStructures = true;
-                                break;
-                            }
+            if ((i + 1) < this.nodes.length) {
+                nextNode = this.nodes[i + 1];
+            } else {
+                nextNode = null;
+            }
+
+            thisNode.next = nextNode;
+            thisNode.prev = lastNode;
+
+            lastNode = thisNode;
+        }
+
+        this.fragmentsAnalyzer.analyze();
+        InlineNodeAnalyzer.analyze(this.nodes);
+
+        this.nodes.forEach((node) => {
+            if (node instanceof AntlersNode) {
+                if (node.isClosedBy != null) {
+                    const nodeChildren = node.getImmediateChildren();
+
+                    for (let i = 0; i < nodeChildren.length; i++) {
+                        const child = nodeChildren[i];
+
+                        if (child instanceof AntlersNode && child.isClosedBy != null) {
+                            node.containsChildStructures = true;
+                            break;
+                        } else if (child instanceof ConditionNode) {
+                            node.containsChildStructures = true;
+                            break;
                         }
                     }
                 }
-            });
-        }
+            }
+        });
 
         this.nodes.forEach((node) => {
             if (node instanceof AntlersNode && node.isClosingTag && node.isOpenedBy == null) {
@@ -2000,7 +2043,7 @@ export class DocumentParser {
         node.sourceContent = this.sourceContent.join('');
         node.startPosition = this.positionFromOffset(startOffset, startOffset);
         node.endPosition = this.positionFromOffset(currentOffset, currentOffset);
-
+        node.sourceContent = this.content.substr(startOffset, currentOffset);
         node.withParser(this);
 
         return node;

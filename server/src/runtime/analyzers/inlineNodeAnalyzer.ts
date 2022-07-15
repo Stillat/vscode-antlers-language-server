@@ -1,4 +1,4 @@
-import { AbstractNode, AntlersNode, LiteralNode } from '../nodes/abstractNode';
+import { AbstractNode, AntlersNode, EscapedContentNode, LiteralNode } from '../nodes/abstractNode';
 import { StringUtilities } from '../utilities/stringUtilities';
 
 export class InlineNodeAnalyzer {
@@ -13,8 +13,22 @@ export class InlineNodeAnalyzer {
                 } else if (node.next instanceof LiteralNode) {
                     const firstLine = StringUtilities.getFirstLine(node.next.content);
 
-                    if (StringUtilities.trimLeft(firstLine, " \t").startsWith("\n") == false && firstLine.trim().length > 0) {
+                    if (node.next.next == null && firstLine.trim().length == 0) {
                         isRightInline = true;
+                    } else {
+                        if (StringUtilities.trimLeft(firstLine, " \t").startsWith("\n") == false && firstLine.trim().length > 0) {
+                            isRightInline = true;
+                        } else if (node.next.next instanceof EscapedContentNode) {
+                            isRightInline = true;
+                        } else if (node.next.next instanceof AntlersNode) {
+                            if (node.next.next.isPaired() == false) {
+                                isRightInline = true;
+                            } else {
+                                if ((node.next.next.startPosition?.line ?? 0) != (node.startPosition?.line ?? 0)) {
+                                    isRightInline = true;
+                                }
+                            }
+                        }
                     }
                 }
 
@@ -25,6 +39,19 @@ export class InlineNodeAnalyzer {
 
                     if (StringUtilities.trimRight(lastLine, " \t").endsWith("\n") == false && lastLine.trim().length > 0) {
                         isLeftInline = true;
+                    } else if (node.prev.prev instanceof EscapedContentNode) {
+                        isLeftInline = true;
+                    } else if (node.prev.prev instanceof AntlersNode) {
+                        if (node.prev.prev.isInlineAntlers) {
+                            isLeftInline = true;
+                        } else {
+                            if (node.prev.prev.isClosingTag && node.prev.prev.isOpenedBy != null) {
+                                if (node.prev.prev.isOpenedBy instanceof EscapedContentNode || node.prev.prev.runtimeName() == 'noparse') {
+                                    node.prev.prev.isInlineAntlers = true;
+                                    isLeftInline = true;
+                                }
+                            }
+                        }
                     }
                 }
 
