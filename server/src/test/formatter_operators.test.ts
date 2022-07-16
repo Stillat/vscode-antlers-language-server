@@ -294,10 +294,10 @@ suite('Formatter Operators', () => {
                         {{ four }}
                             {{ five }}
                                 {{ six }}
-                                        {{ parity = switch(
-                                                 ((index | mod:2) == 0) => 'even',
-                                                 ((index | mod:2) == 1) => 'odd',
-                                             ) }}
+                                    {{ parity = switch(
+                                             ((index | mod:2) == 0) => 'even',
+                                             ((index | mod:2) == 1) => 'odd',
+                                         ) }}
                                 {{ /six }}
                             {{ /five }}
                         {{ /four }}

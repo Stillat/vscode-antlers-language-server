@@ -1,10 +1,9 @@
 import { HTMLFormatter, PHPFormatter, YAMLFormatter } from '../../formatting/formatters';
 import { replaceAllInString } from '../../utils/strings';
 import { ConditionPairAnalyzer } from '../analyzers/conditionPairAnalyzer';
-import { AbstractNode, AntlersNode, ConditionNode, EscapedContentNode, ExecutionBranch, FragmentPosition, LiteralNode, PhpExecutionNode } from '../nodes/abstractNode';
+import { AbstractNode, AntlersNode, ConditionNode, EscapedContentNode, ExecutionBranch, FragmentPosition, LiteralNode } from '../nodes/abstractNode';
 import { StringUtilities } from '../utilities/stringUtilities';
 import { AntlersDocument } from './antlersDocument';
-import { AntlersPrinter } from './printers/antlersPrinter';
 import { CommentPrinter } from './printers/commentPrinter';
 import { IndentLevel } from './printers/indentLevel';
 import { NodePrinter } from './printers/nodePrinter';
@@ -498,7 +497,9 @@ export class Transformer {
             result += `${this.open(slug)}\n`;
 
             if (node.containsChildStructures == false && node.containsAnyFragments == false) {
-                let createVirtual = false;
+                let createVirtual = false,
+                    literalsAllWhiteSpace = true,
+                    allAntlersInline = true;
 
                 for (let i = 0; i < node.children.length; i++) {
                     const thisNode = node.children[i];
@@ -506,6 +507,7 @@ export class Transformer {
                     if (thisNode instanceof LiteralNode) {
                         if (thisNode.sourceContent.trim().length > 0) {
                             createVirtual = true;
+                            literalsAllWhiteSpace = false;
                             break;
                         }
                     }
@@ -520,13 +522,21 @@ export class Transformer {
                 for (let i = 0; i < node.children.length - 1; i++) {
                     const thisNode = node.children[i];
 
-                    if (thisNode instanceof AntlersNode && thisNode.isInlineAntlers) {
-                        inlineAntlers += 1;
+                    if (thisNode instanceof AntlersNode) {
+                        if (thisNode.isInlineAntlers) {
+                            inlineAntlers += 1;
+                        } else {
+                            allAntlersInline = false;
+                        }
                     }
                 }
 
                 if (inlineAntlers == 0) {
                     createVirtual = true;
+                }
+
+                if (allAntlersInline == false) {
+                    createVirtual = false;
                 }
 
                 if (createVirtual) {
