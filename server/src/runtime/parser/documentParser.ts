@@ -467,7 +467,7 @@ export class DocumentParser {
                         node.startPosition = this.positionFromOffset(0, 0);
                         node.endPosition = this.positionFromOffset(offset, offset - 1);
                         const startOffset = (node.startPosition.index ?? 0),
-                                    endOffset = (node.endPosition.index) + 1;
+                            endOffset = (node.endPosition.index) + 1;
                         node.sourceContent = this.content.substr(startOffset, endOffset - startOffset);
                         this.nodes.push(node);
                     }
@@ -678,7 +678,7 @@ export class DocumentParser {
                             if (literalNode.content.length > 0) {
                                 literalNode.startPosition = this.positionFromOffset(literalStart, literalStart);
                                 literalNode.endPosition = this.positionFromOffset(this.inputLen - 1, this.inputLen - 1);
-                                
+
                                 const startOffset = (literalNode.startPosition.index ?? 0),
                                     endOffset = (literalNode.endPosition.index) + 1;
                                 literalNode.sourceContent = this.content.substr(startOffset, endOffset - startOffset);
@@ -746,12 +746,10 @@ export class DocumentParser {
         const tagPairAnalyzer = new TagPairAnalyzer();
         this.renderNodes = tagPairAnalyzer.associate(this.nodes, this);
 
-        if (this.parseChildDocuments) {
-            this.createChildDocuments(this.renderNodes);
-        }
+        this.createChildDocuments(this.renderNodes);
 
-        let lastNode:AbstractNode|null = null,
-            nextNode:AbstractNode|null = null;
+        let lastNode: AbstractNode | null = null,
+            nextNode: AbstractNode | null = null;
 
         for (let i = 0; i < this.nodes.length; i++) {
             const thisNode = this.nodes[i];
@@ -914,10 +912,12 @@ export class DocumentParser {
 
                 node.documentText = this.content.substr(docStart, docLength);
 
-                const startOffset = (node.endPosition?.index ?? 0),
-                    length = ((isClosedBy.startPosition?.index ?? 0) - 1) - startOffset,
-                    childText = this.content.substr(startOffset, length);
-                node.childDocument = AntlersDocument.childFromText(childText, getStartPosition(node.getChildren()));
+                if (this.parseChildDocuments) {
+                    const startOffset = (node.endPosition?.index ?? 0),
+                        length = ((isClosedBy.startPosition?.index ?? 0) - 1) - startOffset,
+                        childText = this.content.substr(startOffset, length);
+                    node.childDocument = AntlersDocument.childFromText(childText, getStartPosition(node.getChildren()));
+                }
             }
         });
     }

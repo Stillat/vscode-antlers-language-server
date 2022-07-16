@@ -394,6 +394,7 @@ export class TagPairAnalyzer {
                     noParseNode.content = NoParseManager.registerNoParseContent(content);
                     noParseNode.originalNode = node;
                     noParseNode.isClosedBy = node.isClosedBy;
+                    noParseNode.parent = node.parent;
 
 
                     nestedNodes[i] = noParseNode;
@@ -535,7 +536,7 @@ export class TagPairAnalyzer {
                             const branchStart = (node.endPosition?.offset ?? 0) + 1,
                                 branchEnd = (node.isClosedBy?.startPosition?.offset) ?? 0,
                                 documentText = document.getText(branchStart, branchEnd);
-                            
+
                             executionBranch.documentText = documentText;
 
                             if (document.shouldParseChildDocument()) {

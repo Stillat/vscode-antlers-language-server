@@ -5,7 +5,6 @@ export class InlineNodeAnalyzer {
     static analyze(nodes: AbstractNode[]) {
         nodes.forEach((node) => {
             if (node instanceof AntlersNode) {
-
                 if (node.prev instanceof AntlersNode && node.isPaired() && node.prev.isInlineAntlers == true) {
                     node.isInlineAntlers = false;
                     if (node.isClosedBy != null) {
@@ -65,6 +64,10 @@ export class InlineNodeAnalyzer {
                                 }
                             }
                         }
+                    }
+                } else if (node.prev instanceof AntlersNode) {
+                    if (node.prev.isPaired()) {
+                        isLeftInline = true;
                     }
                 }
 

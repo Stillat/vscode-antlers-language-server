@@ -129,6 +129,17 @@ After Partial
         {{ foo:one }} {{ foo:two }}
         {{ /tag }}`;
         const output = `{{ tag scope="foo" }}
+    {{ foo:one }} {{ foo:two }}
+{{ /tag }}`;
+        assert.strictEqual(formatAntlers(template), output);
+    });
+
+    test('it does not remove : on simple tags 2', () => {
+        const template = `{{ tag scope="foo" }}
+        {{ foo:one }}
+        {{ foo:two }}
+        {{ /tag }}`;
+        const output = `{{ tag scope="foo" }}
     {{ foo:one }}
     {{ foo:two }}
 {{ /tag }}`;

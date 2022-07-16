@@ -17,11 +17,5 @@ const antlersOptions: AntlersFormattingOptions = {
 };
 
 export function formatAntlers(text: string): string {
-    const doc = new AntlersDocument();
-    doc.getDocumentParser().withChildDocuments(true);
-    doc.loadString(text);
-
-    const formatter = new BeautifyDocumentFormatter(antlersOptions);
-
-    return formatter.formatDocument(doc);
+    return (new BeautifyDocumentFormatter(antlersOptions)).formatDocument(AntlersDocument.fromText(text));
 }

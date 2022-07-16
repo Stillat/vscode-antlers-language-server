@@ -448,7 +448,7 @@ after`;
         `;
         const output = `{{ collection from="blog" }}
     {{ collection :from="related_collection" }}
-            {{ title }}
+        {{ title }}
     {{ /collection }}
 {{ /collection }}`;
         assert.strictEqual(formatAntlers(template), output);

@@ -54,7 +54,7 @@ interface TransformedTagPair {
 
 export class Transformer {
     private doc: AntlersDocument;
-    
+
     private htmlFormatter: HTMLFormatter | null = null;
     private yamlFormatter: YAMLFormatter | null = null;
     private phpFormatter: PHPFormatter | null = null;
@@ -81,9 +81,9 @@ export class Transformer {
     private dynamicElementPairedAntlersNodes: Map<string, AntlersNode> = new Map();
     private dynamicElementConditionAntlers: Map<string, string> = new Map();
     private dynamicElementConditionAntlersNodes: Map<string, ConditionNode> = new Map();
-    private noParses:Map<string, EscapedContentNode> = new Map();
+    private noParses: Map<string, EscapedContentNode> = new Map();
     private options: TransformOptions;
-    private forceBreaks:string[] = [];
+    private forceBreaks: string[] = [];
 
     constructor(doc: AntlersDocument) {
         this.doc = doc;
@@ -209,7 +209,7 @@ export class Transformer {
         }
     }
 
-    private registerNoParse(slug:string, node:EscapedContentNode) {
+    private registerNoParse(slug: string, node: EscapedContentNode) {
         if (this.parentTransformer != null) {
             this.parentTransformer.registerNoParse(slug, node);
         } else {
@@ -274,7 +274,7 @@ export class Transformer {
         return value;
     }
 
-    private printNode(node: AntlersNode, targetIndent: number| null = null) {
+    private printNode(node: AntlersNode, targetIndent: number | null = null) {
         const printNode = node.getTrueNode();
 
         let doc = this.doc;
@@ -283,7 +283,7 @@ export class Transformer {
             doc = node.childDocument.document;
         }
 
-        let prepend : string| null = null;
+        let prepend: string | null = null;
 
         if (ConditionPairAnalyzer.isConditionalStructure(node)) {
             prepend = printNode.runtimeName();
@@ -366,7 +366,7 @@ export class Transformer {
         return value;
     }
 
-    private getAntlersChildDoc(node:AntlersNode|ExecutionBranch): string {
+    private getAntlersChildDoc(node: AntlersNode | ExecutionBranch): string {
         if (node.childDocument != null) {
             return node.childDocument.document.transform().setParentTransformer(this).toStructure();
         }
@@ -528,7 +528,7 @@ export class Transformer {
                 if (inlineAntlers == 0) {
                     createVirtual = true;
                 }
-                
+
                 if (createVirtual) {
                     virtualSlug = this.makeSlug(15);
                     result += this.pair(virtualSlug, innerDoc);
@@ -539,7 +539,7 @@ export class Transformer {
                 result += innerDoc;
             }
 
-            result += `${this.close(slug)}\n`;
+            result += `\n${this.close(slug)}\n`;
 
             this.virtualStructureOpens.push(this.open(virtualSlug));
             this.virtualStructureClose.push(this.close(virtualSlug));
@@ -911,7 +911,9 @@ export class Transformer {
 
     private shouldCleanLine(line: string): boolean {
         for (let i = 0; i < this.forceCleanLines.length; i++) {
-            if (line.startsWith(this.forceCleanLines[i])) {
+            const trimmedLine = line.trim();
+
+            if (line.startsWith(this.forceCleanLines[i]) || (trimmedLine.startsWith('{{ /') && trimmedLine.endsWith('}}'))) {
                 return true;
             }
         }
@@ -1036,7 +1038,7 @@ export class Transformer {
             if (frontMatterDoc != null && frontMatterDoc.isValid && this.yamlFormatter != null) {
                 frontMatter = this.yamlFormatter(frontMatter);
             }
-            
+
             const insertFrontMatter = `---\n${frontMatter}\n---\n` + "\n".repeat(this.options.newlinesAfterFrontMatter);
 
             results = insertFrontMatter + results.trimLeft();

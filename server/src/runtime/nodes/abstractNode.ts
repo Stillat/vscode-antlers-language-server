@@ -84,6 +84,22 @@ export class FragmentParameterNode {
     public endPosition: Position | null = null;
 }
 
+function cleanNodes(nodes: AbstractNode[]): AbstractNode[] {
+    const cleaned: AbstractNode[] = [],
+        ids: string[] = [];
+
+    for (let i = 0; i < nodes.length; i++) {
+        const child = nodes[i],
+            refId = child.refId as string;
+
+        if (ids.includes(refId)) { break; }
+        cleaned.push(child);
+        ids.push(refId);
+    }
+
+    return cleaned;
+}
+
 export class AbstractNode {
     public refId: string | null = null;
     public index = 0;
@@ -319,13 +335,16 @@ export class AntlersNode extends AbstractNode {
     getImmediateChildren(): AbstractNode[] {
         const immediateChildren: AbstractNode[] = [];
 
-        this.children.forEach((node) => {
+        for (let i = 0; i < this.children.length; i++) {
+            const node = this.children[i];
+
             if (node.parent == this) {
+                if (node == this.isClosedBy) { break; }
                 immediateChildren.push(node);
             }
-        });
+        }
 
-        return immediateChildren;
+        return cleanNodes(immediateChildren);
     }
 
     getChildren(): AbstractNode[] {
@@ -418,6 +437,7 @@ export class AntlersNode extends AbstractNode {
         instance.isComment = this.isComment;
         instance.isTagNode = this.isTagNode;
         instance.children = this.children;
+        instance.parent = this.parent;
         instance.parameters = this.parameters;
         instance.isClosingTag = this.isClosingTag;
         instance.rawStart = this.rawStart;
@@ -783,6 +803,10 @@ export class AntlersNode extends AbstractNode {
     }
 
     isPaired() {
+        if (this.isClosingTag && this.isSelfClosing == false && this.isOpenedBy != null) {
+            return true;
+        }
+
         if (this.isClosedBy == null) {
             return false;
         }
