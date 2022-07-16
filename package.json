@@ -176,7 +176,6 @@
     },
     "dependencies": {
         "js-yaml": "^4.1.0",
-        "locutus": "^2.0.15",
         "semver": "^7.3.5",
         "ts-md5": "^1.2.9"
     }
