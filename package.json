@@ -81,12 +81,6 @@
                     "default": false,
                     "description": "When enabled Antlers style block comments will be used in HTML contexts."
                 },
-                "antlersFormatWithPrettierFirstIfAvailable": {
-                    "scope": "resource",
-                    "type": "boolean",
-                    "default": false,
-                    "description": "When enabled Antlers will be formatted with Prettier first, if available."
-                },
                 "antlersLanguageServer.trace.server": {
                     "scope": "window",
                     "type": "string",

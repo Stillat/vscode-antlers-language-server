@@ -116,15 +116,8 @@ const debouncedAskForIndex = debounce(askForIndex, 350);
 const debounceAskForProjectUpdate = debounce(askForProjectUpdate, 350);
 const debouncedManifestLoaded = debounce(sendManifestReloadRequest, 350);
 
-let shouldUsePrettierFirst = false;
-
 export function activate(context: ExtensionContext) {
-    const antlersOverrideHtmlComments = workspace.getConfiguration().get('antlersOverrideHtmlComments'),
-        tempShouldUsePrettierFirst = workspace.getConfiguration().get('antlersFormatWithPrettierFirstIfAvailable');
-
-    if (typeof tempShouldUsePrettierFirst !== 'undefined' && tempShouldUsePrettierFirst === true) {
-        shouldUsePrettierFirst = true;
-    }
+    const antlersOverrideHtmlComments = workspace.getConfiguration().get('antlersOverrideHtmlComments');
 
     // The server is implemented in node
     const serverModule = context.asAbsolutePath(
@@ -151,72 +144,6 @@ export function activate(context: ExtensionContext) {
         // Register the server for plain text documents
         documentSelector: [{ scheme: 'file', language: 'html' }],
         middleware: {
-            provideDocumentFormattingEdits: async (doc, options, token, next) => {
-                if (shouldUsePrettierFirst) {
-                    const prettierVscode = vscode.extensions.getExtension('esbenp.prettier-vscode');
-
-                    if (typeof prettierVscode !== 'undefined' && prettierVscode !== null && prettierVscode.isActive) {
-                        await client.sendRequest(LockEditsRequest.type, {}).then(async () => {
-                            const transformParams: DocumentTransformParams = {
-                                content: doc.getText()
-                            };
-                            await client.sendRequest(DocumentTransformRequest.type, transformParams).then(async (transformResults) => {
-                                if (transformResults.shouldParse) {
-                                    if (transformResults.replacements.length > 0) {
-                                        let curStart = doc.positionAt(0),
-                                            curEnd = doc.positionAt(doc.getText().length);
-                                        const edits = new vscode.WorkspaceEdit(),
-                                            replaceDoc = new vscode.TextEdit(new vscode.Range(curStart, curEnd), transformResults.transformedText);
-
-                                        edits.set(doc.uri, [replaceDoc]);
-                                        vscode.workspace.applyEdit(edits);
-
-                                        await vscode.commands.executeCommand('prettier.forceFormatDocument').then(async () => {
-                                            let currentContent = doc.getText();
-
-                                            transformResults.replacements.forEach((replacement) => {
-                                                currentContent = currentContent.replace(replacement.find, replacement.replace);
-                                            });
-
-                                            const requestParams: ForcedFormatParams = {
-                                                content: currentContent,
-                                                tabSize: options.tabSize,
-                                                insertSpaces: options.insertSpaces
-                                            };
-
-                                            await client.sendRequest(ForcedFormatRequest.type, requestParams).then(async (result) => {
-                                                curStart = doc.positionAt(0);
-                                                curEnd = doc.positionAt(doc.getText().length);
-
-                                                const finalEdits = new vscode.WorkspaceEdit(),
-                                                    finalDoc = new vscode.TextEdit(new vscode.Range(curStart, curEnd), result);
-                                                finalEdits.set(doc.uri, [finalDoc]);
-
-                                                vscode.workspace.applyEdit(finalEdits);
-                                            });
-                                        });
-
-                                        return;
-                                    } else {
-                                        await vscode.commands.executeCommand('prettier.forceFormatDocument');
-
-                                        const formattingResults = await next(doc, options, token);
-                                        const edits = new vscode.WorkspaceEdit();
-                                        edits.set(doc.uri, formattingResults);
-                                        vscode.workspace.applyEdit(edits);
-                                    }
-                                }
-                            });
-                        });
-                    }
-                } else {
-                    const formattingResults = await next(doc, options, token);
-                    const edits = new vscode.WorkspaceEdit();
-                    edits.set(doc.uri, formattingResults);
-                    vscode.workspace.applyEdit(edits);
-                }
-                return null;
-            },
             executeCommand: async (command, args, next) => {
                 if (command == 'antlers.extractToPartial') {
                     const targetPath = await vscode.window.showSaveDialog({
@@ -231,16 +158,6 @@ export function activate(context: ExtensionContext) {
     };
 
     workspace.onDidChangeConfiguration((e) => {
-        if (e.affectsConfiguration('antlersFormatWithPrettierFirstIfAvailable')) {
-            const newPrettierSetting = workspace.getConfiguration().get('antlersFormatWithPrettierFirstIfAvailable');
-
-            if (typeof newPrettierSetting !== 'undefined' && newPrettierSetting === true) {
-                shouldUsePrettierFirst = true;
-            } else {
-                shouldUsePrettierFirst = false;
-            }
-        }
-
         if (e.affectsConfiguration('antlersOverrideHtmlComments')) {
             const newHtmlCommentSetting = workspace.getConfiguration().get('antlersOverrideHtmlComments');
 
