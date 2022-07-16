@@ -376,10 +376,7 @@ export class Transformer {
             return node.childDocument.document.transform().setParentTransformer(this).toStructure();
         }
 
-        // Fall back into the node based approach on very large documents.
-        const result = this.clone().toStructure(node.getImmediateChildren());
-
-        return result;
+        return this.clone().toStructure(node.getImmediateChildren());
     }
 
     private prepareCondition(node: ConditionNode) {
