@@ -83,6 +83,7 @@ export class Transformer {
     private dynamicElementConditionAntlersNodes: Map<string, ConditionNode> = new Map();
     private noParses:Map<string, EscapedContentNode> = new Map();
     private options: TransformOptions;
+    private forceBreaks:string[] = [];
 
     constructor(doc: AntlersDocument) {
         this.doc = doc;
@@ -223,6 +224,21 @@ export class Transformer {
         // TODO: INside fragments etc.
 
         return slug;
+    }
+
+    private registerForcedBreak(): string {
+        if (this.parentTransformer != null) {
+            return this.parentTransformer.registerForcedBreak();
+        } else {
+            const breakSlug = this.makeSlug(15),
+                innerSlug = this.makeSlug(10);
+            this.forceBreaks.push(breakSlug);
+            this.forceBreaks.push(innerSlug);
+            this.removeLines.push(this.open(breakSlug));
+            this.removeLines.push(this.close(breakSlug));
+            this.removeLines.push(this.selfClosing(innerSlug));
+            return this.pair(breakSlug, this.selfClosing(innerSlug));
+        }
     }
 
     private transformVirtualStructures(content: string): string {
@@ -375,6 +391,10 @@ export class Transformer {
         const transformedBranches: TransformedLogicBranch[] = [];
         let result = '';
 
+        if (headNode.prev instanceof AntlersNode && headNode.prev.isInlineAntlers) {
+            result += this.registerForcedBreak();
+        }
+
         node.logicBranches.forEach((branch, index) => {
             const tag = branch.head as AntlersNode,
                 innerDoc = this.getAntlersChildDoc(branch);
@@ -466,7 +486,13 @@ export class Transformer {
 
         if (node.fragmentPosition != FragmentPosition.IsDynamicFragmentName) {
             let virtualSlug = '';
-            let result = `${this.open(slug)}\n`;
+            let result = '';
+
+            if (node.prev instanceof AntlersNode && node.prev.isPaired() == false) {
+                result += this.registerForcedBreak();
+            }
+
+            result += `${this.open(slug)}\n`;
 
             if (node.containsChildStructures == false && node.containsAnyFragments == false) {
                 let createVirtual = false;
@@ -503,7 +529,7 @@ export class Transformer {
                 if (inlineAntlers == 0) {
                     createVirtual = true;
                 }
-
+                
                 if (createVirtual) {
                     virtualSlug = this.makeSlug(15);
                     result += this.pair(virtualSlug, innerDoc);

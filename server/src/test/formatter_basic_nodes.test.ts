@@ -237,6 +237,25 @@ after`;
         assert.strictEqual(formatAntlers(template), output);
     });
 
+    test('smart line breaking 2', () => {
+        const template = `
+        {{ items | count }}{{ items limit="2" }}<{{ value }}>{{ /items }}
+        <ul><li>{{ item:title }}.{{ item:foo }}.{{ foo }}{{ if item:children }}test{{/if}}</li></ul>
+        `;
+        const expected = `{{ items | count }}
+{{ items limit="2" }}
+    <{{ value }}>
+{{ /items }}
+<ul>
+    <li>{{ item:title }}.{{ item:foo }}.{{ foo }}
+        {{ if item:children }}
+            test
+        {{ /if }}
+    </li>
+</ul>`;
+        assert.strictEqual(formatAntlers(template), expected);
+    });
+
     test('template test 1', () => {
         const template = `{{ loopvar }}{{ one }}{{ test:some_parsing var="two" }}{{ two }}{{ /test:some_parsing }}{{ /loopvar }}`;
         const output = `{{ loopvar }}
@@ -511,5 +530,194 @@ after`;
         {{ /article }}
             </article>
             <!-- End: /page_builder/_article.antlers.html -->`), expected);
+    });
+
+    test('it emits nested interpolations', () => {
+        assert.strictEqual(
+            formatAntlers(`{{ 
+    
+    
+                test variable='{ true		 ? 'Hello wilderness - {{default_key}}' 
+                : 'fail' }' }}`),
+            `{{ test variable='{ true ? 'Hello wilderness - {{default_key}}' : 'fail'}' }}`
+        );
+    });
+
+    test('it indents code but not literal text', () => {
+        const template = `Before Yield.
+        {{ yield:dark_mode }}
+        After Yield.
+        
+        {{ section:dark_mode }}
+        <span>Some content.</span>
+        {{ /section:dark_mode }}`;
+        const output = `Before Yield.
+{{ yield:dark_mode }}
+After Yield.
+
+{{ section:dark_mode }}
+    <span>Some content.</span>
+{{ /section:dark_mode }}`;
+        assert.strictEqual(formatAntlers(template), output);
+    });
+
+    test('it will pull wrapped closing tags to the next line', () => {
+        const template = `Before Yield
+{{ yield:tester }}
+After Yield
+
+<ul>
+{{ arrdata }}
+Before Partial
+{{ partial:nested }}
+{{ slot:test }}NameStart{{ value }}NameEnd{{ /slot:test }}
+
+Normal Slot Content ({{ value }})
+{{ /partial:nested }}
+After Partial
+{{ /arrdata }}</ul>`;
+        const output = `Before Yield
+{{ yield:tester }}
+After Yield
+
+<ul>
+    {{ arrdata }}
+        Before Partial
+        {{ partial:nested }}
+            {{ slot:test }}
+                NameStart{{ value }}NameEnd
+            {{ /slot:test }}
+            Normal Slot Content ({{ value }})
+        {{ /partial:nested }}
+        After Partial
+    {{ /arrdata }}
+</ul>`;
+        assert.strictEqual(formatAntlers(template), output);
+    });
+
+    test('it can format reasonable fragmented documents', () => {
+        const template = `Before Yield
+        {{ yield:tester }}
+        After Yield
+        
+        <ul>
+        {{ arrdata }}
+        Before Partial
+        {{ partial:nested }}
+        {{ slot:test }}NameStart{{ value }}NameEnd{{ /slot:test }}
+        
+        Normal Slot Content ({{ value }})
+        {{ /partial:nested }}
+        After Partial
+        {{ /arrdata }}`;
+        const output = `Before Yield
+{{ yield:tester }}
+After Yield
+
+<ul>
+    {{ arrdata }}
+        Before Partial
+        {{ partial:nested }}
+            {{ slot:test }}
+                NameStart{{ value }}NameEnd
+            {{ /slot:test }}
+            Normal Slot Content ({{ value }})
+        {{ /partial:nested }}
+        After Partial
+    {{ /arrdata }}`;
+        assert.strictEqual(formatAntlers(template), output);
+    });
+
+    test('it preserves literal node order', () => {
+        const template = `{{ tag as="stuff" }}
+        before
+        {{ stuff }}
+        <span>{{ foo }}</span>
+        {{ /stuff }}
+        after
+        {{ /tag }}`;
+        const output = `{{ tag as="stuff" }}
+    before
+    {{ stuff }}
+        <span>{{ foo }}</span>
+    {{ /stuff }}
+    after
+{{ /tag }}`;
+        assert.strictEqual(formatAntlers(template), output);
+    });
+
+    test('it produces reasonable indentation on documents without HTML elements', () => {
+        const template = `{{ food }} {{ drink }}
+{{ array scope="s" }}
+-{{ s:food }}- {{ s:drink }} {{ food }} {{ drink }}
+{{ /array }}`;
+        const output = `{{ food }} {{ drink }}
+{{ array scope="s" }}
+        -{{ s:food }}- {{ s:drink }} {{ food }} {{ drink }}
+{{ /array }}`;
+        assert.strictEqual(formatAntlers(template), output);
+    });
+
+    test('it produces reasonable indentation on documents without HTML elements 2', () => {
+        const template = `{{ drink }} {{ food }} {{ activity }}
+{{ tag }}{{ drink }} {{ food }} -{{ activity }}-{{ /tag }}`;
+        const output = `{{ drink }} {{ food }} {{ activity }}
+{{ tag }}
+    {{ drink }} {{ food }} -{{ activity }}-
+{{ /tag }}`;
+        assert.strictEqual(formatAntlers(template), output);
+    });
+
+    
+
+    test('it produces reasonable indentation on documents with many nested Antlers regions', () => {
+        const template = `{{ scope:test }}
+drink: {{ drink }}
+food: {{ food }}
+activity: {{ activity }}
+
+{{ array }}
+    array:drink: {{ drink }}
+    array:food: {{ food }}
+    array:activity: -{{ activity }}-
+    array:test:drink: {{ test:drink }}
+    array:test:food: {{ test:food }}
+    array:test:activity: {{ test:activity }}
+{{ /array }}
+{{ /scope:test }}`;
+        const output = `{{ scope:test }}
+    drink: {{ drink }}
+    food: {{ food }}
+    activity: {{ activity }}
+
+    {{ array }}
+            array:drink: {{ drink }}
+            array:food: {{ food }}
+            array:activity: -{{ activity }}-
+            array:test:drink: {{ test:drink }}
+            array:test:food: {{ test:food }}
+            array:test:activity: {{ test:activity }}
+    {{ /array }}
+{{ /scope:test }}`;
+        assert.strictEqual(formatAntlers(template), output);
+    });
+
+    
+    test('default HTML settings does not randomly break on simple Antlers regions', () => {
+        const template = `var: {{ drink }}
+        page: {{ page:drink }}
+        global: {{ global:drink }}
+        menu: {{ menu:drink }}
+        nested: {{ nested:drink }}
+        augmented: {{ augmented:drink }}
+        nested augmented: {{ nested:augmented:drink }}`;
+        const output = `var: {{ drink }}
+page: {{ page:drink }}
+global: {{ global:drink }}
+menu: {{ menu:drink }}
+nested: {{ nested:drink }}
+augmented: {{ augmented:drink }}
+nested augmented: {{ nested:augmented:drink }}`;
+        assert.strictEqual(formatAntlers(template), output);
     });
 });

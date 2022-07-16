@@ -37,4 +37,24 @@ A
 B`;
         assert.strictEqual(formatAntlers(template), template);
     });
+
+    test('it exits early on unpaired unless structures', () => {
+        const template = `---
+hello: wilderness
+---
+
+{{ unless 		true}}Inner`;
+        assert.strictEqual(formatAntlers(template), template);
+    });
+
+    test('it exits early on unpaired if structures', () => {
+        const template = `---
+hello: wilderness
+---
+A
+{{ if 		true}}Inner
+
+B`;
+        assert.strictEqual(formatAntlers(template), template);
+    });
 });

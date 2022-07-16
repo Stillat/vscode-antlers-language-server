@@ -5,6 +5,15 @@ export class InlineNodeAnalyzer {
     static analyze(nodes: AbstractNode[]) {
         nodes.forEach((node) => {
             if (node instanceof AntlersNode) {
+
+                if (node.prev instanceof AntlersNode && node.isPaired() && node.prev.isInlineAntlers == true) {
+                    node.isInlineAntlers = false;
+                    if (node.isClosedBy != null) {
+                        node.isClosedBy.isInlineAntlers = false;
+                    }
+                    return;
+                }
+
                 let isRightInline = false,
                     isLeftInline = false;
 
@@ -29,6 +38,10 @@ export class InlineNodeAnalyzer {
                                 }
                             }
                         }
+                    }
+                } else if (node.next instanceof AntlersNode) {
+                    if (node.next.isPaired()) {
+                        isRightInline = true;
                     }
                 }
 

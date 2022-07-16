@@ -71,4 +71,193 @@ suite('Formatter Operators', () => {
  tail = (3 + 2) }}`;
         assert.strictEqual(formatAntlers(template), expected);
     });
+    test('it does not remove whitespace inside string interpolations', () => {
+        const template = `{{ test variable='{ true ? 'Hello wilderness - {{default_key}}' : 'fail' }' }}`;
+        const output = `{{ test variable='{ true ? 'Hello wilderness - {{default_key}}' : 'fail'}' }}`;
+        assert.strictEqual(formatAntlers(template), output);
+    });
+
+    test('it emits variable fallback operator', () => {
+        assert.strictEqual(formatAntlers(`{{ test 
+            ?= 			'test' }}				 
+        `), "{{ test ?= 'test' }}");
+    });
+
+    test('it emits logical and keyword', () => {
+        assert.strictEqual(formatAntlers('{{ left   and     right }}'), '{{ left and right }}');
+    });
+
+    test('it emits symbolic and full', () => {
+        assert.strictEqual(formatAntlers('{{ left   &&     right }}'), '{{ left && right }}');
+    });
+
+    test('it emits symbolic and short', () => {
+        assert.strictEqual(formatAntlers('{{ left   &     right }}'), '{{ left & right }}');
+    });
+
+    test('it emits logical or keyword', () => {
+        assert.strictEqual(formatAntlers('{{ left   or     right }}'), '{{ left or right }}');
+    });
+
+    test('it emits symbolic or', () => {
+        assert.strictEqual(formatAntlers('{{ left   ||     right }}'), '{{ left || right }}');
+    });
+
+    test('it emits logical xor keyword', () => {
+        assert.strictEqual(formatAntlers('{{ left   xor     right }}'), '{{ left xor right }}');
+    });
+
+    test('it emits ==', () => {
+        assert.strictEqual(formatAntlers('{{ left   ==     right }}'), '{{ left == right }}');
+    });
+
+    test('it emits !=', () => {
+        assert.strictEqual(formatAntlers('{{ left   !=     right }}'), '{{ left != right }}');
+    });
+
+    test('it emits ??', () => {
+        assert.strictEqual(formatAntlers('{{ left   ??     right }}'), '{{ left ?? right }}');
+    });
+
+    test('it emits ?:', () => {
+        assert.strictEqual(formatAntlers('{{ left   ?:     right }}'), '{{ left ?: right }}');
+    });
+
+    test('it emits ?', () => {
+        assert.strictEqual(formatAntlers('{{ left   ?     right }}'), '{{ left ? right }}');
+    });
+
+    test('it emits <=>', () => {
+        assert.strictEqual(formatAntlers('{{ left   <=>     right }}'), '{{ left <=> right }}');
+    });
+
+    test('it emits <', () => {
+        assert.strictEqual(formatAntlers('{{ left   <     right }}'), '{{ left < right }}');
+    });
+
+    test('it emits <=', () => {
+        assert.strictEqual(formatAntlers('{{ left   <=     right }}'), '{{ left <= right }}');
+    });
+
+    test('it emits >', () => {
+        assert.strictEqual(formatAntlers('{{ left   >     right }}'), '{{ left > right }}');
+    });
+
+    test('it emits >=', () => {
+        assert.strictEqual(formatAntlers('{{ left   >=     right }}'), '{{ left >= right }}');
+    });
+
+    test('it emits null', () => {
+        assert.strictEqual(formatAntlers('{{ test =    null; }}'), '{{ test = null; }}');
+    });
+
+    test('it emits true', () => {
+        assert.strictEqual(formatAntlers('{{ test =    true; }}'), '{{ test = true; }}');
+    });
+
+    test('it emits false', () => {
+        assert.strictEqual(formatAntlers('{{ test =    false; }}'), '{{ test = false; }}');
+    });
+
+    test('it emits not keyword', () => {
+        assert.strictEqual(formatAntlers('{{ 		left not     right; }}'), '{{ left not right; }}');
+    });
+
+    test('it emits array keyword', () => {
+        assert.strictEqual(formatAntlers(`{{ test =    arr(
+            'one' => 1,
+            'two' => 2	
+        ) }}`), `{{ test = arr('one' => 1, 'two' => 2) }}`);
+    });
+
+    test('it emits array brackets', () => {
+        assert.strictEqual(formatAntlers(`{{ test =    [
+            'one' => 1,
+            'two' => 2	
+        ] }}`), `{{ test = ['one' => 1, 'two' => 2] }}`);
+    });
+
+    test('it emits strings', () => {
+        assert.strictEqual(formatAntlers(`{{ test = 'Escape \\'' }}`), `{{ test = 'Escape \\'' }}`);
+        assert.strictEqual(formatAntlers(`{{ test = 'Escape \\'Test\\\\' }}`), `{{ test = 'Escape \\'Test\\\\' }}`);
+    });
+
+    test('it emits numbers', () => {
+        assert.strictEqual(formatAntlers(`{{ test = -132 }}`), `{{ test = -132 }}`);
+        assert.strictEqual(formatAntlers(`{{ test = 132.01 }}`), `{{ test = 132.01 }}`);
+    });
+
+    test('it emits bindings', () => {
+        assert.strictEqual(formatAntlers('{{ test :variable="name|upper" }}'), '{{ test :variable="name|upper" }}');
+    });
+
+    test('it emits language operators', () => {
+        assert.strictEqual(formatAntlers('{{ left pluck       right }}'), '{{ left pluck right }}');
+        assert.strictEqual(formatAntlers('{{ left take       right }}'), '{{ left take right }}');
+        assert.strictEqual(formatAntlers('{{ left skip       right }}'), '{{ left skip right }}');
+        assert.strictEqual(formatAntlers('{{ left orderby       right }}'), '{{ left orderby right }}');
+        assert.strictEqual(formatAntlers('{{ left groupby       right }}'), '{{ left groupby right }}');
+        assert.strictEqual(formatAntlers('{{ left merge       right }}'), '{{ left merge right }}');
+        assert.strictEqual(formatAntlers('{{ left where       right }}'), '{{ left where right }}');
+    });
+
+
+    test('it emits switch groups', () => {
+        const input = `{{ test variable="{switch(
+(size == 'sm') => '(min-width: 768px) 35vw, 90vw',
+(size == 'md') => '(min-width: 768px) 55vw, 90vw',
+(size == 'lg') => '(min-width: 768px) 75vw, 90vw',
+(size == 'xl') => '90vw'
+)}" }}`;
+        const expected = `{{ test variable="{switch(
+  (size == 'sm') => '(min-width: 768px) 35vw, 90vw',
+  (size == 'md') => '(min-width: 768px) 55vw, 90vw',
+  (size == 'lg') => '(min-width: 768px) 75vw, 90vw',
+  (size == 'xl') => '90vw')}" }}`;
+
+        assert.strictEqual(formatAntlers(input), expected);
+    });
+
+    test('it emits list groups', () => {
+        const input = `{{
+
+    items = list(
+        name,  
+        
+                color,
+                
+                
+                type;
+        'Apple',
+                 'red', 		'fruit';
+'Hammer', 'brown', 'tool';
+                'Orange', 'orange', 
+                        'fruit';
+        'Lettuce',
+'green', 'vegetable';
+    )
+    }}<p>Inner</p>
+    {{
+
+        items = list(
+            name,    color, type;
+            'Apple', 'red', 'fruit';
+            'Hammer', 'brown', 'tool';
+            'Orange', 'orange', 'fruit';
+            'Lettuce', 'green', 'vegetable'
+        )
+    }}`;
+        const expected = `{{ items = list(name, color, type;
+          'Apple', 'red', 'fruit';
+          'Hammer', 'brown', 'tool';
+          'Orange', 'orange', 'fruit';
+          'Lettuce', 'green', 'vegetable';
+         ) }}<p>Inner</p>
+{{ items = list(name, color, type;
+          'Apple', 'red', 'fruit';
+          'Hammer', 'brown', 'tool';
+          'Orange', 'orange', 'fruit';
+          'Lettuce', 'green', 'vegetable') }}`;
+        assert.strictEqual(formatAntlers(input), expected);
+    });
 });

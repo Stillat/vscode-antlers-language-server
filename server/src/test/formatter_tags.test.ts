@@ -62,4 +62,76 @@ suite('Formatter Tags', () => {
 {{ /foreach:array_dynamic }}`;
         assert.strictEqual(formatAntlers(template), output);
     });
+
+    test('nested tags inside elements', () => {
+        const input = `<ul>
+{{ loop from="1" to="10" }}
+Before Yield
+{{ yield:tester }}
+After Yield
+
+Before Partial
+{{ partial:nested }}
+{{ slot:test }}NameStart{{ value }}NameEnd{{ /slot:test }}
+
+Normal Slot Content ({{ value }})
+{{ /partial:nested }}
+After Partial
+{{ /loop }}
+</ul>`;
+        const output = `<ul>
+    {{ loop from="1" to="10" }}
+        Before Yield
+        {{ yield:tester }}
+        After Yield
+
+        Before Partial
+        {{ partial:nested }}
+            {{ slot:test }}
+                NameStart{{ value }}NameEnd
+            {{ /slot:test }}
+            Normal Slot Content ({{ value }})
+        {{ /partial:nested }}
+        After Partial
+    {{ /loop }}
+</ul>`;
+        assert.strictEqual(formatAntlers(input), output);
+    });
+
+    test('it emits self closing tags', () => {
+        assert.strictEqual(formatAntlers('{{             test                        /}}'), '{{ test /}}');
+    });
+
+    test('it emits interpolation modifier params', () => {
+        const template = `{{ default_key|ensure_right:{second_key} }}`;
+        const output = `{{ default_key | ensure_right:{second_key} }}`;
+        assert.strictEqual(formatAntlers(template), output);
+    });
+
+    test('it emits recursive nodes', () => {
+        const template = `
+<ul>{{ recursive_children scope="item" }}<li>{{ item:title }}.{{ item:foo }}.{{ foo }}{{ if item:children }}<ul>{{ *recursive item:children* }}</ul>{{ /if }}</li>{{ /recursive_children }}</ul>
+`;
+        const output = `<ul>
+    {{ recursive_children scope="item" }}
+        <li>{{ item:title }}.{{ item:foo }}.{{ foo }}
+            {{ if item:children }}
+                <ul>{{ *recursive item:children* }}</ul>
+            {{ /if }}
+        </li>
+    {{ /recursive_children }}
+</ul>`;
+        assert.strictEqual(formatAntlers(template), output);
+    });
+
+    test('it does not remove : on simple tags', () => {
+        const template = `{{ tag scope="foo" }}
+        {{ foo:one }} {{ foo:two }}
+        {{ /tag }}`;
+        const output = `{{ tag scope="foo" }}
+    {{ foo:one }}
+    {{ foo:two }}
+{{ /tag }}`;
+        assert.strictEqual(formatAntlers(template), output);
+    });
 });

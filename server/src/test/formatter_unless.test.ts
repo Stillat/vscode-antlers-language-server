@@ -25,4 +25,26 @@ suite('Formatter Unless', () => {
 {{ /unless }}`;
         assert.strictEqual(formatAntlers(template), expected);
     });
+
+    test('it emits unless pairs', () => {
+        const template = `
+        Leading Literal
+        {{ unless true}}
+        <div>A</div>
+        {{ elseunless
+                 false    }}
+        <div>B</div>
+        {{ else }}
+        <div>C</div>
+        {{ /unless }}`;
+        const expected = `Leading Literal
+{{ unless true }}
+    <div>A</div>
+{{ elseunless false }}
+    <div>B</div>
+{{ else }}
+    <div>C</div>
+{{ /unless }}`;
+        assert.strictEqual(formatAntlers(template), expected);
+    });
 });
