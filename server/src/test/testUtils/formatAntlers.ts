@@ -16,6 +16,10 @@ const antlersOptions: AntlersFormattingOptions = {
     formatExtensions: []
 };
 
-export function formatAntlers(text: string): string {
-    return (new BeautifyDocumentFormatter(antlersOptions)).formatDocument(AntlersDocument.fromText(text));
+export function formatAntlers(text: string, options: AntlersFormattingOptions | null = null): string {
+    if (options == null) {
+        options = antlersOptions;
+    }
+
+    return (new BeautifyDocumentFormatter(options)).formatDocument(AntlersDocument.fromText(text));
 }
