@@ -57,14 +57,3 @@ export function getTagsFormatOption(
     }
     return dflt;
 }
-
-export function getTemplatingFormatOption(
-    options: IHTMLFormatConfiguration,
-    dflt: string
-): ("auto" | "none" | "django" | "erb" | "handlebars" | "php")[] | undefined {
-    const value = getFormatOption(options, "templating", dflt);
-    if (value === true) {
-        return ["auto"];
-    }
-    return ["none"];
-}

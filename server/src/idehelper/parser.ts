@@ -32,8 +32,6 @@ const EmptyEnvironmentHelper: IEnvironmentHelper = {
     formatterEnabled: true
 };
 
-export { EmptyEnvironmentHelper };
-
 const DocumentName = "@name";
 const DocumentDescription = "@description";
 const DocDescriptionShort = "@desc";

@@ -12,6 +12,5 @@ export function makeEntryVariables(node: AntlersNode): IScopeVariable[] {
         { name: 'order', dataType: 'number', sourceName: '*internal.entry', sourceField: null, introducedBy: node },
         { name: 'order_type', dataType: 'string', sourceName: '*internal.entry', sourceField: null, introducedBy: node },
         { name: 'timestamp', dataType: 'number', sourceName: '*internal.entry', sourceField: null, introducedBy: node },
-
     ];
 }

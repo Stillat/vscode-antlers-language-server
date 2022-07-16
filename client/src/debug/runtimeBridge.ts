@@ -253,8 +253,6 @@ export class RuntimeBridge extends EventEmitter {
 		return false;
 	}
 
-	
-
 	private sendEvent(event: string, ... args: any[]): void {
 		setImmediate(() => {
 			this.emit(event, ...args);

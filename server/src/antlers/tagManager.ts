@@ -378,19 +378,14 @@ interface ITagMethod {
 }
 
 export {
-    ITagMethod,
     IAntlersTag,
     IProviderCompletionResult,
     IAntlersParameter,
-    IVariableInterpolation,
-    IParameterAttribute,
     exclusiveResultList,
     resultList,
     ICompletionResult,
     IRuntimeVariableType,
-    IParameterSearchResult,
     dynamicParameter,
-    DnyamicParameter,
     EmptyCompletionResult,
     exclusiveResult,
     nonExclusiveResult

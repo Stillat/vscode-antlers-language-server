@@ -8,7 +8,7 @@
  *   * Is scheduled to be removed completely, but can be reverted quickly
  */
 
-export interface IFeatureConfiguration {
+interface IFeatureConfiguration {
     warnUnknownParameters: boolean;
 }
 

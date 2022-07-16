@@ -4,18 +4,15 @@ import { IComposerPackage } from '../composer/composerPackage';
 import { replaceAllInString } from '../utils/strings';
 import { convertUriToPath } from '../utils/uris';
 import { IAssets } from './assets/asset';
-import AugmentationManager from './augmentationManager';
 import { IBlueprintField, blueprintFieldsFromFieldset } from './blueprints/fields';
 import { ICollection } from './collections/collection';
 import { ICollectionScope } from './collections/collectionScope';
 import { IFieldsetField } from './fieldsets/fieldset';
-import ManifestManager from './manifestManager';
 import { INavigation } from './navigations/navigation';
 import { IProjectDetailsProvider } from './projectDetailsProvider';
 import { IStatamicStructure, IStructureRestore } from './statamicStructure';
 import { ITemplate } from './templates';
 import { IUserGroup } from './users/users';
-import ViewModelManager from './viewModelManager';
 import { IView } from './views/view';
 
 function makeBlueprintField(blueprintName: string, fieldName: string, fieldType: string):IBlueprintField {
@@ -31,8 +28,6 @@ function makeBlueprintField(blueprintName: string, fieldName: string, fieldType:
         type: fieldType
     };
 }
-
-
 
 class JsonSourceProject implements IProjectDetailsProvider {
     public isMocked = false;
@@ -402,27 +397,15 @@ class JsonSourceProject implements IProjectDetailsProvider {
     }
 
     getOAuthProviders(): string[] {
-        return ManifestManager.instance?.getManifest()?.config.oauthProviders ?? [];
+        return [];
     }
 
     getSiteNames(): string[] {
-        return ManifestManager.instance?.getManifest()?.config.siteNames ?? ['default'];
+        return [];
     }
 
     getSearchIndexes(): string[] {
-        const baseSearchIndexes = this.sourceStructure.searchIndexes;
-
-        if (ManifestManager.instance?.hasManifest()) {
-            const manifestIndexes = ManifestManager.instance.getManifest()?.config.searchIndexes ?? [];
-
-            manifestIndexes.forEach((index) => {
-                if (baseSearchIndexes.includes(index) == false) {
-                    baseSearchIndexes.push(index);
-                }
-            });
-        }
-
-        return baseSearchIndexes;
+        return this.sourceStructure.searchIndexes;
     }
 
     getStatamicVersion(): string {
@@ -537,20 +520,6 @@ class JsonSourceProject implements IProjectDetailsProvider {
     }
 
     getCollectionQueryScopes(): ICollectionScope[] {
-        if (ManifestManager.instance?.hasManifest()) {
-            const scopes: ICollectionScope[] = [],
-                manifestScopes = ManifestManager.instance?.getManifest()?.queryScopes ?? [];
-
-            for (let i = 0; i < manifestScopes.length; i++) {
-                scopes.push({
-                    name: manifestScopes[i].name,
-                    description: manifestScopes[i].description,
-                });
-            }
-
-            return this.collectionQueryScopes.concat(manifestScopes);
-        }
-
         return this.collectionQueryScopes;
     }
 
@@ -560,18 +529,6 @@ class JsonSourceProject implements IProjectDetailsProvider {
         for (let i = 0; i < collections.length; i++) {
             const collectionName = collections[i],
                 collectionDetails = this.getCollectionDetails(collectionName);
-
-            fieldsToReturn = fieldsToReturn.concat(AugmentationManager.instance?.getCollectionFields(collectionName) ?? []);
-
-            if (collectionDetails != null && collectionDetails.viewModel != null) {
-                const viewModel = ViewModelManager.instance?.getViewModelFields(
-                    collectionDetails.viewModel
-                ) ?? [];
-
-                if (viewModel.length > 0) {
-                    fieldsToReturn = fieldsToReturn.concat(viewModel);
-                }
-            }
 
             if (collectionDetails != null && collectionDetails.injectFields != null) {
                 for (let j = 0; j < collectionDetails.injectFields.length; j++) {
@@ -693,7 +650,7 @@ class JsonSourceProject implements IProjectDetailsProvider {
     }
 
     getAssetPresets(): string[] {
-        return ManifestManager.instance?.getManifest()?.config.assetPresets ?? [];
+        return [];
     }
 
     getUniqueGlobalsNames(): string[] {

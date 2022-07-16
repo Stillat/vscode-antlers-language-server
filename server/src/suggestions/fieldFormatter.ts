@@ -85,25 +85,6 @@ export function makeModifierSuggest(modifier: IModifier): CompletionItem {
     return item;
 }
 
-export function makeParameterSuggest(name: string): CompletionItem {
-    return {
-        label: '"' + name + '"',
-        insertText: name,
-        kind: CompletionItemKind.Text,
-    };
-}
-
-export function makeValueSuggestion(name: string, description: string, valueType: string): CompletionItem {
-    const item: CompletionItem = {
-        label: name,
-        insertText: name,
-        kind: CompletionItemKind.Value,
-        detail: valueType + ": " + description,
-    };
-
-    return item;
-}
-
 export function formatSuggestionList(fields: IBlueprintField[]): CompletionItem[] {
     const items: CompletionItem[] = [];
 

@@ -175,7 +175,7 @@ export class IndentLevel {
     }
 }
 
-export interface InferredIndentLevel {
+interface InferredIndentLevel {
     targetLevel: number,
     referenceLevel: number,
     sourceTabSize: number

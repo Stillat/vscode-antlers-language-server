@@ -13,10 +13,6 @@ export function toPath(value: any): PathNode {
     return value as PathNode;
 }
 
-export function toVarRef(value: any): VariableReference {
-    return value as VariableReference;
-}
-
 export function assertInstanceOf(expected: any, instance: any) {
     assert.strictEqual(instance instanceof expected, true);
 }

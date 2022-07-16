@@ -3,7 +3,7 @@ import { TextDocument } from "vscode-languageserver-textdocument";
 import { sessionDocuments } from '../languageService/documents';
 import { AbstractNode, ModifierNameNode } from '../runtime/nodes/abstractNode';
 
-export interface SemanticTokenProvider {
+interface SemanticTokenProvider {
     readonly legend: { types: string[]; modifiers: string[] };
     getSemanticTokens(
         document: TextDocument,

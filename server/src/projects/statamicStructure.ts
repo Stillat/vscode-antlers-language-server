@@ -163,4 +163,4 @@ const MockStructure: IStatamicStructure = {
     restoreProperties: null
 };
 
-export { MockStructure, IStatamicStructure, IStructureRestore };
+export { IStatamicStructure, IStructureRestore };

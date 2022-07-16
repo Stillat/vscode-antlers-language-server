@@ -247,7 +247,7 @@ export class YamlDocument {
     }
 }
 
-export interface YAMLRange {
+interface YAMLRange {
     start: Position,
     end: Position,
     length: number,

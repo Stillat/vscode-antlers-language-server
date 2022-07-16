@@ -7,7 +7,7 @@ import * as fs from 'fs';
 import * as path from "path";
 import { requestEdits } from '../../server';
 
-export interface IExtractedPartaialTargetFile {
+interface IExtractedPartaialTargetFile {
     path: string,
     fsPath: string
 }

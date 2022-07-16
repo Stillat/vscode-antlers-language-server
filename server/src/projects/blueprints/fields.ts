@@ -61,7 +61,7 @@ const SetFieldTypes: string[] = ["replicator", "bard"];
 
 export { SetFieldTypes };
 
-export function blueprintFieldFromScopeVariable(
+function blueprintFieldFromScopeVariable(
     variable: IScopeVariable
 ): IBlueprintField {
     return {

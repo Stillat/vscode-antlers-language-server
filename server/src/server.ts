@@ -41,7 +41,6 @@ import { handleDocumentSymbolRequest } from "./services/documentSymbols";
 import { DocumentLinkManager } from "./services/antlersLinks";
 import ProjectManager from './projects/projectManager';
 import InjectionManager from './antlers/scope/injections';
-import { checkForIndexProcessAvailability, reloadProjectManifest, safeRunIndexing } from './projects/manifest/fileSystemProvider/manifestLoader';
 import { sessionDocuments, documentMap } from './languageService/documents';
 import { getProjectStructure } from './projects/fileSystemProvider/fileSystemStatamicProject';
 import TagManager from './antlers/tagManagerInstance';
@@ -52,7 +51,6 @@ import ReferenceManager from './references/referenceManager';
 import SectionManager from './references/sectionManager';
 import SessionVariableManager from './references/sessionVariableManager';
 import { AntlersError } from './runtime/errors/antlersError';
-import { setServerDirectory } from './languageService/serverDirectory';
 import { htmlFormatterSettings, updateHtmlFormatterSettings } from './languageService/htmlFormatterSettings';
 import { AntlersNode } from './runtime/nodes/abstractNode';
 import { SessionVariableContext } from './antlers/tags/core/contexts/sessionContext';
@@ -65,14 +63,11 @@ import { handleCodeActions } from './services/antlersRefactoring';
 import ExtractPartialHandler from './refactoring/core/extractPartialHandler';
 import { BeautifyDocumentFormatter } from './formatting/beautifyDocumentFormatter';
 
-const projectIndex = "antlers-project-index";
-
-export interface ServerTrace {
+interface ServerTrace {
     server: string;
 }
 
-// The example settings
-export interface AntlersSettings {
+interface AntlersSettings {
     formatFrontMatter: boolean;
     showGeneralSnippetCompletions: boolean;
     trace: ServerTrace;
@@ -91,33 +86,16 @@ export function getAntlersSettings() {
     return globalSettings;
 }
 
-export { defaultSettings, globalSettings };
-export { hasConfigurationCapability, connection };
+export { globalSettings };
 
-// Create a connection for the server, using Node's IPC as a transport.
-// Also include all preview / proposed LSP features.
 const connection = createConnection(ProposedFeatures.all);
 
-// Create a simple text document manager.
 const documents: TextDocuments<TextDocument> = new TextDocuments(TextDocument);
-
-setServerDirectory(__dirname);
 
 let hasConfigurationCapability = false;
 let hasWorkspaceFolderCapability = false;
 let hasDiagnosticRelatedInformationCapability = false;
 
-// eslint-disable-next-line @typescript-eslint/no-empty-interface
-interface ManifestAvailableParams { }
-
-namespace ManifestAvailableRequest {
-    export const type: RequestType<ReindexParams, null, any> = new RequestType(
-        "antlers/loadManifest"
-    );
-}
-
-// eslint-disable-next-line @typescript-eslint/no-empty-interface
-interface ReindexParams { }
 // eslint-disable-next-line @typescript-eslint/no-empty-interface
 interface LockEditsParams { }
 // eslint-disable-next-line @typescript-eslint/no-empty-interface
@@ -144,9 +122,6 @@ interface DocumentTransformResult {
     replacements: TransformReplacement[]
 }
 
-namespace ReindexRequest {
-    export const type: RequestType<ReindexParams, null, any> = new RequestType("antlers/reindex");
-}
 namespace LockEditsRequest {
     export const type: RequestType<LockEditsParams, null, any> = new RequestType("antlers/lockedits");
 }
@@ -181,8 +156,6 @@ namespace SemanticTokenRequest {
 
 connection.onInitialize((params: InitializeParams) => {
     const capabilities = params.capabilities;
-
-    checkForIndexProcessAvailability();
 
     // Does the client support the `workspace/configuration` request?
     // If not, we fall back using global settings.
@@ -351,10 +324,6 @@ connection.onRequest(SemanticTokenLegendRequest.type, (token) => {
     return newSemanticTokenProvider().legend;
 });
 
-connection.onRequest(ReindexRequest.type, () => {
-    safeRunIndexing();
-});
-
 connection.onRequest(ForcedFormatRequest.type, (params) => {
     const settings = getAntlersSettings(),
         options = htmlFormatterSettings.format as IHTMLFormatConfiguration;
@@ -407,10 +376,6 @@ connection.onRequest(ProjectUpdateRequest.type, () => {
     }
 });
 
-connection.onRequest(ManifestAvailableRequest.type, () => {
-    reloadProjectManifest();
-});
-
 connection.onRequest(SemanticTokenRequest.type, (params, token) => {
     const docPath = decodeURIComponent(params.textDocument.uri);
 
@@ -423,20 +388,15 @@ connection.onRequest(SemanticTokenRequest.type, (params, token) => {
     return null;
 });
 
-const registeredProjectIndexToken = false;
-
-const isFirstRun = true;
-
-/**getProjectStructure(localPath)
+/**
  * Attempts to retrieve details about the current Statamic project.
  * @param textDocument 
  */
-export async function collectProjectDetails(textDocument: TextDocument): Promise<void> {
+async function collectProjectDetails(textDocument: TextDocument): Promise<void> {
     if (ProjectManager.instance?.hasStructure()) {
         ProjectManager.instance.reloadDetails();
 
         sessionDocuments.setProject(ProjectManager.instance.getStructure());
-        reloadProjectManifest();
         return;
     }
 
@@ -449,20 +409,6 @@ export async function collectProjectDetails(textDocument: TextDocument): Promise
         InjectionManager.instance?.updateProject(ProjectManager.instance?.getStructure());
     }
 
-    /*if (!registeredProjectIndexToken) {
-        registeredProjectIndexToken = true;
-        await connection.sendRequest(WorkDoneProgressCreateRequest.type, {
-            token: projectIndex,
-        });
-    }*/
-
-    reloadProjectManifest();
-
-
-    /*connection.sendProgress(WorkDoneProgress.type, projectIndex, {
-        kind: "begin",
-        title: "Analyzing Statamic Project",
-    });*/
     ReferenceManager.instance?.clearPartialReferences(docPath);
     DiagnosticsManager.instance?.clearIssues(docPath);
 
@@ -479,11 +425,6 @@ export async function collectProjectDetails(textDocument: TextDocument): Promise
             analyzeStructures(thisView.documentUri);
         }
     }
-
-    /*    connection.sendProgress(WorkDoneProgress.type, projectIndex, {
-            kind: "end",
-            message: "Analysis Complete",
-        });*/
 }
 
 export function requestEdits(edit: WorkspaceEdit) {
@@ -494,7 +435,7 @@ export function requestEdits(edit: WorkspaceEdit) {
     connection.sendRequest("workspace/applyEdit", params);
 }
 
-export function analyzeStructures(document: string) {
+function analyzeStructures(document: string) {
     document = decodeURIComponent(document);
     if (sessionDocuments.hasDocument(document)) {
         const doc = sessionDocuments.getDocument(document),

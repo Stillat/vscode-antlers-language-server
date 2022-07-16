@@ -7,7 +7,7 @@ export enum TernaryRefactorMode {
     GateKeeper
 }
 
-export interface IConditionRefactoringRequest {
+interface IConditionRefactoringRequest {
     isInInterpolation: boolean,
     refactorNested: boolean
 }

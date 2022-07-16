@@ -19,9 +19,6 @@ interface SemanticTokenParams {
 }
 
 // eslint-disable-next-line @typescript-eslint/no-empty-interface
-interface ReindexParams { }
-
-// eslint-disable-next-line @typescript-eslint/no-empty-interface
 interface LockEditsParams { }
 
 // eslint-disable-next-line @typescript-eslint/no-empty-interface
@@ -48,10 +45,6 @@ interface DocumentTransformResult {
     replacements: TransformReplacement[]
 }
 
-namespace ReindexRequest {
-    export const type: RequestType<ReindexParams, null, any> = new RequestType('antlers/reindex');
-}
-
 namespace LockEditsRequest {
     export const type: RequestType<LockEditsParams, null, any> = new RequestType('antlers/lockedits');
 }
@@ -68,15 +61,6 @@ namespace ProjectUpdateRequest {
     export const type: RequestType<ProjectUpdateParams, null, any> = new RequestType('antlers/projectUpdate');
 }
 
-// eslint-disable-next-line @typescript-eslint/no-empty-interface
-interface ManifestAvailableParams {
-
-}
-
-namespace ManifestAvailableRequest {
-    export const type: RequestType<ReindexParams, null, any> = new RequestType('antlers/loadManifest');
-}
-
 namespace SemanticTokenRequest {
     export const type: RequestType<SemanticTokenParams, number[] | null, any> = new RequestType('antlers/semanticTokens');
 }
@@ -87,10 +71,7 @@ namespace SemanticTokenLegendRequest {
 
 let didChangeHtmlComments = false;
 let client: LanguageClient;
-let phpWatcher: FileSystemWatcher | null = null,
-    composerWatcher: FileSystemWatcher | null = null,
-    manifestWatcher: FileSystemWatcher | null = null,
-    projectWatcher: FileSystemWatcher | null = null;
+let projectWatcher: FileSystemWatcher | null = null;
 
 let isClientReady = false;
 
@@ -100,21 +81,7 @@ function askForProjectUpdate() {
     }
 }
 
-function askForIndex() {
-    if (isClientReady) {
-        client.sendRequest(ReindexRequest.type, {});
-    }
-}
-
-function sendManifestReloadRequest() {
-    if (isClientReady) {
-        client.sendRequest(ManifestAvailableRequest.type, {});
-    }
-}
-
-const debouncedAskForIndex = debounce(askForIndex, 350);
 const debounceAskForProjectUpdate = debounce(askForProjectUpdate, 350);
-const debouncedManifestLoaded = debounce(sendManifestReloadRequest, 350);
 
 export function activate(context: ExtensionContext) {
     const antlersOverrideHtmlComments = workspace.getConfiguration().get('antlersOverrideHtmlComments');
@@ -219,26 +186,11 @@ export function activate(context: ExtensionContext) {
         resetTimings();
     });
 
-    phpWatcher = workspace.createFileSystemWatcher('**/*.php');
-    composerWatcher = workspace.createFileSystemWatcher('**/composer.lock');
-    manifestWatcher = workspace.createFileSystemWatcher('**/.antlers.json');
     projectWatcher = workspace.createFileSystemWatcher('**/*.yaml');
 
     projectWatcher.onDidDelete(() => { debounceAskForProjectUpdate(); });
     projectWatcher.onDidCreate(() => { debounceAskForProjectUpdate(); });
     projectWatcher.onDidChange(() => { debounceAskForProjectUpdate(); });
-
-    manifestWatcher.onDidDelete(() => { debouncedManifestLoaded(); });
-    manifestWatcher.onDidCreate(() => { debouncedManifestLoaded(); });
-    manifestWatcher.onDidChange(() => { debouncedManifestLoaded(); });
-
-    composerWatcher.onDidChange(() => { debouncedAskForIndex(); });
-    composerWatcher.onDidCreate(() => { debouncedAskForIndex(); });
-    composerWatcher.onDidDelete(() => { debouncedAskForIndex(); });
-
-    phpWatcher.onDidChange(() => { debouncedAskForIndex(); });
-    phpWatcher.onDidCreate(() => { debouncedAskForIndex(); });
-    phpWatcher.onDidDelete(() => { debouncedAskForIndex(); });
 
     activateAntlersDebug(context);
 
@@ -247,8 +199,6 @@ export function activate(context: ExtensionContext) {
     toDispose.push(disposable);
     client.onReady().then(() => {
         isClientReady = true;
-
-        sendManifestReloadRequest();
 
         setTimeout(() => {
             client.sendRequest(SemanticTokenLegendRequest.type).then(legend => {
@@ -292,9 +242,7 @@ export function deactivate(): Thenable<void> | undefined {
         });
     }
 
-    phpWatcher?.dispose();
-    composerWatcher?.dispose();
-    manifestWatcher?.dispose();
+    projectWatcher?.dispose();
 
     return client.stop();
 }

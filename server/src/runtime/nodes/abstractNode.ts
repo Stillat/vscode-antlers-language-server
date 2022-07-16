@@ -22,17 +22,17 @@ function newRefId() {
 }
 
 /* eslint-disable @typescript-eslint/no-empty-interface */
-export interface ArithmeticNodeContract {
+interface ArithmeticNodeContract {
 
 }
 
 /* eslint-disable @typescript-eslint/no-empty-interface */
-export interface OperatorNodeContract {
+interface OperatorNodeContract {
 
 }
 
 /* eslint-disable @typescript-eslint/no-empty-interface */
-export interface AssignmentOperatorNodeContract {
+interface AssignmentOperatorNodeContract {
 
 }
 
@@ -1000,7 +1000,6 @@ export class ModifierParameterNode extends AbstractNode {
 export class FalseConstant extends AbstractNode { }
 export class NullConstant extends AbstractNode { }
 export class TrueConstant extends AbstractNode { }
-
 
 export class AdditionOperator extends AbstractNode implements OperatorNodeContract, ArithmeticNodeContract { }
 export class DivisionOperator extends AbstractNode implements OperatorNodeContract, ArithmeticNodeContract {

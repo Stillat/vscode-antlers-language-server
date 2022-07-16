@@ -8,7 +8,7 @@ export function createDefinitionAlias(tag: IAntlersTag, alias: string): IAntlers
     return tagCopy;
 }
 
-export function copyTagDefinition(tag: IAntlersTag): IAntlersTag {
+function copyTagDefinition(tag: IAntlersTag): IAntlersTag {
     return {
         allowsArbitraryParameters: tag.allowsArbitraryParameters,
         allowsContentClose: tag.allowsContentClose,

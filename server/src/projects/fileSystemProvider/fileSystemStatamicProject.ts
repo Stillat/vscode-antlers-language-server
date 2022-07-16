@@ -1,6 +1,5 @@
 import * as path from "path";
 import * as fs from "fs";
-import * as YAML from "yaml";
 
 import { dirname } from "path";
 import { IComposerPackage } from '../../composer/composerPackage';
@@ -154,7 +153,7 @@ function getFiles(
     return [...new Set(returnFiles)];
 }
 
-export function getDirectFiles(startPath: string, filter: string): string[] {
+function getDirectFiles(startPath: string, filter: string): string[] {
     if (!fs.existsSync(startPath)) {
         return [];
     }
@@ -672,7 +671,7 @@ export function getProjectStructure(resourcePath: string): FileSystemStatamicPro
     }, resourcePath);
 }
 
-export class FileSystemStatamicProject extends JsonSourceProject implements IProjectDetailsProvider {
+class FileSystemStatamicProject extends JsonSourceProject implements IProjectDetailsProvider {
 
     reloadDetails(): IProjectDetailsProvider {
         return getProjectStructure(this.baseResourcePath);

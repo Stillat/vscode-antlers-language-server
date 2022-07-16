@@ -1,29 +1,4 @@
 import * as path from 'path';
-import * as fs from 'fs';
-
-export function getFiles(startPath: string, filter: string, foundFiles: string[]): string[] {
-    if (!fs.existsSync(startPath)) {
-        return [];
-    }
-
-    let returnFiles = foundFiles || [];
-    const files = fs.readdirSync(startPath);
-
-    for (let i = 0; i < files.length; i++) {
-        const filename = path.join(startPath, files[i]);
-        const stat = fs.lstatSync(filename);
-
-        if (stat.isDirectory()) {
-            returnFiles = returnFiles.concat(getFiles(filename, filter, foundFiles));
-        } else if (filename.indexOf(filter) >= 0) {
-            returnFiles.push(filename);
-        }
-    }
-
-    return [...new Set(returnFiles)];
-}
-
-
 
 export function convertPathToUri(filePath: string): string {
     let pathName = path.resolve(filePath).replace(/\\/g, '/');

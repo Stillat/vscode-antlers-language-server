@@ -62,7 +62,7 @@ export interface IModifier {
     augmentScope?(symbol: AntlersNode, scope: Scope): Scope;
 }
 
-export interface IModifierParameter {
+interface IModifierParameter {
     /**
      * The name of the modifier parameter.
      */

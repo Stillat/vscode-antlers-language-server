@@ -112,7 +112,7 @@ export function convertImmediateScopeToCompletionList(params: ISuggestionRequest
     return convertScopeToCompletionList(params, lastScopeItem.currentScope);
 }
 
-export function convertScopeToCompletionList(params: ISuggestionRequest, scope: Scope): CompletionItem[] {
+function convertScopeToCompletionList(params: ISuggestionRequest, scope: Scope): CompletionItem[] {
     const items: CompletionItem[] = [];
 
     scope.values.forEach((val: IScopeVariable) => {
@@ -159,7 +159,7 @@ export function convertScopeToCompletionList(params: ISuggestionRequest, scope: 
     return items;
 }
 
-export function getModifierCompletionList(): CompletionItem[] {
+function getModifierCompletionList(): CompletionItem[] {
     const items: CompletionItem[] = [];
 
     ModifierManager.instance?.getRegisteredModifiers().forEach((modifier: IModifier) => {

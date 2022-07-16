@@ -8,20 +8,6 @@ import { Scope } from '../../../scope/scope';
 import { ICollectionContext } from '../../../types';
 import { EntryStatuses } from './parameters';
 
-export function getExcludeCollectionName(node: AntlersNode): string | null {
-    if (node.isClosedBy) {
-        return null;
-    }
-
-    const excludeParam = node.findAnyParameter(['not_from', 'not_folder', 'dont_use']);
-
-    if (excludeParam != null) {
-        return excludeParam.value;
-    }
-
-    return null;
-}
-
 export function getTaxonomyCompletionItems(request: ISuggestionRequest): CompletionItem[] {
     const items: CompletionItem[] = [];
 
