@@ -499,7 +499,8 @@ export class Transformer {
             if (node.containsChildStructures == false && node.containsAnyFragments == false) {
                 let createVirtual = false,
                     literalsAllWhiteSpace = true,
-                    allAntlersInline = true;
+                    allAntlersInline = true,
+                    antlersCount = 0;
 
                 for (let i = 0; i < node.children.length; i++) {
                     const thisNode = node.children[i];
@@ -523,6 +524,8 @@ export class Transformer {
                     const thisNode = node.children[i];
 
                     if (thisNode instanceof AntlersNode) {
+                        antlersCount += 1;
+
                         if (thisNode.isInlineAntlers) {
                             inlineAntlers += 1;
                         } else {
@@ -536,6 +539,10 @@ export class Transformer {
                 }
 
                 if (allAntlersInline == false) {
+                    createVirtual = false;
+                }
+
+                if (literalsAllWhiteSpace == false && antlersCount == 0) {
                     createVirtual = false;
                 }
 
