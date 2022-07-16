@@ -59,11 +59,11 @@ import { SessionVariableContext } from './antlers/tags/core/contexts/sessionCont
 import { handleReferences } from './services/antlersVariableReferences';
 import { handleDocumentHighlight } from './services/antlersDocumentHighlight';
 import DocumentTransformer from './runtime/parser/documentTransformer';
-import { AntlersFormatter } from './formatting/antlersFormatter';
 import { IHTMLFormatConfiguration } from './formatting/htmlCompat';
 import { AntlersDocument } from './runtime/document/antlersDocument';
 import { handleCodeActions } from './services/antlersRefactoring';
 import ExtractPartialHandler from './refactoring/core/extractPartialHandler';
+import { BeautifyDocumentFormatter } from './formatting/beautifyDocumentFormatter';
 
 const projectIndex = "antlers-project-index";
 
@@ -359,7 +359,7 @@ connection.onRequest(ForcedFormatRequest.type, (params) => {
     const settings = getAntlersSettings(),
         options = htmlFormatterSettings.format as IHTMLFormatConfiguration;
 
-    const formatter = new AntlersFormatter({
+    const formatter = new BeautifyDocumentFormatter({
         tabSize: params.tabSize,
         formatFrontMatter: settings.formatFrontMatter,
         insertSpaces: params.insertSpaces,

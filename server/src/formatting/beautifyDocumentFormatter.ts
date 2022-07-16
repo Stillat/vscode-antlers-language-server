@@ -5,7 +5,6 @@ import { DocumentFormatter } from './documentFormatter';
 import { FrontMatterFormatter } from './frontMatterFormatter';
 import { getFormatOption, getTagsFormatOption } from './htmlCompat';
 
-
 export class BeautifyDocumentFormatter extends DocumentFormatter {
     private options: AntlersFormattingOptions;
 

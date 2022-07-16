@@ -4,8 +4,8 @@ import { documentMap, sessionDocuments } from '../languageService/documents';
 import { htmlFormatterSettings } from '../languageService/htmlFormatterSettings';
 import { AntlersDocument } from '../runtime/document/antlersDocument';
 import { getAntlersSettings } from '../server';
-import { AntlersFormatter } from './antlersFormatter';
 import { AntlersFormattingOptions } from './antlersFormattingOptions';
+import { BeautifyDocumentFormatter } from './beautifyDocumentFormatter';
 import { IHTMLFormatConfiguration } from "./htmlCompat";
 
 export function formatAntlersDocument(params: DocumentFormattingParams): TextEdit[] | null {
@@ -23,7 +23,6 @@ export function formatAntlersDocument(params: DocumentFormattingParams): TextEdi
 
     if (sessionDocuments.hasDocument(documentPath) && documentMap.has(documentPath)) {
         const document = documentMap.get(documentPath) as TextDocument,
-            sessionDocument = sessionDocuments.getDocument(documentPath),
             docText = document.getText(),
             antlersDoc = AntlersDocument.fromText(docText),
             antlersFormatterOptions: AntlersFormattingOptions = {
@@ -35,8 +34,7 @@ export function formatAntlersDocument(params: DocumentFormattingParams): TextEdi
                 formatExtensions: []
             };
 
-        AntlersFormatter.applyPositionsFromDocument(sessionDocument, antlersDoc);
-        const formatter = new AntlersFormatter(antlersFormatterOptions),
+        const formatter = new BeautifyDocumentFormatter(antlersFormatterOptions),
             results = formatter.formatDocument(antlersDoc);
 
         const replaceEndPosition = document.positionAt(docText.length);
