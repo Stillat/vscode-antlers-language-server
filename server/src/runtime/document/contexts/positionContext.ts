@@ -2,10 +2,10 @@ import { Position } from '../../nodes/position';
 import { GeneralContext } from './generalContext';
 import { ModifierContext } from './modifierContext';
 import { ParameterContext } from './parameterContext';
-import { v4 as uuidv4 } from 'uuid';
 import { IdentifierContext } from './identifierContext';
 import { AntlersNode, AbstractNode } from '../../nodes/abstractNode';
 import { VariableContext } from './variableContext';
+import { getId } from '../../../utils/simpleIds';
 
 export class PositionContext {
     public refId = '';
@@ -40,7 +40,7 @@ export class PositionContext {
     public cursorContext: CursorContext = CursorContext.Unknown;
 
     constructor() {
-        this.refId = uuidv4();
+        this.refId = getId();
     }
 }
 

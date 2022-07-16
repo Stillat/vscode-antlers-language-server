@@ -1,9 +1,9 @@
 import { IBlueprintField } from '../../projects/blueprints/fields';
 import { IProjectDetailsProvider } from '../../projects/projectDetailsProvider';
-import { v4 as uuidv4 } from 'uuid';
 import { IPristineSnapshot, IScopeVariable } from './types';
 import { valuesToDataMap } from './scopeUtilities';
 import { AntlersNode } from '../../runtime/nodes/abstractNode';
+import { getId } from '../../utils/simpleIds';
 
 export class Scope {
     static generationCounter = 0;
@@ -21,7 +21,7 @@ export class Scope {
         this.statamicProject = statamicProject;
         Scope.generationCounter += 1;
         this.generation = Scope.generationCounter;
-        this.id = uuidv4();
+        this.id = getId();
     }
 
     makeNew(): Scope {

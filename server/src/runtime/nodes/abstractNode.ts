@@ -1,5 +1,4 @@
 import { Position, Range } from './position';
-import { v4 as uuidv4 } from 'uuid';
 import { AntlersError } from '../errors/antlersError';
 import { DocumentParser } from '../parser/documentParser';
 import { DocumentRange } from '../document/documentRange';
@@ -16,9 +15,10 @@ import { TagIdentifier } from './tagIdentifier';
 import { ConditionPairAnalyzer } from '../analyzers/conditionPairAnalyzer';
 import { replaceAllInString } from '../../utils/strings';
 import { AntlersDocument } from '../document/antlersDocument';
+import { getId } from '../../utils/simpleIds';
 
 function newRefId() {
-    return replaceAllInString(uuidv4(), '-', '_');
+    return replaceAllInString(getId(), '-', '_');
 }
 
 /* eslint-disable @typescript-eslint/no-empty-interface */
