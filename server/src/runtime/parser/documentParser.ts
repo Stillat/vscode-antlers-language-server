@@ -104,6 +104,7 @@ export class DocumentParser {
     private currentChunkOffset = 0;
     private isNoParse = false;
     private antlersErrors: AntlersError[] = [];
+    private structureErrors: AntlersError[] = [];
     private languageParser: LanguageParser = new LanguageParser();
     private documentPath: string | null = null;
     private pushedErrors: Map<string, AntlersError> = new Map();
@@ -114,6 +115,14 @@ export class DocumentParser {
     private fragmentsParser: FragmentsParser;
     private fragmentsAnalyzer: FragmentPositionAnalyzer;
     private parseChildDocuments = false;
+
+    private structuralErrorCodes:string[] = [
+        AntlersErrorCodes.TYPE_PARSE_UNCLOSED_CONDITIONAL,
+        AntlersErrorCodes.TYPE_PARSE_UNPAIRED_CONDITIONAL,
+        AntlersErrorCodes.TYPE_RECURSIVE_UNPAIRED_NODE,
+        AntlersErrorCodes.TYPE_RUNTIME_FATAL_UNPAIRED_LOOP_END,
+        AntlersErrorCodes.TYPE_UNPAIRED_CLOSING_TAG
+    ];
 
     constructor() {
         this.fragmentsParser = new FragmentsParser();
@@ -162,6 +171,10 @@ export class DocumentParser {
         if (!this.pushedErrors.has(errorHash)) {
             this.pushedErrors.set(errorHash, error);
             this.antlersErrors.push(error);
+
+            if (this.structuralErrorCodes.includes(error.errorCode)) {
+                this.structureErrors.push(error);
+            }
         }
     }
 
@@ -363,6 +376,27 @@ export class DocumentParser {
         }
 
         return this.content.substr(position.offset, 1);
+    }
+    
+    getLinesAround(line: number): Map<number, string> {
+        const lines: Map<number, string> = new Map();
+
+        let startLine = line - 3,
+            endLine = line + 3;
+
+        if (startLine < 1) {
+            startLine = 1;
+        }
+
+        if (endLine > this.maxLine) {
+            endLine = this.maxLine;
+        }
+
+        for (let i = startLine; i <= endLine; i++) {
+            lines.set(i, this.getLineText(i) ?? '');
+        }
+
+        return lines;
     }
 
     charAtCursor(line: number, char: number) {
@@ -2055,6 +2089,10 @@ export class DocumentParser {
 
     getAntlersErrors() {
         return this.antlersErrors;
+    }
+    
+    getStructureErrors() {
+        return this.structureErrors;
     }
 }
 

@@ -235,6 +235,10 @@ export class AntlersDocument {
 
         return null;
     }
+    
+    getLinesAround(line: number): Map<number, string> {
+        return this.documentParser.getLinesAround(line);
+    }
 
     getContent() {
         return this.documentParser.getContent();

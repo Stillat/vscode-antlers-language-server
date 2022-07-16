@@ -8,6 +8,14 @@ export class DocumentErrors {
         this.doc = doc;
     }
 
+    hasStructureErrors() {
+        return this.doc.getDocumentParser().getStructureErrors().length > 0;
+    }
+
+    getFirstStructureError(): AntlersError {
+        return this.doc.getDocumentParser().getStructureErrors()[0];
+    }
+
     hasAny() {
         return this.all().length > 0;
     }
