@@ -1,106 +1,7 @@
 import assert = require('assert');
-import { AntlersFormatter } from '../formatting/antlersFormatter';
-import { AntlersFormattingOptions } from '../formatting/antlersFormattingOptions';
-import { IHTMLFormatConfiguration } from '../formatting/htmlCompat';
-import { AntlersDocument } from '../runtime/document/antlersDocument';
+import { formatAntlers } from './testUtils/formatAntlers';
 
-const htmlOptions: IHTMLFormatConfiguration = {
-    wrapLineLength: 500,
-
-};
-const antlersOptions: AntlersFormattingOptions = {
-    htmlOptions: htmlOptions,
-    tabSize: 4,
-    insertSpaces: true,
-    formatFrontMatter: true,
-    maxStatementsPerLine: 3,
-    formatExtensions: []
-};
-
-const antlersOptionsDefault: AntlersFormattingOptions = {
-    htmlOptions: {},
-    tabSize: 4,
-    insertSpaces: true,
-    formatFrontMatter: true,
-    maxStatementsPerLine: 3,
-    formatExtensions: []
-};
-
-function format(text: string): string {
-    const doc = AntlersDocument.fromText(text),
-        formatter = new AntlersFormatter(antlersOptions);
-
-    return formatter.formatDocument(doc);
-}
-
-function formatDefaultHtmlSettings(text: string): string {
-    const doc = AntlersDocument.fromText(text),
-        formatter = new AntlersFormatter(antlersOptionsDefault);
-
-    return formatter.formatDocument(doc);
-}
-
-function assertFormattedMatches(input: string, output: string) {
-    assert.strictEqual(formatDefaultHtmlSettings(input), output);
-}
-
-suite("Document Formatting Test", () => {
-
-
-    test('switch groups do not have crazy spacing', () => {
-        const input = `<div class="container w-full py-32 space-y-24">
-{{ entries = {collection:possibilities sort="order"} }}
-{{ test }}
-{{ one }}
-{{ two }}
-{{ three }}
-{{ four }}
-{{ five }}
-{{ six }}
-{{ parity = switch(
-((index | mod:2) == 0) => 'even',
-((index | mod:2) == 1) => 'odd',
-) }}
-{{ /six }}
-{{ /five }}
-{{ /four }}
-{{ /three }}
-{{ /two }}
-{{ /one }}
-{{ /test }}
-{{ partial:possibilities/preview :side="parity" }}
-{{ /entries }}
-</div>`;
-        const expected = `<div class="container w-full py-32 space-y-24">
-    {{ entries = {collection:possibilities sort="order"} }}
-        {{ test }}
-            {{ one }}
-                {{ two }}
-                    {{ three }}
-                        {{ four }}
-                            {{ five }}
-                                {{ six }}
-                                    {{ parity = switch(
-                                                   ((index | mod:2) == 0) => 'even',
-                                                   ((index | mod:2) == 1) => 'odd',
-                                                   ) }}
-                                {{ /six }}
-                            {{ /five }}
-                        {{ /four }}
-                    {{ /three }}
-                {{ /two }}
-            {{ /one }}
-        {{ /test }}
-        {{ partial:possibilities/preview :side="parity" }}
-    {{ /entries }}
-</div>`;
-        assert.strictEqual(formatDefaultHtmlSettings(input), expected);
-    });
-
-    
-
-    
-
+suite('Formatter Disabled', () => {
     test('formatter can be disabled', () => {
         const input = `{{#
             @name Form
@@ -204,7 +105,6 @@ suite("Document Formatting Test", () => {
             </section>
             <!-- End: /page_builder/_form.antlers.html -->`;
 
-        assert.strictEqual(formatDefaultHtmlSettings(input), input);
+        assert.strictEqual(formatAntlers(input), input);
     });
-    
 });

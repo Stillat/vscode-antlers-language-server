@@ -221,7 +221,6 @@ export class Transformer {
         const slug = this.makeSlug(35);
 
         this.registerNoParse(slug, node);
-        // TODO: INside fragments etc.
 
         return slug;
     }
@@ -275,7 +274,7 @@ export class Transformer {
         return value;
     }
 
-    private printNode(node: AntlersNode) {
+    private printNode(node: AntlersNode, targetIndent: number| null = null) {
         const printNode = node.getTrueNode();
 
         let doc = this.doc;
@@ -302,7 +301,13 @@ export class Transformer {
             return `{{ ${printNode.content.trim()} }}`;
         }
 
-        return NodePrinter.prettyPrintNode(printNode, doc, 0, this.options, prepend, null);
+        let result = NodePrinter.prettyPrintNode(printNode, doc, 0, this.options, prepend, null);
+
+        if (targetIndent != null && result.includes("\n")) {
+            result = IndentLevel.shiftIndent(result, targetIndent - (this.options.tabSize * 2), true);
+        }
+
+        return result;
     }
 
     private transformConditions(content: string): string {
@@ -327,10 +332,9 @@ export class Transformer {
 
                 if (!structure.isLast) {
                     this.removeLines.push(structure.pairClose);
-                    value = value.replace(structure.pairOpen, this.printNode(structureTag));
+                    value = value.replace(structure.pairOpen, this.printNode(structureTag, this.indentLevel(structure.pairOpen)));
                 } else {
-                    value = value.replace(structure.pairOpen, this.printNode(structureTag));
-                    const hmmmmm = this.printNode(structureTag.isClosedBy as AntlersNode);
+                    value = value.replace(structure.pairOpen, this.printNode(structureTag, this.indentLevel(structure.pairOpen)));
                     value = value.replace(structure.pairClose, this.printNode(structureTag.isClosedBy as AntlersNode));
                 }
             });
@@ -439,7 +443,6 @@ export class Transformer {
                     tBranch.virtualBreakOpen = this.open(ifBreakSlug);
                     tBranch.virtualBreakClose = this.close(ifBreakSlug);
 
-
                     result += tBranch.pairOpen;
                     result += "\n" + tBranch.virtualBreakOpen;
                     result += innerDoc;
@@ -512,14 +515,10 @@ export class Transformer {
                     createVirtual = true;
                 }
 
-                let inlineAntlers = 0, emptyLiterals = 0;
+                let inlineAntlers = 0;
 
                 for (let i = 0; i < node.children.length - 1; i++) {
                     const thisNode = node.children[i];
-
-                    if (thisNode instanceof LiteralNode && thisNode.sourceContent.trim().length == 0) {
-                        emptyLiterals += 1;
-                    }
 
                     if (thisNode instanceof AntlersNode && thisNode.isInlineAntlers) {
                         inlineAntlers += 1;
@@ -739,7 +738,7 @@ export class Transformer {
             const open = this.open(slug),
                 close = this.close(slug);
 
-            value = value.replace(open, this.printNode(originalTag));
+            value = value.replace(open, this.printNode(originalTag, this.indentLevel(open)));
 
             value = value.replace(close, this.printNode(originalTag.isClosedBy as AntlersNode));
         });
@@ -753,7 +752,7 @@ export class Transformer {
         this.inlineNodes.forEach((node: AntlersNode, slug: string) => {
             const inline = this.selfClosing(slug);
 
-            value = value.replace(inline, this.printNode(node));
+            value = value.replace(inline, this.printNode(node, this.indentLevel(inline)));
         });
 
         this.spanNodes.forEach((node: AntlersNode, slug: string) => {
@@ -775,7 +774,6 @@ export class Transformer {
         this.blockComments.forEach((structure) => {
             const comment = structure.node as AntlersNode;
 
-            // TODO: Transform options.
             value = value.replace(structure.pairOpen, CommentPrinter.printComment(comment, this.options.tabSize, this.indentLevel(structure.pairOpen)));
             this.removeLines.push(structure.pairClose);
             this.removeLines.push(structure.virtualElement);
@@ -887,7 +885,6 @@ export class Transformer {
         return 0;
     }
 
-
     private forceCleanLines: string[] = [
         '{{ /if',
         '{{ /unless',
@@ -970,7 +967,6 @@ export class Transformer {
     }
 
     private cleanStructuralNewLines(content: string): string {
-        // Step 1: Reflow lines that appear after a remove line.
         const lines: string[] = StringUtilities.breakByNewLine(content),
             newLines: string[] = [];
 

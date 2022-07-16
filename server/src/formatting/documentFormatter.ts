@@ -1,7 +1,6 @@
 import InterleavedNodeHandler from '../diagnostics/handlers/interleavedNodes';
 import { AntlersDocument } from '../runtime/document/antlersDocument';
 import { TransformOptions } from '../runtime/document/transformOptions';
-import { AntlersFormattingOptions } from './antlersFormattingOptions';
 import { HTMLFormatter, PHPFormatter, PreFormatter, YAMLFormatter } from './formatters';
 
 export class DocumentFormatter {
@@ -50,6 +49,10 @@ export class DocumentFormatter {
     }
 
     formatDocument(document: AntlersDocument): string {
+        if (!document.isFormattingEnabled()) {
+            return document.getOriginalContent();
+        }
+
         if (this.preFormatter != null) {
             const preformatResult = this.preFormatter(document);
 

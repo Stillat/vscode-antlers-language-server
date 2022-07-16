@@ -67,8 +67,12 @@ export class IndentLevel {
         return reflowedLines.join("\n");
     }
 
-    static shiftIndent(value: string, targetIndent: number, skipFirst = false): string {
-        const lines = StringUtilities.breakByNewLine(value.trim()),
+    static shiftIndent(value: string, targetIndent: number, skipFirst = false, tabSize = 4, adjustStructures = true): string {
+        if (targetIndent < 0) {
+            targetIndent = 0;
+        }
+
+        let lines = StringUtilities.breakByNewLine(value.trim()),
             reflowedLines: string[] = [];
 
         for (let i = 0; i < lines.length; i++) {
@@ -78,7 +82,28 @@ export class IndentLevel {
             reflowedLines.push(' '.repeat(targetIndent) + line);
         }
 
-        return reflowedLines.join("\n");
+        let result = reflowedLines.join("\n");
+
+        if (adjustStructures && reflowedLines.length > 0 && (targetIndent - tabSize > tabSize) && reflowedLines[reflowedLines.length - 1].trim() == ') }}') {
+            lines = StringUtilities.breakByNewLine(result.trim());
+            reflowedLines = [];
+
+            for (let i = 0; i < lines.length; i++) {
+                if (i == 0 && skipFirst) { reflowedLines.push(lines[i]); continue; }
+                const line = lines[i];
+
+                if (i == lines.length - 1) {
+                    reflowedLines.push(line);
+                    break;
+                }
+
+                reflowedLines.push(' '.repeat(tabSize) + line);
+            }
+
+            result = reflowedLines.join("\n");
+        }
+
+        return result;
     }
 
     static shiftClean(value: string, indent: number): string {
