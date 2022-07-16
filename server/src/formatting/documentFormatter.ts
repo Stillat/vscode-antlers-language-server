@@ -9,6 +9,7 @@ export class DocumentFormatter {
     private phpFormatter: PHPFormatter | null = null;
     private preFormatter: PreFormatter | null = null;
     private transformOptions:TransformOptions | null = null;
+    protected createExtraVirtualStructures = false;
 
     withTransformOptions(options: TransformOptions) {
         this.transformOptions = options;
@@ -74,6 +75,7 @@ export class DocumentFormatter {
         }
         
         document.transform()
+            .produceExtraStructuralPairs(this.createExtraVirtualStructures)
             .withHtmlFormatter(this.htmlFormatter)
             .withPhpFormatter(this.phpFormatter)
             .withYamlFormatter(this.yamlFormatter);

@@ -95,6 +95,12 @@ export class Transformer {
         };
     }
 
+    produceExtraStructuralPairs(doCreate: boolean) {
+        this.createExraStructuralPairs = doCreate;
+
+        return this;
+    }
+
     withHtmlFormatter(formatter: HTMLFormatter | null) {
         this.htmlFormatter = formatter;
 
