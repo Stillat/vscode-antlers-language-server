@@ -29,7 +29,7 @@ export function cleanOptions(options: prettier.ParserOptions): prettier.ParserOp
 export function setOptions(options: prettier.ParserOptions) {
     htmlOptions = cleanOptions(
         Object.assign({}, options,
-            { htmlWhitespaceSensitivity: "ignore", parser: "html", plugins: [{ parsers: { html: tw.parsers.html } }] }
+            { htmlWhitespaceSensitivity: "ignore", parser: "html", plugins: options.plugins }
         )
     );
 
