@@ -456,7 +456,7 @@ export class Transformer {
                     result += tBranch.pairOpen;
                     result += "\n" + tBranch.virtualBreakOpen;
                     result += innerDoc;
-                    result += "\n" + tBranch.virtualBreakClose;
+                    result += "\n" + tBranch.virtualBreakClose + "\n";
                     result += tBranch.pairClose + "\n";
                 } else {
                     result += tBranch.pairOpen;
