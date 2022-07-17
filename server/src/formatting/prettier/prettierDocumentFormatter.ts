@@ -6,7 +6,7 @@ import { ErrorPrinter } from '../../runtime/document/printers/errorPrinter';
 
 export class PrettierDocumentFormatter extends DocumentFormatter {
 
-    constructor(options:prettier.ParserOptions) {
+    constructor(options: prettier.ParserOptions) {
         super();
 
         this.createExtraVirtualStructures = true;
@@ -22,14 +22,14 @@ export class PrettierDocumentFormatter extends DocumentFormatter {
             })
             .withPhpFormatter(formatPhp)
             .withPreFormatter((document) => {
-            if (document.errors.hasStructureErrors()) {
-                const firstError = document.errors.getFirstStructureError(),
-                    lines = document.getLinesAround((firstError.node?.startPosition?.line ?? 1));
+                if (document.errors.hasStructureErrors()) {
+                    const firstError = document.errors.getFirstStructureError(),
+                        lines = document.getLinesAround((firstError.node?.startPosition?.line ?? 1));
 
-                throw new SyntaxError(ErrorPrinter.printError(firstError, lines));
-            }
+                    throw new SyntaxError(ErrorPrinter.printError(firstError, lines));
+                }
 
-            return null;
-        });
+                return null;
+            });
     }
 }
