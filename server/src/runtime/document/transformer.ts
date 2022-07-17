@@ -430,7 +430,7 @@ export class Transformer {
                     tBranch.virtualBreakClose = this.close(virtualBreakSlug);
                     result += tBranch.virtualBreakOpen + "\n";
                     result += innerDoc;
-                    result += "\n" + tBranch.virtualBreakClose + "\n" + tBranch.pairClose;
+                    result += "\n" + tBranch.virtualBreakClose + "\n" + tBranch.pairClose + "\n";
                 } else {
                     tBranch.virtualBreakOpen = this.selfClosing(virtualBreakSlug);
                     result += tBranch.virtualBreakOpen + "\n";
@@ -449,7 +449,7 @@ export class Transformer {
                     result += "\n" + tBranch.virtualBreakOpen;
                     result += innerDoc;
                     result += "\n" + tBranch.virtualBreakClose;
-                    result += tBranch.pairClose;
+                    result += tBranch.pairClose + "\n";
                 } else {
                     result += tBranch.pairOpen;
                     result += "\n";
