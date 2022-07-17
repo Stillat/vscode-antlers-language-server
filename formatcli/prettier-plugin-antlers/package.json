@@ -1,0 +1,20 @@
+{
+    "name": "prettier-plugin-antlers",
+    "version": "1.1.3",
+    "description": "Antlers Prettier plugin.",
+    "main": "plugin.js",
+    "scripts": {},
+    "keywords": [
+        "Antlers",
+        "Statamic",
+        "format"
+    ],  
+    "peerDependencies": {
+        "prettier": ">=2.2.0"
+    },
+    "author": "John Koster",
+    "license": "MIT",
+    "engines": {
+        "node": ">=6.9.0"
+    }
+}

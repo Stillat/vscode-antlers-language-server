@@ -153,6 +153,7 @@
             }
         ]
     },
+    "bundleDependencies": false,
     "scripts": {
         "vscode:prepublish": "npm run compile",
         "compile": "tsc -b",
@@ -160,6 +161,8 @@
         "esbuild:format_cli": "esbuild ./server/src/formatting/cli/index.ts --bundle --minify --outfile=./formatcli/package/cli.js --format=cjs --platform=node",
         "bundle:antlersls": "npm run compile && npm run esbuild:antlersls",
         "esbuild:antlersls": "esbuild ./server/src/server.ts --bundle --minify --outfile=./antlersls/server.js --format=cjs --platform=node",
+        "bundle:prettier": "npm run compile && npm run esbuild:prettier",
+        "esbuild:prettier": "esbuild ./server/src/formatting/prettier/plugin.ts --bundle --minify --outfile=./formatcli/prettier-plugin-antlers/plugin.js --format=cjs --platform=node",
         "watch": "tsc -b -w",
         "postinstall": "cd client && npm install && cd ../server && npm install && cd ..",
         "test:server": "npm run compile && mocha ./server/out/test/*.js -- -u tdd"

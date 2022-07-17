@@ -43,4 +43,4 @@ const plugin: prettier.Plugin = {
     },
 }
 
-module.exports = plugin;
+export = plugin;
