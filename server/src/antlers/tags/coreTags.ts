@@ -112,6 +112,7 @@ import GetError from './core/getErrors/getError';
 import SetTag from './core/set';
 import MountUrlTag from './core/mountUrl';
 import Vite from './core/vite';
+import NoCache from './core/nocache';
 
 const coreTags = [
     If,
@@ -217,6 +218,7 @@ const coreTags = [
     MemberRegister,
 
     NoParse,
+    NoCache,
 
     Switch,
     Rotate,
