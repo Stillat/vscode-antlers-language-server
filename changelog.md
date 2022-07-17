@@ -2,6 +2,15 @@
 
 Bugs fixed, what's new, and more! :)
 
+## v2.2.0
+
+> Note: This version removes the `Antlers: Use Prettier First` configuration option. This option has been removed in favor of an Antlers Prettier Plugin. Impacted users should consider installing and configuring this plugin: [https://www.npmjs.com/package/prettier-plugin-antlers](https://www.npmjs.com/package/prettier-plugin-antlers)
+
+- Introduces a new underlying formatting engine
+- Removes the `Antlers: Use Prettier First` configuration option
+- Adds support for the `nocache` tag
+- Emits warnings when request variables (`get` or `post`) do not have the `sanitize` modifier applied to their output
+
 ## v2.1.6
 
 - Improves parsing of parameters that begin with numbers
