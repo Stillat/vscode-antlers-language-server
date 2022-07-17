@@ -27,7 +27,6 @@ suite('Prettier Formatter Basic Nodes', () => {
         assert.strictEqual(formatStringWithPrettier(input).trim(), "{{ tag:test-hyphens }} {{ 5 - 5 }}");
     });
 
-
     test('it does not double up', () => {
         const initial = `{{# Page title #}}
         <title>
@@ -123,8 +122,6 @@ suite('Prettier Formatter Basic Nodes', () => {
         assert.strictEqual(formatStringWithPrettier(template).trim(), output);
     });
 
-    
-
     test('smart line breaking', () => {
         const template = `{{ tag:array }}{{ noparse }}{{ string }}{{ /noparse }}{{ /tag:array }}
         {{ tag:loop }} <p>{{ index }} {{ noparse }}{{ string }}{{ /noparse }} {{ string }}</p> {{ /tag:loop }}
@@ -145,5 +142,38 @@ suite('Prettier Formatter Basic Nodes', () => {
     <{{ value }} />
 {{ /items }}`;
         assert.strictEqual(formatStringWithPrettier(template).trim(), output);
+    });
+
+    test('it indents at nested levels', () => {
+        const input = `<nav
+class="bg-blue mx-auto flex max-w-5xl flex-wrap items-center justify-between py-10 lg:justify-start"
+>    <div class="text-md font-medium antialiased">
+{{ if something }}
+        something -here
+{{ else }}
+    nope
+{{ /if }}
+<a href="/" class="mr-12 block text-xl font-black lg:inline-block">
+    {{ settings:site_name }}
+</a>
+</div></nav>`;
+        const output = `<nav
+    class="bg-blue mx-auto flex max-w-5xl flex-wrap items-center justify-between py-10 lg:justify-start"
+>
+    <div class="text-md font-medium antialiased">
+        {{ if something }}
+            something -here
+        {{ else }}
+            nope
+        {{ /if }}
+        <a href="/" class="mr-12 block text-xl font-black lg:inline-block">
+            {{ settings:site_name }}
+        </a>
+    </div>
+</nav>`;
+        assert.strictEqual(
+            formatStringWithPrettier(input).trim(),
+            output
+        );
     });
 });

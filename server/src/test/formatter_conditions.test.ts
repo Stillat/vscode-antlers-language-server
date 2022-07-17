@@ -163,7 +163,6 @@ window.secondaryColor = '{{ theme:secondary_color ?? "#C62368" }}';
     <p>start</p>
     {{ if title == 'Nectar of the Gods' }}
         <p>Inner literal one.</p>
-
         {{ if true == true }}
             {{ if true == false }}
             {{ elseif false == true }}

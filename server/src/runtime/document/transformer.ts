@@ -19,6 +19,7 @@ interface TransformedLogicBranch {
     isLast: boolean,
     virtualOpen: string,
     virtualClose: string,
+    virtualSlug: string,
     virtualBreakOpen: string,
     virtualBreakClose: string
 }
@@ -344,9 +345,21 @@ export class Transformer {
                 this.removeLines.push(structure.virtualClose);
 
                 if (!structure.isLast) {
+                    const virtualInline = this.selfClosing(structure.virtualSlug);
+
+                    if (value.includes(virtualInline)) {
+                        value = value.replace(virtualInline, structure.doc.trim());
+                    }
+
                     this.removeLines.push(structure.pairClose);
                     value = value.replace(structure.pairOpen, this.printNode(structureTag, this.indentLevel(structure.pairOpen)));
                 } else {
+                    const virtualInline = this.selfClosing(structure.virtualSlug);
+
+                    if (value.includes(virtualInline)) {
+                        value = value.replace(virtualInline, structure.doc.trim());
+                    }
+
                     value = value.replace(structure.pairOpen, this.printNode(structureTag, this.indentLevel(structure.pairOpen)));
                     value = value.replace(structure.pairClose, this.printNode(structureTag.isClosedBy as AntlersNode));
                 }
@@ -423,6 +436,7 @@ export class Transformer {
                 pairClose: this.close(openSlug),
                 virtualOpen: this.open(virtualSlug),
                 virtualClose: this.close(virtualSlug),
+                virtualSlug: virtualSlug,
                 isFirst: index == 0,
                 isLast: index == node.logicBranches.length - 1,
                 virtualBreakClose: '',
@@ -436,9 +450,9 @@ export class Transformer {
                 if (this.createExraStructuralPairs && branch.head.containsChildStructures == false && branch.head.containsAnyFragments == false) {
                     tBranch.virtualBreakOpen = this.open(virtualBreakSlug);
                     tBranch.virtualBreakClose = this.close(virtualBreakSlug);
-                    result += tBranch.virtualBreakOpen + "\n";
-                    result += innerDoc;
-                    result += "\n" + tBranch.virtualBreakClose + "\n" + tBranch.pairClose + "\n";
+                    tBranch.virtualSlug = virtualBreakSlug;
+                    result += "\n" + this.selfClosing(virtualBreakSlug);
+                    result += tBranch.pairClose + "\n";
                 } else {
                     tBranch.virtualBreakOpen = this.selfClosing(virtualBreakSlug);
                     result += tBranch.virtualBreakOpen + "\n";
@@ -452,11 +466,10 @@ export class Transformer {
 
                     tBranch.virtualBreakOpen = this.open(ifBreakSlug);
                     tBranch.virtualBreakClose = this.close(ifBreakSlug);
+                    tBranch.virtualSlug = ifBreakSlug;
 
-                    result += tBranch.pairOpen;
-                    result += "\n" + tBranch.virtualBreakOpen;
-                    result += innerDoc;
-                    result += "\n" + tBranch.virtualBreakClose + "\n";
+                    result += "\n" + tBranch.pairOpen;
+                    result += "\n" + this.selfClosing(ifBreakSlug);
                     result += tBranch.pairClose + "\n";
                 } else {
                     result += tBranch.pairOpen;
@@ -914,6 +927,7 @@ export class Transformer {
     }
 
     private forceCleanLines: string[] = [
+        '{{ if ',
         '{{ /if',
         '{{ /unless',
         '{{ /noparse',
