@@ -35,7 +35,7 @@ If you continuously receive errors like "could not resolve module prettier-plugi
 
 ## Tailwind CSS Prettier Plugin Compatibility
 
-This plugin does not ship with the Tailwind CSS Prettier plugin. If you'd to have that as well, you will need to install it separately :)
+This plugin does not ship with the Tailwind CSS Prettier plugin. If you'd like to have that as well, you will need to install it separately :)
 
 ## Reporting Issues
 
