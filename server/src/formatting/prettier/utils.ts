@@ -3,7 +3,6 @@ import * as plugin from './plugin';
 
 // @ts-ignore
 import php from "@prettier/plugin-php/standalone";
-const tw = require("prettier-plugin-tailwindcss");
 
 let phpOptions: prettier.ParserOptions,
     htmlOptions: prettier.ParserOptions;

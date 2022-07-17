@@ -11,7 +11,7 @@ const plugin: prettier.Plugin = {
             name: "Antlers",
             parsers: ["antlers"],
             extensions: [".antlers.html", ".antlers.php"],
-            vscodeLanguageIds: ["antlers"],
+            vscodeLanguageIds: ["html", "antlers"],
         },
     ],
     parsers: {

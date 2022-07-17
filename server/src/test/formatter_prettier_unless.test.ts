@@ -4,7 +4,7 @@ import { formatStringWithPrettier } from '../formatting/prettier/utils';
 suite('Formatter Prettier Unless', () => {    
     test('it does not remove unless else', () => {
         const output = `<body
-    class="selection:bg-primary {{ unless segment_1 }}home-{{else}}page-{{ /unless }}content flex min-h-screen flex-col bg-white selection:text-white"
+    class="flex flex-col min-h-screen bg-white selection:bg-primary selection:text-white {{ unless segment_1 }}home-{{else}}page-{{ /unless }}content"
 ></body>`;
         assert.strictEqual(
             formatStringWithPrettier(`<body class="flex flex-col min-h-screen bg-white selection:bg-primary selection:text-white {{ unless segment_1 }}home-{{else}}page-{{ /unless }}content">`).trim(),

@@ -36,7 +36,7 @@ hello3: 'wilderness3'
 
 <!-- /layout/_header.antlers.html -->
 <header class="w-full py-4">
-    <div class="fluid-container flex items-center justify-between">
+    <div class="fluid-container flex justify-between items-center">
         {{# Make partials you want to use for the header or use and edit premade examples like the following ones. #}}
         {{ partial:components/logo width="120" }}
         {{ partial:navigation/main }}
