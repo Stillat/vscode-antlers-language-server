@@ -157,4 +157,5 @@ export class AntlersErrorCodes {
     static readonly LINT_INTERLEAVED_TAG_PAIRS = 'ANTLR_516';
     static readonly LINT_MISSING_REQUIRED_PARAMETER = 'ANTLR_517';
     static readonly LINT_POSSIBLE_PARTIAL_RECURSION = 'ANTLR_518';
+    static readonly LINT_URL_VARIABLE_WITHOUT_SANITIZE = 'ANTLR_519';
 }

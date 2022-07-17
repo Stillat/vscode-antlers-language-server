@@ -15,6 +15,7 @@ export class LanguageParser {
     private pathParser: PathParser = new PathParser();
     protected tokens: AbstractNode[] = [];
 
+    private createdVariables: VariableNode[] = [];
     private createdModifierChains: ModifierChainNode[] = [];
     private createdLanguageOperators: LanguageOperatorConstruct[] = [];
     private createdArrays: ArrayNode[] = [];
@@ -60,6 +61,10 @@ export class LanguageParser {
 
     public getCreatedArrays(): ArrayNode[] {
         return this.createdArrays;
+    }
+
+    public getCreatedVariables(): VariableNode[] {
+        return this.createdVariables;
     }
 
     public getRuntimeAssignments(): StaticTracedAssignment[] {
@@ -347,6 +352,7 @@ export class LanguageParser {
         variableNode.refId = node.refId;
         variableNode.modifierChain = node.modifierChain;
         variableNode.index = node.index;
+        this.createdVariables.push(variableNode);
 
         return variableNode;
     }
@@ -418,6 +424,7 @@ export class LanguageParser {
                     NodeHelpers.mergeVarRight(left, right);
 
                     newNodes.push(right);
+                    this.createdVariables.push(right);
 
                     this.mergedVariablePaths.push(right);
                     this.mergedComponents.set(node, right);
@@ -444,7 +451,7 @@ export class LanguageParser {
 
                     NodeHelpers.mergeVarContentLeft(node.sourceTerminator + node.value + node.sourceTerminator, node, left);
                     NodeHelpers.mergeVarContentLeft(right.name, right, left);
-
+                    this.createdVariables.push(left);
                     newNodes.push(left);
                     this.mergedVariablePaths.push(left);
                     this.mergedComponents.set(node, left);
@@ -511,6 +518,7 @@ export class LanguageParser {
         varNodeWrap.content = operator.content;
         varNodeWrap.name = operator.content;
         varNodeWrap.originalAbstractNode = operator;
+        this.createdVariables.push(varNodeWrap);
 
         return varNodeWrap;
     }
@@ -2218,6 +2226,8 @@ export class LanguageParser {
                 varNode.endPosition = node.endPosition;
                 varNode.modifierChain = node.modifierChain;
                 varNode.originalAbstractNode = node;
+                this.createdVariables.push(varNode);
+
                 newNodes.push(varNode);
             } else {
                 newNodes.push(node);

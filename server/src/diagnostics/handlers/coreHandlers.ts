@@ -9,9 +9,11 @@ import RelateTagHandler from './relateHandler';
 import ShorthandModifierHandler from './shorthandModifierHandler';
 import StatamicVersionHandler from './statamicVersionHandler';
 import TagsThatErrorHandler from './tagsThatErrorHandler';
+import UrlInputHandler from './urlInputHandler';
 
 const CoreHandlers: IDiagnosticsHandler[] = [
     DataDumpHandler,
+    UrlInputHandler,
     MixedModifierHandler,
     ModifierRuntimeTypeHandler,
     DoubleColonHandler,
