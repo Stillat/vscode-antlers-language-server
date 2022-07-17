@@ -2,7 +2,6 @@ import assert = require('assert');
 import { formatAntlers } from './testUtils/formatAntlers';
 
 suite('Formatting Invalid Docs', () => {
-    
     test('it does not attempt to format documents with unclosed regions', () => {
         const input = `<head>
         {{ if something }}

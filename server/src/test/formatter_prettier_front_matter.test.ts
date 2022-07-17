@@ -2,7 +2,6 @@ import assert = require('assert');
 import { formatStringWithPrettier } from '../formatting/prettier/utils';
 
 suite('Formatter Prettier Front Matter', () => {
-
     test('it can format front matter', () => {
         const template = `---
 hello: 			wilderness
@@ -45,5 +44,4 @@ hello3: 'wilderness3'
 <!-- End: /layout/_header.antlers.html -->`;
         assert.strictEqual(formatStringWithPrettier(template).trim(), expected);
     });
-
 });

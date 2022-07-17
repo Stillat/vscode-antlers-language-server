@@ -131,7 +131,6 @@ window.secondaryColor = '{{ theme:secondary_color ?? "#C62368" }}';
         assert.strictEqual(formatAntlers(input), expected);
     });
 
-    
     test('it indents nested conditionals', () => {
         const input = `<p>Outer Start</p>
 {{ articles }}
@@ -181,5 +180,4 @@ window.secondaryColor = '{{ theme:secondary_color ?? "#C62368" }}';
 <p>Outer end</p>`;
         assert.strictEqual(formatAntlers(input), expected);
     });
-
 });

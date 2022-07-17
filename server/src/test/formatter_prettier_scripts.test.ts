@@ -35,7 +35,6 @@ suite('Formatter Prettier JavaScript and Antlers', () => {
 {{ /if }}`;
         assert.strictEqual(formatStringWithPrettier(input).trim(), expected);
     });
-
     
     test('it preserves antlers inside scripts', () => {
         const input = `<script>const element = {{ value }};</script>`;

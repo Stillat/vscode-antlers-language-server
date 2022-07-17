@@ -2,7 +2,6 @@ import assert = require('assert');
 import { formatStringWithPrettier } from '../formatting/prettier/utils';
 
 suite('Prettier Formatter Basic Nodes', () => {
-
     test('it doesnt remove variable parts with neighboring numeric nodes', () => {
         assert.strictEqual(formatStringWithPrettier('{{ assets:0 }}').trim(), '{{ assets:0 }}');
         assert.strictEqual(formatStringWithPrettier('{{ assets:0:0 }}').trim(), '{{ assets:0:0 }}');

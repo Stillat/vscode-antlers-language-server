@@ -2,7 +2,6 @@ import { HtmlFragments } from '../runtime/parser/htmlFragments';
 import { assertFalse, assertTrue } from './testUtils/assertions';
 
 suite("HTML Fragments Suite", () => {
-
     test('it detects HTML end fragments', () => {
         assertTrue(HtmlFragments.endsWithFragment('</div><h1 '));
         assertFalse(HtmlFragments.endsWithFragment('><div>'));

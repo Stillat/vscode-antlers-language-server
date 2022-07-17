@@ -2,7 +2,6 @@ import assert = require('assert');
 import { formatAntlers } from './testUtils/formatAntlers';
 
 suite('Formatter Front Matter', () => {
-
     test('it can format front matter', () => {
         const template = `---
 hello: 			wilderness
@@ -45,5 +44,4 @@ hello3: 'wilderness3'
 <!-- End: /layout/_header.antlers.html -->`;
         assert.strictEqual(formatAntlers(template), expected);
     });
-
 });

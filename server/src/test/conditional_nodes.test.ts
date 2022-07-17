@@ -3,7 +3,6 @@ import { AntlersNode, LiteralNode, ConditionNode, ExecutionBranch, SemanticGroup
 import {
     assertConditionalChainContainsSteps,
     assertCount,
-    assertGreaterThan,
     assertInstanceOf,
     assertLiteralNodeContains,
     assertNotNull,

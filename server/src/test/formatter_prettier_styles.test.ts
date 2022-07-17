@@ -2,7 +2,6 @@ import assert = require('assert');
 import { formatStringWithPrettier } from '../formatting/prettier/utils';
 
 suite('Formatter PRettier CSS and Antlers', () => {
-    
     test('it does not do weird things with many chained strings and numeric values', () => {
         const template = `<html>
         <head>

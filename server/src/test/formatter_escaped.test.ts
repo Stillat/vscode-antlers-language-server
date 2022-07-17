@@ -105,7 +105,6 @@ bar
 </html>`;
         assert.strictEqual(formatAntlers(template), output);
     });
-
     
     test('it emits escaped content chars', () => {
         const template = `start
@@ -118,7 +117,6 @@ bar
 end`;
         assert.strictEqual(formatAntlers(template), output);
     });
-
     
     test('template test 22', () => {
         const template = `{{ tag:array }}{{ noparse }}{{ string }}{{ /noparse }}{{ /tag:array }}

@@ -26,7 +26,6 @@ suite('Formatting Peak Samples', () => {
         assert.strictEqual(formatAntlers(input), expected);
     });
 
-    
     test('peak_sample2', () => {
         const expected = `{{#
     @name Main navigation
@@ -375,6 +374,7 @@ suite('Formatting Peak Samples', () => {
 
         assert.strictEqual(formatAntlers(input), expected);
     });
+
     test('peak_sample6', () => {
         const expected = `{{#
     @name Caption

@@ -36,7 +36,6 @@ suite('Formatter: JavaScript and Antlers', () => {
         assert.strictEqual(formatAntlers(input), expected);
     });
 
-    
     test('it preserves antlers inside scripts', () => {
         const input = `<script>const element = {{ value }};</script>`;
         const expected = `<script>

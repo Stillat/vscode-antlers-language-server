@@ -2,7 +2,6 @@ import assert = require('assert');
 import { formatAntlers } from './testUtils/formatAntlers';
 
 suite('Formatter: CSS and Antlers', () => {
-    
     test('it does not do weird things with many chained strings and numeric values', () => {
         const template = `<html>
         <head>

@@ -103,7 +103,6 @@ bar
 </html>`;
         assert.strictEqual(formatStringWithPrettier(template).trim(), output);
     });
-
     
     test('it emits escaped content chars', () => {
         const template = `start
@@ -116,7 +115,6 @@ bar
 end`;
         assert.strictEqual(formatStringWithPrettier(template).trim(), output);
     });
-
     
     test('template test 22', () => {
         const template = `{{ tag:array }}{{ noparse }}{{ string }}{{ /noparse }}{{ /tag:array }}

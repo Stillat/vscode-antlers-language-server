@@ -19,7 +19,6 @@ suite('Formatter Operators', () => {
 
         assert.strictEqual(formatAntlers(template), output);
     });
-
     
     test('template test 19', () => {
         const template = `{{ string
@@ -71,6 +70,7 @@ suite('Formatter Operators', () => {
  tail = (3 + 2) }}`;
         assert.strictEqual(formatAntlers(template), expected);
     });
+
     test('it does not remove whitespace inside string interpolations', () => {
         const template = `{{ test variable='{ true ? 'Hello wilderness - {{default_key}}' : 'fail' }' }}`;
         const output = `{{ test variable='{ true ? 'Hello wilderness - {{default_key}}' : 'fail'}' }}`;
@@ -200,7 +200,6 @@ suite('Formatter Operators', () => {
         assert.strictEqual(formatAntlers('{{ left merge       right }}'), '{{ left merge right }}');
         assert.strictEqual(formatAntlers('{{ left where       right }}'), '{{ left where right }}');
     });
-
 
     test('it emits switch groups', () => {
         const input = `{{ test variable="{switch(
