@@ -1,6 +1,6 @@
 import { DocumentFormatter } from '../documentFormatter';
 import * as prettier from 'prettier';
-import { formatAsHtml, setOptions } from './utils';
+import { formatAsHtml, formatPhp, setOptions } from './utils';
 import { FrontMatterFormatter } from '../frontMatterFormatter';
 import { ErrorPrinter } from '../../runtime/document/printers/errorPrinter';
 
@@ -20,6 +20,7 @@ export class PrettierDocumentFormatter extends DocumentFormatter {
                 newlinesAfterFrontMatter: 1,
                 tabSize: options.tabWidth
             })
+            .withPhpFormatter(formatPhp)
             .withPreFormatter((document) => {
             if (document.errors.hasStructureErrors()) {
                 const firstError = document.errors.getFirstStructureError(),

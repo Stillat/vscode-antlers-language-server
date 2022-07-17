@@ -282,6 +282,14 @@ export class Transformer {
     private printNode(node: AntlersNode, targetIndent: number | null = null) {
         const printNode = node.getTrueNode();
 
+        if ((printNode.rawStart == '{{?' || printNode.rawStart == '{{$') && this.phpFormatter != null) {
+            try {
+                const formattedPhp = this.phpFormatter(printNode.content);
+
+                return `${printNode.rawStart} ${formattedPhp} ${printNode.rawEnd}`;
+            } catch (err) { }
+        }
+
         let doc = this.doc;
 
         if (node.childDocument != null) {

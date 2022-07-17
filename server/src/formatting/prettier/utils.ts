@@ -46,19 +46,13 @@ export function getHtmlOptions(): prettier.ParserOptions {
 }
 
 export function formatPhp(text: string) {
-    let result = prettier.format(text, phpOptions).trim();
+    let result = prettier.format('<?php ' + text, phpOptions).trim();
 
     result = result.substring(5);
 
     if (text.endsWith(';') == false && result.endsWith(';')) {
         result = result.substring(0, result.length - 1);
     }
-
-    return result.trim();
-}
-
-export function formatTagPhp(text: string) {
-    let result = prettier.format(text, phpOptions).trim();
 
     return result.trim();
 }
