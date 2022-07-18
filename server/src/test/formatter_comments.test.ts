@@ -19,4 +19,16 @@ suite('Formatter Comments', () => {
         }
     });
 
+    test('trailing nodes are note deleted after comments', () => {
+        assert.strictEqual(
+            formatAntlers(`<div>
+{{# {{ partial src="something" }} #}}
+<h1>Help! I get deleted!</h1>
+</div>`),
+            `<div>
+    {{# {{ partial src="something" }} #}}}}
+    <h1>Help! I get deleted!</h1>
+</div>`
+        );
+    });
 });

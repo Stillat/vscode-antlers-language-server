@@ -2,6 +2,10 @@
 
 Bugs fixed, what's new, and more! :)
 
+## v2.2.1
+
+- Corrects an issue where some content may be deleted after a comment and there is no other Antlers in the document
+
 ## v2.2.0
 
 > Note: This version removes the `Antlers: Use Prettier First` configuration option. This option has been removed in favor of an Antlers Prettier Plugin. Impacted users should consider installing and configuring this plugin: [https://www.npmjs.com/package/prettier-plugin-antlers](https://www.npmjs.com/package/prettier-plugin-antlers)

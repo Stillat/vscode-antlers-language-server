@@ -636,7 +636,7 @@ export class DocumentParser {
                                 literalNode.endPosition = this.positionFromOffset(nextAntlersStart, nextAntlersStart - 1);
                                 const startOffset = (literalNode.startPosition.index ?? 0),
                                     endOffset = (literalNode.endPosition.index) + 1;
-                                literalNode.sourceContent = this.content.substr(startOffset, endOffset - startOffset);
+                                literalNode.sourceContent = this.content.substr(startOffset, this.inputLen - startOffset);
                                 this.nodes.push(literalNode);
                             }
 

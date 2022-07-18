@@ -853,7 +853,11 @@ export class Transformer {
 
         renderNodes.forEach((node) => {
             if (node instanceof LiteralNode) {
-                result += node.sourceContent;
+                if (node.sourceContent == '') {
+                    result += node.content;
+                } else {
+                    result += node.sourceContent;
+                }
             } else if (node instanceof ConditionNode) {
                 result += this.prepareCondition(node);
             } else if (node instanceof EscapedContentNode) {
