@@ -26,9 +26,17 @@ suite('Formatter Comments', () => {
 <h1>Help! I get deleted!</h1>
 </div>`),
             `<div>
-    {{# {{ partial src="something" }} #}}}}
+    {{# {{ partial src="something" }} #}}
     <h1>Help! I get deleted!</h1>
 </div>`
         );
+
+        const result = formatAntlers(`<div>
+        {{# {{ partial src="something" }} #}}
+        <h1>Help! I get deleted!</h1>
+        </div>`);
+        for (let i = 0; i < 10; i++) {
+            assert.strictEqual(formatAntlers(result), result);
+        }
     });
 });

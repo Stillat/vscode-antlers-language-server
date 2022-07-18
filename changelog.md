@@ -2,6 +2,10 @@
 
 Bugs fixed, what's new, and more! :)
 
+## v2.2.2
+
+- Corrects an issue where `}}` could be duplicated following a comment and there are no other Antlers nodes in the document
+
 ## v2.2.1
 
 - Corrects an issue where some content may be deleted after a comment and there is no other Antlers in the document
