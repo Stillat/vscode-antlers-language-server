@@ -220,7 +220,6 @@ after`;
         const template = `{{ tag:array }}{{ noparse }}{{ string }}{{ /noparse }}{{ /tag:array }}
         {{ tag:loop }} <p>{{ index }} {{ noparse }}{{ string }}{{ /noparse }} {{ string }}</p> {{ /tag:loop }}
         
-        
         {{ items | count }}{{ items limit="2" }}<{{ value }}>{{ /items }}`;
         const output = `{{ tag:array }}
     {{ noparse }}{{ string }}{{ /noparse }}
@@ -230,6 +229,7 @@ after`;
         {{ index }} {{ noparse }}{{ string }}{{ /noparse }} {{ string }}
     </p>
 {{ /tag:loop }}
+
 {{ items | count }}
 {{ items limit="2" }}
     <{{ value }}>
@@ -587,6 +587,7 @@ After Yield
             {{ slot:test }}
                 NameStart{{ value }}NameEnd
             {{ /slot:test }}
+
             Normal Slot Content ({{ value }})
         {{ /partial:nested }}
         After Partial
@@ -621,6 +622,7 @@ After Yield
             {{ slot:test }}
                 NameStart{{ value }}NameEnd
             {{ /slot:test }}
+
             Normal Slot Content ({{ value }})
         {{ /partial:nested }}
         After Partial

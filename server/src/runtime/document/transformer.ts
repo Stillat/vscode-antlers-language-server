@@ -1059,6 +1059,56 @@ export class Transformer {
         return result;
     }
 
+    private cleanLines(content:string): string {
+        const lines:string[] = StringUtilities.breakByNewLine(content),
+            newLines:string[] = [];
+
+        let pruneLines = false,
+            prunedCount = 0,
+            isProbablyOpen = false;
+        for (let i = 0; i < lines.length; i++) {
+            const checkLine = lines[i].trim(),
+                line = lines[i];
+
+            if (checkLine.startsWith('{{') && checkLine.endsWith('}}')) {
+                if (pruneLines) {
+                    prunedCount =0;
+                }
+                if (checkLine.startsWith('{{ /') == false) {
+                    isProbablyOpen = true;
+                } else {
+                    isProbablyOpen = false;
+                }
+                pruneLines = true;
+                newLines.push(line);
+                continue;
+            }
+
+            if (!pruneLines) {
+                newLines.push(line);
+            } else {
+                if (checkLine.length == 0) {
+                    if (isProbablyOpen == false) {
+                        prunedCount = 0;
+                        pruneLines = false;
+                        continue;
+                    }
+                    prunedCount += 1;
+                    continue;
+                } else {
+                    if (isProbablyOpen && prunedCount > 1) {
+                        newLines.push('');
+                    }
+                    prunedCount = 0;
+                    newLines.push(line);
+                    pruneLines = false;
+                }
+            }
+        }
+
+        return newLines.join("\n");
+    }
+
     fromStructure(structure: string): string {
         const reflowedContent = this.reflowSlugs(structure);
 
@@ -1072,9 +1122,10 @@ export class Transformer {
         results = this.transformPairedAntlers(results);
         results = this.transformExtractedDocuments(results);
         results = this.cleanVirtualStructures(results);
-        results = this.removeVirtualStructures(results);
+        results = this.cleanLines(results);
+        //results = this.removeVirtualStructures(results);
 
-        results = this.cleanStructuralNewLines(results);
+       // results = this.cleanStructuralNewLines(results);
 
         if (this.doc.hasFrontMatter()) {
             let frontMatter = this.doc.getFrontMatter();

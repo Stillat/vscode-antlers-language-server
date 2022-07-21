@@ -4,7 +4,7 @@
     "description": "Provides Antlers syntax highlighting, formatting, error reporting, project-specific suggestions, and more.",
     "author": "John Koster",
     "license": "MIT",
-    "version": "2.2.2",
+    "version": "2.2.4",
     "repository": {
         "type": "git",
         "url": "https://github.com/Stillat/vscode-antlers-language-server"
@@ -165,6 +165,7 @@
         "esbuild:prettier": "esbuild ./server/src/formatting/prettier/plugin.ts --bundle --minify --outfile=./formatcli/prettier-plugin-antlers/plugin.js --format=cjs --platform=node --external:prettier",
         "watch": "tsc -b -w",
         "postinstall": "cd client && npm install && cd ../server && npm install && cd ..",
+        "bundle:everything": "npm run bundle:format_cli && npm run bundle:antlersls && npm run bundle:prettier",
         "test:server": "npm run compile && mocha ./server/out/test/*.js -- -u tdd"
     },
     "devDependencies": {

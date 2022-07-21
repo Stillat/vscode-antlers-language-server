@@ -1,7 +1,7 @@
 {
     "name": "stillat-antlers-lsp",
     "description": "Language server for Antlers.",
-    "version": "1.1.69",
+    "version": "1.1.70",
     "author": "John Koster",
     "license": "MIT",
     "engines": {

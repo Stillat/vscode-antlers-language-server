@@ -155,6 +155,7 @@ suite('Formatting Peak Samples', () => {
                 {{ partial:snippets/form_fields }}
             </div>
         {{ /form:create }}
+
         {{# The form script handling validation and submission via AJAX with \`fetch()\`. #}}
         <script>
             document.addEventListener('alpine:initializing', () => {

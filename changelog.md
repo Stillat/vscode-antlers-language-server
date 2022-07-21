@@ -2,6 +2,15 @@
 
 Bugs fixed, what's new, and more! :)
 
+## v2.2.4
+
+- Corrects an issue when Front Matter documents
+- Makes the removal of new lines after formatting less aggressive
+
+## v2.2.3
+
+- Disables the request input diagnostics handler temporarily
+
 ## v2.2.2
 
 - Corrects an issue where `}}` could be duplicated following a comment and there are no other Antlers nodes in the document

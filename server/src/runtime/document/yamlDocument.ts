@@ -89,6 +89,10 @@ export class YamlDocument {
     }
 
     private processMap(map: YAMLMap | YAMLSeq) {
+        if (typeof map.items === 'undefined') {
+            return;
+        }
+
         map.items.forEach((item) => {
             this.processItem(item);
         });

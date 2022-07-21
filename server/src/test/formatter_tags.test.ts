@@ -90,6 +90,7 @@ After Partial
             {{ slot:test }}
                 NameStart{{ value }}NameEnd
             {{ /slot:test }}
+
             Normal Slot Content ({{ value }})
         {{ /partial:nested }}
         After Partial
