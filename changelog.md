@@ -2,6 +2,13 @@
 
 Bugs fixed, what's new, and more! :)
 
+## v2.3.0
+
+- Warning `ANTLER_521` will now be emitted for deprecated modifiers
+- Deprecated modifiers will no longer appear in suggestions
+- Warning `ANTLER_520` will now be emitted when dynamic CSS class names are detected 
+
+
 ## v2.2.4
 
 - Corrects an issue when Front Matter documents

@@ -8,7 +8,8 @@ const stringModifiers: IModifier[] = [
         description: 'Replaces all non-ASCII characters with their closest ASCII counterparts.',
         docLink: 'https://statamic.dev/modifiers/ascii',
         parameters: [],
-        canBeParameter: false
+        canBeParameter: false,
+        isDeprecated: false
     },
     {
         name: 'at',
@@ -22,7 +23,8 @@ const stringModifiers: IModifier[] = [
                 description: 'The zero-based position to retrieve a character from.'
             }
         ],
-        canBeParameter: true
+        canBeParameter: true,
+        isDeprecated: false
     },
 
     {
@@ -37,7 +39,8 @@ const stringModifiers: IModifier[] = [
                 description: 'The number of characters to remove from the end of the string.'
             }
         ],
-        canBeParameter: true
+        canBeParameter: true,
+        isDeprecated: false
     },
 
     {
@@ -47,7 +50,8 @@ const stringModifiers: IModifier[] = [
         description: 'Converts the string into camelCase.',
         docLink: 'https://statamic.dev/modifiers/camelize',
         parameters: [],
-        canBeParameter: false
+        canBeParameter: false,
+        isDeprecated: false
     },
     {
         name: 'cdata',
@@ -56,7 +60,8 @@ const stringModifiers: IModifier[] = [
         description: 'Wraps the string in CDATA XML tags.',
         docLink: 'https://statamic.dev/modifiers/cdata',
         parameters: [],
-        canBeParameter: false
+        canBeParameter: false,
+        isDeprecated: false
     },
     {
         name: 'collapse_whitespace',
@@ -65,7 +70,8 @@ const stringModifiers: IModifier[] = [
         description: 'Trims a string and replaces consecutive whitespace characters with a single space.',
         docLink: 'https://statamic.dev/modifiers/collapse_whitespace',
         parameters: [],
-        canBeParameter: false
+        canBeParameter: false,
+        isDeprecated: false
     },
     {
         name: 'count_substring',
@@ -79,7 +85,8 @@ const stringModifiers: IModifier[] = [
                 description: 'The sub-string to search for'
             }
         ],
-        canBeParameter: true
+        canBeParameter: true,
+        isDeprecated: false
     },
     {
         name: 'dashify',
@@ -88,7 +95,8 @@ const stringModifiers: IModifier[] = [
         description: 'Returns a lower-cased and trimmed string, separated by dashes.',
         docLink: 'https://statamic.dev/modifiers/dashify',
         parameters: [],
-        canBeParameter: false
+        canBeParameter: false,
+        isDeprecated: false
     },
     {
         name: 'deslugify',
@@ -97,7 +105,8 @@ const stringModifiers: IModifier[] = [
         description: 'Replaces all hyphens and underscores with spaces.',
         docLink: 'https://statamic.dev/modifiers/deslugify',
         parameters: [],
-        canBeParameter: false
+        canBeParameter: false,
+        isDeprecated: false
     },
     {
         name: 'embed_url',
@@ -106,7 +115,8 @@ const stringModifiers: IModifier[] = [
         description: 'Converts a YouTube or Viemo link into their embed URLs.',
         docLink: 'https://statamic.dev/modifiers/embed_url',
         parameters: [],
-        canBeParameter: false
+        canBeParameter: false,
+        isDeprecated: false
     },
     {
         name: 'trackable_embed_url',
@@ -115,7 +125,8 @@ const stringModifiers: IModifier[] = [
         description: 'Get the embed URL when given a youtube or vimeo link that\'s direct to the page.',
         docLink: null,
         parameters: [],
-        canBeParameter: false
+        canBeParameter: false,
+        isDeprecated: false
     },
     {
         name: 'ensure_left',
@@ -129,7 +140,8 @@ const stringModifiers: IModifier[] = [
                 description: 'The value that should be at the start of the string.'
             }
         ],
-        canBeParameter: true
+        canBeParameter: true,
+        isDeprecated: false
     },
     {
         name: 'ensure_right',
@@ -143,7 +155,8 @@ const stringModifiers: IModifier[] = [
                 description: 'The value that should be at the end of the string.'
             }
         ],
-        canBeParameter: true
+        canBeParameter: true,
+        isDeprecated: false
     },
     {
         name: 'entities',
@@ -152,7 +165,8 @@ const stringModifiers: IModifier[] = [
         description: 'Encode a string with HTML entities.',
         docLink: 'https://statamic.dev/modifiers/entities',
         parameters: [],
-        canBeParameter: false
+        canBeParameter: false,
+        isDeprecated: false
     },
     {
         name: 'excerpt',
@@ -166,7 +180,8 @@ const stringModifiers: IModifier[] = [
                 description: 'The string to break by.'
             }
         ],
-        canBeParameter: false
+        canBeParameter: false,
+        isDeprecated: false
     },
     {
         name: 'explode',
@@ -180,7 +195,8 @@ const stringModifiers: IModifier[] = [
                 description: 'The string to split the larger string by.'
             }
         ],
-        canBeParameter: true
+        canBeParameter: true,
+        isDeprecated: false
     },
     {
         name: 'gravatar',
@@ -194,7 +210,8 @@ const stringModifiers: IModifier[] = [
                 description: 'The desired image size.'
             }
         ],
-        canBeParameter: true
+        canBeParameter: true,
+        isDeprecated: false
     },
     {
         name: 'insert',
@@ -212,7 +229,8 @@ const stringModifiers: IModifier[] = [
                 description: 'The zero based position to insert the text at.'
             }
         ],
-        canBeParameter: true
+        canBeParameter: true,
+        isDeprecated: false
     },
     {
         name: 'is_email',
@@ -221,7 +239,8 @@ const stringModifiers: IModifier[] = [
         description: 'Returns true if the string is a valid email address.',
         docLink: 'https://statamic.dev/modifiers/is_email',
         parameters: [],
-        canBeParameter: false
+        canBeParameter: false,
+        isDeprecated: false
     },
     {
         name: 'is_embeddable',
@@ -230,7 +249,8 @@ const stringModifiers: IModifier[] = [
         description: 'Checks to see if a video URL is embeddable.',
         docLink: 'https://statamic.dev/modifiers/is_embeddable',
         parameters: [],
-        canBeParameter: false
+        canBeParameter: false,
+        isDeprecated: false
     },
     {
         name: 'is_lowercase',
@@ -239,7 +259,8 @@ const stringModifiers: IModifier[] = [
         description: 'Returns true if the string contains only lowercase characters.',
         docLink: 'https://statamic.dev/modifiers/is_lowercase',
         parameters: [],
-        canBeParameter: false
+        canBeParameter: false,
+        isDeprecated: false
     },
     {
         name: 'is_url',
@@ -248,7 +269,8 @@ const stringModifiers: IModifier[] = [
         description: 'Returns true if a string is a valid URL.',
         docLink: 'https://statamic.dev/modifiers/is_url',
         parameters: [],
-        canBeParameter: false
+        canBeParameter: false,
+        isDeprecated: false
     },
     {
         name: 'lcfirst',
@@ -257,7 +279,8 @@ const stringModifiers: IModifier[] = [
         description: 'Converts the first character of the value to lower case.',
         docLink: 'https://statamic.dev/modifiers/lcfirst',
         parameters: [],
-        canBeParameter: false
+        canBeParameter: false,
+        isDeprecated: false
     },
     {
         name: 'length',
@@ -266,7 +289,8 @@ const stringModifiers: IModifier[] = [
         description: 'Returns the number of items in an array or number of characters in a string.',
         docLink: 'https://statamic.dev/modifiers/length',
         parameters: [],
-        canBeParameter: false
+        canBeParameter: false,
+        isDeprecated: false
     },
     {
         name: 'lower',
@@ -275,7 +299,8 @@ const stringModifiers: IModifier[] = [
         description: 'Converts all characters to lowercase.',
         docLink: 'https://statamic.dev/modifiers/lower',
         parameters: [],
-        canBeParameter: false
+        canBeParameter: false,
+        isDeprecated: false
     },
     {
         name: 'md5',
@@ -284,7 +309,8 @@ const stringModifiers: IModifier[] = [
         description: 'Creates an MD5 hash of the variable.',
         docLink: 'https://statamic.dev/modifiers/md5',
         parameters: [],
-        canBeParameter: false
+        canBeParameter: false,
+        isDeprecated: false
     },
     {
         name: 'rawurlencode',
@@ -293,7 +319,8 @@ const stringModifiers: IModifier[] = [
         description: 'URL-encode a variable according to RFC-3986.',
         docLink: 'https://statamic.dev/modifiers/rawurlencode',
         parameters: [],
-        canBeParameter: false
+        canBeParameter: false,
+        isDeprecated: false
     },
     {
         name: 'read_time',
@@ -307,7 +334,8 @@ const stringModifiers: IModifier[] = [
                 description: 'The words per minute to use as an estimate.'
             }
         ],
-        canBeParameter: true
+        canBeParameter: true,
+        isDeprecated: false
     },
     {
         name: 'regex_replace',
@@ -325,7 +353,8 @@ const stringModifiers: IModifier[] = [
                 description: 'The replacement value.'
             }
         ],
-        canBeParameter: true
+        canBeParameter: true,
+        isDeprecated: false
     },
     {
         name: 'remove_left',
@@ -339,7 +368,8 @@ const stringModifiers: IModifier[] = [
                 description: 'The value to remove.'
             }
         ],
-        canBeParameter: true
+        canBeParameter: true,
+        isDeprecated: false
     },
     {
         name: 'remove_right',
@@ -353,7 +383,8 @@ const stringModifiers: IModifier[] = [
                 description: 'The value to remove.'
             }
         ],
-        canBeParameter: true
+        canBeParameter: true,
+        isDeprecated: false
     },
     {
         name: 'replace',
@@ -371,7 +402,8 @@ const stringModifiers: IModifier[] = [
                 description: 'The value to replace all occurrences with.'
             }
         ],
-        canBeParameter: true
+        canBeParameter: true,
+        isDeprecated: false
     },
     {
         name: 'reverse',
@@ -380,7 +412,8 @@ const stringModifiers: IModifier[] = [
         description: 'Reverses all characters in a string, or all items in an array.',
         docLink: 'https://statamic.dev/modifiers/reverse',
         parameters: [],
-        canBeParameter: false
+        canBeParameter: false,
+        isDeprecated: false
     },
     {
         name: 'safe_truncate',
@@ -398,7 +431,8 @@ const stringModifiers: IModifier[] = [
                 description: 'An optional suffix to append to the string if truncation occurs.'
             }
         ],
-        canBeParameter: false
+        canBeParameter: false,
+        isDeprecated: false
     },
     {
         name: 'sanitize',
@@ -407,7 +441,8 @@ const stringModifiers: IModifier[] = [
         description: 'Converts special characters to HTML entities.',
         docLink: 'https://statamic.dev/modifiers/sanitize',
         parameters: [],
-        canBeParameter: false
+        canBeParameter: false,
+        isDeprecated: false
     },
     {
         name: 'segment',
@@ -421,7 +456,8 @@ const stringModifiers: IModifier[] = [
                 description: 'The one-based segment to return.'
             }
         ],
-        canBeParameter: true
+        canBeParameter: true,
+        isDeprecated: false
     },
     {
         name: 'singular',
@@ -430,7 +466,8 @@ const stringModifiers: IModifier[] = [
         description: 'Returns the singular form of an English word.',
         docLink: 'https://statamic.dev/modifiers/singular',
         parameters: [],
-        canBeParameter: false
+        canBeParameter: false,
+        isDeprecated: false
     },
     {
         name: 'slugify',
@@ -439,7 +476,8 @@ const stringModifiers: IModifier[] = [
         description: 'Converts the string into an URL slug.',
         docLink: 'https://statamic.dev/modifiers/slugify',
         parameters: [],
-        canBeParameter: false
+        canBeParameter: false,
+        isDeprecated: false
     },
 
     {
@@ -449,7 +487,8 @@ const stringModifiers: IModifier[] = [
         description: 'Translates plain ASCII punctuation characters into typographic punctuation HTML entities.',
         docLink: 'https://statamic.dev/modifiers/smartypants',
         parameters: [],
-        canBeParameter: false
+        canBeParameter: false,
+        isDeprecated: false
     },
     {
         name: 'spaceless',
@@ -458,7 +497,8 @@ const stringModifiers: IModifier[] = [
         description: 'Removes excess whitespace and line breaks from a string.',
         docLink: 'https://statamic.dev/modifiers/spaceless',
         parameters: [],
-        canBeParameter: false
+        canBeParameter: false,
+        isDeprecated: false
     },
     {
         name: 'substr',
@@ -476,7 +516,8 @@ const stringModifiers: IModifier[] = [
                 description: 'An optional length for the string to find.'
             }
         ],
-        canBeParameter: false
+        canBeParameter: false,
+        isDeprecated: false
     },
     {
         name: 'surround',
@@ -490,7 +531,8 @@ const stringModifiers: IModifier[] = [
                 description: 'The value to surround the string with.'
             }
         ],
-        canBeParameter: false
+        canBeParameter: false,
+        isDeprecated: false
     },
     {
         name: 'swap_case',
@@ -499,7 +541,8 @@ const stringModifiers: IModifier[] = [
         description: 'Returns a case swapped version of the string.',
         docLink: 'https://statamic.dev/modifiers/swap_case',
         parameters: [],
-        canBeParameter: false
+        canBeParameter: false,
+        isDeprecated: false
     },
     {
         name: 'tidy',
@@ -508,7 +551,8 @@ const stringModifiers: IModifier[] = [
         description: 'Returns a string with smart quotes, ellipsis characters, and dashes from Windows-1252 replaced by ASCII equivalents.',
         docLink: 'https://statamic.dev/modifiers/tidy',
         parameters: [],
-        canBeParameter: false
+        canBeParameter: false,
+        isDeprecated: false
     },
     {
         name: 'title',
@@ -517,7 +561,8 @@ const stringModifiers: IModifier[] = [
         description: 'Returns a Title Cased version of the string.',
         docLink: 'https://statamic.dev/modifiers/title',
         parameters: [],
-        canBeParameter: false
+        canBeParameter: false,
+        isDeprecated: false
     },
     {
         name: 'trim',
@@ -526,7 +571,8 @@ const stringModifiers: IModifier[] = [
         description: 'Removes whitespace from the start and end of the string.',
         docLink: 'https://statamic.dev/modifiers/trim',
         parameters: [],
-        canBeParameter: false
+        canBeParameter: false,
+        isDeprecated: false
     },
     {
         name: 'truncate',
@@ -544,7 +590,8 @@ const stringModifiers: IModifier[] = [
                 description: 'An optional suffix to append to the string if truncation occurs.'
             }
         ],
-        canBeParameter: false
+        canBeParameter: false,
+        isDeprecated: false
     },
     {
         name: 'ucfirst',
@@ -553,7 +600,8 @@ const stringModifiers: IModifier[] = [
         description: 'Upper cases the first character in the string.',
         docLink: 'https://statamic.dev/modifiers/ucfirst',
         parameters: [],
-        canBeParameter: false
+        canBeParameter: false,
+        isDeprecated: false
     },
     {
         name: 'underscored',
@@ -562,7 +610,8 @@ const stringModifiers: IModifier[] = [
         description: 'Returns a lower-cased and trimmed version of the string, separated by underscores.',
         docLink: 'https://statamic.dev/modifiers/underscored',
         parameters: [],
-        canBeParameter: false
+        canBeParameter: false,
+        isDeprecated: false
     },
     {
         name: 'upper',
@@ -571,7 +620,8 @@ const stringModifiers: IModifier[] = [
         description: 'Transforms the string to uppercase.',
         docLink: 'https://statamic.dev/modifiers/upper',
         parameters: [],
-        canBeParameter: false
+        canBeParameter: false,
+        isDeprecated: false
     },
     {
         name: 'urldecode',
@@ -580,7 +630,8 @@ const stringModifiers: IModifier[] = [
         description: 'URL-decodes the string.',
         docLink: 'https://statamic.dev/modifiers/urldecode',
         parameters: [],
-        canBeParameter: false
+        canBeParameter: false,
+        isDeprecated: false
     },
     {
         name: 'urlencode',
@@ -589,7 +640,8 @@ const stringModifiers: IModifier[] = [
         description: 'URL-encodes the string.',
         docLink: 'https://statamic.dev/modifiers/urlencode',
         parameters: [],
-        canBeParameter: false
+        canBeParameter: false,
+        isDeprecated: false
     },
     {
         name: 'widont',
@@ -598,7 +650,8 @@ const stringModifiers: IModifier[] = [
         description: 'Attempts to prevent lines with single words.',
         docLink: 'https://statamic.dev/modifiers/widont',
         parameters: [],
-        canBeParameter: false
+        canBeParameter: false,
+        isDeprecated: false
     },
     {
         name: 'word_count',
@@ -607,7 +660,8 @@ const stringModifiers: IModifier[] = [
         description: 'Returns the number of words in the string.',
         docLink: 'https://statamic.dev/modifiers/word_count',
         parameters: [],
-        canBeParameter: false
+        canBeParameter: false,
+        isDeprecated: false
     },
     {
         name: 'add_slashes',
@@ -616,7 +670,8 @@ const stringModifiers: IModifier[] = [
         description: 'Adds slashes before characters that need to be escaped.',
         docLink: 'https://statamic.dev/modifiers/add_slashes',
         canBeParameter: false,
-        parameters: []
+        parameters: [],
+        isDeprecated: false
     }
 ];
 

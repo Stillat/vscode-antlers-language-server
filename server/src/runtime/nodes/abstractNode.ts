@@ -16,6 +16,7 @@ import { ConditionPairAnalyzer } from '../analyzers/conditionPairAnalyzer';
 import { replaceAllInString } from '../../utils/strings';
 import { AntlersDocument } from '../document/antlersDocument';
 import { getId } from '../../utils/simpleIds';
+import { TagPairAnalyzer } from '../analyzers/tagPairAnalyzer';
 
 function newRefId() {
     return replaceAllInString(getId(), '-', '_');
@@ -82,6 +83,8 @@ export class FragmentNode {
 export class FragmentParameterNode {
     public startPosition: Position | null = null;
     public endPosition: Position | null = null;
+    public content = '';
+    public name = '';
 }
 
 function cleanNodes(nodes: AbstractNode[]): AbstractNode[] {
@@ -116,6 +119,7 @@ export class AbstractNode {
     private addedContexts: Map<string, boolean> = new Map();
 
     public fragment: FragmentNode | null = null;
+    public fragmentParameter: FragmentParameterNode | null = null;
     public fragmentPosition: FragmentPosition = FragmentPosition.Unresolved;
     public containsAnyFragments = false;
     public containsChildStructures = false;
@@ -251,6 +255,7 @@ export class ConditionNode extends AbstractNode {
     public chain: number[] = [];
     public nodeContent = '';
     public fragment: FragmentNode | null = null;
+    public fragmentParameter: FragmentParameterNode | null = null;
     public fragmentPosition: FragmentPosition = FragmentPosition.Unresolved;
     public containsAnyFragments = false;
     public containsChildStructures = false;

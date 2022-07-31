@@ -163,6 +163,7 @@ function getModifierCompletionList(): CompletionItem[] {
     const items: CompletionItem[] = [];
 
     ModifierManager.instance?.getRegisteredModifiers().forEach((modifier: IModifier) => {
+        if (modifier.isDeprecated) { return; }
         items.push(makeModifierSuggest(modifier));
     });
 
@@ -736,6 +737,8 @@ export class SuggestionManager {
                         const arrayModifiers = ModifierManager.instance?.getModifiersForType("array") ?? [];
 
                         arrayModifiers.forEach((modifier: IModifier) => {
+                            if (modifier.isDeprecated) { return; }
+
                             const suggestion = makeModifierSuggest(modifier);
                             suggestion.sortText = '000';
 
@@ -747,6 +750,7 @@ export class SuggestionManager {
                         const arrayModifiers = ModifierManager.instance?.getModifiersForType(params.context.node.manifestType) ?? [];
 
                         arrayModifiers.forEach((modifier: IModifier) => {
+                            if (modifier.isDeprecated) { return; }
                             const suggestion = makeModifierSuggest(modifier);
                             suggestion.sortText = '000';
 

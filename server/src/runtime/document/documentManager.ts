@@ -85,7 +85,7 @@ class DocumentManager {
     }
 }
 
-if (typeof DocumentManager.instance == 'undefined' || DocumentManager.instance) {
+if (typeof DocumentManager.instance == 'undefined' || DocumentManager.instance == null) {
     DocumentManager.instance = new DocumentManager();
 }
 

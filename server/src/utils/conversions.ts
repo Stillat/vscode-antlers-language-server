@@ -1,6 +1,6 @@
 import * as ls from 'vscode-languageserver-types';
 import { AntlersError, ErrrorLevel } from '../runtime/errors/antlersError';
-import { AbstractNode, ParameterNode, AntlersNode } from '../runtime/nodes/abstractNode';
+import { AbstractNode, ParameterNode, AntlersNode, ConditionNode } from '../runtime/nodes/abstractNode';
 import { Position } from '../runtime/nodes/position';
 
 export function anltersErrorsToDiagnostics(errors: AntlersError[]): ls.Diagnostic[] {
@@ -9,7 +9,9 @@ export function anltersErrorsToDiagnostics(errors: AntlersError[]): ls.Diagnosti
     errors.forEach((error) => {
         let range: ls.Range | null = null;
 
-        if (error.node != null) {
+        if (error.lsRange != null) {
+            range = error.lsRange;
+        } else if (error.node != null) {
             range = nodeToRange(error.node);
         } else {
             if (error.range != null) {
@@ -35,7 +37,8 @@ export function anltersErrorsToDiagnostics(errors: AntlersError[]): ls.Diagnosti
             severity: severity,
             range: range,
             message: "[" + error.errorCode + "] " + error.message,
-            source: 'antlers'
+            source: 'antlers',
+            code: error.errorCode
         });
     });
 
@@ -67,6 +70,18 @@ export function nodeToRange(node: AbstractNode): ls.Range {
                 line: end.line
             }
         };
+    } else if (node instanceof ConditionNode) {
+        if (node.logicBranches.length > 0) {
+            const firstBranch = node.logicBranches[0],
+                lastBranch = node.logicBranches[node.logicBranches.length - 1];
+
+            if (firstBranch.head != null && lastBranch.head != null && lastBranch.head.isClosedBy != null) {
+                return {
+                    start: antlersPositionToVsCode(firstBranch.head.startPosition),
+                    end: antlersPositionToVsCode(lastBranch.head.isClosedBy.endPosition)
+                }
+            }
+        }
     }
 
     return {

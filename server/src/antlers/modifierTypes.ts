@@ -60,6 +60,8 @@ export interface IModifier {
      */
     canBeParameter: boolean;
     augmentScope?(symbol: AntlersNode, scope: Scope): Scope;
+    isDeprecated: boolean;
+    getDeprecatedMessage?(): string;
 }
 
 interface IModifierParameter {

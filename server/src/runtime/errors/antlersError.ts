@@ -1,6 +1,8 @@
 import { Md5 } from 'ts-md5';
+import { CodeAction } from 'vscode-languageserver';
 import { AbstractNode } from '../nodes/abstractNode';
 import { Range } from '../nodes/position';
+import * as ls from 'vscode-languageserver';
 
 export enum ErrrorLevel {
     Error = 0,
@@ -13,6 +15,9 @@ export class AntlersError {
     public message = '';
     public level: ErrrorLevel = ErrrorLevel.Error;
     public range: Range | null = null;
+    public actions: CodeAction[] = [];
+    public lsRange: ls.Range | null = null;
+    public data: any | null = null;
 
     hash() {
         let positionSlug = '';

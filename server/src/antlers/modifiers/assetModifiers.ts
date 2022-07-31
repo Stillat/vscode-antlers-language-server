@@ -8,7 +8,8 @@ const assetModifiers: IModifier[] = [
         description: 'Converts an asset focal point into a background-position CSS property.',
         docLink: 'https://statamic.dev/modifiers/background_position',
         parameters: [],
-        canBeParameter: false
+        canBeParameter: false,
+        isDeprecated: false
     },
     {
         name: 'image',
@@ -17,7 +18,8 @@ const assetModifiers: IModifier[] = [
         description: 'Generates an HTML image element with the variable\'s value as the src.',
         docLink: 'https://statamic.dev/modifiers/image',
         parameters: [],
-        canBeParameter: false
+        canBeParameter: false,
+        isDeprecated: false
     },
     {
         name: 'output',
@@ -26,7 +28,8 @@ const assetModifiers: IModifier[] = [
         description: 'Returns the string output of an Asset file\'s contents.',
         docLink: 'https://statamic.dev/modifiers/output',
         parameters: [],
-        canBeParameter: false
+        canBeParameter: false,
+        isDeprecated: false
     },
 ];
 

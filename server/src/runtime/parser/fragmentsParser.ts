@@ -482,6 +482,22 @@ export class FragmentsParser implements StringIterator {
                 const fragmentParameter = new FragmentParameterNode();
                 fragmentParameter.startPosition = this.positionFromOffset(stringStartedOn + this.seedOffset, stringStartedOn + this.seedOffset);
                 fragmentParameter.endPosition = this.positionFromOffset(this.currentIndex + this.seedOffset, this.currentIndex + this.seedOffset);
+                const startedOn = stringStartedOn + this.seedOffset,
+                    endedOn = this.currentIndex + this.seedOffset + 1;
+                fragmentParameter.content = this.content.substr(startedOn, endedOn - startedOn);
+                const nameChars:string[] = [];
+
+                for (let j = stringStartedOn - 2; j >= 0; j--) {
+                    const cur = this.chars[j];
+
+                    if (StringUtilities.ctypeSpace(cur)) {
+                        break;
+                    }
+
+                    nameChars.push(cur);
+                }
+
+                fragmentParameter.name = nameChars.reverse().join('');
                 potentialParameterRanges.push(fragmentParameter);
                 continue;
             }

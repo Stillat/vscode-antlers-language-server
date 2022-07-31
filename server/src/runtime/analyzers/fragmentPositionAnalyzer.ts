@@ -87,6 +87,7 @@ export class FragmentPositionAnalyzer {
 
                 if ((thisParam.startPosition?.index ?? 0) < node.startPosition.index && (thisParam.endPosition?.index ?? 0) > node.startPosition.index) {
                     node.fragmentPosition = FragmentPosition.InsideFragmentParameter;
+                    node.fragmentParameter = thisParam;
                     resolvedParam = true;
                     break;
                 }

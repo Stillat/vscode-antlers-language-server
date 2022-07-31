@@ -14,7 +14,6 @@ import { WordScanner } from '../document/scanners/wordScanner';
 import { VirtualHierarchy } from './virtualDocument/virtualHierarchy';
 import TagManager from '../../antlers/tagManagerInstance';
 import { ModifierAnalyzer } from '../analyzers/modifierAnalyzer';
-import { ParameterValidator } from '../analyzers/parameterValidator';
 import ModifierManager from '../../antlers/modifierManager';
 import { IModifier } from '../../antlers/modifierTypes';
 import { DocumentOffset } from './documentOffset';
@@ -913,7 +912,6 @@ export class DocumentParser {
 
                 curIndex += 1;
                 ModifierAnalyzer.analyzeModifierNodeParameters(node);
-                ParameterValidator.validateParameters(node);
             }
         });
 

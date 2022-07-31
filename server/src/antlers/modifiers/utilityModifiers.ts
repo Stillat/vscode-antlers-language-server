@@ -8,7 +8,8 @@ const utilityModifiers: IModifier[] = [
         description: 'Displays variable data in the browser\'s JavaScript console.',
         docLink: 'https://statamic.dev/modifiers/console_log',
         parameters: [],
-        canBeParameter: false
+        canBeParameter: false,
+        isDeprecated: false
     },
     {
         name: 'decode',
@@ -17,7 +18,8 @@ const utilityModifiers: IModifier[] = [
         description: 'Converts all HTML entities to their applicable character codes.',
         docLink: 'https://statamic.dev/modifiers/decode',
         parameters: [],
-        canBeParameter: false
+        canBeParameter: false,
+        isDeprecated: false
     },
     {
         name: 'dump',
@@ -26,7 +28,8 @@ const utilityModifiers: IModifier[] = [
         description: 'Displays variable data in the browser.',
         docLink: 'https://statamic.dev/modifiers/dump',
         parameters: [],
-        canBeParameter: false
+        canBeParameter: false,
+        isDeprecated: false
     },
     {
         name: 'full_urls',
@@ -35,7 +38,8 @@ const utilityModifiers: IModifier[] = [
         description: 'Replaces root-relative URLs with absolute URLs.',
         docLink: 'https://statamic.dev/modifiers/full_urls',
         parameters: [],
-        canBeParameter: false
+        canBeParameter: false,
+        isDeprecated: false
     },
     {
         name: 'repeat',
@@ -47,7 +51,8 @@ const utilityModifiers: IModifier[] = [
             name: 'repeat_count',
             description: 'The number of times to repeat the value.'
         }],
-        canBeParameter: true
+        canBeParameter: true,
+        isDeprecated: false
     },
     {
         name: 'to_spaces',
@@ -61,7 +66,8 @@ const utilityModifiers: IModifier[] = [
                 description: 'The number of spaces to replace tabs with.'
             }
         ],
-        canBeParameter: false
+        canBeParameter: false,
+        isDeprecated: false
     },
     {
         name: 'to_tabs',
@@ -75,7 +81,8 @@ const utilityModifiers: IModifier[] = [
                 description: 'The number of spaces to convert to tabs.'
             }
         ],
-        canBeParameter: false
+        canBeParameter: false,
+        isDeprecated: false
     },
     {
         name: 'to_json',
@@ -84,7 +91,8 @@ const utilityModifiers: IModifier[] = [
         description: 'Converts the data to JSON.',
         docLink: 'https://statamic.dev/modifiers/to_json',
         parameters: [],
-        canBeParameter: false
+        canBeParameter: false,
+        isDeprecated: false
     },
     {
         name: 'to_bool',
@@ -93,7 +101,8 @@ const utilityModifiers: IModifier[] = [
         description: 'Converst the data to a boolean',
         parameters: [],
         canBeParameter: false,
-        docLink: null
+        docLink: null,
+        isDeprecated: false
     }
 ];
 

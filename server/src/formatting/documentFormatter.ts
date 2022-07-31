@@ -1,6 +1,7 @@
 import InterleavedNodeHandler from '../diagnostics/handlers/interleavedNodes';
 import { AntlersDocument } from '../runtime/document/antlersDocument';
 import { TransformOptions } from '../runtime/document/transformOptions';
+import { getAntlersSettings } from '../server';
 import { HTMLFormatter, PHPFormatter, PreFormatter, YAMLFormatter } from './formatters';
 
 export class DocumentFormatter {
@@ -62,10 +63,11 @@ export class DocumentFormatter {
             }
         }
 
-        const antlersNodes = document.getAllAntlersNodes();
+        const antlersNodes = document.getAllAntlersNodes(),
+            currentSettings = getAntlersSettings();
 
         for (let i = 0; i < antlersNodes.length; i++) {
-            if (InterleavedNodeHandler.checkNode(antlersNodes[i]).length > 0) {
+            if (InterleavedNodeHandler.checkNode(antlersNodes[i], currentSettings).length > 0) {
                 return document.getOriginalContent();
             }
         }

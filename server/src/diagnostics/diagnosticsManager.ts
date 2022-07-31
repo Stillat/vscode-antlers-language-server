@@ -1,6 +1,7 @@
 import { AntlersDocument } from '../runtime/document/antlersDocument';
 import { AntlersError } from '../runtime/errors/antlersError';
 import { AntlersNode } from '../runtime/nodes/abstractNode';
+import { getAntlersSettings } from '../server';
 import { IDiagnosticsHandler } from "./diagnosticsHandler";
 import { IDocumentDiagnosticsHandler } from './documentHandler';
 import { CoreDocumentHandlers } from './documentHandlers/coreDocHandlers';
@@ -67,9 +68,11 @@ class DiagnosticsManager {
     }
 
     checkDocument(document: AntlersDocument) {
-        const errors: AntlersError[] = [];
+        const errors: AntlersError[] = [],
+            settings = getAntlersSettings();
+
         this.docHandlers.forEach((handler) => {
-            handler.checkDocument(document).forEach((error) => {
+            handler.checkDocument(document, settings).forEach((error) => {
                 errors.push(error);
             });
         });
@@ -81,8 +84,10 @@ class DiagnosticsManager {
 
         if (node.isComment) { return errors; }
 
+        const currentSettings = getAntlersSettings();
+
         this.handlers.forEach((handler) => {
-            handler.checkNode(node).forEach((error) => {
+            handler.checkNode(node, currentSettings).forEach((error) => {
                 errors.push(error);
             });
         });

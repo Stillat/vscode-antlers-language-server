@@ -17,6 +17,7 @@ import {
     ProposedFeatures,
     RequestType,
     RequestType0,
+    TextDocumentChangeEvent,
     TextDocumentIdentifier,
     TextDocuments,
     TextDocumentSyncKind,
@@ -62,20 +63,20 @@ import { AntlersDocument } from './runtime/document/antlersDocument';
 import { handleCodeActions } from './services/antlersRefactoring';
 import ExtractPartialHandler from './refactoring/core/extractPartialHandler';
 import { BeautifyDocumentFormatter } from './formatting/beautifyDocumentFormatter';
+import { AntlersSettings } from './antlersSettings';
+import { debounce } from 'ts-debounce';
 
-interface ServerTrace {
-    server: string;
-}
-
-interface AntlersSettings {
-    formatFrontMatter: boolean;
-    showGeneralSnippetCompletions: boolean;
-    trace: ServerTrace;
-    formatterIgnoreExtensions: string[];
-    languageVersion: string;
-}
-
-const defaultSettings: AntlersSettings = { formatFrontMatter: false, showGeneralSnippetCompletions: true, trace: { server: 'off' }, formatterIgnoreExtensions: ['xml'], languageVersion: 'runtime' };
+const defaultSettings: AntlersSettings = {
+    formatFrontMatter: false,
+    showGeneralSnippetCompletions: true,
+    diagnostics: {
+        warnOnDynamicCssClassNames: true,
+        validateTagParameters: true,
+    },
+    trace: { server: 'off' },
+    formatterIgnoreExtensions: ['xml'],
+    languageVersion: 'runtime'
+};
 let globalSettings: AntlersSettings = defaultSettings;
 
 function updateGlobalSettings(settings: AntlersSettings) {
@@ -215,13 +216,13 @@ connection.onInitialized(() => {
         );
     }
 
-    const htmlResult = connection.workspace
+    connection.workspace
         .getConfiguration("html")
         .then(function (value) {
             updateHtmlFormatterSettings(value);
         });
 
-    const antlersResult = connection.workspace
+    connection.workspace
         .getConfiguration("antlersLanguageServer")
         .then(function (value) {
             if (value != null) {
@@ -245,12 +246,12 @@ connection.onExecuteCommand(async (params) => {
 });
 
 connection.onDidChangeConfiguration((change) => {
-    const htmlResult = connection.workspace
+    connection.workspace
         .getConfiguration("html")
         .then(function (value) {
             updateHtmlFormatterSettings(value);
         });
-    const antlersResult = connection.workspace
+    connection.workspace
         .getConfiguration("antlersLanguageServer")
         .then(function (value) {
             if (value != null) {
@@ -282,10 +283,7 @@ connection.onRequest(LockEditsRequest.type, () => {
     isDidChangeContentLocked = true;
 });
 
-
-// The content of a text document has changed. This event is emitted
-// when the text document first opened or when its content has changed.
-documents.onDidChangeContent((change) => {
+function contentChangeHandler(change: TextDocumentChangeEvent<TextDocument>) {
     if (isDidChangeContentLocked) {
         isDidChangeContentLocked = false;
         return;
@@ -295,7 +293,13 @@ documents.onDidChangeContent((change) => {
     parseDocument(change.document);
     analyzeStructures(decodeURIComponent(change.document.uri));
     validateTextDocument(change.document, connection);
-});
+}
+
+const debouncedContentChangeHandler = debounce(contentChangeHandler, 250);
+
+// The content of a text document has changed. This event is emitted
+// when the text document first opened or when its content has changed.
+documents.onDidChangeContent(debouncedContentChangeHandler);
 
 connection.onDidChangeWatchedFiles((_change) => {
     // Monitored files have change in VSCode
@@ -428,7 +432,7 @@ async function collectProjectDetails(textDocument: TextDocument): Promise<void> 
 }
 
 export function requestEdits(edit: WorkspaceEdit) {
-    const params:ApplyWorkspaceEditParams = {
+    const params: ApplyWorkspaceEditParams = {
         edit: edit
     };
 

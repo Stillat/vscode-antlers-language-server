@@ -13,7 +13,8 @@ const specialModifiers: IModifier[] = [
                 description: 'The name of the partial.'
             }
         ],
-        canBeParameter: false
+        canBeParameter: false,
+        isDeprecated: false
     },
     {
         name: 'macro',
@@ -27,7 +28,8 @@ const specialModifiers: IModifier[] = [
                 description: 'The macro name.'
             }
         ],
-        canBeParameter: false
+        canBeParameter: false,
+        isDeprecated: false
     },
     {
         name: 'url',
@@ -36,7 +38,8 @@ const specialModifiers: IModifier[] = [
         description: 'Locates the URL of an asset, page, entry, or taxonomy term based on the variable contents.',
         docLink: 'https://statamic.dev/modifiers/url',
         parameters: [],
-        canBeParameter: false
+        canBeParameter: false,
+        isDeprecated: false
     },
     /*{name: 'get'},
     {name:'raw'},*/

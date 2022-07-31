@@ -89,7 +89,7 @@ class JsonSourceProject implements IProjectDetailsProvider {
     constructor(structure: IStatamicStructure, resourcePath: string) {
         this.baseResourcePath = resourcePath;
         this.sourceStructure = structure;
-
+        this.rootPath = '';
         this.isMocked = structure.isMocked;
         this.rootPath = structure.rootPath;
         this.fieldsetsPath = structure.fieldsetsPath;
@@ -119,7 +119,8 @@ class JsonSourceProject implements IProjectDetailsProvider {
         this.hasMacroFile = structure.hasMacrosFile;
         this.collectionQueryScopes = structure.collectionScopes;
         this.taxonomyTerms = structure.taxonomyTerms;
-        this.navigationMenus = structure.navigationMenus; ``;
+        this.navigationMenus = structure.navigationMenus;
+        this.rootPath = structure.workingDirectory;
 
         this.buildDetails();
 
@@ -168,6 +169,10 @@ class JsonSourceProject implements IProjectDetailsProvider {
 
     getViewPath(): string {
         return this.viewsPath;
+    }
+
+    getProjectRoot(): string {
+        return this.rootPath;
     }
 
     export(): IStatamicStructure {

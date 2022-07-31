@@ -41,7 +41,9 @@ export class ParameterValidator {
         };
     }
 
-    static validateParameters(node: AntlersNode) {
+    static validateParameters(node: AntlersNode): AntlersError[] {
+        const errors: AntlersError[] = [];
+
         if (node.isTagNode && TagManager.instance?.isKnownTag(node.runtimeName())) {
             const tagReference = TagManager.instance?.findTag(
                 node.runtimeName()
@@ -104,7 +106,7 @@ export class ParameterValidator {
 
                             const errorMessage = 'Unknown parameter name: "' + paramName + '"' + suggestionSuffix;
 
-                            node.pushError(AntlersError.makeSyntaxError(
+                            errors.push(AntlersError.makeSyntaxError(
                                 AntlersErrorCodes.LINT_UNKNOWN_PARAMETER,
                                 node,
                                 errorMessage,
@@ -117,7 +119,7 @@ export class ParameterValidator {
 
                             if (paramResults.length > 0) {
                                 paramResults.forEach((error) => {
-                                    node.pushError(AntlersError.makeSyntaxError(
+                                    errors.push(AntlersError.makeSyntaxError(
                                         AntlersErrorCodes.LINT_GENERAL_INVALID_PARAMETER_CONTENTS,
                                         paramToAnalyze,
                                         error.message,
@@ -137,7 +139,7 @@ export class ParameterValidator {
                                     const result = this.validateInteger(paramToAnalyze.value);
 
                                     if (!result.isValid) {
-                                        node.pushError(AntlersError.makeSyntaxError(
+                                        errors.push(AntlersError.makeSyntaxError(
                                             AntlersErrorCodes.LINT_PARAMETER_CONTENT_INVALID_INTEGER,
                                             paramToAnalyze,
                                             result.message,
@@ -154,7 +156,7 @@ export class ParameterValidator {
                                             if (parseInt(paramToAnalyze.value).toString() != paramToAnalyze.value) {
                                                 const message = 'Unexpected "' + paramToAnalyze.value + '". Expecting a numeric value, or true/false.';
 
-                                                node.pushError(AntlersError.makeSyntaxError(
+                                                errors.push(AntlersError.makeSyntaxError(
                                                     AntlersErrorCodes.LINT_PAGINATE_INVALID_VALUE,
                                                     paramToAnalyze,
                                                     message,
@@ -164,7 +166,7 @@ export class ParameterValidator {
                                         }
                                     } else {
                                         if (!result.isValid) {
-                                            node.pushError(AntlersError.makeSyntaxError(
+                                            errors.push(AntlersError.makeSyntaxError(
                                                 AntlersErrorCodes.LINT_PARAMETER_CONTENT_INVALID_BOOLEAN,
                                                 paramToAnalyze,
                                                 result.message,
@@ -179,5 +181,7 @@ export class ParameterValidator {
                 }
             }
         }
+
+        return errors;
     }
 }

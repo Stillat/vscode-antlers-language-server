@@ -8,6 +8,7 @@ import { IView } from './views/view';
 export interface IProjectDetailsProvider {
     reloadDetails(): IProjectDetailsProvider,
     getWorkingDirectory(): string,
+    getProjectRoot(): string,
     getOAuthProviders(): string[],
     getSiteNames(): string[],
     getSearchIndexes(): string[],

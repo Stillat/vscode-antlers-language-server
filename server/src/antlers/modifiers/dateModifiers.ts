@@ -8,7 +8,8 @@ const dateModifiers: IModifier[] = [
         description: 'Returns the number of days since a given date.',
         docLink: 'https://statamic.dev/modifiers/days_ago',
         parameters: [],
-        canBeParameter: false
+        canBeParameter: false,
+        isDeprecated: false
     },
     {
         name: 'format_translated',
@@ -22,7 +23,8 @@ const dateModifiers: IModifier[] = [
                 description: 'The format to use.'
             }
         ],
-        canBeParameter: true
+        canBeParameter: true,
+        isDeprecated: false
     },
     {
         name: 'format',
@@ -36,13 +38,14 @@ const dateModifiers: IModifier[] = [
                 description: 'The format to use.'
             }
         ],
-        canBeParameter: true
+        canBeParameter: true,
+        isDeprecated: false
     },
     {
         name: 'format_localized',
         acceptsType: ['string', 'date'],
         returnsType: ['string', 'date'],
-        description: 'Forms the date using server\'s locale, using PHP\'s [strftime format variables](https://www.php.net/strftime).',
+        description: 'Formats the date using server\'s locale, using PHP\'s [strftime format variables](https://www.php.net/strftime).',
         docLink: 'https://statamic.dev/modifiers/format_localized',
         parameters: [
             {
@@ -50,7 +53,11 @@ const dateModifiers: IModifier[] = [
                 description: 'The format to use.'
             }
         ],
-        canBeParameter: true
+        canBeParameter: true,
+        isDeprecated: true,
+        getDeprecatedMessage() {
+            return 'The format_localized modifier is deprecated. Alternatives, such as the iso_format modifier, should be used instead.'
+        },
     },
     {
         name: 'hours_ago',
@@ -59,7 +66,8 @@ const dateModifiers: IModifier[] = [
         description: 'Returns the number of hours since the date.',
         docLink: 'https://statamic.dev/modifiers/hours_ago',
         parameters: [],
-        canBeParameter: false
+        canBeParameter: false,
+        isDeprecated: false
     },
     {
         name: 'iso_format',
@@ -73,7 +81,8 @@ const dateModifiers: IModifier[] = [
                 description: 'The format to use.'
             }
         ],
-        canBeParameter: false
+        canBeParameter: false,
+        isDeprecated: false
     },
     {
         name: 'minutes_ago',
@@ -82,7 +91,8 @@ const dateModifiers: IModifier[] = [
         description: 'Returns the number of minutes since the date.',
         docLink: 'https://statamic.dev/modifiers/minutes_ago',
         parameters: [],
-        canBeParameter: false
+        canBeParameter: false,
+        isDeprecated: false
     },
     {
         name: 'modify_date',
@@ -91,7 +101,8 @@ const dateModifiers: IModifier[] = [
         description: 'Alters the date by incrementing or decrementing it in a format accepted by PHP\'s [strtotime](https://www.php.net/strtotime) function.',
         docLink: 'https://statamic.dev/modifiers/modify_date',
         parameters: [],
-        canBeParameter: true
+        canBeParameter: true,
+        isDeprecated: false
     },
     {
         name: 'months_ago',
@@ -100,7 +111,8 @@ const dateModifiers: IModifier[] = [
         description: 'Returns the number of months since the date.',
         docLink: 'https://statamic.dev/modifiers/months_ago',
         parameters: [],
-        canBeParameter: false
+        canBeParameter: false,
+        isDeprecated: false
     },
     {
         name: 'relative',
@@ -114,7 +126,8 @@ const dateModifiers: IModifier[] = [
                 description: 'Whether to add the relative suffix words at the end of the string.'
             }
         ],
-        canBeParameter: false
+        canBeParameter: false,
+        isDeprecated: false
     },
     {
         name: 'seconds_ago',
@@ -123,7 +136,8 @@ const dateModifiers: IModifier[] = [
         description: 'Returns the number of seconds since the date.',
         docLink: 'https://statamic.dev/modifiers/seconds_ago',
         parameters: [],
-        canBeParameter: false
+        canBeParameter: false,
+        isDeprecated: false
     },
     {
         name: 'timezone',
@@ -137,7 +151,8 @@ const dateModifiers: IModifier[] = [
                 description: 'The timezone to apply.'
             }
         ],
-        canBeParameter: false
+        canBeParameter: false,
+        isDeprecated: false
     },
     {
         name: 'weeks_ago',
@@ -146,7 +161,8 @@ const dateModifiers: IModifier[] = [
         description: 'Returns the number of weeks since the date.',
         docLink: 'https://statamic.dev/modifiers/weeks_ago',
         parameters: [],
-        canBeParameter: false
+        canBeParameter: false,
+        isDeprecated: false
     },
     {
         name: 'years_ago',
@@ -155,7 +171,8 @@ const dateModifiers: IModifier[] = [
         description: 'Returns the number of years since the date.',
         docLink: 'https://statamic.dev/modifiers/years_ago',
         parameters: [],
-        canBeParameter: false
+        canBeParameter: false,
+        isDeprecated: false
     },
 
 ];

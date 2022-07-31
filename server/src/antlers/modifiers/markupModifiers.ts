@@ -13,7 +13,8 @@ const markupModifiers: IModifier[] = [
                 description: 'The maximum length of each new chunk.'
             }
         ],
-        canBeParameter: true
+        canBeParameter: true,
+        isDeprecated: false
     },
     {
         name: 'favicon',
@@ -22,7 +23,8 @@ const markupModifiers: IModifier[] = [
         description: 'Generates a favicon HTML meta tag for the given value.',
         docLink: 'https://statamic.dev/modifiers/favicon',
         parameters: [],
-        canBeParameter: false
+        canBeParameter: false,
+        isDeprecated: false
     },
     {
         name: 'first',
@@ -36,7 +38,8 @@ const markupModifiers: IModifier[] = [
                 description: 'The number of characters to return.'
             }
         ],
-        canBeParameter: true
+        canBeParameter: true,
+        isDeprecated: false
     },
     {
         name: 'last',
@@ -50,7 +53,8 @@ const markupModifiers: IModifier[] = [
                 description: 'The number of characters to return.'
             }
         ],
-        canBeParameter: true
+        canBeParameter: true,
+        isDeprecated: false
     },
     {
         name: 'link',
@@ -59,7 +63,8 @@ const markupModifiers: IModifier[] = [
         description: 'Generates an HTML link for the provided value.',
         docLink: 'https://statamic.dev/modifiers/link',
         parameters: [],
-        canBeParameter: false
+        canBeParameter: false,
+        isDeprecated: false
     },
     {
         name: 'mailto',
@@ -68,7 +73,8 @@ const markupModifiers: IModifier[] = [
         description: 'Generates a mailto HTML link for the provided value.',
         docLink: 'https://statamic.dev/modifiers/mailto',
         parameters: [],
-        canBeParameter: false
+        canBeParameter: false,
+        isDeprecated: false
     },
     {
         name: 'markdown',
@@ -77,7 +83,8 @@ const markupModifiers: IModifier[] = [
         description: 'Parses the value as Markdown and returns the HTML.',
         docLink: 'https://statamic.dev/modifiers/markdown',
         parameters: [],
-        canBeParameter: false
+        canBeParameter: false,
+        isDeprecated: false
     },
     {
         name: 'nl2br',
@@ -86,7 +93,8 @@ const markupModifiers: IModifier[] = [
         description: 'Replaces line breaks with HTML `<br>` tags.',
         docLink: 'https://statamic.dev/modifiers/nl2br',
         parameters: [],
-        canBeParameter: false
+        canBeParameter: false,
+        isDeprecated: false
     },
     {
         name: 'obfuscate',
@@ -95,7 +103,8 @@ const markupModifiers: IModifier[] = [
         description: 'Modifies the input string by replacing it with special characters, making it harder for bots but remains readable to site visitors.',
         docLink: 'https://statamic.dev/modifiers/obfuscate',
         parameters: [],
-        canBeParameter: false
+        canBeParameter: false,
+        isDeprecated: false
     },
     {
         name: 'obfuscate_email',
@@ -104,7 +113,8 @@ const markupModifiers: IModifier[] = [
         description: 'Obfuscates an email address with special HTML characters.',
         docLink: 'https://statamic.dev/modifiers/obfuscate_email',
         parameters: [],
-        canBeParameter: false
+        canBeParameter: false,
+        isDeprecated: false
     },
     {
         name: 'strip_tags',
@@ -118,7 +128,8 @@ const markupModifiers: IModifier[] = [
                 description: 'The HTML tag(s) to remove from the string.'
             }
         ],
-        canBeParameter: false
+        canBeParameter: false,
+        isDeprecated: false
     },
     {
         name: 'table',
@@ -132,7 +143,8 @@ const markupModifiers: IModifier[] = [
                 description: 'Whether to parse cell contents as Markdown.'
             }
         ],
-        canBeParameter: false
+        canBeParameter: false,
+        isDeprecated: false
     },
     {
         name: 'textile',
@@ -141,7 +153,8 @@ const markupModifiers: IModifier[] = [
         description: 'Parses a string with [Textile](http://demo.textilewiki.com/theme-default/) and returns the HTML.',
         docLink: 'https://statamic.dev/modifiers/textile',
         parameters: [],
-        canBeParameter: false
+        canBeParameter: false,
+        isDeprecated: false
     },
     {
         name: 'wrap',
@@ -155,7 +168,8 @@ const markupModifiers: IModifier[] = [
                 description: 'The HTML tag or Emmet-style expression to wrap the value in.'
             }
         ],
-        canBeParameter: false
+        canBeParameter: false,
+        isDeprecated: false
     },
 ];
 

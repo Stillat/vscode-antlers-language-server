@@ -1,9 +1,10 @@
-import { Diagnostic, _Connection } from "vscode-languageserver";
+import { CodeAction, Diagnostic, _Connection } from "vscode-languageserver";
 import { TextDocument } from "vscode-languageserver-textdocument";
 import DiagnosticsManager from '../diagnostics/diagnosticsManager';
 import { documentMap, sessionDocuments } from '../languageService/documents';
 import ProjectManager from '../projects/projectManager';
 import { anltersErrorsToDiagnostics } from "../utils/conversions";
+import { setCurDiagnostics } from './antlersRefactoring';
 
 export function parseDocumentText(uri: string, text: string) {
     const documentPath = decodeURIComponent(uri);
@@ -28,24 +29,25 @@ export async function validateTextDocument(textDocument: TextDocument, connectio
     const docPath = decodeURIComponent(textDocument.uri);
     sessionDocuments.createOrUpdate(docPath, textDocument.getText());
 
-    const problems = 0;
     const diagnostics: Diagnostic[] = [];
 
     if (sessionDocuments.hasDocument(docPath)) {
         const doc = sessionDocuments.getDocument(docPath);
-        const errors = doc.errors.all();
 
         anltersErrorsToDiagnostics(doc.errors.all()).forEach((error) => {
             diagnostics.push(error);
         });
 
         if (DiagnosticsManager.instance?.hasDiagnosticsIssues(docPath)) {
-            anltersErrorsToDiagnostics(DiagnosticsManager.instance.getDiagnostics(docPath)).forEach((error) => {
+            const antlersErrors = DiagnosticsManager.instance.getDiagnostics(docPath);
+
+            anltersErrorsToDiagnostics(antlersErrors).forEach((error) => {
                 diagnostics.push(error);
             });
         }
     }
 
+    setCurDiagnostics(diagnostics);
     // Send the computed diagnostics to VSCode.
     connection.sendDiagnostics({ uri: textDocument.uri, diagnostics });
     sendOtherDiagnostics(textDocument.uri, connection);

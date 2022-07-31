@@ -4,7 +4,7 @@
     "description": "Provides Antlers syntax highlighting, formatting, error reporting, project-specific suggestions, and more.",
     "author": "John Koster",
     "license": "MIT",
-    "version": "2.2.4",
+    "version": "2.3.0",
     "repository": {
         "type": "git",
         "url": "https://github.com/Stillat/vscode-antlers-language-server"
@@ -97,6 +97,18 @@
                     "type": "boolean",
                     "default": true,
                     "description": "When enabled general Antlers snippets will appear in completion suggestions outside of Antlers tags."
+                },
+                "antlersLanguageServer.diagnostics.warnOnDynamicCssClassNames": {
+                    "scope": "window",
+                    "type": "boolean",
+                    "default": true,
+                    "description": "When enabled, Antlers Toolbox will check for dynamic CSS class names and emit warnings."
+                },
+                "antlersLanguageServer.diagnostics.validateTagParameters": {
+                    "scope": "window",
+                    "type": "boolean",
+                    "default": true,
+                    "description": "When enabled, Antlers Toolbox will validate known tag parameters."
                 },
                 "antlersLanguageServer.languageVersion": {
                     "scope": "window",

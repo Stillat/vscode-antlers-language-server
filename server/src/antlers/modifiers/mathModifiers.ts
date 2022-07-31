@@ -13,7 +13,8 @@ const mathModifiers: IModifier[] = [
                 description: 'The value to add.'
             }
         ],
-        canBeParameter: true
+        canBeParameter: true,
+        isDeprecated: false
     },
     {
         name: '+',
@@ -27,7 +28,8 @@ const mathModifiers: IModifier[] = [
                 description: 'The value to add.'
             }
         ],
-        canBeParameter: false
+        canBeParameter: false,
+        isDeprecated: false
     },
     {
         name: 'ceil',
@@ -36,7 +38,8 @@ const mathModifiers: IModifier[] = [
         description: 'Rounds the value to the next whole number.',
         docLink: 'https://statamic.dev/modifiers/ceil',
         parameters: [],
-        canBeParameter: false
+        canBeParameter: false,
+        isDeprecated: false
     },
     {
         name: 'divide',
@@ -50,7 +53,8 @@ const mathModifiers: IModifier[] = [
                 description: 'The value to divide.'
             }
         ],
-        canBeParameter: true
+        canBeParameter: true,
+        isDeprecated: false
     },
     {
         name: 'floor',
@@ -59,7 +63,8 @@ const mathModifiers: IModifier[] = [
         description: 'Rounds a number down to the next whole number.',
         docLink: 'https://statamic.dev/modifiers/floor',
         parameters: [],
-        canBeParameter: true
+        canBeParameter: true,
+        isDeprecated: false
     },
     {
         name: 'format_number',
@@ -81,7 +86,8 @@ const mathModifiers: IModifier[] = [
                 description: 'The thousands separator (default `,`).'
             }
         ],
-        canBeParameter: true
+        canBeParameter: true,
+        isDeprecated: false
     },
     {
         name: 'mode',
@@ -90,7 +96,8 @@ const mathModifiers: IModifier[] = [
         description: '',
         docLink: '',
         parameters: [],
-        canBeParameter: true
+        canBeParameter: true,
+        isDeprecated: false
     },
     {
         name: 'multiply',
@@ -104,7 +111,8 @@ const mathModifiers: IModifier[] = [
                 description: 'The value to multiply.'
             }
         ],
-        canBeParameter: true
+        canBeParameter: true,
+        isDeprecated: false
     },
     {
         name: '*',
@@ -118,7 +126,8 @@ const mathModifiers: IModifier[] = [
                 description: 'The value to multiply.'
             }
         ],
-        canBeParameter: false
+        canBeParameter: false,
+        isDeprecated: false
     },
     {
         name: 'round',
@@ -132,7 +141,8 @@ const mathModifiers: IModifier[] = [
                 description: 'The number of digits after the decimal point.'
             }
         ],
-        canBeParameter: true
+        canBeParameter: true,
+        isDeprecated: false
     },
     {
         name: 'subtract',
@@ -146,7 +156,8 @@ const mathModifiers: IModifier[] = [
                 description: 'The value to subtract.'
             }
         ],
-        canBeParameter: true
+        canBeParameter: true,
+        isDeprecated: false
     },
     {
         name: '-',
@@ -160,7 +171,8 @@ const mathModifiers: IModifier[] = [
                 description: 'The value to subtract.'
             }
         ],
-        canBeParameter: false
+        canBeParameter: false,
+        isDeprecated: false
     },
 ];
 

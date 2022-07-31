@@ -1,3 +1,4 @@
+import { AntlersSettings } from '../antlersSettings';
 import { AntlersError } from '../runtime/errors/antlersError';
 import { AntlersNode } from '../runtime/nodes/abstractNode';
 
@@ -7,5 +8,5 @@ export interface IDiagnosticsHandler {
      *
      * @param {AntlersNode} node The node being analyzed.
      */
-    checkNode(node: AntlersNode): AntlersError[];
+    checkNode(node: AntlersNode, settings: AntlersSettings): AntlersError[];
 }

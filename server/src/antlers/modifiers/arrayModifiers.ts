@@ -15,7 +15,8 @@ const arrayModifiers: IModifier[] = [
                 description: 'The alias name.'
             }
         ],
-        canBeParameter: true
+        canBeParameter: true,
+        isDeprecated: false
     },
     {
         name: 'ampersand_list',
@@ -24,7 +25,8 @@ const arrayModifiers: IModifier[] = [
         description: 'Converts the array into a comma delimited string, with an ampersand before the last item.',
         docLink: 'https://statamic.dev/modifiers/ampersand_list',
         parameters: [],
-        canBeParameter: false
+        canBeParameter: false,
+        isDeprecated: false
     },
     {
         name: 'collapse',
@@ -33,7 +35,8 @@ const arrayModifiers: IModifier[] = [
         description: 'Collapses an array of arrays into a single, flat, array.',
         docLink: 'https://statamic.dev/modifiers/collapse',
         parameters: [],
-        canBeParameter: false
+        canBeParameter: false,
+        isDeprecated: false
     },
     {
         name: 'contains',
@@ -47,7 +50,8 @@ const arrayModifiers: IModifier[] = [
                 description: 'The value to check for.'
             }
         ],
-        canBeParameter: false
+        canBeParameter: false,
+        isDeprecated: false
     },
     {
         name: 'count',
@@ -56,7 +60,8 @@ const arrayModifiers: IModifier[] = [
         description: 'Returns the number of items in the array.',
         docLink: 'https://statamic.dev/modifiers/count',
         parameters: [],
-        canBeParameter: false
+        canBeParameter: false,
+        isDeprecated: false
     },
     {
         name: 'dl',
@@ -65,7 +70,8 @@ const arrayModifiers: IModifier[] = [
         description: 'Turns an associative array into an HTML definition list.',
         docLink: 'https://statamic.dev/modifiers/dl',
         parameters: [],
-        canBeParameter: false
+        canBeParameter: false,
+        isDeprecated: false
     },
     {
         name: 'explode',
@@ -79,7 +85,8 @@ const arrayModifiers: IModifier[] = [
                 description: 'The delimiter to break the string apart on.'
             }
         ],
-        canBeParameter: true
+        canBeParameter: true,
+        isDeprecated: false
     },
     {
         name: 'flatten',
@@ -88,7 +95,8 @@ const arrayModifiers: IModifier[] = [
         description: 'Flattens a multi-dimensional array.',
         docLink: 'https://statamic.dev/modifiers/flatten',
         parameters: [],
-        canBeParameter: false
+        canBeParameter: false,
+        isDeprecated: false
     },
     {
         name: 'flip',
@@ -97,7 +105,8 @@ const arrayModifiers: IModifier[] = [
         description: 'Swaps the array keys with their values.',
         docLink: 'https://statamic.dev/modifiers/flip',
         parameters: [],
-        canBeParameter: false
+        canBeParameter: false,
+        isDeprecated: false
     },
     {
         name: 'group_by',
@@ -112,7 +121,8 @@ const arrayModifiers: IModifier[] = [
             }
         ],
         canBeParameter: true,
-        augmentScope: augmentGroupByScope
+        augmentScope: augmentGroupByScope,
+        isDeprecated: false
     },
     {
         name: 'in_array',
@@ -126,7 +136,8 @@ const arrayModifiers: IModifier[] = [
                 description: 'The value to check for.'
             }
         ],
-        canBeParameter: false
+        canBeParameter: false,
+        isDeprecated: false
     },
     {
         name: 'is_empty',
@@ -135,7 +146,8 @@ const arrayModifiers: IModifier[] = [
         description: 'Tests if the array is empty.',
         docLink: 'https://statamic.dev/modifiers/is_empty',
         parameters: [],
-        canBeParameter: false
+        canBeParameter: false,
+        isDeprecated: false
     },
     {
         name: 'join',
@@ -149,7 +161,8 @@ const arrayModifiers: IModifier[] = [
                 description: 'The string to combine the parts by.'
             }
         ],
-        canBeParameter: true
+        canBeParameter: true,
+        isDeprecated: false
     },
     {
         name: 'joinplode',
@@ -163,7 +176,8 @@ const arrayModifiers: IModifier[] = [
                 description: 'The string to combine the parts by.'
             }
         ],
-        canBeParameter: true
+        canBeParameter: true,
+        isDeprecated: false
     },
     {
         name: 'limit',
@@ -177,7 +191,8 @@ const arrayModifiers: IModifier[] = [
                 description: 'The maximum number of items to return.'
             }
         ],
-        canBeParameter: true
+        canBeParameter: true,
+        isDeprecated: false
     },
     {
         name: 'list',
@@ -186,7 +201,8 @@ const arrayModifiers: IModifier[] = [
         description: 'Converts the array into a comma-separated string.',
         docLink: 'https://statamic.dev/modifiers/list',
         parameters: [],
-        canBeParameter: false
+        canBeParameter: false,
+        isDeprecated: false
     },
     {
         name: 'offset',
@@ -200,7 +216,8 @@ const arrayModifiers: IModifier[] = [
                 description: 'The one-based index to start retrieving items.'
             }
         ],
-        canBeParameter: true
+        canBeParameter: true,
+        isDeprecated: false
     },
     {
         name: 'ol',
@@ -209,7 +226,8 @@ const arrayModifiers: IModifier[] = [
         description: 'Turns the array into an HTML ordered list.',
         docLink: 'https://statamic.dev/modifiers/ol',
         parameters: [],
-        canBeParameter: false
+        canBeParameter: false,
+        isDeprecated: false
     },
     {
         name: 'option_list',
@@ -218,7 +236,8 @@ const arrayModifiers: IModifier[] = [
         description: 'Turns an array into a pipe-delimited string.',
         docLink: 'https://statamic.dev/modifiers/option_list',
         parameters: [],
-        canBeParameter: false
+        canBeParameter: false,
+        isDeprecated: false
     },
     {
         name: 'pluck',
@@ -232,7 +251,8 @@ const arrayModifiers: IModifier[] = [
             }
         ],
         canBeParameter: true,
-        docLink: null
+        docLink: null,
+        isDeprecated: false
     },
     {
         name: 'pad',
@@ -250,7 +270,8 @@ const arrayModifiers: IModifier[] = [
                 description: 'The value to pad the array with.'
             }
         ],
-        canBeParameter: true
+        canBeParameter: true,
+        isDeprecated: false
     },
     {
         name: 'piped',
@@ -259,7 +280,8 @@ const arrayModifiers: IModifier[] = [
         description: 'Turns an array into a pipe-delimited string.',
         docLink: 'https://statamic.dev/modifiers/piped',
         parameters: [],
-        canBeParameter: false
+        canBeParameter: false,
+        isDeprecated: false
     },
     {
         name: 'sentence_list',
@@ -268,7 +290,8 @@ const arrayModifiers: IModifier[] = [
         description: 'Turns the array into a comma-delimited list, with the word "and" before the last item.',
         docLink: 'https://statamic.dev/modifiers/sentence_list',
         parameters: [],
-        canBeParameter: false
+        canBeParameter: false,
+        isDeprecated: false
     },
     {
         name: 'shuffle',
@@ -277,7 +300,8 @@ const arrayModifiers: IModifier[] = [
         description: 'Randomizes the order of array elements.',
         docLink: 'https://statamic.dev/modifiers/shuffle',
         parameters: [],
-        canBeParameter: false
+        canBeParameter: false,
+        isDeprecated: false
     },
     {
         name: 'sort',
@@ -295,7 +319,8 @@ const arrayModifiers: IModifier[] = [
                 description: 'The sort direction. `asc` or `desc`.'
             }
         ],
-        canBeParameter: true
+        canBeParameter: true,
+        isDeprecated: false
     },
     {
         name: 'sum',
@@ -309,7 +334,8 @@ const arrayModifiers: IModifier[] = [
                 description: 'The value to sum.'
             }
         ],
-        canBeParameter: false
+        canBeParameter: false,
+        isDeprecated: false
     },
     {
         name: 'ul',
@@ -318,7 +344,8 @@ const arrayModifiers: IModifier[] = [
         description: 'Turns the array into an HTML unordered list.',
         docLink: 'https://statamic.dev/modifiers/ul',
         parameters: [],
-        canBeParameter: false
+        canBeParameter: false,
+        isDeprecated: false
     },
     {
         name: 'unique',
@@ -327,7 +354,8 @@ const arrayModifiers: IModifier[] = [
         description: 'Returns all unique items in the array.',
         docLink: 'https://statamic.dev/modifiers/unique',
         parameters: [],
-        canBeParameter: false
+        canBeParameter: false,
+        isDeprecated: false
     },
     {
         name: 'where',
@@ -345,7 +373,8 @@ const arrayModifiers: IModifier[] = [
                 description: 'The value to compare to.'
             }
         ],
-        canBeParameter: true
+        canBeParameter: true,
+        isDeprecated: false
     },
     {
         name: 'split',
@@ -360,7 +389,8 @@ const arrayModifiers: IModifier[] = [
                 description: 'The size of each new array'
             }
         ],
-        augmentScope: augmentSplitScope
+        augmentScope: augmentSplitScope,
+        isDeprecated: false
     },
     {
         name: 'compact',
@@ -374,7 +404,8 @@ const arrayModifiers: IModifier[] = [
                 name: 'variables',
                 description: 'A comma-delimited list of variable names.'
             }
-        ]
+        ],
+        isDeprecated: false
     }
 ];
 
