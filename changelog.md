@@ -2,6 +2,10 @@
 
 Bugs fixed, what's new, and more! :)
 
+## v2.3.1
+
+- Improves parsing and error reporting of array access variables
+
 ## v2.3.0
 
 - Warning `ANTLER_521` will now be emitted for deprecated modifiers
