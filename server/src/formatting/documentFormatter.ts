@@ -1,7 +1,7 @@
+import { AntlersSettings } from '../antlersSettings';
 import InterleavedNodeHandler from '../diagnostics/handlers/interleavedNodes';
 import { AntlersDocument } from '../runtime/document/antlersDocument';
 import { TransformOptions } from '../runtime/document/transformOptions';
-import { getAntlersSettings } from '../server';
 import { HTMLFormatter, PHPFormatter, PreFormatter, YAMLFormatter } from './formatters';
 
 export class DocumentFormatter {
@@ -9,7 +9,7 @@ export class DocumentFormatter {
     private yamlFormatter: YAMLFormatter | null = null;
     private phpFormatter: PHPFormatter | null = null;
     private preFormatter: PreFormatter | null = null;
-    private transformOptions:TransformOptions | null = null;
+    private transformOptions: TransformOptions | null = null;
     protected createExtraVirtualStructures = false;
 
     withTransformOptions(options: TransformOptions) {
@@ -42,15 +42,15 @@ export class DocumentFormatter {
         return this;
     }
 
-    formatText(text: string): string {
+    formatText(text: string, settings: AntlersSettings): string {
         const document = new AntlersDocument();
         document.getDocumentParser().withChildDocuments(true);
         document.loadString(text);
 
-        return this.formatDocument(document);
+        return this.formatDocument(document, settings);
     }
 
-    formatDocument(document: AntlersDocument): string {
+    formatDocument(document: AntlersDocument, currentSettings: AntlersSettings): string {
         if (!document.isFormattingEnabled()) {
             return document.getOriginalContent();
         }
@@ -63,8 +63,7 @@ export class DocumentFormatter {
             }
         }
 
-        const antlersNodes = document.getAllAntlersNodes(),
-            currentSettings = getAntlersSettings();
+        const antlersNodes = document.getAllAntlersNodes();
 
         for (let i = 0; i < antlersNodes.length; i++) {
             if (InterleavedNodeHandler.checkNode(antlersNodes[i], currentSettings).length > 0) {
@@ -75,7 +74,7 @@ export class DocumentFormatter {
         if (this.htmlFormatter == null || document.isValid() == false) {
             return document.getOriginalContent();
         }
-        
+
         document.transform()
             .produceExtraStructuralPairs(this.createExtraVirtualStructures)
             .withHtmlFormatter(this.htmlFormatter)

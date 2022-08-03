@@ -341,7 +341,7 @@ connection.onRequest(ForcedFormatRequest.type, (params) => {
         htmlOptions: options
     });
 
-    return formatter.formatDocument(AntlersDocument.fromText(params.content));
+    return formatter.formatDocument(AntlersDocument.fromText(params.content), getAntlersSettings());
 });
 
 connection.onRequest(DocumentTransformRequest.type, (params) => {

@@ -1,9 +1,21 @@
 import * as prettier from 'prettier';
+import { AntlersSettings } from '../../antlersSettings';
 import { AntlersDocument } from '../../runtime/document/antlersDocument';
 import { PrettierDocumentFormatter } from './prettierDocumentFormatter';
 import { setOptions } from './utils';
 
 let formatterOptions:prettier.ParserOptions;
+const defaultAntlersSettings: AntlersSettings = {
+    formatFrontMatter: false,
+    showGeneralSnippetCompletions: true,
+    diagnostics: {
+        warnOnDynamicCssClassNames: true,
+        validateTagParameters: true,
+    },
+    trace: { server: 'off' },
+    formatterIgnoreExtensions: ['xml'],
+    languageVersion: 'runtime'
+};
 
 const plugin: prettier.Plugin = {
     languages: [
@@ -34,7 +46,7 @@ const plugin: prettier.Plugin = {
             print (path: prettier.AstPath) {
                 const doc = path.stack[0] as AntlersDocument;
 
-                return (new PrettierDocumentFormatter(formatterOptions as prettier.ParserOptions)).formatDocument(doc);
+                return (new PrettierDocumentFormatter(formatterOptions as prettier.ParserOptions)).formatDocument(doc, defaultAntlersSettings);
             }
         }
     },

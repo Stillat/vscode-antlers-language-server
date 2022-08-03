@@ -35,7 +35,7 @@ export function formatAntlersDocument(params: DocumentFormattingParams): TextEdi
             };
 
         const formatter = new BeautifyDocumentFormatter(antlersFormatterOptions),
-            results = formatter.formatDocument(antlersDoc);
+            results = formatter.formatDocument(antlersDoc, getAntlersSettings());
 
         const replaceEndPosition = document.positionAt(docText.length);
 

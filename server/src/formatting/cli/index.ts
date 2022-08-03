@@ -4,9 +4,22 @@
 const yargs = require('yargs'), path = require('path');
 
 import * as fs from 'fs';
+import { AntlersSettings } from '../../antlersSettings';
 import { AntlersDocument } from '../../runtime/document/antlersDocument';
 import { AntlersFormattingOptions } from '../antlersFormattingOptions';
 import { BeautifyDocumentFormatter } from '../beautifyDocumentFormatter';
+
+const defaultAntlersSettings: AntlersSettings = {
+    formatFrontMatter: false,
+    showGeneralSnippetCompletions: true,
+    diagnostics: {
+        warnOnDynamicCssClassNames: true,
+        validateTagParameters: true,
+    },
+    trace: { server: 'off' },
+    formatterIgnoreExtensions: ['xml'],
+    languageVersion: 'runtime'
+};
 
 const EXIT_SUCCESS = 0,
     EXIT_FILE_NOT_FOUND = 3,
@@ -94,7 +107,7 @@ function getFiles(directory: string, extension: string, callback: fileCallback) 
 function formatString(contents: string, savePath: string|null, dumpContents: boolean, options: AntlersFormattingOptions) {
     const doc = AntlersDocument.fromText(contents),
         formatter = new BeautifyDocumentFormatter(options),
-        formatResults = formatter.formatDocument(doc);
+        formatResults = formatter.formatDocument(doc, defaultAntlersSettings);
     if (dumpContents === true) {
         console.log(formatResults);
     } else if (savePath != null) {
@@ -110,7 +123,7 @@ function formatFile(path: string, savePath: string, dumpContents: boolean, optio
             const contents = fs.readFileSync(path, { encoding: 'utf8' }),
                 doc = AntlersDocument.fromText(contents),
                 formatter = new BeautifyDocumentFormatter(options),
-                formatResults = formatter.formatDocument(doc);
+                formatResults = formatter.formatDocument(doc, defaultAntlersSettings);
 
             if (dumpContents === true) {
                 console.log(formatResults);
