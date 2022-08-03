@@ -39,4 +39,18 @@ suite("Path Parser Errors Test", () => {
         );
         assert.strictEqual(errors[0].node, node);
     });
+
+    
+
+    test("parser does not flag array access false positives", () => {
+        const nodes = parseRenderNodes("{{ test['hello']['test'] }}");
+
+        assertCount(1, nodes);
+        assertInstanceOf(AntlersNode, nodes[0]);
+
+        const node = nodes[0] as AntlersNode;
+        const errors = node.getErrors();
+
+        assertCount(0, errors);
+    });
 });

@@ -169,8 +169,8 @@ export class PathParser {
                         continue;
                     }
                 } else {
-                    if (this.prev != DocumentParser.LeftBracket) {
-                        if (StringUtilities.ctypeAlpha(this.prev) || StringUtilities.ctypeDigit(this.prev)) {
+                    if (this.prev != null && this.prev != DocumentParser.LeftBracket) {
+                        if ( StringUtilities.ctypeAlpha(this.prev) || StringUtilities.ctypeDigit(this.prev)) {
                             this.antlersErrors.push(AntlersError.makeSyntaxError(
                                 AntlersErrorCodes.PATH_STRING_NOT_INSIDE_ARRAY_ACCESSOR,
                                 null,
