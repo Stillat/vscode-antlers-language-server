@@ -2,6 +2,10 @@
 
 Bugs fixed, what's new, and more! :)
 
+## v2.3.2
+
+- Adds additional YAML parsing checks to prevent crashing the language server
+
 ## v2.3.1
 
 - Improves parsing and error reporting of array access variables

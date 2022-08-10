@@ -8,7 +8,7 @@ export function parseMacros(macroFile: string): IModifierMacro[] {
         macrosToReturn: IModifierMacro[] = [];
 
     try {
-        const document = YAML.parse(contents);
+        let document = YAML.parse(contents);
 
         if (typeof document === 'undefined' || document === null) {
             return [];

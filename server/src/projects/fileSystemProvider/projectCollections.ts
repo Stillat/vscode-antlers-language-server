@@ -43,10 +43,8 @@ export function getCollectionDetails(collectionPath: string): ICollection {
                 }
             }
 
-            if (
-                typeof document.template !== "undefined" &&
-                document.template !== null
-            ) {
+            if (typeof document.template !== "undefined" &&
+                document.template !== null) {
                 template = document.template;
             }
 
@@ -54,34 +52,26 @@ export function getCollectionDetails(collectionPath: string): ICollection {
                 layout = document.layout;
             }
 
-            if (
-                typeof document.taxonomies !== "undefined" &&
-                document.taxonomies !== null
-            ) {
+            if (typeof document.taxonomies !== "undefined" &&
+                document.taxonomies !== null) {
                 taxonomyNames = Object.keys(document.taxonomies);
             }
 
-            if (
-                typeof document.structure !== "undefined" &&
-                document.structure !== null
-            ) {
+            if (typeof document.structure !== "undefined" &&
+                document.structure !== null) {
                 isStructure = true;
 
                 const tempStructure = document.structure;
                 let maxDepth = -1,
                     root = false;
 
-                if (
-                    typeof tempStructure.root !== "undefined" &&
-                    tempStructure.root !== null
-                ) {
+                if (typeof tempStructure.root !== "undefined" &&
+                    tempStructure.root !== null) {
                     root = tempStructure.root;
                 }
 
-                if (
-                    typeof tempStructure.max_depth !== "undefined" &&
-                    tempStructure.max_depth !== null
-                ) {
+                if (typeof tempStructure.max_depth !== "undefined" &&
+                    tempStructure.max_depth !== null) {
                     maxDepth = tempStructure.max_depth;
                 }
 

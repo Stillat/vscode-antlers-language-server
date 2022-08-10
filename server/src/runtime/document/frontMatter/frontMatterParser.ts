@@ -81,9 +81,8 @@ export class FrontMatterParser {
     }
 
     parse(text: string) {
-        const docs = YAML.parseDocument(text);
-
         try {
+            const docs = YAML.parseDocument(text);
 
             if (docs.contents instanceof YAMLMap) {
                 this.documentScope = this.analyzeDocument(docs.contents.items);

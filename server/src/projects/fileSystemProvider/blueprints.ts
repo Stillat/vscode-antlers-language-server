@@ -113,43 +113,48 @@ export function getBlueprintFields(
     blueprintName: string,
     fieldsets: Map<string, IFieldsetField[]>
 ): IBlueprintField[] {
-    const contents = fs.readFileSync(fileName, { encoding: "utf8" }),
-        document = YAML.parse(contents),
-        sections = document.sections;
     let fields: IBlueprintField[] = [];
 
-    if (typeof sections !== "undefined") {
-        for (const sectionName of Object.keys(sections)) {
-            const section = sections[sectionName];
+    try {
+        const contents = fs.readFileSync(fileName, { encoding: "utf8" }),
+            document = YAML.parse(contents),
+            sections = document.sections;
 
-            if (typeof section.fields !== "undefined") {
-                const sectionFields = getFields(
-                    section,
+        if (typeof sections !== "undefined") {
+            for (const sectionName of Object.keys(sections)) {
+                const section = sections[sectionName];
+
+                if (typeof section.fields !== "undefined") {
+                    const sectionFields = getFields(
+                        section,
+                        blueprintName,
+                        "fields",
+                        blueprintName,
+                        fieldsets
+                    );
+
+                    if (sectionFields.length > 0) {
+                        fields = fields.concat(sectionFields);
+                    }
+                }
+            }
+        } else {
+            if (typeof document.fields !== "undefined") {
+                const documentFields = getFields(
+                    document,
                     blueprintName,
                     "fields",
                     blueprintName,
                     fieldsets
                 );
 
-                if (sectionFields.length > 0) {
-                    fields = fields.concat(sectionFields);
+                if (documentFields.length > 0) {
+                    fields = fields.concat(documentFields);
                 }
             }
         }
-    } else {
-        if (typeof document.fields !== "undefined") {
-            const documentFields = getFields(
-                document,
-                blueprintName,
-                "fields",
-                blueprintName,
-                fieldsets
-            );
-
-            if (documentFields.length > 0) {
-                fields = fields.concat(documentFields);
-            }
-        }
+    } catch (err) {
+        // Don't let blueprint parsing crash the server.
     }
 
     return fields;
