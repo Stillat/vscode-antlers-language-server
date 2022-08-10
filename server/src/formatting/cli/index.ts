@@ -221,8 +221,14 @@ if (argv._.includes('format')) {
         if (typeof argv.dir !== 'undefined' && argv.dir !== null) {
             let extensionsToUse: string[] = ['.antlers.html'];
 
-            if (settingsToUse.formatExtensions.length > 0) {
+            if (typeof settingsToUse === 'undefined' || settingsToUse == null) {
+                settingsToUse = defaultSettings;
+            }
+
+            if (typeof settingsToUse !== 'undefined' && settingsToUse.formatExtensions != null && settingsToUse.formatExtensions.length > 0) {
                 extensionsToUse = settingsToUse.formatExtensions;
+            } else {
+                extensionsToUse = defaultSettings.formatExtensions;
             }
 
             formatDirectory(argv.dir, settingsToUse, extensionsToUse, argv.dump === true);
@@ -250,8 +256,14 @@ if (argv._.includes('format')) {
             if (stat.isDirectory()) {
                 let extensionsToUse: string[] = ['.antlers.html'];
 
-                if (settingsToUse.formatExtensions.length > 0) {
+                if (typeof settingsToUse === 'undefined' || settingsToUse == null) {
+                    settingsToUse = defaultSettings;
+                }
+
+                if (typeof settingsToUse !== 'undefined' && settingsToUse.formatExtensions != null && settingsToUse.formatExtensions.length > 0) {
                     extensionsToUse = settingsToUse.formatExtensions;
+                } else {
+                    extensionsToUse = defaultSettings.formatExtensions;
                 }
 
                 formatDirectory(path, settingsToUse, extensionsToUse, argv.dump === true);
