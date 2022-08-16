@@ -64,7 +64,7 @@ export class NodePrinter {
                         if (node.name == 'arr') {
                             nodeBuffer.appendT(' arr');
                         } else if (node.name == 'switch' || node.name == 'list') {
-                            nodeBuffer.appendTS(' ' + node.name);
+                            nodeBuffer.appendTS(' ' + node.name, true);
 
                             if (i + 1 < lexerNodes.length) {
                                 const next = lexerNodes[i + 1];

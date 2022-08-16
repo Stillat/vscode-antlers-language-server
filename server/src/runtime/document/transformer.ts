@@ -317,8 +317,14 @@ export class Transformer {
 
         let result = NodePrinter.prettyPrintNode(printNode, doc, 0, this.options, prepend, null);
 
+        const forceBreakOperatorNames = ['switch', 'list'];
+
         if (targetIndent != null && result.includes("\n")) {
-            result = IndentLevel.shiftIndent(result, targetIndent - (this.options.tabSize * 2), true);
+            if (node.isVirtual && (node.name?.name == 'switch' || node.name?.name == 'list')) {
+                result = IndentLevel.shiftIndent(result, targetIndent + this.options.tabSize, true);
+            } else {
+                result = IndentLevel.shiftIndent(result, targetIndent - (this.options.tabSize * 2), true);
+            }
         }
 
         return result;
@@ -792,12 +798,18 @@ export class Transformer {
 
         this.inlineNodes.forEach((node: AntlersNode, slug: string) => {
             const inline = this.selfClosing(slug);
-
+            const level = this.indentLevel(inline);
             value = value.replace(inline, this.printNode(node, this.indentLevel(inline)));
         });
 
         this.spanNodes.forEach((node: AntlersNode, slug: string) => {
-            value = value.replace(slug, this.printNode(node));
+            let level = 0;
+
+            if (node.isVirtual && (node.name?.name == 'switch' || node.name?.name == 'list')) {
+                level = this.indentLevel(slug, true);
+            }
+
+            value = value.replace(slug, this.printNode(node, level));
         });
 
         return value;
@@ -917,14 +929,21 @@ export class Transformer {
         return value;
     }
 
-    private indentLevel(value: string): number {
+    private indentLevel(value: string, includeIndex = false): number {
+
         for (let i = 0; i < this.structureLines.length; i++) {
             const thisLine = this.structureLines[i];
 
             if (thisLine.includes(value)) {
                 const trimmed = thisLine.trimLeft();
 
-                return thisLine.length - trimmed.length;
+                let indent = thisLine.length - trimmed.length;
+
+                if (includeIndex) {
+                    indent += thisLine.indexOf(value);
+                }
+
+                return indent;
             }
         }
         return 0;

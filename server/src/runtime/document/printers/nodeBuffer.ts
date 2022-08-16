@@ -59,12 +59,12 @@ export class NodeBuffer {
         return this;
     }
 
-    appendTS(text: string) {
+    appendTS(text: string, preserveSpace = false) {
         if (this.buffer.endsWith(' ')) {
             this.buffer = this.buffer.trimEnd();
         }
 
-        if (this.buffer.endsWith('{')) {
+        if (this.buffer.endsWith('{') && !preserveSpace) {
             text = text.trimStart();
         }
 

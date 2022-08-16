@@ -2,6 +2,11 @@
 
 Bugs fixed, what's new, and more! :)
 
+## v2.3.3
+
+- Improves formatting of expanded inline `switch` groups
+- Preserves space on nested `switch` or `list` operators
+
 ## v2.3.2
 
 - Adds additional YAML parsing checks to prevent crashing the language server
