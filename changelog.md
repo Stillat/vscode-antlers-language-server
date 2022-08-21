@@ -2,6 +2,11 @@
 
 Bugs fixed, what's new, and more! :)
 
+## v2.3.4
+
+- Fixes a bug that would split up tag names if they contained characters that look like operators
+- Improves the preservation of line breaks when formatting
+
 ## v2.3.3
 
 - Improves formatting of expanded inline `switch` groups
