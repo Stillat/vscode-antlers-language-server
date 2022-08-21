@@ -54,7 +54,7 @@ export class InlineNodeAnalyzer {
                     } else if (node.prev.prev instanceof EscapedContentNode) {
                         isLeftInline = true;
                     } else if (node.prev.prev instanceof AntlersNode) {
-                        if (node.prev.prev.isInlineAntlers) {
+                        if (node.prev.prev.isInlineAntlers && node.prev.prev.endPosition?.line == node.startPosition?.line) {
                             isLeftInline = true;
                         } else {
                             if (node.prev.prev.isClosingTag && node.prev.prev.isOpenedBy != null) {

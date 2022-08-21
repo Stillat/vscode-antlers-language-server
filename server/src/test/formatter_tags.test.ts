@@ -130,7 +130,8 @@ After Partial
         {{ foo:one }} {{ foo:two }}
         {{ /tag }}`;
         const output = `{{ tag scope="foo" }}
-    {{ foo:one }} {{ foo:two }}
+    {{ foo:one }}
+    {{ foo:two }}
 {{ /tag }}`;
         assert.strictEqual(formatAntlers(template), output);
     });

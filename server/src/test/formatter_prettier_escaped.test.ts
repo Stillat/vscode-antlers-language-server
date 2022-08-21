@@ -60,7 +60,8 @@ suite('Formatter Prettier Escaped Nodes', () => {
   }} {{ qux }}
 bar
 {{ baz }}`;
-        const output = `@{{ foo bar:baz="qux" }} {{ qux }} bar {{ baz }}`;
+        const output = `@{{ foo bar:baz="qux" }} {{ qux }} bar
+{{ baz }}`;
         assert.strictEqual(formatStringWithPrettier(template).trim(), output);
     });
     

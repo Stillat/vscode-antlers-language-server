@@ -132,7 +132,8 @@ After Partial
         {{ foo:one }} {{ foo:two }}
         {{ /tag }}`;
         const output = `{{ tag scope="foo" }}
-    {{ foo:one }} {{ foo:two }}
+    {{ foo:one }}
+    {{ foo:two }}
 {{ /tag }}`;
         assert.strictEqual(formatStringWithPrettier(template).trim(), output);
     });
@@ -143,7 +144,8 @@ After Partial
         {{ foo:two }}
         {{ /tag }}`;
         const output = `{{ tag scope="foo" }}
-    {{ foo:one }} {{ foo:two }}
+    {{ foo:one }}
+    {{ foo:two }}
 {{ /tag }}`;
         assert.strictEqual(formatStringWithPrettier(template).trim(), output);
     });

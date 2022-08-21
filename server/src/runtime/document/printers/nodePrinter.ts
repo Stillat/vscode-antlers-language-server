@@ -93,6 +93,10 @@ export class NodePrinter {
                             if (nodeOperators > 1) {
                                 nodeBuffer.newlineNDIndent().indent().addIndent(6).appendS(node.name);
                             } else {
+                                if (doc.getDocumentParser().getLanguageParser().isMergedVariableComponent(node)) {
+                                    nodeBuffer.append(node.name);
+                                    continue;
+                                }
                                 nodeBuffer.appendS(node.name);
                             }
                         }

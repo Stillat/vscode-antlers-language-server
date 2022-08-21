@@ -175,4 +175,80 @@ class="bg-blue mx-auto flex max-w-5xl flex-wrap items-center justify-between py-
             output
         );
     });
+
+
+    test('it doesnt break up tags and preserves line breaks', () => {
+        const input = `<!DOCTYPE html>
+        <html lang="{{ site:short_locale }}">
+          <head>
+            <meta charset="UTF-8" />
+            <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+            <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+            <meta name="theme-color" content="#000000" />
+            {{ seo_pro:meta }}
+            {{ yield:preconnect }}
+            <link rel="icon" href="/favicon.ico" sizes="any" />
+            <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+            <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
+            <link rel="manifest" href="/manifest.webmanifest" />
+                                        {{ webpack:style name="print.css" loading="print" }}
+                                        {{ webpack:style name="critical.css" loading="inline" }}
+                                        {{ webpack:style name="main.css" preload="true" }}
+                                       
+                                       
+                                        {{ webpack }}
+                                        
+                                        {{ yield:page_scripts }}
+          </head>
+          <body>
+            {{ test that="{ 2     -      3 + 3}" }}
+            {{ partial:common/patterns/skip-link }}
+            {{ partial:common/patterns/page-transition }}
+            {{ partial:common/patterns/navbar }}
+            <main>{{ template_content }}</main>        
+            {{ partial:common/patterns/social }}
+                            {{ partial:common/patterns/footer }}
+                                          {{ partial:common/patterns/search-modal }}
+                            {{ yield:inline_script }}
+                             </body>
+        </html>`;
+            const output = `<!DOCTYPE html>
+<html lang="{{ site:short_locale }}">
+    <head>
+        <meta charset="UTF-8" />
+        <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+        <meta
+            name="viewport"
+            content="width=device-width, initial-scale=1, viewport-fit=cover"
+        />
+        <meta name="theme-color" content="#000000" />
+        {{ seo_pro:meta }}
+        {{ yield:preconnect }}
+        <link rel="icon" href="/favicon.ico" sizes="any" />
+        <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+        <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
+        <link rel="manifest" href="/manifest.webmanifest" />
+        {{ webpack:style name="print.css" loading="print" }}
+        {{ webpack:style name="critical.css" loading="inline" }}
+        {{ webpack:style name="main.css" preload="true" }}
+        {{ webpack }}
+        {{ yield:page_scripts }}
+    </head>
+    <body>
+        {{ test that="{2 - 3 + 3}" }}
+        {{ partial:common/patterns/skip-link }}
+        {{ partial:common/patterns/page-transition }}
+        {{ partial:common/patterns/navbar }}
+        <main>{{ template_content }}</main>
+        {{ partial:common/patterns/social }}
+        {{ partial:common/patterns/footer }}
+        {{ partial:common/patterns/search-modal }}
+        {{ yield:inline_script }}
+    </body>
+</html>`;
+        assert.strictEqual(
+            formatStringWithPrettier(input).trim(),
+            output
+        );
+    });
 });

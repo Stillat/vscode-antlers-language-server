@@ -67,7 +67,11 @@ export class FragmentPositionAnalyzer {
 
             const fragment = this.fragmentsParser.getFragmentContaining(node.startPosition);
 
-            if (fragment == null) { return; }
+            if (fragment == null) { 
+                node.fragmentPosition = FragmentPosition.Unresolved;
+                return;
+            }
+
             node.fragment = fragment;
             const startDelta = node.startPosition.index - (fragment.startPosition?.index ?? 0);
 
