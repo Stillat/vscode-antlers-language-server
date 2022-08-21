@@ -51,6 +51,16 @@ const LocaleParameters: IAntlersParameter[] = [
         expectsTypes: ["boolean"],
         isDynamic: false,
     },
+    {
+        isRequired: false,
+        name: "collection_term_workaround",
+        description: "Disables the behavior introduced in https://github.com/statamic/cms/pull/6466",
+        acceptsVariableInterpolation: true,
+        aliases: [],
+        allowsVariableReference: true,
+        expectsTypes: ["boolean"],
+        isDynamic: false,
+    }
 ];
 
 export { LocaleParameters };

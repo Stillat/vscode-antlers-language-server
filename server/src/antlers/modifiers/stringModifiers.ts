@@ -672,7 +672,47 @@ const stringModifiers: IModifier[] = [
         canBeParameter: false,
         parameters: [],
         isDeprecated: false
-    }
+    },
+    {
+        name: 'antlers',
+        acceptsType: ['string'],
+        returnsType: ['string'],
+        description: 'Parses the provided value as Antlers, and returns the result',
+        docLink: null,
+        canBeParameter: false,
+        parameters: [],
+        isDeprecated: false,
+    },
+    {
+        name: 'bard_items',
+        acceptsType: ['string'],
+        returnsType: ['array'],
+        description: 'Converts a Bard value to a flat array of nodes and marks',
+        docLink: null,
+        canBeParameter: false,
+        parameters: [],
+        isDeprecated: false,
+    },
+    {
+        name: 'bard_text',
+        acceptsType: ['array', 'string'],
+        returnsType: ['string'],
+        description: 'Converts a Bard value to plain text (excluding sets)',
+        docLink: null,
+        canBeParameter: false,
+        parameters: [],
+        isDeprecated: false,
+    },
+    {
+        name: 'bard_html',
+        acceptsType: ['array', 'string'],
+        returnsType: ['string'],
+        description: 'Converts a Bard value to HTML (excluding sets)',
+        docLink: null,
+        canBeParameter: false,
+        parameters: [],
+        isDeprecated: false,
+    },
 ];
 
 export { stringModifiers };

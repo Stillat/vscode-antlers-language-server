@@ -18,7 +18,7 @@ const Cache: IAntlersTag = {
         params: ISuggestionRequest
     ) => {
         if (parameter.name == "scope") {
-            return exclusiveResultList(["page", "site"]);
+            return exclusiveResultList(["page", "site", "user"]);
         }
 
         return null;

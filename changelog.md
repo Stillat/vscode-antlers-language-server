@@ -2,6 +2,18 @@
 
 Bugs fixed, what's new, and more! :)
 
+## v2.3.5
+
+- Adds `user` completion item to the `cache` tag's `scope` parameter
+- Adds `collection_term_workaround` completion item to the `locales` tag
+- Adds `blueprint` entry variable to scope and completion items
+- Adds support for the `antlers` modifier
+- Adds support for the `bard_text`  modifier
+- Adds support for the `bard_html` modifier
+- Adds support for the `bard_items` modifier
+- Adds support for the `user_roles` tag
+- Adds support for the `user_groups` tag
+
 ## v2.3.4
 
 - Fixes a bug that would split up tag names if they contained characters that look like operators

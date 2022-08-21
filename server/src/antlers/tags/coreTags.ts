@@ -113,6 +113,8 @@ import SetTag from './core/set';
 import MountUrlTag from './core/mountUrl';
 import Vite from './core/vite';
 import NoCache from './core/nocache';
+import UserRoles from './core/userRoles';
+import UserGroups from './core/userGroups';
 
 const coreTags = [
     If,
@@ -190,7 +192,9 @@ const coreTags = [
     Is,
 
     InstalledTag,
-
+    UserRoles,
+    UserGroups,
+    
     User,
     UserIsnt,
     UserCan,
