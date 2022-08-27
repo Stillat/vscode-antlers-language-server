@@ -2,6 +2,10 @@
 
 Bugs fixed, what's new, and more! :)
 
+## v2.3.6
+
+- Improves indentation when formatting Antlers structures inside embedded documents
+
 ## v2.3.5
 
 - Adds `user` completion item to the `cache` tag's `scope` parameter

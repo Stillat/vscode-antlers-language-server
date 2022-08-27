@@ -59,7 +59,7 @@ export class IndentLevel {
                     reflowedLines[i] = thisLine.trimLeft();
                     continue;
                 } else {
-                    reflowedLines[i] = targetWs + reflowed;
+                    reflowedLines[i] = targetWs + reflowed.trimLeft();
                 }
             }
         }
