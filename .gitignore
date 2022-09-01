@@ -6,3 +6,4 @@ analyzer/vendor
 .vscode-test
 analyzer.phar
 analyzer/.idea
+.DS_Store
