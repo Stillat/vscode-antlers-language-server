@@ -2,6 +2,10 @@
 
 Bugs fixed, what's new, and more! :)
 
+## v2.3.7
+
+- Improves parsing of tag names containing "or" in the method part (https://github.com/Stillat/vscode-antlers-language-server/issues/49)
+
 ## v2.3.6
 
 - Improves indentation when formatting Antlers structures inside embedded documents

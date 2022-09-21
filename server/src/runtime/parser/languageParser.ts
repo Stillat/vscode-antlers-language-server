@@ -466,7 +466,7 @@ export class LanguageParser {
                 const left = newNodes[newNodeCount - 1],
                     right  = tokens[i + 1];
                 
-                if (left instanceof VariableNode && right instanceof VariableNode) {
+                if (left instanceof VariableNode && (right instanceof VariableNode || right instanceof LogicalOrOperator)) {
                     const lDistance = NodeHelpers.distance(left, node),
                         rDistance = NodeHelpers.distance(node, right);
                     if (lDistance <= 1 && rDistance <= 1) {
