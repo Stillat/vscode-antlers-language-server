@@ -147,4 +147,9 @@ After Partial
 {{ /tag }}`;
         assert.strictEqual(formatAntlers(template), output);
     });
+
+    test('it does not aggressively wrap modifier arguments', () => {
+        const input = `{{ article | raw | where('type', 'paragraph') | bard_text | safe_truncate(180, '...') | entities | mark }}`;
+        assert.strictEqual(formatAntlers(input), input);
+    });
 });

@@ -2,6 +2,16 @@
 
 Bugs fixed, what's new, and more! :)
 
+## v2.3.8
+
+- Improves line wrapping when formatting method-style modifiers
+- Adds support for the `key_by` modifier
+- Adds support for the `mark` modifier
+- Adds support for the `regex_mark` modifier
+- Adds support for the `page_name` Collection parameter
+- Adds support for the `cookie` tags
+- Adds support for the `glide:data_url` tag
+
 ## v2.3.7
 
 - Improves parsing of tag names containing "or" in the method part (https://github.com/Stillat/vscode-antlers-language-server/issues/49)

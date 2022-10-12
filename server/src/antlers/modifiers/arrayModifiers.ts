@@ -4,6 +4,21 @@ import { augmentSplitScope } from './scopeAugmentation/augmentSplitScope';
 
 const arrayModifiers: IModifier[] = [
     {
+        name: 'key_by',
+        acceptsType: ['array'],
+        returnsType: ['array'],
+        description: 'Re-keys the array or collection using the provided field name.',
+        docLink: null,
+        parameters: [
+            {
+                name: 'field',
+                description: 'The field to re-key the array or collection by.'
+            }
+        ],
+        canBeParameter: true,
+        isDeprecated: false,
+    },
+    {
         name: 'as',
         acceptsType: ['array'],
         returnsType: ['array'],

@@ -14,10 +14,12 @@ import {
 } from "../../tagManager";
 import { makeGlideVariables } from "../../variables/glideVariables";
 import GlideBatch from './glideBatch';
+import GlideDataUrl from './glideDataUrl';
 import { GlideParameters, resolveGlideParameterCompletions } from './glideParameters';
 
 const GlideCompletionItems: CompletionItem[] = [
     tagToCompletionItem(GlideBatch),
+    tagToCompletionItem(GlideDataUrl)
 ];
 
 const Glide: IAntlersTag = {

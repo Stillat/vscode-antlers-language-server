@@ -713,6 +713,36 @@ const stringModifiers: IModifier[] = [
         parameters: [],
         isDeprecated: false,
     },
+    {
+        name: 'mark',
+        acceptsType: ['string'],
+        returnsType: ['string'],
+        description: 'Wraps matched words and phrases in <mark> tags.',
+        docLink: null,
+        canBeParameter: false,
+        parameters: [
+            {
+                name: 'search',
+                description: 'The search word or phrase to wrap in <mark> tags.'
+            }
+        ],
+        isDeprecated: false,
+    },
+    {
+        name: 'regex_mark',
+        acceptsType: ['string'],
+        returnsType: ['string'],
+        description: 'Wraps matched words and phrases in <mark> tags using regular expressions.',
+        docLink: null,
+        canBeParameter: false,
+        parameters: [
+            {
+                name: 'pattern',
+                description: 'The search pattern used to wrap content in <mark> tags.'
+            }
+        ],
+        isDeprecated: false,
+    }
 ];
 
 export { stringModifiers };

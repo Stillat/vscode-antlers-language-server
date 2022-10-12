@@ -47,6 +47,10 @@ export class NodePrinter {
                                     }
                                 }
                             }
+
+                            if (node.next instanceof ModifierSeparator) {
+                                insertNlAfter = false;
+                            }
                         }
                     }
                 } else {

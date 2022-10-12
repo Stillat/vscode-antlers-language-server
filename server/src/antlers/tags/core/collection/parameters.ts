@@ -161,6 +161,16 @@ const collectionParameters: IAntlersParameter[] = [
         expectsTypes: ['boolean'],
         isRequired: false,
         isDynamic: false
+    },
+    {
+        name: 'page_name',
+        aliases: [],
+        acceptsVariableInterpolation: true,
+        allowsVariableReference: true,
+        description: 'Allows you to customise the name of the URL query parameter used for pagination.',
+        expectsTypes: ['string'],
+        isRequired: false,
+        isDynamic: false,
     }
 ];
 

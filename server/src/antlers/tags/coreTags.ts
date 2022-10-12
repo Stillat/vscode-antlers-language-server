@@ -115,6 +115,12 @@ import Vite from './core/vite';
 import NoCache from './core/nocache';
 import UserRoles from './core/userRoles';
 import UserGroups from './core/userGroups';
+import GlideDataUrl from './core/glideDataUrl';
+import CookieTag from './core/cookie/cookie';
+import CookieForget from './core/cookie/cookieForget';
+import CookieHas from './core/cookie/cookieHas';
+import CookieSet from './core/cookie/cookieSet';
+import CookieValue from './core/cookie/cookieValue';
 
 const coreTags = [
     If,
@@ -131,6 +137,12 @@ const coreTags = [
     CollectionNext,
     CollectionNewer,
     CollectionOlder,
+
+    CookieTag,
+    CookieForget,
+    CookieHas,
+    CookieSet,
+    CookieValue,
 
     Relate,
 
@@ -168,6 +180,7 @@ const coreTags = [
     GetFiles,
     Glide,
     GlideBatch,
+    GlideDataUrl,
     Link,
     Loop,
     RangeTag,
