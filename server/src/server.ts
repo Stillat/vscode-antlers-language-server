@@ -72,6 +72,7 @@ const defaultSettings: AntlersSettings = {
     diagnostics: {
         warnOnDynamicCssClassNames: true,
         validateTagParameters: true,
+        reportDiagnostics: true
     },
     trace: { server: 'off' },
     formatterIgnoreExtensions: ['xml'],
@@ -255,7 +256,21 @@ connection.onDidChangeConfiguration((change) => {
         .getConfiguration("antlersLanguageServer")
         .then(function (value) {
             if (value != null) {
-                updateGlobalSettings(value as AntlersSettings);
+                const newSettings = value as AntlersSettings;
+                updateGlobalSettings(newSettings);
+
+                if (newSettings.diagnostics.reportDiagnostics == false) {
+                    if (ProjectManager.instance?.hasStructure()) {
+                        const projViews = ProjectManager.instance.getStructure().getViews();
+
+                        for (let i = 0; i < projViews.length; i++) {
+                            connection.sendDiagnostics({
+                                uri: projViews[i].originalDocumentUri,
+                                diagnostics: [],
+                            });
+                        }
+                    }
+                }
             } else {
                 updateGlobalSettings(defaultSettings);
             }

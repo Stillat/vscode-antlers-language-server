@@ -98,6 +98,12 @@
                     "default": true,
                     "description": "When enabled general Antlers snippets will appear in completion suggestions outside of Antlers tags."
                 },
+                "antlersLanguageServer.diagnostics.reportDiagnostics": {
+                    "scope": "window",
+                    "type": "boolean",
+                    "default": true,
+                    "description": "When enabled, Antlers Toolbox will report syntax errors and warnings."
+                },
                 "antlersLanguageServer.diagnostics.warnOnDynamicCssClassNames": {
                     "scope": "window",
                     "type": "boolean",

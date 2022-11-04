@@ -5,6 +5,7 @@ export interface ServerTrace {
 export interface AntlersDiagnosticsSettings {
     warnOnDynamicCssClassNames: boolean;
     validateTagParameters: boolean;
+    reportDiagnostics: boolean;
 }
 
 export interface AntlersSettings {

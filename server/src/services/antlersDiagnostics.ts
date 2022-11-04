@@ -3,6 +3,7 @@ import { TextDocument } from "vscode-languageserver-textdocument";
 import DiagnosticsManager from '../diagnostics/diagnosticsManager';
 import { documentMap, sessionDocuments } from '../languageService/documents';
 import ProjectManager from '../projects/projectManager';
+import { getAntlersSettings } from '../server';
 import { anltersErrorsToDiagnostics } from "../utils/conversions";
 import { setCurDiagnostics } from './antlersRefactoring';
 
@@ -47,6 +48,12 @@ export async function validateTextDocument(textDocument: TextDocument, connectio
         }
     }
 
+    const settings = getAntlersSettings();
+
+    if (settings.diagnostics.reportDiagnostics == false) {
+        return;
+    }
+
     setCurDiagnostics(diagnostics);
     // Send the computed diagnostics to VSCode.
     connection.sendDiagnostics({ uri: textDocument.uri, diagnostics });
@@ -54,6 +61,11 @@ export async function validateTextDocument(textDocument: TextDocument, connectio
 }
 
 function sendOtherDiagnostics(currentUri: string, connection: _Connection) {
+    const settings = getAntlersSettings();
+
+    if (settings.diagnostics.reportDiagnostics == false) {
+        return;
+    }
 
     if (ProjectManager.instance?.hasStructure()) {
         const projViews = ProjectManager.instance.getStructure().getViews();
