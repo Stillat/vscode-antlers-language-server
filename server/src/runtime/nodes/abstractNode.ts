@@ -918,7 +918,7 @@ export class EscapedContentNode extends AntlersNode {
 export class ParameterNode extends AbstractNode {
     public modifier: IModifier | null = null;
     public isModifierParameter = false;
-    public nameDelimiter = '"';
+    public nameDelimiter:string|null = '"';
     public isVariableReference = false;
     public name = "";
     public value = "";
@@ -929,6 +929,8 @@ export class ParameterNode extends AbstractNode {
     public blockPosition: Range | null = null;
     public namePosition: Range | null = null;
     public valuePosition: Range | null = null;
+
+    public hasValidValueDelimiter: boolean = true;
 
     containsSimpleValue() {
         return (

@@ -143,6 +143,7 @@ export class AntlersNodeParser {
 
                         name = nameContent.join('');
                         hasFoundName = true;
+
                         break;
                     }
                 }
@@ -375,7 +376,7 @@ export class AntlersNodeParser {
             nameBlockEndAt = -1,
             valueBlockStartAt = -1,
             valueBlockEndAt = -1,
-            nameDelimiter = '"';
+            nameDelimiter:string|null = null;
 
         for (let i = 0; i < charCount; i++) {
             const current = chars[i];
@@ -542,6 +543,11 @@ export class AntlersNodeParser {
                 parameterNode.nameDelimiter = nameDelimiter;
                 parameterNode.name = name;
                 parameterNode.value = content;
+
+                if (parameterNode.nameDelimiter == null) {
+                    parameterNode.hasValidValueDelimiter = false;
+                    parameterNode.nameDelimiter = '"';
+                }
 
                 parameterNode.startPosition = node.relativePositionFromOffset(startAt, nameStart) ?? null;
 
