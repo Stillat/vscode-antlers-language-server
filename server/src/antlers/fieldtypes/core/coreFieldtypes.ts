@@ -1,5 +1,6 @@
 import { IFieldtypeInjection } from '../../../projects/fieldsets/fieldtypeInjection';
 import ArrayFieldType from './arrayFieldType';
+import AssetsFieldType from './assetsFieldType';
 import BardFieldType from './bardFieldType';
 import FormMultipleFieldtype from './formMultiple';
 import ListFieldtype from './listFieldType';
@@ -18,6 +19,7 @@ import YamlFieldtype from './yamlFieldType';
 
 const CoreFieldtypes: IFieldtypeInjection[] = [
     ArrayFieldType,
+    AssetsFieldType,
     BardFieldType,
     FormMultipleFieldtype,
     ListFieldtype,
