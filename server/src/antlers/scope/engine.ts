@@ -156,7 +156,6 @@ export class ScopeEngine {
             }
 
             rootScope.addVariables(makeContentVariables(nodes[0]));
-
         }
 
         if (InjectionManager.instance?.hasAvailableInjections(this.documentUri)) {
@@ -244,8 +243,30 @@ export class ScopeEngine {
                                 sourceName: firstListVar.sourceName
                             };
                         }
+                    }
 
+                    let firstName = currentNode.name?.name ?? '';
 
+                    if (firstName.includes('.')) {
+                        firstName = firstName.split('.')[0] as string;
+                    } else if (firstName.includes(':')) {
+                        firstName = firstName.split(':')[0] as string;
+                    }
+
+                    const speculativeBlueprintField = this.statamicProject.findAnyBlueprintField(firstName);
+
+                    if (speculativeBlueprintField != null) {
+                        let scopeV = blueprintFieldToScopeVariable(currentNode, speculativeBlueprintField);
+
+                        currentNode.scopeVariable = scopeV;
+
+                        if (currentNode.scopeVariable.sourceField != null) {
+                            if (FieldtypeManager.instance?.hasFieldtype(currentNode.scopeVariable.sourceField.type)) {
+                                const fieldTypeRef = FieldtypeManager.instance?.getFieldType(currentNode.scopeVariable.sourceField.type) as IFieldtypeInjection;
+    
+                                fieldTypeRef.augmentScope(currentNode, currentScope);
+                            }
+                        }
                     }
                 } else {
                     currentNode.sourceType = getFieldRuntimeType(currentNode.scopeVariable.dataType);
@@ -262,7 +283,6 @@ export class ScopeEngine {
             if (currentNode.hasParameters) {
                 checkNodeForPagination(currentNode, currentScope);
             }
-
 
             if (currentNode.modifiers != null && currentNode.modifiers.hasModifiers()) {
                 currentNode.manifestType = currentNode.modifiers.getLastManifestedModifierRuntimeType();
