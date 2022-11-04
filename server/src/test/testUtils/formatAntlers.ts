@@ -10,6 +10,7 @@ const defaultAntlersSettings: AntlersSettings = {
     diagnostics: {
         warnOnDynamicCssClassNames: true,
         validateTagParameters: true,
+        reportDiagnostics: true
     },
     trace: { server: 'off' },
     formatterIgnoreExtensions: ['xml'],
