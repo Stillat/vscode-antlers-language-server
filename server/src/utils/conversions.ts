@@ -63,6 +63,19 @@ export function nodeToRange(node: AbstractNode): ls.Range {
     if (node instanceof ParameterNode) {
         const end = antlersPositionToVsCode(node.valuePosition?.end ?? node.blockPosition?.end ?? node.endPosition);
 
+        if (node.namePosition != null && node.namePosition.start != null) {
+            return {
+                start: {
+                    line: node.namePosition.start.line - 1,
+                    character: node.namePosition.start.char - 1,
+                },
+                end: {
+                    character: end.character - 1,
+                    line: end.line
+                }
+            }
+        }
+
         return {
             start: antlersPositionToVsCode(node.namePosition?.start ?? node.blockPosition?.start ?? node.startPosition),
             end: {
