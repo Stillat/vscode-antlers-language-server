@@ -160,4 +160,7 @@ export class AntlersErrorCodes {
     static readonly LINT_URL_VARIABLE_WITHOUT_SANITIZE = 'ANTLR_519';
     static readonly LINT_DYNAMIC_CLASS_NAMES_POSSIBLE_PURGE = 'ANTLER_520';
     static readonly LINT_DEPRECATED_MODIFIER = 'ANTLER_521';
+    static readonly LINT_INVALID_VARIABLE_ACCESS = 'ANTLR_522';
+    static readonly LINT_SELECT_FIELD_JOIN_RAW = 'ANTLR_523';
+    static readonly LINT_INVALID_PARAMETER_VALUE_DELIMITER = 'ANTLR_524';
 }
