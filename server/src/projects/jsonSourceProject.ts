@@ -42,6 +42,7 @@ class JsonSourceProject implements IProjectDetailsProvider {
     public globalFiles: string[] = [];
     public blueprintFiles: string[] = [];
     public collectionNames: string[] = [];
+    public speculativeFields: Map<string, IBlueprintField> = new Map();
 
     public collections: Map<string, ICollection> = new Map();
     public fieldsets: Map<string, IFieldsetField[]> = new Map();
@@ -121,6 +122,7 @@ class JsonSourceProject implements IProjectDetailsProvider {
         this.taxonomyTerms = structure.taxonomyTerms;
         this.navigationMenus = structure.navigationMenus;
         this.rootPath = structure.workingDirectory;
+        this.speculativeFields = structure.namedBluePrintFields;
 
         this.buildDetails();
 
@@ -230,6 +232,14 @@ class JsonSourceProject implements IProjectDetailsProvider {
 
     reloadDetails(): IProjectDetailsProvider {
         return this;
+    }
+
+    findAnyBlueprintField(field: string): IBlueprintField | null {
+        if (this.speculativeFields.has(field)) {
+            return this.speculativeFields.get(field) as IBlueprintField;
+        }
+
+        return null;
     }
 
     protected buildImportRefernece(field: IBlueprintField) {

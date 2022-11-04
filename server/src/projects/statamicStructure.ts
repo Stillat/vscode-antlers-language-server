@@ -63,6 +63,7 @@ interface IStatamicStructure {
     userGroupNames: string[];
     internalFieldReference: IBlueprintField[];
     restoreProperties: IStructureRestore | null;
+    namedBluePrintFields: Map<string, IBlueprintField>;
 }
 
 interface IStructureRestore {
@@ -160,7 +161,8 @@ const MockStructure: IStatamicStructure = {
     userGroupNames: [],
 
     internalFieldReference: [],
-    restoreProperties: null
+    restoreProperties: null,
+    namedBluePrintFields: new Map()
 };
 
 export { IStatamicStructure, IStructureRestore };

@@ -291,6 +291,7 @@ export function getProjectStructure(resourcePath: string): FileSystemStatamicPro
     const partialNames: string[] = [];
     const collectionScopes: ICollectionScope[] = [];
     const taxonomyTerms: Map<string, string[]> = new Map();
+    const speculativeFields: Map<string, IBlueprintField> = new Map();
 
     const userGroups: Map<string, IUserGroup> = new Map(),
         userGroupNames: string[] = [],
@@ -499,6 +500,12 @@ export function getProjectStructure(resourcePath: string): FileSystemStatamicPro
                 }
             }
 
+            fields.forEach((field) => {
+                if (! speculativeFields.has(field.name)) {
+                    speculativeFields.set(field.name, field);
+                }
+            });
+
             fieldMapping.set(blueprintName, fields);
         }
     }
@@ -667,7 +674,8 @@ export function getProjectStructure(resourcePath: string): FileSystemStatamicPro
         searchIndexes: [],
 
         internalFieldReference: allBlueprintFields,
-        restoreProperties: null
+        restoreProperties: null,
+        namedBluePrintFields: speculativeFields
     }, resourcePath);
 }
 

@@ -54,5 +54,6 @@ export interface IProjectDetailsProvider {
     findRelativeView(relativeName: string): IView | null,
     findPartial(partialName: string): IView | null,
     getFields(): Map<string, IBlueprintField[]>
-    export(): IStatamicStructure
+    export(): IStatamicStructure,
+    findAnyBlueprintField(field:string): IBlueprintField | null
 }
