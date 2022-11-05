@@ -163,4 +163,5 @@ export class AntlersErrorCodes {
     static readonly LINT_INVALID_VARIABLE_ACCESS = 'ANTLR_522';
     static readonly LINT_SELECT_FIELD_JOIN_RAW = 'ANTLR_523';
     static readonly LINT_INVALID_PARAMETER_VALUE_DELIMITER = 'ANTLR_524';
+    static readonly LINT_MODIFIERS_ON_QUERY_BUILDERS_REQUIRE_AS = 'ANTLR_525';
 }

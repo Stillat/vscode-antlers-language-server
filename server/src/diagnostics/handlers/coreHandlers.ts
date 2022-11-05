@@ -10,6 +10,7 @@ import MixedModifierHandler from './mixedModifierHandler';
 import ModifierRuntimeTypeHandler from './modifierRuntimeTypeHandler';
 import ParameterValidatorHandler from './parameterValidatorHandler';
 import PartialParametersHandler from './partialParametersHandler';
+import QueryBuildersHandler from './queryBuildersHandler';
 import RelateTagHandler from './relateHandler';
 import ShorthandModifierHandler from './shorthandModifierHandler';
 import StatamicVersionHandler from './statamicVersionHandler';
@@ -30,7 +31,8 @@ const CoreHandlers: IDiagnosticsHandler[] = [
     InvalidParameterHandler,
     PartialParametersHandler,
     ParameterValidatorHandler,
-    MinCountHandler
+    MinCountHandler,
+    QueryBuildersHandler
 ];
 
 export default CoreHandlers;

@@ -7,12 +7,17 @@ const internalBuilderTypes:string[] = [
     'users_multiple'
 ];
 
+const ignoredModifierNames:string[] = [
+    'as', 'on_each_side', 'order_by', 'sort',
+    'query_scope', 'filter'
+];
+
 export class QueryBuilderInspection {
     static isQueryBuilderType(fieldType:string): boolean {
-        if (internalBuilderTypes.includes(fieldType)) {
-            return true;
-        }
+        return internalBuilderTypes.includes(fieldType);
+    }
 
-        return false;
+    static isIgnoredParameterName(name:string): boolean {
+        return ignoredModifierNames.includes(name);
     }
 }
