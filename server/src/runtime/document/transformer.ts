@@ -391,7 +391,14 @@ export class Transformer {
             indent = this.indentLevel(target);
 
             if (value.includes(target)) {
-                value = value.replace(target, IndentLevel.indentRelative(document.content, indent));
+                let replaceContent = '';
+
+                if (document.content.includes('{{ /') || document.content.includes('{{/')) {
+                    replaceContent = document.content.trim();
+                } else {
+                    replaceContent = IndentLevel.indentRelative(document.content, indent);
+                }
+                value = value.replace(target, replaceContent);
             }
         });
 
@@ -1078,9 +1085,9 @@ export class Transformer {
         return result;
     }
 
-    private cleanLines(content:string): string {
-        const lines:string[] = StringUtilities.breakByNewLine(content),
-            newLines:string[] = [];
+    private cleanLines(content: string): string {
+        const lines: string[] = StringUtilities.breakByNewLine(content),
+            newLines: string[] = [];
 
         let pruneLines = false,
             prunedCount = 0,
@@ -1091,7 +1098,7 @@ export class Transformer {
 
             if (checkLine.startsWith('{{') && checkLine.endsWith('}}')) {
                 if (pruneLines) {
-                    prunedCount =0;
+                    prunedCount = 0;
                 }
                 if (checkLine.startsWith('{{ /') == false) {
                     isProbablyOpen = true;
@@ -1144,7 +1151,7 @@ export class Transformer {
         results = this.cleanLines(results);
         //results = this.removeVirtualStructures(results);
 
-       // results = this.cleanStructuralNewLines(results);
+        // results = this.cleanStructuralNewLines(results);
 
         if (this.doc.hasFrontMatter()) {
             let frontMatter = this.doc.getFrontMatter();
