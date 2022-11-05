@@ -16,6 +16,10 @@ const QueryBuildersHandler: IDiagnosticsHandler = {
             let firstRtNode = node.runtimeNodes[0];
 
             if (firstRtNode instanceof VariableNode && node.scopeVariable.sourceField != null) {
+                if (node.hasParameter('as')) {
+                    return errors;
+                }
+
                 if (QueryBuilderInspection.isQueryBuilderType(node.scopeVariable.sourceField.type)) {
                     if (node.modifierChain != null && node.modifierChain.modifierChain.length > 0) {
                         errors.push(AntlersError.makeSyntaxError(
