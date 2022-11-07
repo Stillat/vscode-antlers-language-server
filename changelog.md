@@ -2,6 +2,19 @@
 
 Bugs fixed, what's new, and more! :)
 
+## Unreleased
+
+- Improves parser support for Antlers `list` keyword
+- Improves internal support for `assets` fieldtypes
+- Adds internal support for detecting Query Builder augmented fields
+- Internally resolves blueprint and field-type field references where there has not been enough context to do so historically
+- Provides linting feedback when tag parameter values are not surrounded in single or double quotes
+- Adds the ability to disable *all* diagnostics warnings using the `antlersLanguageServer.diagnostics.reportDiagnostics` configuration option
+- Adds warnings when using the `join` or `joinplode` modifiers directly on `select` fieldtypes
+- The formatters no longer format `<script>` tags when they contain Antlers tag pairs
+- Adds warnings when using modifiers directly on fields that augment to query builders
+- Antlers Toolbox no longer requires editing files/restarting Visual Studio Code in order for error reporting to update after changing the current language version
+
 ## v2.3.8
 
 - Improves line wrapping when formatting method-style modifiers
