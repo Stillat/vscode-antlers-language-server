@@ -60,6 +60,46 @@ export async function validateTextDocument(textDocument: TextDocument, connectio
     sendOtherDiagnostics(textDocument.uri, connection);
 }
 
+export function sendAllDiagnostics(connection: _Connection) {
+    if (ProjectManager.instance?.hasStructure()) {
+        const projViews = ProjectManager.instance.getStructure().getViews();
+
+        for (let i = 0; i < projViews.length; i++) {
+            const diagnosticsPath = decodeURIComponent(projViews[i].documentUri);
+            let diagnostics: Diagnostic[] = [];
+
+            if (sessionDocuments.hasDocument(diagnosticsPath)) {
+                const doc = sessionDocuments.getDocument(diagnosticsPath);
+
+                doc.reloadDocument();
+
+                anltersErrorsToDiagnostics(doc.errors.all()).forEach((error) => {
+                    diagnostics.push(error);
+                });
+
+                anltersErrorsToDiagnostics(DiagnosticsManager.instance?.checkDocument(doc) ?? []).forEach((error) => {
+                    diagnostics.push(error);
+                });
+
+                doc.getAllAntlersNodes().forEach((node) => {
+                    const nodeErrors = DiagnosticsManager.instance?.checkNode(node) ?? [];
+
+                    if (nodeErrors.length > 0) {
+                        anltersErrorsToDiagnostics(nodeErrors).forEach((nError) => {
+                            diagnostics.push(nError);
+                        });
+                    }
+                });
+            }
+
+            connection.sendDiagnostics({
+                uri: projViews[i].originalDocumentUri,
+                diagnostics: diagnostics,
+            });
+        }
+    }
+}
+
 function sendOtherDiagnostics(currentUri: string, connection: _Connection) {
     const settings = getAntlersSettings();
 

@@ -31,6 +31,7 @@ import { handleFoldingRequest } from "./services/antlersFoldingRegions";
 import {
     parseDocument,
     parseDocumentText,
+    sendAllDiagnostics,
     validateTextDocument,
 } from "./services/antlersDiagnostics";
 import { formatAntlersDocument } from "./formatting/formatter";
@@ -256,6 +257,7 @@ connection.onDidChangeConfiguration((change) => {
         .getConfiguration("antlersLanguageServer")
         .then(function (value) {
             if (value != null) {
+                const curSettings = getAntlersSettings();
                 const newSettings = value as AntlersSettings;
                 updateGlobalSettings(newSettings);
 
@@ -270,6 +272,10 @@ connection.onDidChangeConfiguration((change) => {
                             });
                         }
                     }
+                }
+
+                if (curSettings.languageVersion != newSettings.languageVersion) {
+                    sendAllDiagnostics(connection);
                 }
             } else {
                 updateGlobalSettings(defaultSettings);
