@@ -22,6 +22,7 @@ import { YamlDocument } from "./yamlDocument";
 export class AntlersDocument {
     private documentParser: DocumentParser = new DocumentParser();
     private transformer: Transformer | null = null;
+    private originalText: string = '';
 
     public readonly ranges: RangeScanner = new RangeScanner(this);
     public readonly nodes: NodeScanner = new NodeScanner(this);
@@ -190,6 +191,7 @@ export class AntlersDocument {
     }
 
     loadString(text: string) {
+        this.originalText = text;
         this.documentParser.parse(text);
 
         this.updateProjectDetails();
@@ -246,6 +248,10 @@ export class AntlersDocument {
 
     getOriginalContent() {
         return this.documentParser.getOriginalContent();
+    }
+
+    reloadDocument() {
+        this.loadString(this.originalText);
     }
 
     getFeaturesAt(position: Position | null): PositionContext | null {
