@@ -2,7 +2,7 @@ import { AntlersError } from '../errors/antlersError';
 import { AntlersErrorCodes } from '../errors/antlersErrorCodes';
 import { LineRetriever } from '../errors/lineRetriever';
 import { TypeLabeler } from '../errors/typeLabeler';
-import { AbstractNode, AdditionAssignmentOperator, AdditionOperator, AliasedScopeLogicGroup, AntlersNode, ArgSeparator, ArgumentGroup, ArrayNode, ConditionalVariableFallbackOperator, DirectionGroup, DivisionAssignmentOperator, DivisionOperator, EqualCompOperator, ExponentiationOperator, FactorialOperator, FalseConstant, GreaterThanCompOperator, GreaterThanEqualCompOperator, InlineBranchSeparator, InlineTernarySeparator, LanguageOperatorConstruct, LeftAssignmentOperator, LessThanCompOperator, LessThanEqualCompOperator, LibraryInvocationConstruct, ListValueNode, LogicalAndOperator, LogicalNegationOperator, LogicalOrOperator, LogicalXorOperator, LogicGroup, LogicGroupBegin, LogicGroupEnd, MethodInvocationNode, ModifierChainNode, ModifierNameNode, ModifierNode, ModifierSeparator, ModifierValueNode, ModifierValueSeparator, ModulusAssignmentOperator, ModulusOperator, MultiplicationAssignmentOperator, MultiplicationOperator, NamedArgumentNode, NameValueNode, NotEqualCompOperator, NotStrictEqualCompOperator, NullCoalescenceGroup, NullCoalesceOperator, NullConstant, NumberNode, PathNode, ScopeAssignmentOperator, ScopedLogicGroup, SemanticGroup, SpaceshipCompOperator, StatementSeparatorNode, StaticTracedAssignment, StrictEqualCompOperator, StringConcatenationOperator, StringValueNode, SubtractionAssignmentOperator, SubtractionOperator, SwitchCase, SwitchGroup, TernaryCondition, TrueConstant, TupleListStart, TupleScopedLogicGroup, ValueDirectionNode, VariableNode } from '../nodes/abstractNode';
+import { AbstractNode, AdditionAssignmentOperator, AdditionOperator, AliasedScopeLogicGroup, AntlersNode, ArgSeparator, ArgumentGroup, ArrayNode, ConditionalVariableFallbackOperator, DirectionGroup, DivisionAssignmentOperator, DivisionOperator, EqualCompOperator, ExponentiationOperator, FactorialOperator, FalseConstant, GreaterThanCompOperator, GreaterThanEqualCompOperator, InlineBranchSeparator, InlineTernarySeparator, LanguageOperatorConstruct, LeftAssignmentOperator, LessThanCompOperator, LessThanEqualCompOperator, LibraryInvocationConstruct, ListValueNode, LogicalAndOperator, LogicalNegationOperator, LogicalOrOperator, LogicalXorOperator, LogicGroup, LogicGroupBegin, LogicGroupEnd, MethodInvocationNode, ModifierChainNode, ModifierNameNode, ModifierNode, ModifierSeparator, ModifierValueNode, ModifierValueSeparator, ModulusAssignmentOperator, ModulusOperator, MultiplicationAssignmentOperator, MultiplicationOperator, NamedArgumentNode, NameValueNode, NotEqualCompOperator, NotStrictEqualCompOperator, NullCoalescenceGroup, NullCoalesceOperator, NullConstant, NumberNode, PathNode, ScopeAssignmentOperator, ScopedLogicGroup, SemanticGroup, SpaceshipCompOperator, StatementSeparatorNode, StaticTracedAssignment, StrictEqualCompOperator, StringConcatenationOperator, StringValueNode, SubtractionAssignmentOperator, SubtractionOperator, SwitchCase, SwitchGroup, TernaryCondition, TrueConstant, TupleList, TupleListStart, TupleScopedLogicGroup, ValueDirectionNode, VariableNode } from '../nodes/abstractNode';
 import { LibraryManager } from '../runtime/libraries/libraryManager';
 import { LanguageOperatorRegistry } from '../runtime/sandbox/languageOperatorRegistry';
 import { NodeHelpers } from '../utilities/nodeHelpers';
@@ -1328,6 +1328,10 @@ export class LanguageParser {
                     for (let j = 0; j < targetGroupLength; j++) {
                         const valueToken = valueNodeCandidate.nodes[j];
 
+                        if (typeof valueToken === 'undefined' || valueToken == null) {
+                            break;
+                        }
+
                         if (valueToken instanceof ArgSeparator == false) {
                             if (this.isOperand(valueToken) == false) {
                                 valueToken.pushError(AntlersError.makeSyntaxError(
@@ -2125,7 +2129,7 @@ export class LanguageParser {
             token instanceof FalseConstant || token instanceof NullConstant ||
             token instanceof TrueConstant || token instanceof LibraryInvocationConstruct ||
             token instanceof DirectionGroup || token instanceof ListValueNode ||
-            token instanceof SwitchGroup || token instanceof ArrayNode;
+            token instanceof SwitchGroup || token instanceof ArrayNode || token instanceof TupleListStart;
     }
 
     private isProperMethodChainTargetStrict(token: AbstractNode) {
