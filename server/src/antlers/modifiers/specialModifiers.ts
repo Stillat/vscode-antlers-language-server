@@ -5,6 +5,7 @@ const specialModifiers: IModifier[] = [
         name: 'partial',
         acceptsType: ['*'],
         returnsType: ['*view*'],
+        forFieldType: [],
         description: 'Injects data into a partial and renders it.',
         docLink: 'https://statamic.dev/modifiers/partial',
         parameters: [
@@ -20,6 +21,7 @@ const specialModifiers: IModifier[] = [
         name: 'macro',
         acceptsType: ['*'],
         returnsType: ['*'],
+        forFieldType: [],
         description: 'Runs a pre-configured macro on the data.',
         docLink: 'https://statamic.dev/modifiers/macro',
         parameters: [
@@ -35,6 +37,7 @@ const specialModifiers: IModifier[] = [
         name: 'url',
         acceptsType: ['string', '*'],
         returnsType: ['string'],
+        forFieldType: [],
         description: 'Locates the URL of an asset, page, entry, or taxonomy term based on the variable contents.',
         docLink: 'https://statamic.dev/modifiers/url',
         parameters: [],

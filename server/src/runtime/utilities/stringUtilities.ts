@@ -3,6 +3,10 @@
 import { is_numeric } from './isNumeric';
 
 export class StringUtilities {
+    public static boolLabel(value: boolean): string {
+        return value ? 'true' : 'false';
+    }
+
     static normalizeLineEndings(string: string, to = "\n") {
         return string.replace(/\r?\n/g, to);
     }

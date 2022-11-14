@@ -31,6 +31,7 @@ export interface IModifier {
      *   boolean - boolean
      */
     acceptsType: string[];
+    forFieldType: string[];
     /**
      * A list of return types for the modifier.
      *

@@ -12,6 +12,10 @@ import { activateAntlersDebug } from './debug/activateAntlersDebug';
 import { TimingsLensProvider } from './debug/timingsLensProvider';
 import { resetTimings } from './debug/antlersDebug';
 import *  as vscode from 'vscode';
+import HelpPanel from './help/helpPanel';
+import { ProjectExplorer } from './project/projectExplorer';
+import { IProjectFields } from './project/types';
+import { IDocumentationResult } from './help/documentationTypes';
 
 interface SemanticTokenParams {
     textDocument: TextDocumentIdentifier;
@@ -45,6 +49,15 @@ interface DocumentTransformResult {
     replacements: TransformReplacement[]
 }
 
+interface GenerateHelpParams {
+    context: any
+}
+
+interface GenerateHelpResult {
+    result: IDocumentationResult,
+    didGenerate: boolean
+}
+
 namespace LockEditsRequest {
     export const type: RequestType<LockEditsParams, null, any> = new RequestType('antlers/lockedits');
 }
@@ -53,12 +66,24 @@ namespace DocumentTransformRequest {
     export const type: RequestType<DocumentTransformParams, DocumentTransformResult, any> = new RequestType('antlers/transform');
 }
 
+namespace GenerateHelpRequest {
+    export const type: RequestType<GenerateHelpParams, GenerateHelpResult, any> = new RequestType('antlers/generateHelp');
+}
+
 namespace ForcedFormatRequest {
     export const type: RequestType<ForcedFormatParams, string, any> = new RequestType('antlers/forcedFormat');
 }
 
 namespace ProjectUpdateRequest {
     export const type: RequestType<ProjectUpdateParams, null, any> = new RequestType('antlers/projectUpdate');
+}
+
+interface ProjectDetailsParams {
+    content: IProjectFields;
+}
+
+namespace ProjectUpdatedRequest {
+    export const type: RequestType<ProjectDetailsParams, null, any> = new RequestType('antlers/projectDetailsAvailable');
 }
 
 namespace SemanticTokenRequest {
@@ -72,7 +97,7 @@ namespace SemanticTokenLegendRequest {
 let didChangeHtmlComments = false;
 let client: LanguageClient;
 let projectWatcher: FileSystemWatcher | null = null;
-
+let projectExplorer:ProjectExplorer;
 let isClientReady = false;
 
 function askForProjectUpdate() {
@@ -105,6 +130,8 @@ export function activate(context: ExtensionContext) {
             options: debugOptions
         }
     };
+
+    projectExplorer = new ProjectExplorer(context);
 
     // Options to control the language client
     const clientOptions: LanguageClientOptions = {
@@ -157,6 +184,18 @@ export function activate(context: ExtensionContext) {
     }
 
     context.subscriptions.push(
+        vscode.commands.registerCommand('extension.antlersLanguageServer.generateHelpInformation', (obj) => {
+            if (isClientReady) {
+                client.sendRequest(GenerateHelpRequest.type, { context: obj }).then((result) => {
+                    if (result.didGenerate && result.result.resolved) {
+                        HelpPanel.render(context.extensionUri, result.result);
+                    }
+                });
+            }
+        })
+    );
+
+    context.subscriptions.push(
         vscode.commands.registerCommand("extension.antlersLanguageServer.reloadProjectDetails", () => {
             if (isClientReady) {
                 client.sendRequest(ProjectUpdateRequest.type, {});
@@ -198,7 +237,13 @@ export function activate(context: ExtensionContext) {
     const disposable = client.start();
     toDispose.push(disposable);
     client.onReady().then(() => {
+
+
         isClientReady = true;
+
+        client.onRequest(ProjectUpdatedRequest.type, (f) => {
+            projectExplorer.updateStructure(f.content);
+        });
 
         setTimeout(() => {
             client.sendRequest(SemanticTokenLegendRequest.type).then(legend => {

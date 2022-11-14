@@ -4,7 +4,7 @@ import { IComposerPackage } from '../composer/composerPackage';
 import { replaceAllInString } from '../utils/strings';
 import { convertUriToPath } from '../utils/uris';
 import { IAssets } from './assets/asset';
-import { IBlueprintField, blueprintFieldsFromFieldset } from './blueprints/fields';
+import { IBlueprintField, blueprintFieldsFromFieldset, IBlueprint } from './blueprints/fields';
 import { ICollection } from './collections/collection';
 import { ICollectionScope } from './collections/collectionScope';
 import { IFieldsetField } from './fieldsets/fieldset';
@@ -15,7 +15,7 @@ import { ITemplate } from './templates';
 import { IUserGroup } from './users/users';
 import { IView } from './views/view';
 
-function makeBlueprintField(blueprintName: string, fieldName: string, fieldType: string):IBlueprintField {
+function makeBlueprintField(blueprintName: string, fieldName: string, fieldType: string): IBlueprintField {
     return {
         blueprintName: blueprintName,
         displayName: '',
@@ -68,6 +68,7 @@ class JsonSourceProject implements IProjectDetailsProvider {
     public userRoles: Map<string, IUserGroup> = new Map();
     public navigationMenus: Map<string, INavigation> = new Map();
 
+    protected blueprints: IBlueprint[] = [];
     protected viewMap: Map<string, IView> = new Map();
     protected routeNames: string[] = [];
     protected translationKeys: string[] = [];
@@ -103,6 +104,7 @@ class JsonSourceProject implements IProjectDetailsProvider {
         this.globalFiles = structure.globalFiles;
         this.blueprintFiles = structure.blueprintFiles;
         this.collectionNames = structure.collectionNames;
+        this.blueprints = structure.blueprints;
         this.collections = structure.collections;
         this.assets = structure.assets;
         this.fieldsets = structure.fieldsets;
@@ -137,6 +139,7 @@ class JsonSourceProject implements IProjectDetailsProvider {
             this.collections = this.sourceStructure.restoreProperties.collections;
             this.fields = this.sourceStructure.restoreProperties.fields;
             this.fieldsets = this.sourceStructure.restoreProperties.fieldsets;
+            this.blueprints = this.sourceStructure.restoreProperties.blueprints;
             this.forms = this.sourceStructure.restoreProperties.forms;
             this.globalFiles = this.sourceStructure.restoreProperties.globalFiles;
             this.globals = this.sourceStructure.restoreProperties.globals;
@@ -195,6 +198,7 @@ class JsonSourceProject implements IProjectDetailsProvider {
             blueprintRef: this.blueprintRef,
             collectionNames: this.collectionNames,
             collectionQueryScopes: this.collectionQueryScopes,
+            blueprints: this.blueprints,
             collections: this.collections,
             fields: this.fields,
             fieldsets: this.fieldsets,
@@ -479,7 +483,7 @@ class JsonSourceProject implements IProjectDetailsProvider {
 
     getBlueprintDetails(handle: string): IBlueprintField[] {
         if (this.blueprintRef.has(handle) == false) {
-            const defaultItems:IBlueprintField[] = [];
+            const defaultItems: IBlueprintField[] = [];
             defaultItems.push(makeBlueprintField(handle, 'title', 'text'));
             defaultItems.push(makeBlueprintField(handle, 'content', 'markdown'));
             defaultItems.push(makeBlueprintField(handle, 'slug', 'slug'));

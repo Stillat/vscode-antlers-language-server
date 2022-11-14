@@ -1,7 +1,7 @@
 import * as YAML from "yaml";
 import * as fs from "fs";
-import { IBlueprintField, ISet, blueprintFieldFromFieldSet, adjustFieldType, SetFieldTypes } from '../blueprints/fields';
-import { IFieldsetField } from '../fieldsets/fieldset';
+import { IBlueprintField, ISet, blueprintFieldFromFieldSet, adjustFieldType, SetFieldTypes, IBlueprint } from '../blueprints/fields';
+import {IFieldsetField } from '../fieldsets/fieldset';
 
 export function getFields(container: any, outerblueprintName: string, fieldSetName: string, path: string, fieldsets: Map<string, IFieldsetField[]>): IBlueprintField[] {
     const foundFields: IBlueprintField[] = [];
@@ -108,17 +108,27 @@ export function getFields(container: any, outerblueprintName: string, fieldSetNa
     return foundFields;
 }
 
-export function getBlueprintFields(
-    fileName: string,
-    blueprintName: string,
-    fieldsets: Map<string, IFieldsetField[]>
-): IBlueprintField[] {
+export function getBlueprintFields(fileName: string, blueprintName: string, blueprintType: string, fieldsets: Map<string, IFieldsetField[]>): IBlueprint {
     let fields: IBlueprintField[] = [];
-
+    const newBlueprint:IBlueprint = {
+        fields: [],
+        handle: '',
+        title: '',
+        filePath: '',
+        type: blueprintType
+    }
     try {
         const contents = fs.readFileSync(fileName, { encoding: "utf8" }),
             document = YAML.parse(contents),
             sections = document.sections;
+
+        newBlueprint.filePath = fileName;
+        newBlueprint.handle = blueprintName;
+        newBlueprint.title = blueprintName;
+
+        if (typeof document['title'] !== 'undefined') {
+            newBlueprint.title = document.title as string;
+        }
 
         if (typeof sections !== "undefined") {
             for (const sectionName of Object.keys(sections)) {
@@ -157,5 +167,7 @@ export function getBlueprintFields(
         // Don't let blueprint parsing crash the server.
     }
 
-    return fields;
+    newBlueprint.fields = fields;
+
+    return newBlueprint;
 }

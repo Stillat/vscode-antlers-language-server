@@ -5,6 +5,7 @@ const mathModifiers: IModifier[] = [
         name: 'add',
         acceptsType: ['number'],
         returnsType: ['number'],
+        forFieldType: [],
         description: 'Adds two values together.',
         docLink: 'https://statamic.dev/modifiers/add',
         parameters: [
@@ -20,6 +21,7 @@ const mathModifiers: IModifier[] = [
         name: '+',
         acceptsType: ['number'],
         returnsType: ['number'],
+        forFieldType: [],
         description: 'Adds two values together.',
         docLink: 'https://statamic.dev/modifiers/add',
         parameters: [
@@ -35,6 +37,7 @@ const mathModifiers: IModifier[] = [
         name: 'ceil',
         acceptsType: ['number'],
         returnsType: ['number'],
+        forFieldType: [],
         description: 'Rounds the value to the next whole number.',
         docLink: 'https://statamic.dev/modifiers/ceil',
         parameters: [],
@@ -45,6 +48,7 @@ const mathModifiers: IModifier[] = [
         name: 'divide',
         acceptsType: ['number'],
         returnsType: ['number'],
+        forFieldType: [],
         description: 'Divides two values.',
         docLink: 'https://statamic.dev/modifiers/divide',
         parameters: [
@@ -60,6 +64,7 @@ const mathModifiers: IModifier[] = [
         name: 'floor',
         acceptsType: ['number'],
         returnsType: ['number'],
+        forFieldType: [],
         description: 'Rounds a number down to the next whole number.',
         docLink: 'https://statamic.dev/modifiers/floor',
         parameters: [],
@@ -70,6 +75,7 @@ const mathModifiers: IModifier[] = [
         name: 'format_number',
         acceptsType: ['number'],
         returnsType: ['string'],
+        forFieldType: [],
         description: 'Formats a number.',
         docLink: 'https://statamic.dev/modifiers/format_number',
         parameters: [
@@ -93,6 +99,7 @@ const mathModifiers: IModifier[] = [
         name: 'mode',
         acceptsType: ['number'],
         returnsType: ['number'],
+        forFieldType: [],
         description: '',
         docLink: '',
         parameters: [],
@@ -103,6 +110,7 @@ const mathModifiers: IModifier[] = [
         name: 'multiply',
         acceptsType: ['number'],
         returnsType: ['number'],
+        forFieldType: [],
         description: 'Multiplies two values.',
         docLink: 'https://statamic.dev/modifiers/multiply',
         parameters: [
@@ -118,6 +126,7 @@ const mathModifiers: IModifier[] = [
         name: '*',
         acceptsType: ['number'],
         returnsType: ['number'],
+        forFieldType: [],
         description: 'Multiplies two values.',
         docLink: 'https://statamic.dev/modifiers/multiply',
         parameters: [
@@ -133,6 +142,7 @@ const mathModifiers: IModifier[] = [
         name: 'round',
         acceptsType: ['number'],
         returnsType: ['number'],
+        forFieldType: [],
         description: 'Rounds a number to a specified precision.',
         docLink: 'https://statamic.dev/modifiers/round',
         parameters: [
@@ -148,6 +158,7 @@ const mathModifiers: IModifier[] = [
         name: 'subtract',
         acceptsType: ['number'],
         returnsType: ['number'],
+        forFieldType: [],
         description: 'Subtracts two values.',
         docLink: 'https://statamic.dev/modifiers/subtract',
         parameters: [
@@ -163,6 +174,7 @@ const mathModifiers: IModifier[] = [
         name: '-',
         acceptsType: ['number'],
         returnsType: ['number'],
+        forFieldType: [],
         description: 'Subtracts two values.',
         docLink: 'https://statamic.dev/modifiers/subtract',
         parameters: [

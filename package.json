@@ -29,7 +29,8 @@
         "vscode": "^1.43.0"
     },
     "activationEvents": [
-        "onLanguage:html"
+        "onLanguage:html",
+        "onView:antlers.projectExplorer"
     ],
     "main": "./client/out/extension",
     "contributes": {
@@ -169,11 +170,22 @@
                 ],
                 "label": "Antlers Debug"
             }
-        ]
+        ],
+        "views": {
+            "explorer": [
+                {
+                    "id": "antlers.projectExplorer",
+                    "name": "Blueprint Explorer",
+                    "contextualTitle": "Statamic Blueprint Explorer",
+                    "type": "tree",
+                    "icon": "explorer.svg"
+                }
+            ]
+        }
     },
     "bundleDependencies": false,
     "scripts": {
-        "vscode:prepublish": "npm run compile",
+        "vscode:prepublish": "npm run compile && npm run build:webview",
         "compile": "tsc -b",
         "bundle:format_cli": "npm run compile && npm run esbuild:format_cli",
         "esbuild:format_cli": "esbuild ./server/src/formatting/cli/index.ts --bundle --minify --outfile=./formatcli/package/cli.js --format=cjs --platform=node",
@@ -182,7 +194,9 @@
         "bundle:prettier": "npm run compile && npm run esbuild:prettier",
         "esbuild:prettier": "esbuild ./server/src/formatting/prettier/plugin.ts --bundle --minify --outfile=./formatcli/prettier-plugin-antlers/plugin.js --format=cjs --platform=node --external:prettier",
         "watch": "tsc -b -w",
-        "postinstall": "cd client && npm install && cd ../server && npm install && cd ..",
+        "start:webview": "cd docsui && npm run start",
+        "build:webview": "cd docsui && npm run build",
+        "postinstall": "cd client && npm install && cd ../server && npm install && cd ../docsui && npm install && cd ..",
         "bundle:everything": "npm run bundle:format_cli && npm run bundle:antlersls && npm run bundle:prettier",
         "test:server": "npm run compile && mocha ./server/out/test/*.js -- -u tdd"
     },

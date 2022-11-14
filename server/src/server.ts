@@ -66,6 +66,10 @@ import ExtractPartialHandler from './refactoring/core/extractPartialHandler';
 import { BeautifyDocumentFormatter } from './formatting/beautifyDocumentFormatter';
 import { AntlersSettings } from './antlersSettings';
 import { debounce } from 'ts-debounce';
+import { DocumentationHandler } from './documentation/generator/handler';
+import { IProjectFields } from './projects/structuredFieldTypes/types';
+import { IDocumentationResult } from './documentation/generator/types';
+import { updateCurrentDetails } from './documentation/generator/documentationProvider';
 
 const defaultSettings: AntlersSettings = {
     formatFrontMatter: false,
@@ -79,6 +83,7 @@ const defaultSettings: AntlersSettings = {
     formatterIgnoreExtensions: ['xml'],
     languageVersion: 'runtime'
 };
+
 let globalSettings: AntlersSettings = defaultSettings;
 
 function updateGlobalSettings(settings: AntlersSettings) {
@@ -114,6 +119,10 @@ interface DocumentTransformParams {
     content: string
 }
 
+interface ProjectDetailsParams {
+    content: IProjectFields
+}
+
 interface TransformReplacement {
     find: string,
     replace: string
@@ -123,6 +132,19 @@ interface DocumentTransformResult {
     shouldParse: boolean,
     transformedText: string,
     replacements: TransformReplacement[]
+}
+
+export interface GenerateHelpParams {
+    context: any
+}
+
+export interface GenerateHelpResult {
+    result: IDocumentationResult,
+    didGenerate: boolean
+}
+
+namespace GenerateHelpRequest {
+    export const type: RequestType<GenerateHelpParams, GenerateHelpResult, any> = new RequestType('antlers/generateHelp');
 }
 
 namespace LockEditsRequest {
@@ -152,6 +174,7 @@ interface SemanticTokenParams {
     textDocument: TextDocumentIdentifier;
     ranges?: Range[];
 }
+
 namespace SemanticTokenRequest {
     export const type: RequestType<SemanticTokenParams, number[] | null, any> =
         new RequestType("antlers/semanticTokens");
@@ -365,6 +388,13 @@ connection.onRequest(ForcedFormatRequest.type, (params) => {
     return formatter.formatDocument(AntlersDocument.fromText(params.content), getAntlersSettings());
 });
 
+connection.onRequest(GenerateHelpRequest.type, (params) => {
+    return {
+        didGenerate: true,
+        result: DocumentationHandler.handle(params)
+    } as GenerateHelpResult;
+});
+
 connection.onRequest(DocumentTransformRequest.type, (params) => {
     const transformer = new DocumentTransformer();
     transformer.load(params.content);
@@ -458,6 +488,15 @@ export function requestEdits(edit: WorkspaceEdit) {
     };
 
     connection.sendRequest("workspace/applyEdit", params);
+}
+
+export function sendProjectDetails(contents: IProjectFields) {
+    updateCurrentDetails(contents);
+    const params: ProjectDetailsParams = {
+        content: contents
+    };
+
+    connection.sendRequest("antlers/projectDetailsAvailable", params);
 }
 
 function analyzeStructures(document: string) {

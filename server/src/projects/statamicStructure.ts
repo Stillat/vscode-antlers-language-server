@@ -1,6 +1,6 @@
 import { IComposerPackage } from '../composer/composerPackage';
 import { IAssets } from './assets/asset';
-import { IBlueprintField } from './blueprints/fields';
+import { IBlueprint, IBlueprintField } from './blueprints/fields';
 import { ICollection } from './collections/collection';
 import { ICollectionScope } from './collections/collectionScope';
 import { IFieldsetField } from './fieldsets/fieldset';
@@ -24,7 +24,7 @@ interface IStatamicStructure {
     userPermissionsPath: string;
     composerPackages: IComposerPackage[];
     statamicPackage: IComposerPackage | null;
-
+    blueprints: IBlueprint[];
     searchIndexes: string[];
 
     assets: Map<string, IAssets>;
@@ -70,6 +70,8 @@ interface IStructureRestore {
     globalFiles: string[];
     blueprintFiles: string[];
     collectionNames: string[];
+
+    blueprints: IBlueprint[];
 
     collections: Map<string, ICollection>;
     fieldsets: Map<string, IFieldsetField[]>;
@@ -123,6 +125,7 @@ const MockStructure: IStatamicStructure = {
     fieldsetsPath: "",
     collections: new Map(),
     collectionScopes: [],
+    blueprints: [],
     viewsPath: "",
     collectionBlueprintsPath: "",
     formBlueprintsPath: "",

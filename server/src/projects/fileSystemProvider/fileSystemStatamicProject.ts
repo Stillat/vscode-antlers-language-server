@@ -1,12 +1,13 @@
 import * as path from "path";
 import * as fs from "fs";
+import * as YAML from 'yaml';
 
 import { dirname } from "path";
 import { IComposerPackage } from '../../composer/composerPackage';
 import { LockFileParser } from '../../composer/lockFileParser';
 import { convertPathToUri, shouldProcessPath } from '../../utils/io';
 import { IAssets } from '../assets/asset';
-import { IBlueprintField } from '../blueprints/fields';
+import { IBlueprint, IBlueprintField } from '../blueprints/fields';
 import { ICollection } from '../collections/collection';
 import { ICollectionScope } from '../collections/collectionScope';
 import { IFieldsetField } from '../fieldsets/fieldset';
@@ -24,6 +25,8 @@ import { IProjectDetailsProvider } from '../projectDetailsProvider';
 import { JsonSourceProject } from '../jsonSourceProject';
 import { normalizePath } from '../../utils/uris';
 import { replaceAllInString } from '../../utils/strings';
+import { sendProjectDetails } from '../../server';
+import { FieldSetParser, BlueprintParser, IParsedBlueprint } from '../structuredFieldTypes/types';
 
 function getRootProjectPath(path: string): string {
     const parts = normalizePath(path).split("/");
@@ -277,6 +280,7 @@ export function getProjectStructure(resourcePath: string): FileSystemStatamicPro
         }
     }
 
+    const blueprints: IBlueprint[] = [];
     const fieldsets: Map<string, IFieldsetField[]> = new Map();
     const pluralizedTaxonomyNames: Map<string, string> = new Map();
     const formsMapping: Map<string, IBlueprintField[]> = new Map();
@@ -359,17 +363,20 @@ export function getProjectStructure(resourcePath: string): FileSystemStatamicPro
         }
     }
 
+    // Resolve structured project details.
+    // TODO: Potentially refactor away from existing project setup.
+    const fsParser = new FieldSetParser();
+
     // Gather up the fieldsets.
     const fieldsetPaths = getFiles(fieldsetsDirectory, ".yaml", []);
     let allBlueprintFields: IBlueprintField[] = [];
 
     for (let i = 0; i < fieldsetPaths.length; i++) {
         if (shouldProcessPath(fieldsetPaths[i])) {
-            const fieldsetName = path
-                .basename(fieldsetPaths[i])
-                .split(".")
-                .slice(0, -1)
-                .join(".");
+            const fieldsetName = path.basename(fieldsetPaths[i]).split(".").slice(0, -1).join("."),
+                contents = fs.readFileSync(fieldsetPaths[i]).toString();
+
+            fsParser.parseFieldset(YAML.parse(contents), fieldsetName);
 
             if (fieldsetName != null && fieldsetName.trim().length > 0) {
                 const fields = getFieldsetFields(fieldsetPaths[i], fieldsetName);
@@ -378,6 +385,9 @@ export function getProjectStructure(resourcePath: string): FileSystemStatamicPro
             }
         }
     }
+
+    const bpParser = new BlueprintParser();
+    bpParser.setParsedFieldSet(fsParser.getFieldsets());
 
     // Taxonomies.
     const taxonomyPaths = getFiles(taxonomiesDirectory, ".yaml", []);
@@ -394,14 +404,17 @@ export function getProjectStructure(resourcePath: string): FileSystemStatamicPro
             if (taxonomyName != null && taxonomyName.trim().length > 0) {
                 pluralizedTaxonomyNames.set(taxonomyName, pluralForm);
 
-                const fields = getBlueprintFields(
+                const blueprint = getBlueprintFields(
                     taxonomyPaths[i],
                     taxonomyName,
+                    'taxonomy',
                     fieldsets
                 );
 
-                taxonomyMapping.set(taxonomyName, fields);
-                allBlueprintFields = allBlueprintFields.concat(fields);
+                blueprints.push(blueprint);
+
+                taxonomyMapping.set(taxonomyName, blueprint.fields);
+                allBlueprintFields = allBlueprintFields.concat(blueprint.fields);
 
                 if (discoveredTaxonomyNames.includes(taxonomyName) == false) {
                     discoveredTaxonomyNames.push(taxonomyName);
@@ -456,42 +469,40 @@ export function getProjectStructure(resourcePath: string): FileSystemStatamicPro
 
     for (let i = 0; i < miscBlueprintPaths.length; i++) {
         if (shouldProcessPath(miscBlueprintPaths[i])) {
-            const blueprintName = path
-                .basename(miscBlueprintPaths[i])
-                .split(".")
-                .slice(0, -1)
-                .join(".");
+            const contents = fs.readFileSync(miscBlueprintPaths[i]).toString();
+            const blueprintName = path.basename(miscBlueprintPaths[i]).split(".").slice(0, -1).join(".");
+
+            bpParser.parseBlueprint(YAML.parse(contents), blueprintName, 'misc', miscBlueprintPaths[i], contents);
 
             if (blueprintName != null && blueprintName.trim().length > 0) {
-                const fields = getBlueprintFields(
+                const blueprint = getBlueprintFields(
                     miscBlueprintPaths[i],
                     blueprintName,
+                    'misc',
                     fieldsets
                 );
 
-                miscFields.set(blueprintName, fields);
-                allBlueprintFields = allBlueprintFields.concat(fields);
+                blueprints.push(blueprint);
+
+                miscFields.set(blueprintName, blueprint.fields);
+                allBlueprintFields = allBlueprintFields.concat(blueprint.fields);
             }
         }
     }
 
     for (let i = 0; i < blueprintsPaths.length; i++) {
         if (shouldProcessPath(blueprintsPaths[i])) {
-            let blueprintName = path
-                .basename(blueprintsPaths[i])
-                .split(".")
-                .slice(0, -1)
-                .join(".");
-            const fields = getBlueprintFields(
-                blueprintsPaths[i],
-                blueprintName,
-                fieldsets
-            );
-            const collectionName = normalizePath(dirname(blueprintsPaths[i]))
-                .split("/")
-                .pop();
+            const contents = fs.readFileSync(blueprintsPaths[i]).toString();
+            let blueprintName = path.basename(blueprintsPaths[i]).split(".").slice(0, -1).join(".");
 
-            allBlueprintFields = allBlueprintFields.concat(fields);
+            const blueprint = getBlueprintFields(blueprintsPaths[i], blueprintName, 'collection', fieldsets);
+            const collectionName = normalizePath(dirname(blueprintsPaths[i])).split("/").pop();
+
+            bpParser.parseBlueprint(YAML.parse(contents), blueprintName, 'collection', blueprintsPaths[i], contents);
+
+            blueprints.push(blueprint);
+
+            allBlueprintFields = allBlueprintFields.concat(blueprint.fields);
 
             if (collectionName != null && collectionName.trim().length > 0) {
                 blueprintName = collectionName;
@@ -500,13 +511,13 @@ export function getProjectStructure(resourcePath: string): FileSystemStatamicPro
                 }
             }
 
-            fields.forEach((field) => {
-                if (! speculativeFields.has(field.name)) {
+            blueprint.fields.forEach((field) => {
+                if (!speculativeFields.has(field.name)) {
                     speculativeFields.set(field.name, field);
                 }
             });
 
-            fieldMapping.set(blueprintName, fields);
+            fieldMapping.set(blueprintName, blueprint.fields);
         }
     }
 
@@ -515,7 +526,11 @@ export function getProjectStructure(resourcePath: string): FileSystemStatamicPro
 
     for (let i = 0; i < navPaths.length; i++) {
         if (shouldProcessPath(navPaths[i])) {
+            const contents = fs.readFileSync(navPaths[i]).toString();
             const navigationMenu = getNavigationMenu(navPaths[i]);
+            let blueprintName = path.basename(navPaths[i]).split(".").slice(0, -1).join(".");
+
+            bpParser.parseBlueprint(YAML.parse(contents), blueprintName, 'nav', navPaths[i], contents);
 
             navigationItems.set(navigationMenu.handle, navigationMenu);
         }
@@ -526,45 +541,34 @@ export function getProjectStructure(resourcePath: string): FileSystemStatamicPro
 
     for (let i = 0; i < globalBlueprintPaths.length; i++) {
         if (shouldProcessPath(globalBlueprintPaths[i])) {
-            const globalName = path
-                .basename(globalBlueprintPaths[i])
-                .split(".")
-                .slice(0, -1)
-                .join("."),
-                fields = getBlueprintFields(
-                    globalBlueprintPaths[i],
-                    globalName,
-                    fieldsets
-                );
+            const contents = fs.readFileSync(globalBlueprintPaths[i]).toString();
+            const globalName = path.basename(globalBlueprintPaths[i]).split(".").slice(0, -1).join("."),
+                blueprint = getBlueprintFields(globalBlueprintPaths[i], globalName, 'global', fieldsets);
 
-            allBlueprintFields = allBlueprintFields.concat(fields);
+            bpParser.parseBlueprint(YAML.parse(contents), globalName, 'global', globalBlueprintPaths[i], contents);
 
-            globalsMapping.set(globalName, fields);
+            blueprints.push(blueprint);
+            allBlueprintFields = allBlueprintFields.concat(blueprint.fields);
+
+            globalsMapping.set(globalName, blueprint.fields);
         }
     }
 
     // Asset Fields.
     if (fs.existsSync(assetsBlueprintDirectory)) {
-        const assetBlueprintPathts = getDirectFiles(
-            assetsBlueprintDirectory,
-            ".yaml"
-        );
+        const assetBlueprintPaths = getDirectFiles(assetsBlueprintDirectory, ".yaml");
 
-        for (let i = 0; i < assetBlueprintPathts.length; i++) {
-            if (shouldProcessPath(assetBlueprintPathts[i])) {
-                const assetName = path
-                    .basename(assetBlueprintPathts[i])
-                    .split(".")
-                    .slice(0, -1)
-                    .join("."),
-                    fields = getBlueprintFields(
-                        assetBlueprintPathts[i],
-                        assetName,
-                        fieldsets
-                    );
+        for (let i = 0; i < assetBlueprintPaths.length; i++) {
+            if (shouldProcessPath(assetBlueprintPaths[i])) {
+                const contents = fs.readFileSync(assetBlueprintPaths[i]).toString();
+                const assetName = path.basename(assetBlueprintPaths[i]).split(".").slice(0, -1).join("."),
+                    blueprint = getBlueprintFields(assetBlueprintPaths[i], assetName, 'asset', fieldsets);
 
-                allBlueprintFields = allBlueprintFields.concat(fields);
-                assetFields.set(assetName, fields);
+                bpParser.parseBlueprint(YAML.parse(contents), assetName, 'asset', assetBlueprintPaths[i], contents);
+
+                blueprints.push(blueprint);
+                allBlueprintFields = allBlueprintFields.concat(blueprint.fields);
+                assetFields.set(assetName, blueprint.fields);
             }
         }
     }
@@ -576,11 +580,7 @@ export function getProjectStructure(resourcePath: string): FileSystemStatamicPro
 
     for (let i = 0; i < allFormDefinitions.length; i++) {
         if (shouldProcessPath(allFormDefinitions[i])) {
-            const formName = path
-                .basename(allFormDefinitions[i])
-                .split(".")
-                .slice(0, -1)
-                .join(".");
+            const formName = path.basename(allFormDefinitions[i]).split(".").slice(0, -1).join(".");
 
             if (!formNames.includes(formName)) {
                 formNames.push(formName);
@@ -590,15 +590,15 @@ export function getProjectStructure(resourcePath: string): FileSystemStatamicPro
 
     for (let i = 0; i < formBlueprintPaths.length; i++) {
         if (shouldProcessPath(formBlueprintPaths[i])) {
-            const formName = path
-                .basename(formBlueprintPaths[i])
-                .split(".")
-                .slice(0, -1)
-                .join("."),
-                fields = getBlueprintFields(formBlueprintPaths[i], formName, fieldsets);
+            const contents = fs.readFileSync(formBlueprintPaths[i]).toString();
+            const formName = path.basename(formBlueprintPaths[i]).split(".").slice(0, -1).join("."),
+                blueprint = getBlueprintFields(formBlueprintPaths[i], formName, 'form', fieldsets);
 
-            allBlueprintFields = allBlueprintFields.concat(fields);
-            formsMapping.set(formName, fields);
+            bpParser.parseBlueprint(YAML.parse(contents), formName, 'form', formBlueprintPaths[i], contents);
+
+            blueprints.push(blueprint);
+            allBlueprintFields = allBlueprintFields.concat(blueprint.fields);
+            formsMapping.set(formName, blueprint.fields);
         }
     }
 
@@ -623,6 +623,41 @@ export function getProjectStructure(resourcePath: string): FileSystemStatamicPro
 
             refView.injectsCollections.push(collection.handle);
         }
+    });
+
+    const assetBlueprints: IParsedBlueprint[] = [],
+        collectionBlueprints: IParsedBlueprint[] = [],
+        taxonomyBlueprints: IParsedBlueprint[] = [],
+        navigationBlueprints: IParsedBlueprint[] = [],
+        formBlueprints: IParsedBlueprint[] = [],
+        generalBlueprints: IParsedBlueprint[] = [],
+        globalBlueprints: IParsedBlueprint[] = [];
+
+    bpParser.getBlueprints().forEach((blueprint) => {
+        if (blueprint.type == 'misc') {
+            generalBlueprints.push(blueprint);
+        } else if (blueprint.type == 'collection') {
+            collectionBlueprints.push(blueprint);
+        } else if (blueprint.type == 'nav') {
+            navigationBlueprints.push(blueprint);
+        } else if (blueprint.type == 'global') {
+            globalBlueprints.push(blueprint);
+        } else if (blueprint.type == 'asset') {
+            assetBlueprints.push(blueprint);
+        } else if (blueprint.type == 'form') {
+            formBlueprints.push(blueprint);
+        }
+    });
+
+    sendProjectDetails({
+        assets: assetBlueprints,
+        collections: collectionBlueprints,
+        fieldsets: fsParser.getParsedFieldsets(),
+        forms: formBlueprints,
+        general: generalBlueprints,
+        globals: globalBlueprints,
+        navigations: navigationBlueprints,
+        taxonomies: taxonomyBlueprints
     });
 
     return new FileSystemStatamicProject({
@@ -660,7 +695,7 @@ export function getProjectStructure(resourcePath: string): FileSystemStatamicPro
         contentDirectory: contentDirectory,
         taxonomyContentDirectory: taxonomyContentDirectory,
         taxonomyTerms: taxonomyTerms,
-
+        blueprints: blueprints,
         assets: assets,
         assetFields: assetFields,
         oauthProviders: [],

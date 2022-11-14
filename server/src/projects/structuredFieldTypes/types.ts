@@ -4,7 +4,7 @@
  * made directly to this file are likely to be lost.
  */
 
-export interface IFieldDetails {
+ export interface IFieldDetails {
     required: boolean;
     type: string;
     display: string;
@@ -15,6 +15,7 @@ export interface IFieldDetails {
     sets: ISet[];
     isLinked: boolean;
     linkedFrom: string;
+    internalIcon: string;
 }
 
 export interface ISet {
@@ -292,6 +293,7 @@ export interface ISectionFieldType extends IFieldDetails {
 }
 
 export interface ISelectFieldType extends IFieldDetails {
+    placeholder: string;
     options: string[] | null;
     multiple: boolean | null;
     maxItems: number | null;
@@ -327,6 +329,7 @@ export interface ISlugFieldType extends IFieldDetails {
 }
 
 export interface ITextFieldType extends IFieldDetails {
+    placeholder: string | null;
     inputType: string;
     characterLimit: number | null;
     prepend: string | null;
@@ -341,6 +344,7 @@ export interface ITableFieldType extends IFieldDetails {
 }
 
 export interface ITaggableFieldType extends IFieldDetails {
+    placeholder: string;
 
 }
 
@@ -372,6 +376,7 @@ export interface ITemplateFolderFieldType extends IFieldDetails {
 }
 
 export interface ITextareaFieldType extends IFieldDetails {
+    placeholder: string | null;
     characterLimit: string | null;
     antlers: boolean | null;
     default: string | null;
@@ -410,6 +415,7 @@ export interface IUsersFieldType extends IFieldDetails {
 
 export interface IVideoFieldType extends IFieldDetails {
     default: string | null;
+    placeholder: string | null;
 
 }
 
@@ -419,13 +425,762 @@ export interface IYamlFieldType extends IFieldDetails {
 }
 
 export interface IFormFieldType extends IFieldDetails {
+    placeholder: string | null;
     maxItems: number;
 
 }
 
 
 
-class FieldParser {
+export function getProperties(context: any): any {
+    let properties: any = {};
+
+    if (typeof context['type'] === 'undefined') {
+        return properties;
+    }
+
+    const contextType = context['type'] as string;
+
+    if (contextType == 'array') {
+
+        if (typeof context['mode'] !== 'undefined') {
+            properties['mode'] = context['mode'];
+        }
+
+        if (typeof context['keys'] !== 'undefined') {
+            properties['keys'] = context['keys'];
+        }
+
+    } if (contextType == 'asset_container') {
+
+        if (typeof context['maxItems'] !== 'undefined') {
+            properties['max_items'] = context['maxItems'];
+        }
+
+        if (typeof context['mode'] !== 'undefined') {
+            properties['mode'] = context['mode'];
+        }
+
+    } if (contextType == 'asset_folder') {
+
+        if (typeof context['maxItems'] !== 'undefined') {
+            properties['max_items'] = context['maxItems'];
+        }
+
+        if (typeof context['mode'] !== 'undefined') {
+            properties['mode'] = context['mode'];
+        }
+
+    } if (contextType == 'assets') {
+
+        if (typeof context['mode'] !== 'undefined') {
+            properties['mode'] = context['mode'];
+        }
+
+        if (typeof context['container'] !== 'undefined') {
+            properties['container'] = context['container'];
+        }
+
+        if (typeof context['folder'] !== 'undefined') {
+            properties['folder'] = context['folder'];
+        }
+
+        if (typeof context['restrict'] !== 'undefined') {
+            properties['restrict'] = context['restrict'];
+        }
+
+        if (typeof context['allowUploads'] !== 'undefined') {
+            properties['allow_uploads'] = context['allowUploads'];
+        }
+
+        if (typeof context['showFilename'] !== 'undefined') {
+            properties['show_filename'] = context['showFilename'];
+        }
+
+        if (typeof context['maxFiles'] !== 'undefined') {
+            properties['max_files'] = context['maxFiles'];
+        }
+
+    } if (contextType == 'bard') {
+
+        if (typeof context['collapse'] !== 'undefined') {
+            properties['collapse'] = context['collapse'];
+        }
+
+        if (typeof context['alwaysShowSetButton'] !== 'undefined') {
+            properties['always_show_set_button'] = context['alwaysShowSetButton'];
+        }
+
+        if (typeof context['previews'] !== 'undefined') {
+            properties['previews'] = context['previews'];
+        }
+
+        if (typeof context['buttons'] !== 'undefined') {
+            properties['buttons'] = context['buttons'];
+        }
+
+        if (typeof context['container'] !== 'undefined') {
+            properties['container'] = context['container'];
+        }
+
+        if (typeof context['saveHtml'] !== 'undefined') {
+            properties['save_html'] = context['saveHtml'];
+        }
+
+        if (typeof context['toolbarMode'] !== 'undefined') {
+            properties['toolbar_mode'] = context['toolbarMode'];
+        }
+
+        if (typeof context['linkNoopener'] !== 'undefined') {
+            properties['link_noopener'] = context['linkNoopener'];
+        }
+
+        if (typeof context['linkNoreferrer'] !== 'undefined') {
+            properties['link_noreferrer'] = context['linkNoreferrer'];
+        }
+
+        if (typeof context['targetBlank'] !== 'undefined') {
+            properties['target_blank'] = context['targetBlank'];
+        }
+
+        if (typeof context['linkCollections'] !== 'undefined') {
+            properties['link_collections'] = context['linkCollections'];
+        }
+
+        if (typeof context['readingTime'] !== 'undefined') {
+            properties['reading_time'] = context['readingTime'];
+        }
+
+        if (typeof context['fullscreen'] !== 'undefined') {
+            properties['fullscreen'] = context['fullscreen'];
+        }
+
+        if (typeof context['allowSource'] !== 'undefined') {
+            properties['allow_source'] = context['allowSource'];
+        }
+
+        if (typeof context['enableInputRules'] !== 'undefined') {
+            properties['enable_input_rules'] = context['enableInputRules'];
+        }
+
+        if (typeof context['enablePasteRules'] !== 'undefined') {
+            properties['enable_paste_rules'] = context['enablePasteRules'];
+        }
+
+        if (typeof context['antlers'] !== 'undefined') {
+            properties['antlers'] = context['antlers'];
+        }
+
+        if (typeof context['removeEmptyNodes'] !== 'undefined') {
+            properties['remove_empty_nodes'] = context['removeEmptyNodes'];
+        }
+
+    } if (contextType == 'replicator') {
+
+        if (typeof context['collapse'] !== 'undefined') {
+            properties['collapse'] = context['collapse'];
+        }
+
+        if (typeof context['previews'] !== 'undefined') {
+            properties['previews'] = context['previews'];
+        }
+
+        if (typeof context['maxSets'] !== 'undefined') {
+            properties['max_sets'] = context['maxSets'];
+        }
+
+    } if (contextType == 'bard_buttons_setting') {
+
+    } if (contextType == 'button_group') {
+
+        if (typeof context['options'] !== 'undefined') {
+            properties['options'] = context['options'];
+        }
+
+        if (typeof context['default'] !== 'undefined') {
+            properties['default'] = context['default'];
+        }
+
+    } if (contextType == 'checkboxes') {
+
+        if (typeof context['inline'] !== 'undefined') {
+            properties['inline'] = context['inline'];
+        }
+
+        if (typeof context['options'] !== 'undefined') {
+            properties['options'] = context['options'];
+        }
+
+        if (typeof context['default'] !== 'undefined') {
+            properties['default'] = context['default'];
+        }
+
+    } if (contextType == 'code') {
+
+        if (typeof context['theme'] !== 'undefined') {
+            properties['theme'] = context['theme'];
+        }
+
+        if (typeof context['mode'] !== 'undefined') {
+            properties['mode'] = context['mode'];
+        }
+
+        if (typeof context['modeSelectable'] !== 'undefined') {
+            properties['mode_selectable'] = context['modeSelectable'];
+        }
+
+        if (typeof context['indentType'] !== 'undefined') {
+            properties['indent_type'] = context['indentType'];
+        }
+
+        if (typeof context['indentSize'] !== 'undefined') {
+            properties['indent_size'] = context['indentSize'];
+        }
+
+        if (typeof context['keyMap'] !== 'undefined') {
+            properties['key_map'] = context['keyMap'];
+        }
+
+        if (typeof context['lineNumbers'] !== 'undefined') {
+            properties['line_numbers'] = context['lineNumbers'];
+        }
+
+        if (typeof context['lineWrapping'] !== 'undefined') {
+            properties['line_wrapping'] = context['lineWrapping'];
+        }
+
+    } if (contextType == 'collection_routes') {
+
+    } if (contextType == 'collection_title_formats') {
+
+    } if (contextType == 'collections') {
+
+        if (typeof context['maxItems'] !== 'undefined') {
+            properties['max_items'] = context['maxItems'];
+        }
+
+        if (typeof context['mode'] !== 'undefined') {
+            properties['mode'] = context['mode'];
+        }
+
+    } if (contextType == 'color') {
+
+        if (typeof context['swatches'] !== 'undefined') {
+            properties['swatches'] = context['swatches'];
+        }
+
+        if (typeof context['theme'] !== 'undefined') {
+            properties['theme'] = context['theme'];
+        }
+
+        if (typeof context['lockOpacity'] !== 'undefined') {
+            properties['lock_opacity'] = context['lockOpacity'];
+        }
+
+        if (typeof context['defaultColorMode'] !== 'undefined') {
+            properties['default_color_mode'] = context['defaultColorMode'];
+        }
+
+        if (typeof context['colorModes'] !== 'undefined') {
+            properties['color_modes'] = context['colorModes'];
+        }
+
+    } if (contextType == 'date') {
+
+        if (typeof context['mode'] !== 'undefined') {
+            properties['mode'] = context['mode'];
+        }
+
+        if (typeof context['format'] !== 'undefined') {
+            properties['format'] = context['format'];
+        }
+
+        if (typeof context['earliestDate'] !== 'undefined') {
+            properties['earliest_date'] = context['earliestDate'];
+        }
+
+        if (typeof context['latestDate'] !== 'undefined') {
+            properties['latest_date'] = context['latestDate'];
+        }
+
+        if (typeof context['timeEnabled'] !== 'undefined') {
+            properties['time_enabled'] = context['timeEnabled'];
+        }
+
+        if (typeof context['timeSecondsEnabled'] !== 'undefined') {
+            properties['time_seconds_enabled'] = context['timeSecondsEnabled'];
+        }
+
+        if (typeof context['fullWidth'] !== 'undefined') {
+            properties['full_width'] = context['fullWidth'];
+        }
+
+        if (typeof context['inline'] !== 'undefined') {
+            properties['inline'] = context['inline'];
+        }
+
+        if (typeof context['columns'] !== 'undefined') {
+            properties['columns'] = context['columns'];
+        }
+
+        if (typeof context['rows'] !== 'undefined') {
+            properties['rows'] = context['rows'];
+        }
+
+    } if (contextType == 'entries') {
+
+        if (typeof context['maxItems'] !== 'undefined') {
+            properties['max_items'] = context['maxItems'];
+        }
+
+        if (typeof context['mode'] !== 'undefined') {
+            properties['mode'] = context['mode'];
+        }
+
+        if (typeof context['create'] !== 'undefined') {
+            properties['create'] = context['create'];
+        }
+
+        if (typeof context['collections'] !== 'undefined') {
+            properties['collections'] = context['collections'];
+        }
+
+    } if (contextType == 'files') {
+
+        if (typeof context['maxFiles'] !== 'undefined') {
+            properties['max_files'] = context['maxFiles'];
+        }
+
+    } if (contextType == 'float') {
+
+        if (typeof context['default'] !== 'undefined') {
+            properties['default'] = context['default'];
+        }
+
+    } if (contextType == 'global_set_sites') {
+
+    } if (contextType == 'grid') {
+
+        if (typeof context['mode'] !== 'undefined') {
+            properties['mode'] = context['mode'];
+        }
+
+        if (typeof context['maxRows'] !== 'undefined') {
+            properties['max_rows'] = context['maxRows'];
+        }
+
+        if (typeof context['minRows'] !== 'undefined') {
+            properties['min_rows'] = context['minRows'];
+        }
+
+        if (typeof context['addRow'] !== 'undefined') {
+            properties['add_row'] = context['addRow'];
+        }
+
+        if (typeof context['reorderable'] !== 'undefined') {
+            properties['reorderable'] = context['reorderable'];
+        }
+
+    } if (contextType == 'hidden') {
+
+        if (typeof context['default'] !== 'undefined') {
+            properties['default'] = context['default'];
+        }
+
+    } if (contextType == 'html') {
+
+        if (typeof context['html'] !== 'undefined') {
+            properties['html'] = context['html'];
+        }
+
+    } if (contextType == 'integer') {
+
+        if (typeof context['default'] !== 'undefined') {
+            properties['default'] = context['default'];
+        }
+
+    } if (contextType == 'link') {
+
+        if (typeof context['collections'] !== 'undefined') {
+            properties['collections'] = context['collections'];
+        }
+
+        if (typeof context['container'] !== 'undefined') {
+            properties['container'] = context['container'];
+        }
+
+    } if (contextType == 'list') {
+
+        if (typeof context['default'] !== 'undefined') {
+            properties['default'] = context['default'];
+        }
+
+    } if (contextType == 'markdown') {
+
+        if (typeof context['container'] !== 'undefined') {
+            properties['container'] = context['container'];
+        }
+
+        if (typeof context['folder'] !== 'undefined') {
+            properties['folder'] = context['folder'];
+        }
+
+        if (typeof context['restrict'] !== 'undefined') {
+            properties['restrict'] = context['restrict'];
+        }
+
+        if (typeof context['automaticLineBreaks'] !== 'undefined') {
+            properties['automatic_line_breaks'] = context['automaticLineBreaks'];
+        }
+
+        if (typeof context['automaticLinks'] !== 'undefined') {
+            properties['automatic_links'] = context['automaticLinks'];
+        }
+
+        if (typeof context['escapeMarkup'] !== 'undefined') {
+            properties['escape_markup'] = context['escapeMarkup'];
+        }
+
+        if (typeof context['smartypants'] !== 'undefined') {
+            properties['smartypants'] = context['smartypants'];
+        }
+
+        if (typeof context['parser'] !== 'undefined') {
+            properties['parser'] = context['parser'];
+        }
+
+        if (typeof context['antlers'] !== 'undefined') {
+            properties['antlers'] = context['antlers'];
+        }
+
+        if (typeof context['default'] !== 'undefined') {
+            properties['default'] = context['default'];
+        }
+
+    } if (contextType == 'fields') {
+
+    } if (contextType == 'radio') {
+
+        if (typeof context['options'] !== 'undefined') {
+            properties['options'] = context['options'];
+        }
+
+        if (typeof context['inline'] !== 'undefined') {
+            properties['inline'] = context['inline'];
+        }
+
+        if (typeof context['castBooleans'] !== 'undefined') {
+            properties['cast_booleans'] = context['castBooleans'];
+        }
+
+        if (typeof context['default'] !== 'undefined') {
+            properties['default'] = context['default'];
+        }
+
+    } if (contextType == 'range') {
+
+        if (typeof context['hidden'] !== 'undefined') {
+            properties['hidden'] = context['hidden'];
+        }
+
+        if (typeof context['min'] !== 'undefined') {
+            properties['min'] = context['min'];
+        }
+
+        if (typeof context['max'] !== 'undefined') {
+            properties['max'] = context['max'];
+        }
+
+        if (typeof context['step'] !== 'undefined') {
+            properties['step'] = context['step'];
+        }
+
+        if (typeof context['default'] !== 'undefined') {
+            properties['default'] = context['default'];
+        }
+
+        if (typeof context['prepend'] !== 'undefined') {
+            properties['prepend'] = context['prepend'];
+        }
+
+        if (typeof context['append'] !== 'undefined') {
+            properties['append'] = context['append'];
+        }
+
+    } if (contextType == 'revealer') {
+
+        if (typeof context['mode'] !== 'undefined') {
+            properties['mode'] = context['mode'];
+        }
+
+        if (typeof context['inputLabel'] !== 'undefined') {
+            properties['input_label'] = context['inputLabel'];
+        }
+
+    } if (contextType == 'section') {
+
+    } if (contextType == 'select') {
+
+        if (typeof context['placeholder'] !== 'undefined') {
+            properties['placeholder'] = context['placeholder'];
+        }
+
+        if (typeof context['options'] !== 'undefined') {
+            properties['options'] = context['options'];
+        }
+
+        if (typeof context['multiple'] !== 'undefined') {
+            properties['multiple'] = context['multiple'];
+        }
+
+        if (typeof context['maxItems'] !== 'undefined') {
+            properties['max_items'] = context['maxItems'];
+        }
+
+        if (typeof context['clearable'] !== 'undefined') {
+            properties['clearable'] = context['clearable'];
+        }
+
+        if (typeof context['searchable'] !== 'undefined') {
+            properties['searchable'] = context['searchable'];
+        }
+
+        if (typeof context['taggable'] !== 'undefined') {
+            properties['taggable'] = context['taggable'];
+        }
+
+        if (typeof context['pushTags'] !== 'undefined') {
+            properties['push_tags'] = context['pushTags'];
+        }
+
+        if (typeof context['castBooleans'] !== 'undefined') {
+            properties['cast_booleans'] = context['castBooleans'];
+        }
+
+        if (typeof context['default'] !== 'undefined') {
+            properties['default'] = context['default'];
+        }
+
+    } if (contextType == 'sets') {
+
+    } if (contextType == 'sites') {
+
+        if (typeof context['maxItems'] !== 'undefined') {
+            properties['max_items'] = context['maxItems'];
+        }
+
+        if (typeof context['mode'] !== 'undefined') {
+            properties['mode'] = context['mode'];
+        }
+
+    } if (contextType == 'structures') {
+
+        if (typeof context['maxItems'] !== 'undefined') {
+            properties['max_items'] = context['maxItems'];
+        }
+
+        if (typeof context['mode'] !== 'undefined') {
+            properties['mode'] = context['mode'];
+        }
+
+    } if (contextType == 'slug') {
+
+        if (typeof context['from'] !== 'undefined') {
+            properties['from'] = context['from'];
+        }
+
+        if (typeof context['generate'] !== 'undefined') {
+            properties['generate'] = context['generate'];
+        }
+
+    } if (contextType == 'text') {
+
+        if (typeof context['placeholder'] !== 'undefined') {
+            properties['placeholder'] = context['placeholder'];
+        }
+
+        if (typeof context['inputType'] !== 'undefined') {
+            properties['input_type'] = context['inputType'];
+        }
+
+        if (typeof context['characterLimit'] !== 'undefined') {
+            properties['character_limit'] = context['characterLimit'];
+        }
+
+        if (typeof context['prepend'] !== 'undefined') {
+            properties['prepend'] = context['prepend'];
+        }
+
+        if (typeof context['append'] !== 'undefined') {
+            properties['append'] = context['append'];
+        }
+
+        if (typeof context['antlers'] !== 'undefined') {
+            properties['antlers'] = context['antlers'];
+        }
+
+        if (typeof context['default'] !== 'undefined') {
+            properties['default'] = context['default'];
+        }
+
+    } if (contextType == 'table') {
+
+    } if (contextType == 'taggable') {
+
+        if (typeof context['placeholder'] !== 'undefined') {
+            properties['placeholder'] = context['placeholder'];
+        }
+
+    } if (contextType == 'terms') {
+
+        if (typeof context['maxItems'] !== 'undefined') {
+            properties['max_items'] = context['maxItems'];
+        }
+
+        if (typeof context['mode'] !== 'undefined') {
+            properties['mode'] = context['mode'];
+        }
+
+        if (typeof context['create'] !== 'undefined') {
+            properties['create'] = context['create'];
+        }
+
+        if (typeof context['taxonomies'] !== 'undefined') {
+            properties['taxonomies'] = context['taxonomies'];
+        }
+
+    } if (contextType == 'taxonomies') {
+
+        if (typeof context['maxItems'] !== 'undefined') {
+            properties['max_items'] = context['maxItems'];
+        }
+
+        if (typeof context['mode'] !== 'undefined') {
+            properties['mode'] = context['mode'];
+        }
+
+    } if (contextType == 'template') {
+
+        if (typeof context['hidePartials'] !== 'undefined') {
+            properties['hide_partials'] = context['hidePartials'];
+        }
+
+        if (typeof context['blueprint'] !== 'undefined') {
+            properties['blueprint'] = context['blueprint'];
+        }
+
+        if (typeof context['folder'] !== 'undefined') {
+            properties['folder'] = context['folder'];
+        }
+
+    } if (contextType == 'template_folder') {
+
+        if (typeof context['maxItems'] !== 'undefined') {
+            properties['max_items'] = context['maxItems'];
+        }
+
+        if (typeof context['mode'] !== 'undefined') {
+            properties['mode'] = context['mode'];
+        }
+
+    } if (contextType == 'textarea') {
+
+        if (typeof context['placeholder'] !== 'undefined') {
+            properties['placeholder'] = context['placeholder'];
+        }
+
+        if (typeof context['characterLimit'] !== 'undefined') {
+            properties['character_limit'] = context['characterLimit'];
+        }
+
+        if (typeof context['antlers'] !== 'undefined') {
+            properties['antlers'] = context['antlers'];
+        }
+
+        if (typeof context['default'] !== 'undefined') {
+            properties['default'] = context['default'];
+        }
+
+    } if (contextType == 'time') {
+
+        if (typeof context['secondsEnabled'] !== 'undefined') {
+            properties['seconds_enabled'] = context['secondsEnabled'];
+        }
+
+        if (typeof context['default'] !== 'undefined') {
+            properties['default'] = context['default'];
+        }
+
+    } if (contextType == 'toggle') {
+
+        if (typeof context['inlineLabel'] !== 'undefined') {
+            properties['inline_label'] = context['inlineLabel'];
+        }
+
+        if (typeof context['default'] !== 'undefined') {
+            properties['default'] = context['default'];
+        }
+
+    } if (contextType == 'user_groups') {
+
+        if (typeof context['maxItems'] !== 'undefined') {
+            properties['max_items'] = context['maxItems'];
+        }
+
+        if (typeof context['mode'] !== 'undefined') {
+            properties['mode'] = context['mode'];
+        }
+
+    } if (contextType == 'user_roles') {
+
+        if (typeof context['maxItems'] !== 'undefined') {
+            properties['max_items'] = context['maxItems'];
+        }
+
+        if (typeof context['mode'] !== 'undefined') {
+            properties['mode'] = context['mode'];
+        }
+
+    } if (contextType == 'users') {
+
+        if (typeof context['maxItems'] !== 'undefined') {
+            properties['max_items'] = context['maxItems'];
+        }
+
+        if (typeof context['mode'] !== 'undefined') {
+            properties['mode'] = context['mode'];
+        }
+
+    } if (contextType == 'video') {
+
+        if (typeof context['default'] !== 'undefined') {
+            properties['default'] = context['default'];
+        }
+
+        if (typeof context['placeholder'] !== 'undefined') {
+            properties['placeholder'] = context['placeholder'];
+        }
+
+    } if (contextType == 'yaml') {
+
+        if (typeof context['default'] !== 'undefined') {
+            properties['default'] = context['default'];
+        }
+
+    } if (contextType == 'form') {
+
+        if (typeof context['placeholder'] !== 'undefined') {
+            properties['placeholder'] = context['placeholder'];
+        }
+
+        if (typeof context['maxItems'] !== 'undefined') {
+            properties['max_items'] = context['maxItems'];
+        }
+
+    }
+
+    return properties;
+} class FieldParser {
     private fieldSets: Map<string, IParsedFieldset> = new Map();
 
     setFieldSets(fieldSets: Map<string, IParsedFieldset>) {
@@ -461,7 +1216,8 @@ class FieldParser {
             sets: _tSets,
             fields: _tFields,
             isLinked: false,
-            linkedFrom: ''
+            linkedFrom: '',
+            internalIcon: 'array',
         };
     }
 
@@ -496,7 +1252,8 @@ class FieldParser {
             sets: _tSets,
             fields: _tFields,
             isLinked: false,
-            linkedFrom: ''
+            linkedFrom: '',
+            internalIcon: 'asset_container',
         };
     }
 
@@ -531,7 +1288,8 @@ class FieldParser {
             sets: _tSets,
             fields: _tFields,
             isLinked: false,
-            linkedFrom: ''
+            linkedFrom: '',
+            internalIcon: 'asset_folder',
         };
     }
 
@@ -576,7 +1334,8 @@ class FieldParser {
             sets: _tSets,
             fields: _tFields,
             isLinked: false,
-            linkedFrom: ''
+            linkedFrom: '',
+            internalIcon: 'assets',
         };
     }
 
@@ -643,7 +1402,8 @@ class FieldParser {
             sets: _tSets,
             fields: _tFields,
             isLinked: false,
-            linkedFrom: ''
+            linkedFrom: '',
+            internalIcon: 'bard',
         };
     }
 
@@ -680,7 +1440,8 @@ class FieldParser {
             sets: _tSets,
             fields: _tFields,
             isLinked: false,
-            linkedFrom: ''
+            linkedFrom: '',
+            internalIcon: 'replicator',
         };
     }
 
@@ -711,7 +1472,8 @@ class FieldParser {
             sets: _tSets,
             fields: _tFields,
             isLinked: false,
-            linkedFrom: ''
+            linkedFrom: '',
+            internalIcon: 'bard_buttons_setting',
         };
     }
 
@@ -746,7 +1508,8 @@ class FieldParser {
             sets: _tSets,
             fields: _tFields,
             isLinked: false,
-            linkedFrom: ''
+            linkedFrom: '',
+            internalIcon: 'button_group',
         };
     }
 
@@ -783,7 +1546,8 @@ class FieldParser {
             sets: _tSets,
             fields: _tFields,
             isLinked: false,
-            linkedFrom: ''
+            linkedFrom: '',
+            internalIcon: 'checkboxes',
         };
     }
 
@@ -830,7 +1594,8 @@ class FieldParser {
             sets: _tSets,
             fields: _tFields,
             isLinked: false,
-            linkedFrom: ''
+            linkedFrom: '',
+            internalIcon: 'code',
         };
     }
 
@@ -861,7 +1626,8 @@ class FieldParser {
             sets: _tSets,
             fields: _tFields,
             isLinked: false,
-            linkedFrom: ''
+            linkedFrom: '',
+            internalIcon: 'collection_routes',
         };
     }
 
@@ -892,7 +1658,8 @@ class FieldParser {
             sets: _tSets,
             fields: _tFields,
             isLinked: false,
-            linkedFrom: ''
+            linkedFrom: '',
+            internalIcon: 'collection_title_formats',
         };
     }
 
@@ -927,7 +1694,8 @@ class FieldParser {
             sets: _tSets,
             fields: _tFields,
             isLinked: false,
-            linkedFrom: ''
+            linkedFrom: '',
+            internalIcon: 'collections',
         };
     }
 
@@ -968,7 +1736,8 @@ class FieldParser {
             sets: _tSets,
             fields: _tFields,
             isLinked: false,
-            linkedFrom: ''
+            linkedFrom: '',
+            internalIcon: 'color',
         };
     }
 
@@ -1019,7 +1788,8 @@ class FieldParser {
             sets: _tSets,
             fields: _tFields,
             isLinked: false,
-            linkedFrom: ''
+            linkedFrom: '',
+            internalIcon: 'date',
         };
     }
 
@@ -1058,7 +1828,8 @@ class FieldParser {
             sets: _tSets,
             fields: _tFields,
             isLinked: false,
-            linkedFrom: ''
+            linkedFrom: '',
+            internalIcon: 'entries',
         };
     }
 
@@ -1091,7 +1862,8 @@ class FieldParser {
             sets: _tSets,
             fields: _tFields,
             isLinked: false,
-            linkedFrom: ''
+            linkedFrom: '',
+            internalIcon: 'files',
         };
     }
 
@@ -1124,7 +1896,8 @@ class FieldParser {
             sets: _tSets,
             fields: _tFields,
             isLinked: false,
-            linkedFrom: ''
+            linkedFrom: '',
+            internalIcon: 'float',
         };
     }
 
@@ -1155,7 +1928,8 @@ class FieldParser {
             sets: _tSets,
             fields: _tFields,
             isLinked: false,
-            linkedFrom: ''
+            linkedFrom: '',
+            internalIcon: 'global_set_sites',
         };
     }
 
@@ -1196,7 +1970,8 @@ class FieldParser {
             sets: _tSets,
             fields: _tFields,
             isLinked: false,
-            linkedFrom: ''
+            linkedFrom: '',
+            internalIcon: 'grid',
         };
     }
 
@@ -1229,7 +2004,8 @@ class FieldParser {
             sets: _tSets,
             fields: _tFields,
             isLinked: false,
-            linkedFrom: ''
+            linkedFrom: '',
+            internalIcon: 'hidden',
         };
     }
 
@@ -1262,7 +2038,8 @@ class FieldParser {
             sets: _tSets,
             fields: _tFields,
             isLinked: false,
-            linkedFrom: ''
+            linkedFrom: '',
+            internalIcon: 'html',
         };
     }
 
@@ -1295,7 +2072,8 @@ class FieldParser {
             sets: _tSets,
             fields: _tFields,
             isLinked: false,
-            linkedFrom: ''
+            linkedFrom: '',
+            internalIcon: 'integer',
         };
     }
 
@@ -1330,7 +2108,8 @@ class FieldParser {
             sets: _tSets,
             fields: _tFields,
             isLinked: false,
-            linkedFrom: ''
+            linkedFrom: '',
+            internalIcon: 'link',
         };
     }
 
@@ -1363,7 +2142,8 @@ class FieldParser {
             sets: _tSets,
             fields: _tFields,
             isLinked: false,
-            linkedFrom: ''
+            linkedFrom: '',
+            internalIcon: 'list',
         };
     }
 
@@ -1414,7 +2194,8 @@ class FieldParser {
             sets: _tSets,
             fields: _tFields,
             isLinked: false,
-            linkedFrom: ''
+            linkedFrom: '',
+            internalIcon: 'markdown',
         };
     }
 
@@ -1445,7 +2226,8 @@ class FieldParser {
             sets: _tSets,
             fields: _tFields,
             isLinked: false,
-            linkedFrom: ''
+            linkedFrom: '',
+            internalIcon: 'fields',
         };
     }
 
@@ -1484,7 +2266,8 @@ class FieldParser {
             sets: _tSets,
             fields: _tFields,
             isLinked: false,
-            linkedFrom: ''
+            linkedFrom: '',
+            internalIcon: 'radio',
         };
     }
 
@@ -1529,7 +2312,8 @@ class FieldParser {
             sets: _tSets,
             fields: _tFields,
             isLinked: false,
-            linkedFrom: ''
+            linkedFrom: '',
+            internalIcon: 'range',
         };
     }
 
@@ -1564,7 +2348,8 @@ class FieldParser {
             sets: _tSets,
             fields: _tFields,
             isLinked: false,
-            linkedFrom: ''
+            linkedFrom: '',
+            internalIcon: 'revealer',
         };
     }
 
@@ -1595,11 +2380,13 @@ class FieldParser {
             sets: _tSets,
             fields: _tFields,
             isLinked: false,
-            linkedFrom: ''
+            linkedFrom: '',
+            internalIcon: 'section',
         };
     }
 
     _parseSelectFieldType(context: any): ISelectFieldType {
+        let _parsedPlaceholder = fetchDynamic<string>(context['field'], 'placeholder', '');
         let _parsedOptions = fetchDynamic<string[] | null>(context['field'], 'options', null);
         let _parsedMultiple = fetchDynamic<boolean | null>(context['field'], 'multiple', null);
         let _parsedMaxItems = fetchDynamic<number | null>(context['field'], 'max_items', null);
@@ -1626,6 +2413,7 @@ class FieldParser {
             validateArray: string[] = fetchDynamic<string[]>(context['field'], 'validate', []),
             display: string = fetchDynamic<string>(context['field'], 'display', '');
         return {
+            placeholder: _parsedPlaceholder,
             options: _parsedOptions,
             multiple: _parsedMultiple,
             maxItems: _parsedMaxItems,
@@ -1644,7 +2432,8 @@ class FieldParser {
             sets: _tSets,
             fields: _tFields,
             isLinked: false,
-            linkedFrom: ''
+            linkedFrom: '',
+            internalIcon: 'select',
         };
     }
 
@@ -1675,7 +2464,8 @@ class FieldParser {
             sets: _tSets,
             fields: _tFields,
             isLinked: false,
-            linkedFrom: ''
+            linkedFrom: '',
+            internalIcon: 'sets',
         };
     }
 
@@ -1710,7 +2500,8 @@ class FieldParser {
             sets: _tSets,
             fields: _tFields,
             isLinked: false,
-            linkedFrom: ''
+            linkedFrom: '',
+            internalIcon: 'sites',
         };
     }
 
@@ -1745,7 +2536,8 @@ class FieldParser {
             sets: _tSets,
             fields: _tFields,
             isLinked: false,
-            linkedFrom: ''
+            linkedFrom: '',
+            internalIcon: 'structures',
         };
     }
 
@@ -1780,11 +2572,13 @@ class FieldParser {
             sets: _tSets,
             fields: _tFields,
             isLinked: false,
-            linkedFrom: ''
+            linkedFrom: '',
+            internalIcon: 'slug',
         };
     }
 
     _parseTextFieldType(context: any): ITextFieldType {
+        let _parsedPlaceholder = fetchDynamic<string | null>(context['field'], 'placeholder', null);
         let _parsedInputType = fetchDynamic<string>(context['field'], 'input_type', 'text');
         let _parsedCharacterLimit = fetchDynamic<number | null>(context['field'], 'character_limit', null);
         let _parsedPrepend = fetchDynamic<string | null>(context['field'], 'prepend', null);
@@ -1808,6 +2602,7 @@ class FieldParser {
             validateArray: string[] = fetchDynamic<string[]>(context['field'], 'validate', []),
             display: string = fetchDynamic<string>(context['field'], 'display', '');
         return {
+            placeholder: _parsedPlaceholder,
             inputType: _parsedInputType,
             characterLimit: _parsedCharacterLimit,
             prepend: _parsedPrepend,
@@ -1823,7 +2618,8 @@ class FieldParser {
             sets: _tSets,
             fields: _tFields,
             isLinked: false,
-            linkedFrom: ''
+            linkedFrom: '',
+            internalIcon: 'text',
         };
     }
 
@@ -1854,11 +2650,13 @@ class FieldParser {
             sets: _tSets,
             fields: _tFields,
             isLinked: false,
-            linkedFrom: ''
+            linkedFrom: '',
+            internalIcon: 'table',
         };
     }
 
     _parseTaggableFieldType(context: any): ITaggableFieldType {
+        let _parsedPlaceholder = fetchDynamic<string>(context['field'], 'placeholder', '');
 
         let _tSets: ISet[] = [];
         let _tFields: IFieldDetails[] = [];
@@ -1876,6 +2674,7 @@ class FieldParser {
             validateArray: string[] = fetchDynamic<string[]>(context['field'], 'validate', []),
             display: string = fetchDynamic<string>(context['field'], 'display', '');
         return {
+            placeholder: _parsedPlaceholder,
             required: isRequired,
             type: type,
             validate: validateArray,
@@ -1885,7 +2684,8 @@ class FieldParser {
             sets: _tSets,
             fields: _tFields,
             isLinked: false,
-            linkedFrom: ''
+            linkedFrom: '',
+            internalIcon: 'tags',
         };
     }
 
@@ -1924,7 +2724,8 @@ class FieldParser {
             sets: _tSets,
             fields: _tFields,
             isLinked: false,
-            linkedFrom: ''
+            linkedFrom: '',
+            internalIcon: 'taxonomy',
         };
     }
 
@@ -1959,7 +2760,8 @@ class FieldParser {
             sets: _tSets,
             fields: _tFields,
             isLinked: false,
-            linkedFrom: ''
+            linkedFrom: '',
+            internalIcon: 'taxonomy',
         };
     }
 
@@ -1996,7 +2798,8 @@ class FieldParser {
             sets: _tSets,
             fields: _tFields,
             isLinked: false,
-            linkedFrom: ''
+            linkedFrom: '',
+            internalIcon: 'template',
         };
     }
 
@@ -2031,11 +2834,13 @@ class FieldParser {
             sets: _tSets,
             fields: _tFields,
             isLinked: false,
-            linkedFrom: ''
+            linkedFrom: '',
+            internalIcon: 'template_folder',
         };
     }
 
     _parseTextareaFieldType(context: any): ITextareaFieldType {
+        let _parsedPlaceholder = fetchDynamic<string | null>(context['field'], 'placeholder', null);
         let _parsedCharacterLimit = fetchDynamic<string | null>(context['field'], 'character_limit', null);
         let _parsedAntlers = fetchDynamic<boolean | null>(context['field'], 'antlers', null);
         let _parsedDefault = fetchDynamic<string | null>(context['field'], 'default', null);
@@ -2056,6 +2861,7 @@ class FieldParser {
             validateArray: string[] = fetchDynamic<string[]>(context['field'], 'validate', []),
             display: string = fetchDynamic<string>(context['field'], 'display', '');
         return {
+            placeholder: _parsedPlaceholder,
             characterLimit: _parsedCharacterLimit,
             antlers: _parsedAntlers,
             default: _parsedDefault,
@@ -2068,7 +2874,8 @@ class FieldParser {
             sets: _tSets,
             fields: _tFields,
             isLinked: false,
-            linkedFrom: ''
+            linkedFrom: '',
+            internalIcon: 'textarea',
         };
     }
 
@@ -2103,7 +2910,8 @@ class FieldParser {
             sets: _tSets,
             fields: _tFields,
             isLinked: false,
-            linkedFrom: ''
+            linkedFrom: '',
+            internalIcon: 'time',
         };
     }
 
@@ -2138,7 +2946,8 @@ class FieldParser {
             sets: _tSets,
             fields: _tFields,
             isLinked: false,
-            linkedFrom: ''
+            linkedFrom: '',
+            internalIcon: 'toggle',
         };
     }
 
@@ -2173,7 +2982,8 @@ class FieldParser {
             sets: _tSets,
             fields: _tFields,
             isLinked: false,
-            linkedFrom: ''
+            linkedFrom: '',
+            internalIcon: 'user_groups',
         };
     }
 
@@ -2208,7 +3018,8 @@ class FieldParser {
             sets: _tSets,
             fields: _tFields,
             isLinked: false,
-            linkedFrom: ''
+            linkedFrom: '',
+            internalIcon: 'user_roles',
         };
     }
 
@@ -2243,12 +3054,14 @@ class FieldParser {
             sets: _tSets,
             fields: _tFields,
             isLinked: false,
-            linkedFrom: ''
+            linkedFrom: '',
+            internalIcon: 'users',
         };
     }
 
     _parseVideoFieldType(context: any): IVideoFieldType {
         let _parsedDefault = fetchDynamic<string | null>(context['field'], 'default', null);
+        let _parsedPlaceholder = fetchDynamic<string | null>(context['field'], 'placeholder', null);
 
         let _tSets: ISet[] = [];
         let _tFields: IFieldDetails[] = [];
@@ -2267,6 +3080,7 @@ class FieldParser {
             display: string = fetchDynamic<string>(context['field'], 'display', '');
         return {
             default: _parsedDefault,
+            placeholder: _parsedPlaceholder,
             required: isRequired,
             type: type,
             validate: validateArray,
@@ -2276,7 +3090,8 @@ class FieldParser {
             sets: _tSets,
             fields: _tFields,
             isLinked: false,
-            linkedFrom: ''
+            linkedFrom: '',
+            internalIcon: 'video',
         };
     }
 
@@ -2309,11 +3124,13 @@ class FieldParser {
             sets: _tSets,
             fields: _tFields,
             isLinked: false,
-            linkedFrom: ''
+            linkedFrom: '',
+            internalIcon: 'yaml',
         };
     }
 
     _parseFormFieldType(context: any): IFormFieldType {
+        let _parsedPlaceholder = fetchDynamic<string | null>(context['field'], 'placeholder', null);
         let _parsedMaxItems = fetchDynamic<number>(context['field'], 'max_items', 1);
 
         let _tSets: ISet[] = [];
@@ -2332,6 +3149,7 @@ class FieldParser {
             validateArray: string[] = fetchDynamic<string[]>(context['field'], 'validate', []),
             display: string = fetchDynamic<string>(context['field'], 'display', '');
         return {
+            placeholder: _parsedPlaceholder,
             maxItems: _parsedMaxItems,
             required: isRequired,
             type: type,
@@ -2342,7 +3160,8 @@ class FieldParser {
             sets: _tSets,
             fields: _tFields,
             isLinked: false,
-            linkedFrom: ''
+            linkedFrom: '',
+            internalIcon: 'form',
         };
     }
 
@@ -2513,64 +3332,72 @@ class FieldParser {
     } parseFields(context: any): IFieldDetails[] {
         const fields: IFieldDetails[] = [];
 
-        if (typeof context['fields'] === 'undefined') {
+        if (typeof context['fields'] === 'undefined' || context['fields'] == null) {
+            return fields;
+        }
+
+        if (typeof context['fields'] === 'object' && !Array.isArray(context['fields'])) {
             return fields;
         }
 
         const contextFields = context.fields as [];
 
-        contextFields.forEach((field) => {
-            if (typeof field['field'] === 'string') {
-                const fsName = this.getFieldsetName(field['field']);
-
-                if (fsName == null || !this.fieldSets.has(fsName)) { return; }
-                const _tFs = this.fieldSets.get(fsName) as IParsedFieldset;
-                const fsField = locateField(this.getFieldName(field['field']), _tFs);
-
-                if (fsField == null) { return; }
-                const targetHandle = field['handle'] as string;
-                const newField: IFieldDetails = {
-                    ...fsField,
-                    handle: targetHandle,
-                    isLinked: true,
-                    linkedFrom: field['field'] as string
-                };
-
-                fields.push(newField);
-                return;
-            }
-
-            if (typeof field['import'] === 'string') {
-                if (this.fieldSets.has(field['import']) == false) { return; }
-                const _tFs = this.fieldSets.get(field['import']) as IParsedFieldset;
-                let importPrefix: string | null = null;
-
-                if (typeof field['prefix'] === 'string') {
-                    const _tImportPrefix = field['prefix'] as string;
-
-                    if (_tImportPrefix.trim().length > 0) {
-                        importPrefix = _tImportPrefix.trim();
+        try {
+            contextFields.forEach((field) => {
+                if (typeof field['field'] === 'string') {
+                    const fsName = this.getFieldsetName(field['field']);
+    
+                    if (fsName == null || !this.fieldSets.has(fsName)) { return; }
+                    const _tFs = this.fieldSets.get(fsName) as IParsedFieldset;
+                    const fsField = locateField(this.getFieldName(field['field']), _tFs);
+    
+                    if (fsField == null) { return; }
+                    const targetHandle = field['handle'] as string;
+                    const newField: IFieldDetails = {
+                        ...fsField,
+                        handle: targetHandle,
+                        isLinked: true,
+                        linkedFrom: field['field'] as string
+                    };
+    
+                    fields.push(newField);
+                    return;
+                }
+    
+                if (typeof field['import'] === 'string') {
+                    if (this.fieldSets.has(field['import']) == false) { return; }
+                    const _tFs = this.fieldSets.get(field['import']) as IParsedFieldset;
+                    let importPrefix: string | null = null;
+    
+                    if (typeof field['prefix'] === 'string') {
+                        const _tImportPrefix = field['prefix'] as string;
+    
+                        if (_tImportPrefix.trim().length > 0) {
+                            importPrefix = _tImportPrefix.trim();
+                        }
                     }
+    
+                    const _tFields = fetchFields(importPrefix, _tFs);
+    
+                    if (_tFields.length > 0) {
+                        _tFields.forEach((importedField) => {
+                            fields.push(importedField);
+                        });
+                    }
+    
+                    return;
                 }
-
-                const _tFields = fetchFields(importPrefix, _tFs);
-
-                if (_tFields.length > 0) {
-                    _tFields.forEach((importedField) => {
-                        fields.push(importedField);
-                    });
+    
+                const parsedField = this.parse(field);
+    
+                if (parsedField != null) {
+                    parsedField.handle = field['handle'];
+                    fields.push(parsedField);
                 }
-
-                return;
-            }
-
-            const parsedField = this.parse(field);
-
-            if (parsedField != null) {
-                parsedField.handle = field['handle'];
-                fields.push(parsedField);
-            }
-        });
+            });
+        } catch (err) {
+            var hm = 'asdf';
+        }
 
         return fields;
     }
@@ -2592,7 +3419,7 @@ class FieldParser {
     parseSets(context: any): ISet[] {
         const sets: ISet[] = [];
 
-        const handles = Object.keys(context);
+        const handles = Object.keys(context);   
 
         handles.forEach((setName) => {
             const _tSet = context[setName];
@@ -2621,10 +3448,24 @@ export interface IParsedBlueprint {
     allFields: IFieldDetails[]
     fields: IFieldDetails[],
     type: string,
+    fileName?: string,
+    contents?: string
+}
+
+export interface IProjectFields {
+    assets: IParsedBlueprint[];
+    collections: IParsedBlueprint[];
+    taxonomies: IParsedBlueprint[];
+    navigations: IParsedBlueprint[];
+    forms: IParsedBlueprint[];
+    general: IParsedBlueprint[];
+    globals: IParsedBlueprint[];
+    fieldsets: IParsedFieldset[];
 }
 
 export class BlueprintParser {
     private fieldParser: FieldParser = new FieldParser();
+    private parsedBlueprints: IParsedBlueprint[] = [];
 
     setParsedFieldSet(fieldSets: Map<string, IParsedFieldset>) {
         this.fieldParser.setFieldSets(fieldSets);
@@ -2636,7 +3477,7 @@ export class BlueprintParser {
 
         sectionNames.forEach((sectionHandle) => {
             const _tSectionContext = context[sectionHandle];
-            const _tSectionDisplay = context['display'] ?? '';
+            const _tSectionDisplay = _tSectionContext['display'] ?? '';
             const _tSectionFields = this.fieldParser.parseFields(_tSectionContext);
 
             sections.push({
@@ -2649,7 +3490,7 @@ export class BlueprintParser {
         return sections;
     }
 
-    parseBlueprint(context: any, handle: string, blueprintType: string): IParsedBlueprint | null {
+    parseBlueprint(context: any, handle: string, blueprintType: string, filePath?:string, contents?:string): IParsedBlueprint | null {
         const title = context['title'] ?? '';
         let _tSections: IParsedSection[] = [];
         let _tFields: IFieldDetails[] = [];
@@ -2666,14 +3507,24 @@ export class BlueprintParser {
             _tAllFields = _tAllFields.concat(section.fields);
         });
 
-        return {
+        const parsedBlueprint: IParsedBlueprint = {
             allFields: _tAllFields,
             fields: _tFields,
             handle: handle,
             sections: _tSections,
             title: title,
-            type: blueprintType
+            type: blueprintType,
+            fileName: filePath,
+            contents: contents
         };
+
+        this.parsedBlueprints.push(parsedBlueprint);
+
+        return parsedBlueprint;
+    }
+
+    getBlueprints(): IParsedBlueprint[] {
+        return this.parsedBlueprints;
     }
 }
 
@@ -2689,6 +3540,7 @@ export interface IParsedFieldset extends IParsedBlueprint {
 export class FieldSetParser {
     private blueprintParser: BlueprintParser = new BlueprintParser();
     private parsedFieldsets: Map<string, IParsedFieldset> = new Map();
+    private fieldsetArray: IParsedFieldset[] = [];
 
     parseFieldset(context: any, handle: string): IParsedFieldset | null {
         let _blueprint = this.blueprintParser.parseBlueprint(context, handle, '');
@@ -2711,6 +3563,7 @@ export class FieldSetParser {
 
         if (this.parsedFieldsets.has(handle) == false) {
             this.parsedFieldsets.set(handle, parsedFieldset);
+            this.fieldsetArray.push(parsedFieldset);
         }
 
         return parsedFieldset;
@@ -2719,4 +3572,9 @@ export class FieldSetParser {
     getFieldsets(): Map<string, IParsedFieldset> {
         return this.parsedFieldsets;
     }
+
+    getParsedFieldsets(): IParsedFieldset[] {
+        return this.fieldsetArray;
+    }
 }
+

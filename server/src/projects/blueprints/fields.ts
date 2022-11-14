@@ -1,6 +1,14 @@
 import { IScopeVariable } from '../../antlers/scope/types';
 import { IFieldsetField } from "../fieldsets/fieldset";
 
+export interface IBlueprint {
+    handle: string;
+    title: string;
+    fields: IBlueprintField[];
+    filePath: string;
+    type: string;
+}
+
 export interface IBlueprintField {
     /**
      * The name of the blueprint or collection introducing the field.
