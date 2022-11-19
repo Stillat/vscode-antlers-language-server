@@ -55,7 +55,7 @@ function fetchFields(prefix: string | null, fieldSet: IParsedFieldset): IFieldDe
     return returnFields;
 }
 
-function fetchDynamic<T>(context: any, field: string, defaultValue: T): T {
+export function fetchDynamic<T>(context: any, field: string, defaultValue: T): T {
     if (typeof context[field] !== 'undefined') {
         try {
             const tempV = context[field] as T;

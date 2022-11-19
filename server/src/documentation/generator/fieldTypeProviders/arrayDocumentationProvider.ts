@@ -1,6 +1,7 @@
 import { KeysResolver } from '../../../projects/structuredFieldTypes/keysResolver';
 import { IArrayFieldType, IProjectFields } from '../../../projects/structuredFieldTypes/types';
 import { AugmentationTypes } from '../augmentationTypes';
+import { EvenOddProvider } from '../providers/evenOddProvider';
 import { ForeachProvider } from '../providers/foreachProvider';
 import { NestedFieldsProvider } from '../providers/nestedFieldsProvider';
 import { OfficialDocumentationLinkProvider } from '../providers/officialDocumentationLinkProvider';
@@ -16,6 +17,8 @@ export class ArrayDocumentationProvider implements IDocumentationProvider {
 
         if (array.mode == 'keyed') {
             overviewSnippets.push(ForeachProvider.generate(array.handle));
+        } else {
+            EvenOddProvider.generate(array.handle).forEach((snippet) => overviewSnippets.push(snippet));
         }
 
         overviewProperties.push({

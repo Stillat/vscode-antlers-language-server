@@ -30,6 +30,8 @@ export class KeysResolver {
     private static massageInjectedType(type: string): string {
         if (type == 'user_roles' || type == 'user_groups') {
             return 'array';
+        } else if (type == 'toggle') {
+            return 'boolean';
         }
 
         return type;

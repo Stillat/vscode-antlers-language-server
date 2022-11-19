@@ -14,6 +14,9 @@ Bugs fixed, what's new, and more! :)
 - The formatters no longer format `<script>` tags when they contain Antlers tag pairs
 - Adds warnings when using modifiers directly on fields that augment to query builders
 - Antlers Toolbox no longer requires editing files/restarting Visual Studio Code in order for error reporting to update after changing the current language version
+- Improvements to internal modifier suggestion management and parsing
+- Adds support for the `bool_string` modifier
+
 
 ## v2.3.8
 

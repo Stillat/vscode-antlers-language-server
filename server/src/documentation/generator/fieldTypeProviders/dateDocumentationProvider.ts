@@ -1,6 +1,7 @@
 import { IDateFieldType, IProjectFields } from '../../../projects/structuredFieldTypes/types';
 import { StringUtilities } from '../../../runtime/utilities/stringUtilities';
 import { AugmentationTypes } from '../augmentationTypes';
+import { DateTimeSnippetProvider } from '../snippets/dateTimeSnippetProvider';
 import { IDocumentationProvider, IDocumentationResult } from '../types';
 import { GeneralTextDocumentationProvider } from './generalTextDocumentationProvider';
 
@@ -9,6 +10,10 @@ export class DateDocumentationProvider implements IDocumentationProvider {
         const results = (new GeneralTextDocumentationProvider()).resolve(context, currentProject);
 
         if (results.documentation != null) {
+            DateTimeSnippetProvider.generate(context).forEach((snippet) => {
+                results.documentation?.overviewSnippets.unshift(snippet);
+            });
+
             results.documentation.overviewProperties.unshift({
                 name: 'Time Enabled',
                 mono: false,

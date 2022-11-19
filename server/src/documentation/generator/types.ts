@@ -1,4 +1,4 @@
-import { IFieldDetails, IProjectFields } from '../../projects/structuredFieldTypes/types'
+import { fetchDynamic, IFieldDetails, IProjectFields } from '../../projects/structuredFieldTypes/types'
 import { AugmentationTypes } from './augmentationTypes'
 import { OfficialDocumentationLinkProvider } from './providers/officialDocumentationLinkProvider'
 
@@ -80,12 +80,36 @@ export function stringDocumentationResult(field: IFieldDetails): IDocumentationR
 }
 
 export function numericDocumentationResult(field: IFieldDetails): IDocumentationResult {
-    const snippets: IDocumentationSnippet[] = [];
+    const snippets: IDocumentationSnippet[] = [],
+        defaultValue = fetchDynamic<string|null>(field, 'default', null),
+        isRequired = field.validate.includes('required');
 
-    snippets.push({
-        overview: `Using ${field.handle} in an operation`,
-        snippet: `{{ _result = ${field.handle} + 1; }}`
-    });
+    if (defaultValue === null || isRequired === false) {
+        snippets.push({
+            overview: `Using ${field.handle} in an operation`,
+            snippet: `{{# Use null coalescence to account for a possible null value. #}}
+{{ _result = (${field.handle} ?? 0) + 1; }}`
+        });
+    } else {
+        const checkDefault = defaultValue as any;
+        if (isNaN(checkDefault)) {
+            snippets.push({
+                overview: `Using ${field.handle} in an operation`,
+                snippet: `{{#
+    This field has a non-numeric default value of '${defaultValue}',
+    which may cause issues with operations and comparisons.
+#}}
+{{ _result = ${field.handle} + 1; }}`
+            });
+        } else {
+            snippets.push({
+                overview: `Using ${field.handle} in an operation`,
+                snippet: `{{ _result = ${field.handle} + 1; }}`
+            });
+        }
+    }
+
+    
 
     snippets.push({
         overview: `Using ${field.handle} in a condition`,
@@ -115,6 +139,25 @@ export function numericDocumentationResult(field: IFieldDetails): IDocumentation
 }
 
 export function booleanDocumentationResult(field: IFieldDetails): IDocumentationResult {
+    const snippets:IDocumentationSnippet[] = [];
+
+    snippets.push({
+        overview: `Using the ${field.handle} field in a condition`,
+        snippet: `{{ if ${field.handle} }}
+
+{{ /if }}`
+    });
+
+    snippets.push({
+        overview: `Using the ${field.handle} field in a ternary expression`,
+        snippet: `{{ ${field.handle} ? 'true' : 'false' }}`
+    });
+
+    snippets.push({
+        overview: `Using the ${field.handle} field with the Gatekeeper operator to conditionally render a partial`,
+        snippet: `{{ ${field.handle} ?= {partial:partial/name} }}`
+    });
+
     return {
         resolved: true,
         documentation: {
@@ -127,7 +170,7 @@ export function booleanDocumentationResult(field: IFieldDetails): IDocumentation
             canBeTagPair: false,
             exampleSnippets: [],
             overviewProperties: [],
-            overviewSnippets: [],
+            overviewSnippets: snippets,
             modifiers: [],
             officialDocumentation: OfficialDocumentationLinkProvider.getDocLink(field.type),
             stringableReturns: "The field's value"
