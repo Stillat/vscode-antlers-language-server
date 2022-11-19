@@ -16,6 +16,7 @@ Bugs fixed, what's new, and more! :)
 - Antlers Toolbox no longer requires editing files/restarting Visual Studio Code in order for error reporting to update after changing the current language version
 - Improvements to internal modifier suggestion management and parsing
 - Adds support for the `bool_string` modifier
+- Adds common date/time format variables to the `format` modifier's hover tooltip
 
 ## v2.3.8
 
