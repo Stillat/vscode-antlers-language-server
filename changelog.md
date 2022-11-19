@@ -17,7 +17,6 @@ Bugs fixed, what's new, and more! :)
 - Improvements to internal modifier suggestion management and parsing
 - Adds support for the `bool_string` modifier
 
-
 ## v2.3.8
 
 - Improves line wrapping when formatting method-style modifiers
