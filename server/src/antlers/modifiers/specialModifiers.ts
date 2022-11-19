@@ -44,8 +44,22 @@ const specialModifiers: IModifier[] = [
         canBeParameter: false,
         isDeprecated: false
     },
-    /*{name: 'get'},
-    {name:'raw'},*/
+    {
+        name: 'bool_string',
+        acceptsType: ['boolean', '*'],
+        returnsType: ['string'],
+        canBeParameter: false,
+        description: 'Converts the provided value to a "true" or "false" string',
+        docLink: null,
+        forFieldType: ['toggle'],
+        isDeprecated: false,
+        parameters: [
+            {
+                name: 'value',
+                description: 'The truthy value to convert to a string'
+            }
+        ]
+    }
 ];
 
 export { specialModifiers };
