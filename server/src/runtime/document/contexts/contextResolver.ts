@@ -74,6 +74,10 @@ export class ContextResolver {
             cursorContext.leftChar = document.charLeftAt(position);
             cursorContext.rightChar = document.charRightAt(position);
 
+            if (cursorContext.isCursorInIdentifier == true && cursorContext.leftChar == ' ') {
+                cursorContext.leftChar = ':';
+            }
+
             cursorContext.word = document.wordAt(position);
             cursorContext.char = document.charAt(position);
             cursorContext.leftWord = document.wordLeftAt(position);

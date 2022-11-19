@@ -208,7 +208,7 @@ connection.onInitialize((params: InitializeParams) => {
             documentFormattingProvider: {},
             foldingRangeProvider: {},
             signatureHelpProvider: {
-                triggerCharacters: [":", ','],
+                triggerCharacters: [','],
             },
             documentLinkProvider: {},
             hoverProvider: {},

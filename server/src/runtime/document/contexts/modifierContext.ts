@@ -1,3 +1,4 @@
+import ModifierManager from '../../../antlers/modifierManager';
 import { ModifierChainNode, ModifierNode, AbstractNode, AntlersNode, ModifierNameNode } from '../../nodes/abstractNode';
 import { Position } from '../../nodes/position';
 import { DocumentParser } from '../../parser/documentParser';
@@ -23,11 +24,11 @@ export class ModifierContext {
         for (let i = 0; i < chains.length; i++) {
             const chain = chains[i];
 
-            if (position.isWithin(chain.startPosition, chain.endPosition)) {
+            if (position.isWithin(chain.startPosition, chain.endPosition, 2)) {
                 for (let j = 0; j < chain.modifierChain.length; j++) {
                     const thisModifier = chain.modifierChain[j];
 
-                    if (position.isWithin(thisModifier.startPosition, thisModifier.endPosition)) {
+                    if (position.isWithin(thisModifier.startPosition, thisModifier.endPosition, 2)) {
                         modifier = thisModifier;
                         break;
                     }
@@ -42,6 +43,21 @@ export class ModifierContext {
         if (modifier == null && feature instanceof ModifierNameNode) {
             if (document.getDocumentParser().getLanguageParser().hasModifierConstruct(feature)) {
                 modifier = document.getDocumentParser().getLanguageParser().getModifierConstruct(feature);
+            }
+        }
+
+        const modLeftWord = document.wordLeftAt(position);
+
+        if (modifier == null && modLeftWord != null && ModifierManager.instance?.hasModifier(modLeftWord)) {
+            if (node.modifierChain != null && node.modifierChain.modifierChain.length > 0) {
+                for (let i = 0; i < node.modifierChain.modifierChain.length; i++) {
+                    const curModifierChainItem = node.modifierChain.modifierChain[i];
+
+                    if (curModifierChainItem.modifier != null && curModifierChainItem.modifier.name == modLeftWord) {
+                        modifier = curModifierChainItem;
+                        break;
+                    }
+                }
             }
         }
 
@@ -61,7 +77,6 @@ export class ModifierContext {
 
                     if (position.isWithin(value.startPosition, value.endPosition, 1)) {
                         context.activeValueIndex = i;
-                        context.inModifierParameter = true;
                         context.activeValue = value;
                         break;
                     }
