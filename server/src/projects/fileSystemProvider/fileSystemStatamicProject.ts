@@ -472,7 +472,7 @@ export function getProjectStructure(resourcePath: string): FileSystemStatamicPro
             const contents = fs.readFileSync(miscBlueprintPaths[i]).toString();
             const blueprintName = path.basename(miscBlueprintPaths[i]).split(".").slice(0, -1).join(".");
 
-            bpParser.parseBlueprint(YAML.parse(contents), blueprintName, 'misc', miscBlueprintPaths[i], contents);
+            bpParser.parseBlueprint(YAML.parse(contents), blueprintName, 'misc', miscBlueprintPaths[i]);
 
             if (blueprintName != null && blueprintName.trim().length > 0) {
                 const blueprint = getBlueprintFields(
@@ -498,7 +498,7 @@ export function getProjectStructure(resourcePath: string): FileSystemStatamicPro
             const blueprint = getBlueprintFields(blueprintsPaths[i], blueprintName, 'collection', fieldsets);
             const collectionName = normalizePath(dirname(blueprintsPaths[i])).split("/").pop();
 
-            bpParser.parseBlueprint(YAML.parse(contents), blueprintName, 'collection', blueprintsPaths[i], contents);
+            bpParser.parseBlueprint(YAML.parse(contents), blueprintName, 'collection', blueprintsPaths[i]);
 
             blueprints.push(blueprint);
 
@@ -530,7 +530,7 @@ export function getProjectStructure(resourcePath: string): FileSystemStatamicPro
             const navigationMenu = getNavigationMenu(navPaths[i]);
             let blueprintName = path.basename(navPaths[i]).split(".").slice(0, -1).join(".");
 
-            bpParser.parseBlueprint(YAML.parse(contents), blueprintName, 'nav', navPaths[i], contents);
+            bpParser.parseBlueprint(YAML.parse(contents), blueprintName, 'nav', navPaths[i]);
 
             navigationItems.set(navigationMenu.handle, navigationMenu);
         }
@@ -545,7 +545,7 @@ export function getProjectStructure(resourcePath: string): FileSystemStatamicPro
             const globalName = path.basename(globalBlueprintPaths[i]).split(".").slice(0, -1).join("."),
                 blueprint = getBlueprintFields(globalBlueprintPaths[i], globalName, 'global', fieldsets);
 
-            bpParser.parseBlueprint(YAML.parse(contents), globalName, 'global', globalBlueprintPaths[i], contents);
+            bpParser.parseBlueprint(YAML.parse(contents), globalName, 'global', globalBlueprintPaths[i]);
 
             blueprints.push(blueprint);
             allBlueprintFields = allBlueprintFields.concat(blueprint.fields);
@@ -564,7 +564,7 @@ export function getProjectStructure(resourcePath: string): FileSystemStatamicPro
                 const assetName = path.basename(assetBlueprintPaths[i]).split(".").slice(0, -1).join("."),
                     blueprint = getBlueprintFields(assetBlueprintPaths[i], assetName, 'asset', fieldsets);
 
-                bpParser.parseBlueprint(YAML.parse(contents), assetName, 'asset', assetBlueprintPaths[i], contents);
+                bpParser.parseBlueprint(YAML.parse(contents), assetName, 'asset', assetBlueprintPaths[i]);
 
                 blueprints.push(blueprint);
                 allBlueprintFields = allBlueprintFields.concat(blueprint.fields);
@@ -594,7 +594,7 @@ export function getProjectStructure(resourcePath: string): FileSystemStatamicPro
             const formName = path.basename(formBlueprintPaths[i]).split(".").slice(0, -1).join("."),
                 blueprint = getBlueprintFields(formBlueprintPaths[i], formName, 'form', fieldsets);
 
-            bpParser.parseBlueprint(YAML.parse(contents), formName, 'form', formBlueprintPaths[i], contents);
+            bpParser.parseBlueprint(YAML.parse(contents), formName, 'form', formBlueprintPaths[i]);
 
             blueprints.push(blueprint);
             allBlueprintFields = allBlueprintFields.concat(blueprint.fields);
