@@ -78,7 +78,7 @@ export default {
 
             <div v-html="parsedDescription()"></div>
             <p v-if="modifier.docLink != null">Documentation <a :href="modifier.docLink">{{ modifier.docLink }}</a></p>
-            <pre v-if="modifier.parameters.length == 0"><code v-for="line in lines" style="display:block;">{{ line }}</code></pre>
+            <pre v-if="modifier.parameters.length == 0"><code v-for="line in lines()" style="display:block;">{{ line }}</code></pre>
 
             <div v-if="modifier.parameters.length > 0">
                 <vscode-panels>
