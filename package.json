@@ -178,7 +178,8 @@
                     "name": "Blueprint Explorer",
                     "contextualTitle": "Statamic Blueprint Explorer",
                     "type": "tree",
-                    "icon": "explorer.svg"
+                    "icon": "explorer.svg",
+                    "when": "resourceExtname == .html"
                 }
             ]
         }
