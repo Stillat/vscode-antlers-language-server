@@ -1,7 +1,5 @@
 <script lang="ts">
-import type { DataGrid } from '@microsoft/fast-foundation';
 import { provideVSCodeDesignSystem, vsCodeDataGrid, vsCodeDataGridCell, vsCodeDataGridRow } from "@vscode/webview-ui-toolkit";
-import { toRaw } from 'vue';
 import type { IInjectedField } from '../documentation/types';
 
 provideVSCodeDesignSystem().register(vsCodeDataGrid(), vsCodeDataGridCell(), vsCodeDataGridRow());
@@ -12,21 +10,19 @@ export default {
             type: Object() as () => IInjectedField[],
             required: true
         }
-    },
-    mounted() {
-        const context = (this as any),
-            dataGridView = context.$refs.gridView as DataGrid,
-            injectedDetails = toRaw(context.fields);
-
-        dataGridView.rowsData = injectedDetails;
-        dataGridView.columnDefinitions = [
-            { columnDataKey: 'name', title: 'Field Name' },
-            { columnDataKey: 'type', title: 'Data Type' }
-        ];
     }
 }
 </script>
 
 <template>
-    <vscode-data-grid ref="gridView"></vscode-data-grid>
+    <vscode-data-grid>
+        <vscode-data-grid-row row-type="header">
+            <vscode-data-grid-cell cell-type="columnheader" grid-column="1">Name</vscode-data-grid-cell>
+            <vscode-data-grid-cell cell-type="columnheader" grid-column="2">Type</vscode-data-grid-cell>
+        </vscode-data-grid-row>
+        <vscode-data-grid-row v-for="field in fields">
+            <vscode-data-grid-cell grid-column="1">{{ field.name }}</vscode-data-grid-cell>
+            <vscode-data-grid-cell grid-column="2">{{ field.type }}</vscode-data-grid-cell>
+        </vscode-data-grid-row>
+    </vscode-data-grid>
 </template>
