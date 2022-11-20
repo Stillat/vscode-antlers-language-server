@@ -13,7 +13,7 @@ import InjectedFields from './components/InjectedFields.vue';
 import ModifierDisplay from './components/ModifierDisplay.vue';
 
 import Fuse from 'fuse.js';
-import { toRaw } from 'vue';
+import { toRaw, unref } from 'vue';
 import { vscode } from './utilities/vscode';
 
 provideVSCodeDesignSystem().register(
@@ -61,7 +61,9 @@ export default {
                     keys: ['name']
                 });
 
-            return toRaw(search.search(searchText)) as any as IInjectedField[];
+            return search.search(searchText).map((item) => {
+                return item.item;
+            });
         },
         displayOverviewSnippets(): IDocumentationSnippet[] {
             const currentContext = (this as any as HelpGeneratorData),
@@ -76,7 +78,9 @@ export default {
                     keys: ['overview']
                 });
 
-            return toRaw(search.search(searchText)) as any as IDocumentationSnippet[];
+            return search.search(searchText).map((item) => {
+                return item.item;
+            });
         },
         displayModifiers(): IDocumentationModifier[] {
             const currentContext = (this as any as HelpGeneratorData),
@@ -91,13 +95,9 @@ export default {
                     keys: ['name', 'description']
                 });
 
-            const returnMod: IDocumentationModifier[] = [];
-
-            search.search(searchText).forEach((proxy) => {
-                returnMod.push(proxy.item);
-            })
-
-            return returnMod;
+            return search.search(searchText).map((item) => {
+                return item.item;
+            });
         }
     },
     methods: {
