@@ -33,7 +33,8 @@ const dateModifiers: IModifier[] = [
         acceptsType: ['string', 'date'],
         returnsType: ['string', 'date'],
         forFieldType: ['date'],
-        description: `Formats the date using the provided format using PHP\'s [date variables](https://www.php.net/date).
+        description: 'Formats the date using the provided format using PHP\'s [date variables](https://www.php.net/date).',
+        hoverDescription: `Formats the date using the provided format using PHP\'s [date variables](https://www.php.net/date).
 
 ## Formatting Options
 

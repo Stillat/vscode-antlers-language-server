@@ -48,6 +48,7 @@ export interface IModifier {
      * A user-friendly description of the modifier.
      */
     description: string;
+    hoverDescription?: string;
     /**
      * A list of acceptable modifier parameters.
      */

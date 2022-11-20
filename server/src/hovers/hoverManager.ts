@@ -78,7 +78,11 @@ export class HoverManager {
             returnString = returnNames.join(', ');
         }
 
-        value += modifier.description + "\n";
+        if (typeof modifier.hoverDescription != 'undefined' && modifier.hoverDescription != null) {
+            value += modifier.hoverDescription + "\n";
+        } else {
+            value += modifier.description + "\n";
+        }
 
         value += "```js\n";
         value += 'function ' + modifier.name + '(' + paramString + '):' + returnString;
