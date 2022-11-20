@@ -11,6 +11,10 @@ export class ModifierGenerator {
 
         modifierString = modifier.name + paramString;
 
+        if ((field.stringable || field.augmentsTo == 'string') && ['first', 'last', 'reverse'].includes(modifier.name)) {
+            return `{{ ${field.field.handle} | ${modifierString} /}}`;
+        }
+
         if ((field.augmentsTo == 'array' || field.augmentsTo == 'builder') && ['first', 'last', 'reverse'].includes(modifier.name)) {
             if (isBuilder) {
                 return `{{ ${field.field.handle} | as('${field.field.handle}_alias') }}
@@ -67,16 +71,14 @@ export class ModifierGenerator {
 {{# In a condition. #}}
 {{ if ({${field.field.handle}} | ${modifierString}) > 0 }}
 
-{{ /if }}
-`;
+{{ /if }}`;
                 } else {
                     return `{{ ${field.field.handle} | ${modifierString} /}}
 
 {{# In a condition. #}}
 {{ if (${field.field.handle} | ${modifierString}) > 0 }}
 
-{{ /if }}
-`;
+{{ /if }}`;
                 }
             }
         }

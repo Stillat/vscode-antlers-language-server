@@ -69,14 +69,32 @@ export class DocumentationProvider {
         const modifiers: IDocumentationModifier[] = [];
 
         const coreModifiers = ModifierManager.instance?.getModifiersForType(this.massageAugmentType(docs.augmentsTo)),
+            addedModifiers: string[] = [],
             filteredModiifers: IModifier[] = [];
 
         coreModifiers?.forEach((modifier) => {
             if (modifier.isDeprecated) { return; }
-            if (modifier.forFieldType.length > 0 && !modifier.forFieldType.includes(docs.handle)) { return; }
+
+            if (modifier.forFieldType.length > 0 && !modifier.forFieldType.includes(docs.field.type)) { return; }
+
+            if (docs.augmentsTo == 'asset' || docs.augmentsTo == 'entry') {
+                if (modifier.acceptsType.length == 1 && modifier.acceptsType[0] == 'array') {
+                    return;
+                }
+            }
 
             filteredModiifers.push(modifier);
+            addedModifiers.push(modifier.name);
         });
+
+        if (docs.augmentsTo == 'asset') {
+            ModifierManager.instance?.getRegisteredModifiers().forEach((modifier) => {
+                if (modifier.forFieldType.includes('assets') && !addedModifiers.includes(modifier.name)) {
+                    filteredModiifers.push(modifier);
+                    addedModifiers.push(modifier.name);
+                }
+            });
+        }
 
         filteredModiifers.forEach((modifier) => {
             modifiers.push({
