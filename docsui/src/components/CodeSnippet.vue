@@ -1,6 +1,8 @@
 <script lang="ts">
 import type { IDocumentationSnippet } from '../documentation/types';
 
+import { vscode } from './../utilities/vscode';
+
 export default {
     props: {
         snippet: {
@@ -15,7 +17,11 @@ export default {
     },
     methods: {
         copySnippet() {
-            navigator.clipboard.writeText((this as any).snippet.snippet);
+            navigator.clipboard.writeText((this as any).snippet.snippet).then(() => {
+                vscode.postMessage({ type: 'message', text: 'Snippet copied to clipboard.' });
+            }).catch(() => {
+                vscode.postMessage({ type: 'error', text: 'The snippet could not be copied to the clipboard.' });
+            });
         }
     }
 }

@@ -48,6 +48,19 @@ class HelpPanel {
      * @param context A reference to the extension context
      */
     private _setWebviewMessageListener(webview: vscode.Webview) {
+        webview.onDidReceiveMessage((message: any) => {
+            const msgType = message.type as string;
+
+            if (msgType == 'message' || msgType == 'error') {
+                const text = message.text as string;
+
+                if (msgType == 'message') {
+                    vscode.window.showInformationMessage(text);
+                } else {
+                    vscode.window.showErrorMessage(text);
+                }
+            }
+        });
     }
 
     public static render(extensionUri: vscode.Uri, docsResult: IDocumentationResult) {

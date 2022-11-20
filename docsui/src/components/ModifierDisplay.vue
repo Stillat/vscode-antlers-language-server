@@ -8,6 +8,7 @@ import type { IDocumentationModifier, IFieldtypeDocumentationOverview } from '..
 import { ModifierGenerator } from '../documentation/modifierGenerator';
 import type { DataGrid } from '@microsoft/fast-foundation';
 import { toRaw } from 'vue';
+import { vscode } from '@/utilities/vscode';
 
 provideVSCodeDesignSystem().register(
     vsCodeButton(), vsCodeTextField(), vsCodePanelTab(),
@@ -44,7 +45,11 @@ export default {
             context.code = ModifierGenerator.generateDocs(context.modifier, context.field, context.field.augmentsTo == 'builder');
         },
         copySnippet() {
-            navigator.clipboard.writeText((this as any).code);
+            navigator.clipboard.writeText((this as any).code).then(() => {
+                vscode.postMessage({ type: 'message', text: 'Snippet copied to clipboard.' });
+            }).catch(() => {
+                vscode.postMessage({ type: 'error', text: 'The snippet could not be copied to the clipboard.' });
+            });
         }
     },
     mounted() {

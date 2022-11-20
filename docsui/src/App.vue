@@ -103,7 +103,7 @@ export default {
         syncFilter(e: any) {
             const curContext = (this as any);
             curContext.currentFilter = e.target.value as string;
-        },
+        }
     },
     created() {
         const tWindow = window as any,
