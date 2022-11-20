@@ -13,7 +13,6 @@ import InjectedFields from './components/InjectedFields.vue';
 import ModifierDisplay from './components/ModifierDisplay.vue';
 
 import Fuse from 'fuse.js';
-import { toRaw, unref } from 'vue';
 import { vscode } from './utilities/vscode';
 
 provideVSCodeDesignSystem().register(
