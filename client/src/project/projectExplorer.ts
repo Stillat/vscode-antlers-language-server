@@ -186,7 +186,7 @@ class ProjectDataProvider implements vscode.TreeDataProvider<ProjectItem> {
                     const tempSets = element.context['sets'] as any[];
 
                     if (tempSets.length > 0) {
-                        const nestedSets = new ProjectItem('Sets', '', ItemType.NestedSetsListing, vscode.TreeItemCollapsibleState.Collapsed);
+                        const nestedSets = new ProjectItem('Sets (' + tempSets.length + ')', '', ItemType.NestedSetsListing, vscode.TreeItemCollapsibleState.Collapsed);
 
                         nestedSets.context = element.context;
                         tempItems.push(nestedSets);
@@ -197,7 +197,7 @@ class ProjectDataProvider implements vscode.TreeDataProvider<ProjectItem> {
                     const tempFields = element.context['fields'] as any[];
 
                     if (tempFields.length > 0) {
-                        const nestedFields = new ProjectItem('Fields', '', ItemType.NestedFieldsListing, vscode.TreeItemCollapsibleState.Collapsed);
+                        const nestedFields = new ProjectItem('Fields (' + tempFields.length + ')', '', ItemType.NestedFieldsListing, vscode.TreeItemCollapsibleState.Collapsed);
 
                         nestedFields.context = element.context;
                         tempItems.push(nestedFields);
