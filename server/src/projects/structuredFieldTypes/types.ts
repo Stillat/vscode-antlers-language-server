@@ -4,7 +4,7 @@
  * made directly to this file are likely to be lost.
  */
 
-export interface IFieldDetails {
+ export interface IFieldDetails {
     required: boolean;
     type: string;
     display: string;
@@ -25,7 +25,7 @@ export interface ISet {
     fields: IFieldDetails[];
 }
 
-function locateField(fieldName: string, fieldSet: IParsedFieldset): IFieldDetails | null {
+function locateField(fieldName: string, fieldSet:IParsedFieldset): IFieldDetails | null {
     for (let i = 0; i < fieldSet.allFields.length; i++) {
         if (fieldSet.allFields[i].handle == fieldName) {
             return fieldSet.allFields[i];
@@ -41,11 +41,11 @@ function fetchFields(prefix: string | null, fieldSet: IParsedFieldset): IFieldDe
     fieldSet.allFields.forEach((field) => {
         try {
             let newHandle = field.handle;
-
+    
             if (prefix != null) {
                 newHandle = prefix + newHandle;
             }
-
+    
             returnFields.push({
                 ...field,
                 handle: newHandle,
@@ -436,7 +436,7 @@ export interface IFormFieldType extends IFieldDetails {
 
 
 export function getProperties(context: any): any {
-    let properties: any = {};
+    let properties:any = {};
 
     if (typeof context['type'] === 'undefined') {
         return properties;
@@ -454,7 +454,7 @@ export function getProperties(context: any): any {
             properties['keys'] = context['keys'];
         }
 
-    } if (contextType == 'asset_container') {
+    }    if (contextType == 'asset_container') {
 
         if (typeof context['maxItems'] !== 'undefined') {
             properties['max_items'] = context['maxItems'];
@@ -464,7 +464,7 @@ export function getProperties(context: any): any {
             properties['mode'] = context['mode'];
         }
 
-    } if (contextType == 'asset_folder') {
+    }    if (contextType == 'asset_folder') {
 
         if (typeof context['maxItems'] !== 'undefined') {
             properties['max_items'] = context['maxItems'];
@@ -474,7 +474,7 @@ export function getProperties(context: any): any {
             properties['mode'] = context['mode'];
         }
 
-    } if (contextType == 'assets') {
+    }    if (contextType == 'assets') {
 
         if (typeof context['mode'] !== 'undefined') {
             properties['mode'] = context['mode'];
@@ -504,7 +504,7 @@ export function getProperties(context: any): any {
             properties['max_files'] = context['maxFiles'];
         }
 
-    } if (contextType == 'bard') {
+    }    if (contextType == 'bard') {
 
         if (typeof context['collapse'] !== 'undefined') {
             properties['collapse'] = context['collapse'];
@@ -578,7 +578,7 @@ export function getProperties(context: any): any {
             properties['remove_empty_nodes'] = context['removeEmptyNodes'];
         }
 
-    } if (contextType == 'replicator') {
+    }    if (contextType == 'replicator') {
 
         if (typeof context['collapse'] !== 'undefined') {
             properties['collapse'] = context['collapse'];
@@ -592,9 +592,9 @@ export function getProperties(context: any): any {
             properties['max_sets'] = context['maxSets'];
         }
 
-    } if (contextType == 'bard_buttons_setting') {
+    }    if (contextType == 'bard_buttons_setting') {
 
-    } if (contextType == 'button_group') {
+    }    if (contextType == 'button_group') {
 
         if (typeof context['options'] !== 'undefined') {
             properties['options'] = context['options'];
@@ -604,7 +604,7 @@ export function getProperties(context: any): any {
             properties['default'] = context['default'];
         }
 
-    } if (contextType == 'checkboxes') {
+    }    if (contextType == 'checkboxes') {
 
         if (typeof context['inline'] !== 'undefined') {
             properties['inline'] = context['inline'];
@@ -618,7 +618,7 @@ export function getProperties(context: any): any {
             properties['default'] = context['default'];
         }
 
-    } if (contextType == 'code') {
+    }    if (contextType == 'code') {
 
         if (typeof context['theme'] !== 'undefined') {
             properties['theme'] = context['theme'];
@@ -652,11 +652,11 @@ export function getProperties(context: any): any {
             properties['line_wrapping'] = context['lineWrapping'];
         }
 
-    } if (contextType == 'collection_routes') {
+    }    if (contextType == 'collection_routes') {
 
-    } if (contextType == 'collection_title_formats') {
+    }    if (contextType == 'collection_title_formats') {
 
-    } if (contextType == 'collections') {
+    }    if (contextType == 'collections') {
 
         if (typeof context['maxItems'] !== 'undefined') {
             properties['max_items'] = context['maxItems'];
@@ -666,7 +666,7 @@ export function getProperties(context: any): any {
             properties['mode'] = context['mode'];
         }
 
-    } if (contextType == 'color') {
+    }    if (contextType == 'color') {
 
         if (typeof context['swatches'] !== 'undefined') {
             properties['swatches'] = context['swatches'];
@@ -688,7 +688,7 @@ export function getProperties(context: any): any {
             properties['color_modes'] = context['colorModes'];
         }
 
-    } if (contextType == 'date') {
+    }    if (contextType == 'date') {
 
         if (typeof context['mode'] !== 'undefined') {
             properties['mode'] = context['mode'];
@@ -730,7 +730,7 @@ export function getProperties(context: any): any {
             properties['rows'] = context['rows'];
         }
 
-    } if (contextType == 'entries') {
+    }    if (contextType == 'entries') {
 
         if (typeof context['maxItems'] !== 'undefined') {
             properties['max_items'] = context['maxItems'];
@@ -748,21 +748,21 @@ export function getProperties(context: any): any {
             properties['collections'] = context['collections'];
         }
 
-    } if (contextType == 'files') {
+    }    if (contextType == 'files') {
 
         if (typeof context['maxFiles'] !== 'undefined') {
             properties['max_files'] = context['maxFiles'];
         }
 
-    } if (contextType == 'float') {
+    }    if (contextType == 'float') {
 
         if (typeof context['default'] !== 'undefined') {
             properties['default'] = context['default'];
         }
 
-    } if (contextType == 'global_set_sites') {
+    }    if (contextType == 'global_set_sites') {
 
-    } if (contextType == 'grid') {
+    }    if (contextType == 'grid') {
 
         if (typeof context['mode'] !== 'undefined') {
             properties['mode'] = context['mode'];
@@ -784,25 +784,25 @@ export function getProperties(context: any): any {
             properties['reorderable'] = context['reorderable'];
         }
 
-    } if (contextType == 'hidden') {
+    }    if (contextType == 'hidden') {
 
         if (typeof context['default'] !== 'undefined') {
             properties['default'] = context['default'];
         }
 
-    } if (contextType == 'html') {
+    }    if (contextType == 'html') {
 
         if (typeof context['html'] !== 'undefined') {
             properties['html'] = context['html'];
         }
 
-    } if (contextType == 'integer') {
+    }    if (contextType == 'integer') {
 
         if (typeof context['default'] !== 'undefined') {
             properties['default'] = context['default'];
         }
 
-    } if (contextType == 'link') {
+    }    if (contextType == 'link') {
 
         if (typeof context['collections'] !== 'undefined') {
             properties['collections'] = context['collections'];
@@ -812,13 +812,13 @@ export function getProperties(context: any): any {
             properties['container'] = context['container'];
         }
 
-    } if (contextType == 'list') {
+    }    if (contextType == 'list') {
 
         if (typeof context['default'] !== 'undefined') {
             properties['default'] = context['default'];
         }
 
-    } if (contextType == 'markdown') {
+    }    if (contextType == 'markdown') {
 
         if (typeof context['container'] !== 'undefined') {
             properties['container'] = context['container'];
@@ -860,9 +860,9 @@ export function getProperties(context: any): any {
             properties['default'] = context['default'];
         }
 
-    } if (contextType == 'fields') {
+    }    if (contextType == 'fields') {
 
-    } if (contextType == 'radio') {
+    }    if (contextType == 'radio') {
 
         if (typeof context['options'] !== 'undefined') {
             properties['options'] = context['options'];
@@ -880,7 +880,7 @@ export function getProperties(context: any): any {
             properties['default'] = context['default'];
         }
 
-    } if (contextType == 'range') {
+    }    if (contextType == 'range') {
 
         if (typeof context['hidden'] !== 'undefined') {
             properties['hidden'] = context['hidden'];
@@ -910,7 +910,7 @@ export function getProperties(context: any): any {
             properties['append'] = context['append'];
         }
 
-    } if (contextType == 'revealer') {
+    }    if (contextType == 'revealer') {
 
         if (typeof context['mode'] !== 'undefined') {
             properties['mode'] = context['mode'];
@@ -920,9 +920,9 @@ export function getProperties(context: any): any {
             properties['input_label'] = context['inputLabel'];
         }
 
-    } if (contextType == 'section') {
+    }    if (contextType == 'section') {
 
-    } if (contextType == 'select') {
+    }    if (contextType == 'select') {
 
         if (typeof context['placeholder'] !== 'undefined') {
             properties['placeholder'] = context['placeholder'];
@@ -964,19 +964,9 @@ export function getProperties(context: any): any {
             properties['default'] = context['default'];
         }
 
-    } if (contextType == 'sets') {
+    }    if (contextType == 'sets') {
 
-    } if (contextType == 'sites') {
-
-        if (typeof context['maxItems'] !== 'undefined') {
-            properties['max_items'] = context['maxItems'];
-        }
-
-        if (typeof context['mode'] !== 'undefined') {
-            properties['mode'] = context['mode'];
-        }
-
-    } if (contextType == 'structures') {
+    }    if (contextType == 'sites') {
 
         if (typeof context['maxItems'] !== 'undefined') {
             properties['max_items'] = context['maxItems'];
@@ -986,7 +976,17 @@ export function getProperties(context: any): any {
             properties['mode'] = context['mode'];
         }
 
-    } if (contextType == 'slug') {
+    }    if (contextType == 'structures') {
+
+        if (typeof context['maxItems'] !== 'undefined') {
+            properties['max_items'] = context['maxItems'];
+        }
+
+        if (typeof context['mode'] !== 'undefined') {
+            properties['mode'] = context['mode'];
+        }
+
+    }    if (contextType == 'slug') {
 
         if (typeof context['from'] !== 'undefined') {
             properties['from'] = context['from'];
@@ -996,7 +996,7 @@ export function getProperties(context: any): any {
             properties['generate'] = context['generate'];
         }
 
-    } if (contextType == 'text') {
+    }    if (contextType == 'text') {
 
         if (typeof context['placeholder'] !== 'undefined') {
             properties['placeholder'] = context['placeholder'];
@@ -1026,15 +1026,15 @@ export function getProperties(context: any): any {
             properties['default'] = context['default'];
         }
 
-    } if (contextType == 'table') {
+    }    if (contextType == 'table') {
 
-    } if (contextType == 'taggable') {
+    }    if (contextType == 'taggable') {
 
         if (typeof context['placeholder'] !== 'undefined') {
             properties['placeholder'] = context['placeholder'];
         }
 
-    } if (contextType == 'terms') {
+    }    if (contextType == 'terms') {
 
         if (typeof context['maxItems'] !== 'undefined') {
             properties['max_items'] = context['maxItems'];
@@ -1052,7 +1052,7 @@ export function getProperties(context: any): any {
             properties['taxonomies'] = context['taxonomies'];
         }
 
-    } if (contextType == 'taxonomies') {
+    }    if (contextType == 'taxonomies') {
 
         if (typeof context['maxItems'] !== 'undefined') {
             properties['max_items'] = context['maxItems'];
@@ -1062,7 +1062,7 @@ export function getProperties(context: any): any {
             properties['mode'] = context['mode'];
         }
 
-    } if (contextType == 'template') {
+    }    if (contextType == 'template') {
 
         if (typeof context['hidePartials'] !== 'undefined') {
             properties['hide_partials'] = context['hidePartials'];
@@ -1076,7 +1076,7 @@ export function getProperties(context: any): any {
             properties['folder'] = context['folder'];
         }
 
-    } if (contextType == 'template_folder') {
+    }    if (contextType == 'template_folder') {
 
         if (typeof context['maxItems'] !== 'undefined') {
             properties['max_items'] = context['maxItems'];
@@ -1086,7 +1086,7 @@ export function getProperties(context: any): any {
             properties['mode'] = context['mode'];
         }
 
-    } if (contextType == 'textarea') {
+    }    if (contextType == 'textarea') {
 
         if (typeof context['placeholder'] !== 'undefined') {
             properties['placeholder'] = context['placeholder'];
@@ -1104,7 +1104,7 @@ export function getProperties(context: any): any {
             properties['default'] = context['default'];
         }
 
-    } if (contextType == 'time') {
+    }    if (contextType == 'time') {
 
         if (typeof context['secondsEnabled'] !== 'undefined') {
             properties['seconds_enabled'] = context['secondsEnabled'];
@@ -1114,7 +1114,7 @@ export function getProperties(context: any): any {
             properties['default'] = context['default'];
         }
 
-    } if (contextType == 'toggle') {
+    }    if (contextType == 'toggle') {
 
         if (typeof context['inlineLabel'] !== 'undefined') {
             properties['inline_label'] = context['inlineLabel'];
@@ -1124,7 +1124,7 @@ export function getProperties(context: any): any {
             properties['default'] = context['default'];
         }
 
-    } if (contextType == 'user_groups') {
+    }    if (contextType == 'user_groups') {
 
         if (typeof context['maxItems'] !== 'undefined') {
             properties['max_items'] = context['maxItems'];
@@ -1134,7 +1134,7 @@ export function getProperties(context: any): any {
             properties['mode'] = context['mode'];
         }
 
-    } if (contextType == 'user_roles') {
+    }    if (contextType == 'user_roles') {
 
         if (typeof context['maxItems'] !== 'undefined') {
             properties['max_items'] = context['maxItems'];
@@ -1144,7 +1144,7 @@ export function getProperties(context: any): any {
             properties['mode'] = context['mode'];
         }
 
-    } if (contextType == 'users') {
+    }    if (contextType == 'users') {
 
         if (typeof context['maxItems'] !== 'undefined') {
             properties['max_items'] = context['maxItems'];
@@ -1154,7 +1154,7 @@ export function getProperties(context: any): any {
             properties['mode'] = context['mode'];
         }
 
-    } if (contextType == 'video') {
+    }    if (contextType == 'video') {
 
         if (typeof context['default'] !== 'undefined') {
             properties['default'] = context['default'];
@@ -1164,13 +1164,13 @@ export function getProperties(context: any): any {
             properties['placeholder'] = context['placeholder'];
         }
 
-    } if (contextType == 'yaml') {
+    }    if (contextType == 'yaml') {
 
         if (typeof context['default'] !== 'undefined') {
             properties['default'] = context['default'];
         }
 
-    } if (contextType == 'form') {
+    }    if (contextType == 'form') {
 
         if (typeof context['placeholder'] !== 'undefined') {
             properties['placeholder'] = context['placeholder'];
@@ -1183,2266 +1183,2265 @@ export function getProperties(context: any): any {
     }
 
     return properties;
-} class FieldParser {
+}class FieldParser {
     private fieldSets: Map<string, IParsedFieldset> = new Map();
 
     setFieldSets(fieldSets: Map<string, IParsedFieldset>) {
         this.fieldSets = fieldSets;
-    } _parseArrayFieldType(context: any): IArrayFieldType {
-        let _parsedMode = fetchDynamic<string>(context['field'], 'mode', 'dynamic');
-        let _parsedKeys = fetchDynamic<string[] | null>(context['field'], 'keys', null);
+    }_parseArrayFieldType(context: any): IArrayFieldType {
+    let _parsedMode = fetchDynamic<string>(context['field'], 'mode', 'dynamic');
+    let _parsedKeys = fetchDynamic<string[] | null>(context['field'], 'keys', null);
 
         let _tSets: ISet[] = [];
         let _tFields: IFieldDetails[] = [];
         if (typeof context['field'] !== 'undefined' && typeof context['field']['sets'] !== 'undefined') {
             _tSets = this.parseSets(context['field']['sets']);
         }
-
+        
         if (typeof context['field'] !== 'undefined' && typeof context['field']['fields'] !== 'undefined') {
             _tFields = this.parseFields(context['field']);
         }
 
-        const isRequired: boolean = fetchDynamic<boolean>(context['field'], 'required', false),
-            type: string = fetchDynamic<string>(context['field'], 'type', 'text'),
-            unlessArray: string[] = fetchDynamic<string[]>(context['field'], 'unless', []),
-            validateArray: string[] = fetchDynamic<string[]>(context['field'], 'validate', []),
-            display: string = fetchDynamic<string>(context['field'], 'display', ''),
-            developerDocumentation: string = fetchDynamic<string>(context['field'], '__documentation', '');
-        return {
-            mode: _parsedMode,
-            keys: _parsedKeys,
-            required: isRequired,
-            type: type,
-            validate: validateArray,
-            unless: unlessArray,
-            display: display,
-            handle: 'temp_handle',
-            sets: _tSets,
-            fields: _tFields,
-            isLinked: false,
-            linkedFrom: '',
-            developerDocumentation: developerDocumentation,
-            internalIcon: 'array',
-        };
-    }
+    const isRequired: boolean = fetchDynamic<boolean>(context['field'], 'required', false),
+        type: string = fetchDynamic<string>(context['field'], 'type', 'text'),
+        unlessArray:string[] = fetchDynamic<string[]>(context['field'], 'unless', []),
+        validateArray:string[] = fetchDynamic<string[]>(context['field'], 'validate', []),
+        display:string = fetchDynamic<string>(context['field'], 'display', ''),
+        developerDocumentation:string = fetchDynamic<string>(context['field'], '__documentation', '');
+    return {
+        mode: _parsedMode,
+        keys: _parsedKeys,
+        required: isRequired,
+        type: type,
+        validate: validateArray,
+        unless: unlessArray,
+        display: display,
+        handle: 'temp_handle',
+        sets: _tSets,
+        fields: _tFields,
+        isLinked: false,
+        linkedFrom: '',
+        developerDocumentation: developerDocumentation,
+        internalIcon: 'array',
+    };
+}
 
-    _parseAssetContainerFieldType(context: any): IAssetContainerFieldType {
-        let _parsedMaxItems = fetchDynamic<number | null>(context['field'], 'max_items', null);
-        let _parsedMode = fetchDynamic<string>(context['field'], 'mode', 'default');
+_parseAssetContainerFieldType(context: any): IAssetContainerFieldType {
+    let _parsedMaxItems = fetchDynamic<number | null>(context['field'], 'max_items', null);
+    let _parsedMode = fetchDynamic<string>(context['field'], 'mode', 'default');
 
         let _tSets: ISet[] = [];
         let _tFields: IFieldDetails[] = [];
         if (typeof context['field'] !== 'undefined' && typeof context['field']['sets'] !== 'undefined') {
             _tSets = this.parseSets(context['field']['sets']);
         }
-
+        
         if (typeof context['field'] !== 'undefined' && typeof context['field']['fields'] !== 'undefined') {
             _tFields = this.parseFields(context['field']);
         }
 
-        const isRequired: boolean = fetchDynamic<boolean>(context['field'], 'required', false),
-            type: string = fetchDynamic<string>(context['field'], 'type', 'text'),
-            unlessArray: string[] = fetchDynamic<string[]>(context['field'], 'unless', []),
-            validateArray: string[] = fetchDynamic<string[]>(context['field'], 'validate', []),
-            display: string = fetchDynamic<string>(context['field'], 'display', ''),
-            developerDocumentation: string = fetchDynamic<string>(context['field'], '__documentation', '');
-        return {
-            maxItems: _parsedMaxItems,
-            mode: _parsedMode,
-            required: isRequired,
-            type: type,
-            validate: validateArray,
-            unless: unlessArray,
-            display: display,
-            handle: 'temp_handle',
-            sets: _tSets,
-            fields: _tFields,
-            isLinked: false,
-            linkedFrom: '',
-            developerDocumentation: developerDocumentation,
-            internalIcon: 'asset_container',
-        };
-    }
+    const isRequired: boolean = fetchDynamic<boolean>(context['field'], 'required', false),
+        type: string = fetchDynamic<string>(context['field'], 'type', 'text'),
+        unlessArray:string[] = fetchDynamic<string[]>(context['field'], 'unless', []),
+        validateArray:string[] = fetchDynamic<string[]>(context['field'], 'validate', []),
+        display:string = fetchDynamic<string>(context['field'], 'display', ''),
+        developerDocumentation:string = fetchDynamic<string>(context['field'], '__documentation', '');
+    return {
+        maxItems: _parsedMaxItems,
+        mode: _parsedMode,
+        required: isRequired,
+        type: type,
+        validate: validateArray,
+        unless: unlessArray,
+        display: display,
+        handle: 'temp_handle',
+        sets: _tSets,
+        fields: _tFields,
+        isLinked: false,
+        linkedFrom: '',
+        developerDocumentation: developerDocumentation,
+        internalIcon: 'asset_container',
+    };
+}
 
-    _parseAssetFolderFieldType(context: any): IAssetFolderFieldType {
-        let _parsedMaxItems = fetchDynamic<number | null>(context['field'], 'max_items', null);
-        let _parsedMode = fetchDynamic<string>(context['field'], 'mode', 'default');
+_parseAssetFolderFieldType(context: any): IAssetFolderFieldType {
+    let _parsedMaxItems = fetchDynamic<number | null>(context['field'], 'max_items', null);
+    let _parsedMode = fetchDynamic<string>(context['field'], 'mode', 'default');
 
         let _tSets: ISet[] = [];
         let _tFields: IFieldDetails[] = [];
         if (typeof context['field'] !== 'undefined' && typeof context['field']['sets'] !== 'undefined') {
             _tSets = this.parseSets(context['field']['sets']);
         }
-
+        
         if (typeof context['field'] !== 'undefined' && typeof context['field']['fields'] !== 'undefined') {
             _tFields = this.parseFields(context['field']);
         }
 
-        const isRequired: boolean = fetchDynamic<boolean>(context['field'], 'required', false),
-            type: string = fetchDynamic<string>(context['field'], 'type', 'text'),
-            unlessArray: string[] = fetchDynamic<string[]>(context['field'], 'unless', []),
-            validateArray: string[] = fetchDynamic<string[]>(context['field'], 'validate', []),
-            display: string = fetchDynamic<string>(context['field'], 'display', ''),
-            developerDocumentation: string = fetchDynamic<string>(context['field'], '__documentation', '');
-        return {
-            maxItems: _parsedMaxItems,
-            mode: _parsedMode,
-            required: isRequired,
-            type: type,
-            validate: validateArray,
-            unless: unlessArray,
-            display: display,
-            handle: 'temp_handle',
-            sets: _tSets,
-            fields: _tFields,
-            isLinked: false,
-            linkedFrom: '',
-            developerDocumentation: developerDocumentation,
-            internalIcon: 'asset_folder',
-        };
-    }
+    const isRequired: boolean = fetchDynamic<boolean>(context['field'], 'required', false),
+        type: string = fetchDynamic<string>(context['field'], 'type', 'text'),
+        unlessArray:string[] = fetchDynamic<string[]>(context['field'], 'unless', []),
+        validateArray:string[] = fetchDynamic<string[]>(context['field'], 'validate', []),
+        display:string = fetchDynamic<string>(context['field'], 'display', ''),
+        developerDocumentation:string = fetchDynamic<string>(context['field'], '__documentation', '');
+    return {
+        maxItems: _parsedMaxItems,
+        mode: _parsedMode,
+        required: isRequired,
+        type: type,
+        validate: validateArray,
+        unless: unlessArray,
+        display: display,
+        handle: 'temp_handle',
+        sets: _tSets,
+        fields: _tFields,
+        isLinked: false,
+        linkedFrom: '',
+        developerDocumentation: developerDocumentation,
+        internalIcon: 'asset_folder',
+    };
+}
 
-    _parseAssetsFieldType(context: any): IAssetsFieldType {
-        let _parsedMode = fetchDynamic<string>(context['field'], 'mode', 'list');
-        let _parsedContainer = fetchDynamic<string>(context['field'], 'container', 'assets');
-        let _parsedFolder = fetchDynamic<IAssetFolderFieldType | null>(context['field'], 'folder', null);
-        let _parsedRestrict = fetchDynamic<boolean | null>(context['field'], 'restrict', null);
-        let _parsedAllowUploads = fetchDynamic<boolean>(context['field'], 'allow_uploads', true);
-        let _parsedShowFilename = fetchDynamic<boolean>(context['field'], 'show_filename', true);
-        let _parsedMaxFiles = fetchDynamic<number | null>(context['field'], 'max_files', null);
+_parseAssetsFieldType(context: any): IAssetsFieldType {
+    let _parsedMode = fetchDynamic<string>(context['field'], 'mode', 'list');
+    let _parsedContainer = fetchDynamic<string>(context['field'], 'container', 'assets');
+    let _parsedFolder = fetchDynamic<IAssetFolderFieldType | null>(context['field'], 'folder', null);
+    let _parsedRestrict = fetchDynamic<boolean | null>(context['field'], 'restrict', null);
+    let _parsedAllowUploads = fetchDynamic<boolean>(context['field'], 'allow_uploads', true);
+    let _parsedShowFilename = fetchDynamic<boolean>(context['field'], 'show_filename', true);
+    let _parsedMaxFiles = fetchDynamic<number | null>(context['field'], 'max_files', null);
 
         let _tSets: ISet[] = [];
         let _tFields: IFieldDetails[] = [];
         if (typeof context['field'] !== 'undefined' && typeof context['field']['sets'] !== 'undefined') {
             _tSets = this.parseSets(context['field']['sets']);
         }
-
+        
         if (typeof context['field'] !== 'undefined' && typeof context['field']['fields'] !== 'undefined') {
             _tFields = this.parseFields(context['field']);
         }
 
-        const isRequired: boolean = fetchDynamic<boolean>(context['field'], 'required', false),
-            type: string = fetchDynamic<string>(context['field'], 'type', 'text'),
-            unlessArray: string[] = fetchDynamic<string[]>(context['field'], 'unless', []),
-            validateArray: string[] = fetchDynamic<string[]>(context['field'], 'validate', []),
-            display: string = fetchDynamic<string>(context['field'], 'display', ''),
-            developerDocumentation: string = fetchDynamic<string>(context['field'], '__documentation', '');
-        return {
-            mode: _parsedMode,
-            container: _parsedContainer,
-            folder: _parsedFolder,
-            restrict: _parsedRestrict,
-            allowUploads: _parsedAllowUploads,
-            showFilename: _parsedShowFilename,
-            maxFiles: _parsedMaxFiles,
-            required: isRequired,
-            type: type,
-            validate: validateArray,
-            unless: unlessArray,
-            display: display,
-            handle: 'temp_handle',
-            sets: _tSets,
-            fields: _tFields,
-            isLinked: false,
-            linkedFrom: '',
-            developerDocumentation: developerDocumentation,
-            internalIcon: 'assets',
-        };
-    }
+    const isRequired: boolean = fetchDynamic<boolean>(context['field'], 'required', false),
+        type: string = fetchDynamic<string>(context['field'], 'type', 'text'),
+        unlessArray:string[] = fetchDynamic<string[]>(context['field'], 'unless', []),
+        validateArray:string[] = fetchDynamic<string[]>(context['field'], 'validate', []),
+        display:string = fetchDynamic<string>(context['field'], 'display', ''),
+        developerDocumentation:string = fetchDynamic<string>(context['field'], '__documentation', '');
+    return {
+        mode: _parsedMode,
+        container: _parsedContainer,
+        folder: _parsedFolder,
+        restrict: _parsedRestrict,
+        allowUploads: _parsedAllowUploads,
+        showFilename: _parsedShowFilename,
+        maxFiles: _parsedMaxFiles,
+        required: isRequired,
+        type: type,
+        validate: validateArray,
+        unless: unlessArray,
+        display: display,
+        handle: 'temp_handle',
+        sets: _tSets,
+        fields: _tFields,
+        isLinked: false,
+        linkedFrom: '',
+        developerDocumentation: developerDocumentation,
+        internalIcon: 'assets',
+    };
+}
 
-    _parseBardFieldType(context: any): IBardFieldType {
-        let _parsedCollapse = fetchDynamic<string | null>(context['field'], 'collapse', null);
-        let _parsedAlwaysShowSetButton = fetchDynamic<boolean | null>(context['field'], 'always_show_set_button', null);
-        let _parsedPreviews = fetchDynamic<boolean>(context['field'], 'previews', true);
-        let _parsedButtons = fetchDynamic<any[]>(context['field'], 'buttons', ['h2', 'h3', 'bold', 'italic', 'unorderedlist', 'orderedlist', 'removeformat', 'quote', 'anchor', 'image', 'table',]);
-        let _parsedContainer = fetchDynamic<string | null>(context['field'], 'container', null);
-        let _parsedSaveHtml = fetchDynamic<boolean | null>(context['field'], 'save_html', null);
-        let _parsedToolbarMode = fetchDynamic<string>(context['field'], 'toolbar_mode', 'fixed');
-        let _parsedLinkNoopener = fetchDynamic<boolean | null>(context['field'], 'link_noopener', null);
-        let _parsedLinkNoreferrer = fetchDynamic<boolean | null>(context['field'], 'link_noreferrer', null);
-        let _parsedTargetBlank = fetchDynamic<boolean | null>(context['field'], 'target_blank', null);
-        let _parsedLinkCollections = fetchDynamic<string[] | null>(context['field'], 'link_collections', null);
-        let _parsedReadingTime = fetchDynamic<boolean | null>(context['field'], 'reading_time', null);
-        let _parsedFullscreen = fetchDynamic<boolean>(context['field'], 'fullscreen', true);
-        let _parsedAllowSource = fetchDynamic<boolean>(context['field'], 'allow_source', true);
-        let _parsedEnableInputRules = fetchDynamic<boolean>(context['field'], 'enable_input_rules', true);
-        let _parsedEnablePasteRules = fetchDynamic<boolean>(context['field'], 'enable_paste_rules', true);
-        let _parsedAntlers = fetchDynamic<boolean | null>(context['field'], 'antlers', null);
-        let _parsedRemoveEmptyNodes = fetchDynamic<string>(context['field'], 'remove_empty_nodes', 'false');
+_parseBardFieldType(context: any): IBardFieldType {
+    let _parsedCollapse = fetchDynamic<string | null>(context['field'], 'collapse', null);
+    let _parsedAlwaysShowSetButton = fetchDynamic<boolean | null>(context['field'], 'always_show_set_button', null);
+    let _parsedPreviews = fetchDynamic<boolean>(context['field'], 'previews', true);
+    let _parsedButtons = fetchDynamic<any[]>(context['field'], 'buttons', ['h2', 'h3', 'bold', 'italic', 'unorderedlist', 'orderedlist', 'removeformat', 'quote', 'anchor', 'image', 'table', ]);
+    let _parsedContainer = fetchDynamic<string | null>(context['field'], 'container', null);
+    let _parsedSaveHtml = fetchDynamic<boolean | null>(context['field'], 'save_html', null);
+    let _parsedToolbarMode = fetchDynamic<string>(context['field'], 'toolbar_mode', 'fixed');
+    let _parsedLinkNoopener = fetchDynamic<boolean | null>(context['field'], 'link_noopener', null);
+    let _parsedLinkNoreferrer = fetchDynamic<boolean | null>(context['field'], 'link_noreferrer', null);
+    let _parsedTargetBlank = fetchDynamic<boolean | null>(context['field'], 'target_blank', null);
+    let _parsedLinkCollections = fetchDynamic<string[] | null>(context['field'], 'link_collections', null);
+    let _parsedReadingTime = fetchDynamic<boolean | null>(context['field'], 'reading_time', null);
+    let _parsedFullscreen = fetchDynamic<boolean>(context['field'], 'fullscreen', true);
+    let _parsedAllowSource = fetchDynamic<boolean>(context['field'], 'allow_source', true);
+    let _parsedEnableInputRules = fetchDynamic<boolean>(context['field'], 'enable_input_rules', true);
+    let _parsedEnablePasteRules = fetchDynamic<boolean>(context['field'], 'enable_paste_rules', true);
+    let _parsedAntlers = fetchDynamic<boolean | null>(context['field'], 'antlers', null);
+    let _parsedRemoveEmptyNodes = fetchDynamic<string>(context['field'], 'remove_empty_nodes', 'false');
 
         let _tSets: ISet[] = [];
         let _tFields: IFieldDetails[] = [];
         if (typeof context['field'] !== 'undefined' && typeof context['field']['sets'] !== 'undefined') {
             _tSets = this.parseSets(context['field']['sets']);
         }
-
+        
         if (typeof context['field'] !== 'undefined' && typeof context['field']['fields'] !== 'undefined') {
             _tFields = this.parseFields(context['field']);
         }
 
-        const isRequired: boolean = fetchDynamic<boolean>(context['field'], 'required', false),
-            type: string = fetchDynamic<string>(context['field'], 'type', 'text'),
-            unlessArray: string[] = fetchDynamic<string[]>(context['field'], 'unless', []),
-            validateArray: string[] = fetchDynamic<string[]>(context['field'], 'validate', []),
-            display: string = fetchDynamic<string>(context['field'], 'display', ''),
-            developerDocumentation: string = fetchDynamic<string>(context['field'], '__documentation', '');
-        return {
-            collapse: _parsedCollapse,
-            alwaysShowSetButton: _parsedAlwaysShowSetButton,
-            previews: _parsedPreviews,
-            buttons: _parsedButtons,
-            container: _parsedContainer,
-            saveHtml: _parsedSaveHtml,
-            toolbarMode: _parsedToolbarMode,
-            linkNoopener: _parsedLinkNoopener,
-            linkNoreferrer: _parsedLinkNoreferrer,
-            targetBlank: _parsedTargetBlank,
-            linkCollections: _parsedLinkCollections,
-            readingTime: _parsedReadingTime,
-            fullscreen: _parsedFullscreen,
-            allowSource: _parsedAllowSource,
-            enableInputRules: _parsedEnableInputRules,
-            enablePasteRules: _parsedEnablePasteRules,
-            antlers: _parsedAntlers,
-            removeEmptyNodes: _parsedRemoveEmptyNodes,
-            required: isRequired,
-            type: type,
-            validate: validateArray,
-            unless: unlessArray,
-            display: display,
-            handle: 'temp_handle',
-            sets: _tSets,
-            fields: _tFields,
-            isLinked: false,
-            linkedFrom: '',
-            developerDocumentation: developerDocumentation,
-            internalIcon: 'bard',
-        };
-    }
+    const isRequired: boolean = fetchDynamic<boolean>(context['field'], 'required', false),
+        type: string = fetchDynamic<string>(context['field'], 'type', 'text'),
+        unlessArray:string[] = fetchDynamic<string[]>(context['field'], 'unless', []),
+        validateArray:string[] = fetchDynamic<string[]>(context['field'], 'validate', []),
+        display:string = fetchDynamic<string>(context['field'], 'display', ''),
+        developerDocumentation:string = fetchDynamic<string>(context['field'], '__documentation', '');
+    return {
+        collapse: _parsedCollapse,
+        alwaysShowSetButton: _parsedAlwaysShowSetButton,
+        previews: _parsedPreviews,
+        buttons: _parsedButtons,
+        container: _parsedContainer,
+        saveHtml: _parsedSaveHtml,
+        toolbarMode: _parsedToolbarMode,
+        linkNoopener: _parsedLinkNoopener,
+        linkNoreferrer: _parsedLinkNoreferrer,
+        targetBlank: _parsedTargetBlank,
+        linkCollections: _parsedLinkCollections,
+        readingTime: _parsedReadingTime,
+        fullscreen: _parsedFullscreen,
+        allowSource: _parsedAllowSource,
+        enableInputRules: _parsedEnableInputRules,
+        enablePasteRules: _parsedEnablePasteRules,
+        antlers: _parsedAntlers,
+        removeEmptyNodes: _parsedRemoveEmptyNodes,
+        required: isRequired,
+        type: type,
+        validate: validateArray,
+        unless: unlessArray,
+        display: display,
+        handle: 'temp_handle',
+        sets: _tSets,
+        fields: _tFields,
+        isLinked: false,
+        linkedFrom: '',
+        developerDocumentation: developerDocumentation,
+        internalIcon: 'bard',
+    };
+}
 
-    _parseReplicatorFieldType(context: any): IReplicatorFieldType {
-        let _parsedCollapse = fetchDynamic<string | null>(context['field'], 'collapse', null);
-        let _parsedPreviews = fetchDynamic<boolean>(context['field'], 'previews', true);
-        let _parsedMaxSets = fetchDynamic<number | null>(context['field'], 'max_sets', null);
+_parseReplicatorFieldType(context: any): IReplicatorFieldType {
+    let _parsedCollapse = fetchDynamic<string | null>(context['field'], 'collapse', null);
+    let _parsedPreviews = fetchDynamic<boolean>(context['field'], 'previews', true);
+    let _parsedMaxSets = fetchDynamic<number | null>(context['field'], 'max_sets', null);
 
         let _tSets: ISet[] = [];
         let _tFields: IFieldDetails[] = [];
         if (typeof context['field'] !== 'undefined' && typeof context['field']['sets'] !== 'undefined') {
             _tSets = this.parseSets(context['field']['sets']);
         }
-
+        
         if (typeof context['field'] !== 'undefined' && typeof context['field']['fields'] !== 'undefined') {
             _tFields = this.parseFields(context['field']);
         }
 
-        const isRequired: boolean = fetchDynamic<boolean>(context['field'], 'required', false),
-            type: string = fetchDynamic<string>(context['field'], 'type', 'text'),
-            unlessArray: string[] = fetchDynamic<string[]>(context['field'], 'unless', []),
-            validateArray: string[] = fetchDynamic<string[]>(context['field'], 'validate', []),
-            display: string = fetchDynamic<string>(context['field'], 'display', ''),
-            developerDocumentation: string = fetchDynamic<string>(context['field'], '__documentation', '');
-        return {
-            collapse: _parsedCollapse,
-            previews: _parsedPreviews,
-            maxSets: _parsedMaxSets,
-            required: isRequired,
-            type: type,
-            validate: validateArray,
-            unless: unlessArray,
-            display: display,
-            handle: 'temp_handle',
-            sets: _tSets,
-            fields: _tFields,
-            isLinked: false,
-            linkedFrom: '',
-            developerDocumentation: developerDocumentation,
-            internalIcon: 'replicator',
-        };
-    }
+    const isRequired: boolean = fetchDynamic<boolean>(context['field'], 'required', false),
+        type: string = fetchDynamic<string>(context['field'], 'type', 'text'),
+        unlessArray:string[] = fetchDynamic<string[]>(context['field'], 'unless', []),
+        validateArray:string[] = fetchDynamic<string[]>(context['field'], 'validate', []),
+        display:string = fetchDynamic<string>(context['field'], 'display', ''),
+        developerDocumentation:string = fetchDynamic<string>(context['field'], '__documentation', '');
+    return {
+        collapse: _parsedCollapse,
+        previews: _parsedPreviews,
+        maxSets: _parsedMaxSets,
+        required: isRequired,
+        type: type,
+        validate: validateArray,
+        unless: unlessArray,
+        display: display,
+        handle: 'temp_handle',
+        sets: _tSets,
+        fields: _tFields,
+        isLinked: false,
+        linkedFrom: '',
+        developerDocumentation: developerDocumentation,
+        internalIcon: 'replicator',
+    };
+}
 
-    _parseBardButtonsSettingFieldType(context: any): IBardButtonsSettingFieldType {
+_parseBardButtonsSettingFieldType(context: any): IBardButtonsSettingFieldType {
 
         let _tSets: ISet[] = [];
         let _tFields: IFieldDetails[] = [];
         if (typeof context['field'] !== 'undefined' && typeof context['field']['sets'] !== 'undefined') {
             _tSets = this.parseSets(context['field']['sets']);
         }
-
+        
         if (typeof context['field'] !== 'undefined' && typeof context['field']['fields'] !== 'undefined') {
             _tFields = this.parseFields(context['field']);
         }
 
-        const isRequired: boolean = fetchDynamic<boolean>(context['field'], 'required', false),
-            type: string = fetchDynamic<string>(context['field'], 'type', 'text'),
-            unlessArray: string[] = fetchDynamic<string[]>(context['field'], 'unless', []),
-            validateArray: string[] = fetchDynamic<string[]>(context['field'], 'validate', []),
-            display: string = fetchDynamic<string>(context['field'], 'display', ''),
-            developerDocumentation: string = fetchDynamic<string>(context['field'], '__documentation', '');
-        return {
-            required: isRequired,
-            type: type,
-            validate: validateArray,
-            unless: unlessArray,
-            display: display,
-            handle: 'temp_handle',
-            sets: _tSets,
-            fields: _tFields,
-            isLinked: false,
-            linkedFrom: '',
-            developerDocumentation: developerDocumentation,
-            internalIcon: 'bard_buttons_setting',
-        };
-    }
+    const isRequired: boolean = fetchDynamic<boolean>(context['field'], 'required', false),
+        type: string = fetchDynamic<string>(context['field'], 'type', 'text'),
+        unlessArray:string[] = fetchDynamic<string[]>(context['field'], 'unless', []),
+        validateArray:string[] = fetchDynamic<string[]>(context['field'], 'validate', []),
+        display:string = fetchDynamic<string>(context['field'], 'display', ''),
+        developerDocumentation:string = fetchDynamic<string>(context['field'], '__documentation', '');
+    return {
+        required: isRequired,
+        type: type,
+        validate: validateArray,
+        unless: unlessArray,
+        display: display,
+        handle: 'temp_handle',
+        sets: _tSets,
+        fields: _tFields,
+        isLinked: false,
+        linkedFrom: '',
+        developerDocumentation: developerDocumentation,
+        internalIcon: 'bard_buttons_setting',
+    };
+}
 
-    _parseButtonGroupFieldType(context: any): IButtonGroupFieldType {
-        let _parsedOptions = fetchDynamic<string[] | null>(context['field'], 'options', null);
-        let _parsedDefault = fetchDynamic<string | null>(context['field'], 'default', null);
+_parseButtonGroupFieldType(context: any): IButtonGroupFieldType {
+    let _parsedOptions = fetchDynamic<string[] | null>(context['field'], 'options', null);
+    let _parsedDefault = fetchDynamic<string | null>(context['field'], 'default', null);
 
         let _tSets: ISet[] = [];
         let _tFields: IFieldDetails[] = [];
         if (typeof context['field'] !== 'undefined' && typeof context['field']['sets'] !== 'undefined') {
             _tSets = this.parseSets(context['field']['sets']);
         }
-
+        
         if (typeof context['field'] !== 'undefined' && typeof context['field']['fields'] !== 'undefined') {
             _tFields = this.parseFields(context['field']);
         }
 
-        const isRequired: boolean = fetchDynamic<boolean>(context['field'], 'required', false),
-            type: string = fetchDynamic<string>(context['field'], 'type', 'text'),
-            unlessArray: string[] = fetchDynamic<string[]>(context['field'], 'unless', []),
-            validateArray: string[] = fetchDynamic<string[]>(context['field'], 'validate', []),
-            display: string = fetchDynamic<string>(context['field'], 'display', ''),
-            developerDocumentation: string = fetchDynamic<string>(context['field'], '__documentation', '');
-        return {
-            options: _parsedOptions,
-            default: _parsedDefault,
-            required: isRequired,
-            type: type,
-            validate: validateArray,
-            unless: unlessArray,
-            display: display,
-            handle: 'temp_handle',
-            sets: _tSets,
-            fields: _tFields,
-            isLinked: false,
-            linkedFrom: '',
-            developerDocumentation: developerDocumentation,
-            internalIcon: 'button_group',
-        };
-    }
+    const isRequired: boolean = fetchDynamic<boolean>(context['field'], 'required', false),
+        type: string = fetchDynamic<string>(context['field'], 'type', 'text'),
+        unlessArray:string[] = fetchDynamic<string[]>(context['field'], 'unless', []),
+        validateArray:string[] = fetchDynamic<string[]>(context['field'], 'validate', []),
+        display:string = fetchDynamic<string>(context['field'], 'display', ''),
+        developerDocumentation:string = fetchDynamic<string>(context['field'], '__documentation', '');
+    return {
+        options: _parsedOptions,
+        default: _parsedDefault,
+        required: isRequired,
+        type: type,
+        validate: validateArray,
+        unless: unlessArray,
+        display: display,
+        handle: 'temp_handle',
+        sets: _tSets,
+        fields: _tFields,
+        isLinked: false,
+        linkedFrom: '',
+        developerDocumentation: developerDocumentation,
+        internalIcon: 'button_group',
+    };
+}
 
-    _parseCheckboxesFieldType(context: any): ICheckboxesFieldType {
-        let _parsedInline = fetchDynamic<boolean | null>(context['field'], 'inline', null);
-        let _parsedOptions = fetchDynamic<string[] | null>(context['field'], 'options', null);
-        let _parsedDefault = fetchDynamic<string | null>(context['field'], 'default', null);
+_parseCheckboxesFieldType(context: any): ICheckboxesFieldType {
+    let _parsedInline = fetchDynamic<boolean | null>(context['field'], 'inline', null);
+    let _parsedOptions = fetchDynamic<string[] | null>(context['field'], 'options', null);
+    let _parsedDefault = fetchDynamic<string | null>(context['field'], 'default', null);
 
         let _tSets: ISet[] = [];
         let _tFields: IFieldDetails[] = [];
         if (typeof context['field'] !== 'undefined' && typeof context['field']['sets'] !== 'undefined') {
             _tSets = this.parseSets(context['field']['sets']);
         }
-
+        
         if (typeof context['field'] !== 'undefined' && typeof context['field']['fields'] !== 'undefined') {
             _tFields = this.parseFields(context['field']);
         }
 
-        const isRequired: boolean = fetchDynamic<boolean>(context['field'], 'required', false),
-            type: string = fetchDynamic<string>(context['field'], 'type', 'text'),
-            unlessArray: string[] = fetchDynamic<string[]>(context['field'], 'unless', []),
-            validateArray: string[] = fetchDynamic<string[]>(context['field'], 'validate', []),
-            display: string = fetchDynamic<string>(context['field'], 'display', ''),
-            developerDocumentation: string = fetchDynamic<string>(context['field'], '__documentation', '');
-        return {
-            inline: _parsedInline,
-            options: _parsedOptions,
-            default: _parsedDefault,
-            required: isRequired,
-            type: type,
-            validate: validateArray,
-            unless: unlessArray,
-            display: display,
-            handle: 'temp_handle',
-            sets: _tSets,
-            fields: _tFields,
-            isLinked: false,
-            linkedFrom: '',
-            developerDocumentation: developerDocumentation,
-            internalIcon: 'checkboxes',
-        };
-    }
+    const isRequired: boolean = fetchDynamic<boolean>(context['field'], 'required', false),
+        type: string = fetchDynamic<string>(context['field'], 'type', 'text'),
+        unlessArray:string[] = fetchDynamic<string[]>(context['field'], 'unless', []),
+        validateArray:string[] = fetchDynamic<string[]>(context['field'], 'validate', []),
+        display:string = fetchDynamic<string>(context['field'], 'display', ''),
+        developerDocumentation:string = fetchDynamic<string>(context['field'], '__documentation', '');
+    return {
+        inline: _parsedInline,
+        options: _parsedOptions,
+        default: _parsedDefault,
+        required: isRequired,
+        type: type,
+        validate: validateArray,
+        unless: unlessArray,
+        display: display,
+        handle: 'temp_handle',
+        sets: _tSets,
+        fields: _tFields,
+        isLinked: false,
+        linkedFrom: '',
+        developerDocumentation: developerDocumentation,
+        internalIcon: 'checkboxes',
+    };
+}
 
-    _parseCodeFieldType(context: any): ICodeFieldType {
-        let _parsedTheme = fetchDynamic<string>(context['field'], 'theme', 'material');
-        let _parsedMode = fetchDynamic<string>(context['field'], 'mode', 'htmlmixed');
-        let _parsedModeSelectable = fetchDynamic<boolean | null>(context['field'], 'mode_selectable', null);
-        let _parsedIndentType = fetchDynamic<string>(context['field'], 'indent_type', 'tabs');
-        let _parsedIndentSize = fetchDynamic<number>(context['field'], 'indent_size', 4);
-        let _parsedKeyMap = fetchDynamic<string>(context['field'], 'key_map', 'default');
-        let _parsedLineNumbers = fetchDynamic<boolean>(context['field'], 'line_numbers', true);
-        let _parsedLineWrapping = fetchDynamic<boolean>(context['field'], 'line_wrapping', true);
+_parseCodeFieldType(context: any): ICodeFieldType {
+    let _parsedTheme = fetchDynamic<string>(context['field'], 'theme', 'material');
+    let _parsedMode = fetchDynamic<string>(context['field'], 'mode', 'htmlmixed');
+    let _parsedModeSelectable = fetchDynamic<boolean | null>(context['field'], 'mode_selectable', null);
+    let _parsedIndentType = fetchDynamic<string>(context['field'], 'indent_type', 'tabs');
+    let _parsedIndentSize = fetchDynamic<number>(context['field'], 'indent_size', 4);
+    let _parsedKeyMap = fetchDynamic<string>(context['field'], 'key_map', 'default');
+    let _parsedLineNumbers = fetchDynamic<boolean>(context['field'], 'line_numbers', true);
+    let _parsedLineWrapping = fetchDynamic<boolean>(context['field'], 'line_wrapping', true);
 
         let _tSets: ISet[] = [];
         let _tFields: IFieldDetails[] = [];
         if (typeof context['field'] !== 'undefined' && typeof context['field']['sets'] !== 'undefined') {
             _tSets = this.parseSets(context['field']['sets']);
         }
-
+        
         if (typeof context['field'] !== 'undefined' && typeof context['field']['fields'] !== 'undefined') {
             _tFields = this.parseFields(context['field']);
         }
 
-        const isRequired: boolean = fetchDynamic<boolean>(context['field'], 'required', false),
-            type: string = fetchDynamic<string>(context['field'], 'type', 'text'),
-            unlessArray: string[] = fetchDynamic<string[]>(context['field'], 'unless', []),
-            validateArray: string[] = fetchDynamic<string[]>(context['field'], 'validate', []),
-            display: string = fetchDynamic<string>(context['field'], 'display', ''),
-            developerDocumentation: string = fetchDynamic<string>(context['field'], '__documentation', '');
-        return {
-            theme: _parsedTheme,
-            mode: _parsedMode,
-            modeSelectable: _parsedModeSelectable,
-            indentType: _parsedIndentType,
-            indentSize: _parsedIndentSize,
-            keyMap: _parsedKeyMap,
-            lineNumbers: _parsedLineNumbers,
-            lineWrapping: _parsedLineWrapping,
-            required: isRequired,
-            type: type,
-            validate: validateArray,
-            unless: unlessArray,
-            display: display,
-            handle: 'temp_handle',
-            sets: _tSets,
-            fields: _tFields,
-            isLinked: false,
-            linkedFrom: '',
-            developerDocumentation: developerDocumentation,
-            internalIcon: 'code',
-        };
-    }
+    const isRequired: boolean = fetchDynamic<boolean>(context['field'], 'required', false),
+        type: string = fetchDynamic<string>(context['field'], 'type', 'text'),
+        unlessArray:string[] = fetchDynamic<string[]>(context['field'], 'unless', []),
+        validateArray:string[] = fetchDynamic<string[]>(context['field'], 'validate', []),
+        display:string = fetchDynamic<string>(context['field'], 'display', ''),
+        developerDocumentation:string = fetchDynamic<string>(context['field'], '__documentation', '');
+    return {
+        theme: _parsedTheme,
+        mode: _parsedMode,
+        modeSelectable: _parsedModeSelectable,
+        indentType: _parsedIndentType,
+        indentSize: _parsedIndentSize,
+        keyMap: _parsedKeyMap,
+        lineNumbers: _parsedLineNumbers,
+        lineWrapping: _parsedLineWrapping,
+        required: isRequired,
+        type: type,
+        validate: validateArray,
+        unless: unlessArray,
+        display: display,
+        handle: 'temp_handle',
+        sets: _tSets,
+        fields: _tFields,
+        isLinked: false,
+        linkedFrom: '',
+        developerDocumentation: developerDocumentation,
+        internalIcon: 'code',
+    };
+}
 
-    _parseCollectionRoutesFieldType(context: any): ICollectionRoutesFieldType {
+_parseCollectionRoutesFieldType(context: any): ICollectionRoutesFieldType {
 
         let _tSets: ISet[] = [];
         let _tFields: IFieldDetails[] = [];
         if (typeof context['field'] !== 'undefined' && typeof context['field']['sets'] !== 'undefined') {
             _tSets = this.parseSets(context['field']['sets']);
         }
-
+        
         if (typeof context['field'] !== 'undefined' && typeof context['field']['fields'] !== 'undefined') {
             _tFields = this.parseFields(context['field']);
         }
 
-        const isRequired: boolean = fetchDynamic<boolean>(context['field'], 'required', false),
-            type: string = fetchDynamic<string>(context['field'], 'type', 'text'),
-            unlessArray: string[] = fetchDynamic<string[]>(context['field'], 'unless', []),
-            validateArray: string[] = fetchDynamic<string[]>(context['field'], 'validate', []),
-            display: string = fetchDynamic<string>(context['field'], 'display', ''),
-            developerDocumentation: string = fetchDynamic<string>(context['field'], '__documentation', '');
-        return {
-            required: isRequired,
-            type: type,
-            validate: validateArray,
-            unless: unlessArray,
-            display: display,
-            handle: 'temp_handle',
-            sets: _tSets,
-            fields: _tFields,
-            isLinked: false,
-            linkedFrom: '',
-            developerDocumentation: developerDocumentation,
-            internalIcon: 'collection_routes',
-        };
-    }
+    const isRequired: boolean = fetchDynamic<boolean>(context['field'], 'required', false),
+        type: string = fetchDynamic<string>(context['field'], 'type', 'text'),
+        unlessArray:string[] = fetchDynamic<string[]>(context['field'], 'unless', []),
+        validateArray:string[] = fetchDynamic<string[]>(context['field'], 'validate', []),
+        display:string = fetchDynamic<string>(context['field'], 'display', ''),
+        developerDocumentation:string = fetchDynamic<string>(context['field'], '__documentation', '');
+    return {
+        required: isRequired,
+        type: type,
+        validate: validateArray,
+        unless: unlessArray,
+        display: display,
+        handle: 'temp_handle',
+        sets: _tSets,
+        fields: _tFields,
+        isLinked: false,
+        linkedFrom: '',
+        developerDocumentation: developerDocumentation,
+        internalIcon: 'collection_routes',
+    };
+}
 
-    _parseCollectionTitleFormatsFieldType(context: any): ICollectionTitleFormatsFieldType {
+_parseCollectionTitleFormatsFieldType(context: any): ICollectionTitleFormatsFieldType {
 
         let _tSets: ISet[] = [];
         let _tFields: IFieldDetails[] = [];
         if (typeof context['field'] !== 'undefined' && typeof context['field']['sets'] !== 'undefined') {
             _tSets = this.parseSets(context['field']['sets']);
         }
-
+        
         if (typeof context['field'] !== 'undefined' && typeof context['field']['fields'] !== 'undefined') {
             _tFields = this.parseFields(context['field']);
         }
 
-        const isRequired: boolean = fetchDynamic<boolean>(context['field'], 'required', false),
-            type: string = fetchDynamic<string>(context['field'], 'type', 'text'),
-            unlessArray: string[] = fetchDynamic<string[]>(context['field'], 'unless', []),
-            validateArray: string[] = fetchDynamic<string[]>(context['field'], 'validate', []),
-            display: string = fetchDynamic<string>(context['field'], 'display', ''),
-            developerDocumentation: string = fetchDynamic<string>(context['field'], '__documentation', '');
-        return {
-            required: isRequired,
-            type: type,
-            validate: validateArray,
-            unless: unlessArray,
-            display: display,
-            handle: 'temp_handle',
-            sets: _tSets,
-            fields: _tFields,
-            isLinked: false,
-            linkedFrom: '',
-            developerDocumentation: developerDocumentation,
-            internalIcon: 'collection_title_formats',
-        };
-    }
+    const isRequired: boolean = fetchDynamic<boolean>(context['field'], 'required', false),
+        type: string = fetchDynamic<string>(context['field'], 'type', 'text'),
+        unlessArray:string[] = fetchDynamic<string[]>(context['field'], 'unless', []),
+        validateArray:string[] = fetchDynamic<string[]>(context['field'], 'validate', []),
+        display:string = fetchDynamic<string>(context['field'], 'display', ''),
+        developerDocumentation:string = fetchDynamic<string>(context['field'], '__documentation', '');
+    return {
+        required: isRequired,
+        type: type,
+        validate: validateArray,
+        unless: unlessArray,
+        display: display,
+        handle: 'temp_handle',
+        sets: _tSets,
+        fields: _tFields,
+        isLinked: false,
+        linkedFrom: '',
+        developerDocumentation: developerDocumentation,
+        internalIcon: 'collection_title_formats',
+    };
+}
 
-    _parseCollectionsFieldType(context: any): ICollectionsFieldType {
-        let _parsedMaxItems = fetchDynamic<number | null>(context['field'], 'max_items', null);
-        let _parsedMode = fetchDynamic<string>(context['field'], 'mode', 'default');
+_parseCollectionsFieldType(context: any): ICollectionsFieldType {
+    let _parsedMaxItems = fetchDynamic<number | null>(context['field'], 'max_items', null);
+    let _parsedMode = fetchDynamic<string>(context['field'], 'mode', 'default');
 
         let _tSets: ISet[] = [];
         let _tFields: IFieldDetails[] = [];
         if (typeof context['field'] !== 'undefined' && typeof context['field']['sets'] !== 'undefined') {
             _tSets = this.parseSets(context['field']['sets']);
         }
-
+        
         if (typeof context['field'] !== 'undefined' && typeof context['field']['fields'] !== 'undefined') {
             _tFields = this.parseFields(context['field']);
         }
 
-        const isRequired: boolean = fetchDynamic<boolean>(context['field'], 'required', false),
-            type: string = fetchDynamic<string>(context['field'], 'type', 'text'),
-            unlessArray: string[] = fetchDynamic<string[]>(context['field'], 'unless', []),
-            validateArray: string[] = fetchDynamic<string[]>(context['field'], 'validate', []),
-            display: string = fetchDynamic<string>(context['field'], 'display', ''),
-            developerDocumentation: string = fetchDynamic<string>(context['field'], '__documentation', '');
-        return {
-            maxItems: _parsedMaxItems,
-            mode: _parsedMode,
-            required: isRequired,
-            type: type,
-            validate: validateArray,
-            unless: unlessArray,
-            display: display,
-            handle: 'temp_handle',
-            sets: _tSets,
-            fields: _tFields,
-            isLinked: false,
-            linkedFrom: '',
-            developerDocumentation: developerDocumentation,
-            internalIcon: 'collections',
-        };
-    }
+    const isRequired: boolean = fetchDynamic<boolean>(context['field'], 'required', false),
+        type: string = fetchDynamic<string>(context['field'], 'type', 'text'),
+        unlessArray:string[] = fetchDynamic<string[]>(context['field'], 'unless', []),
+        validateArray:string[] = fetchDynamic<string[]>(context['field'], 'validate', []),
+        display:string = fetchDynamic<string>(context['field'], 'display', ''),
+        developerDocumentation:string = fetchDynamic<string>(context['field'], '__documentation', '');
+    return {
+        maxItems: _parsedMaxItems,
+        mode: _parsedMode,
+        required: isRequired,
+        type: type,
+        validate: validateArray,
+        unless: unlessArray,
+        display: display,
+        handle: 'temp_handle',
+        sets: _tSets,
+        fields: _tFields,
+        isLinked: false,
+        linkedFrom: '',
+        developerDocumentation: developerDocumentation,
+        internalIcon: 'collections',
+    };
+}
 
-    _parseColorFieldType(context: any): IColorFieldType {
-        let _parsedSwatches = fetchDynamic<string[] | null>(context['field'], 'swatches', null);
-        let _parsedTheme = fetchDynamic<string>(context['field'], 'theme', 'classic');
-        let _parsedLockOpacity = fetchDynamic<boolean | null>(context['field'], 'lock_opacity', null);
-        let _parsedDefaultColorMode = fetchDynamic<string>(context['field'], 'default_color_mode', 'HEXA');
-        let _parsedColorModes = fetchDynamic<string[]>(context['field'], 'color_modes', ['HEXA', 'RGBA', 'HSLA', 'HSVA', 'CMYK',]);
+_parseColorFieldType(context: any): IColorFieldType {
+    let _parsedSwatches = fetchDynamic<string[] | null>(context['field'], 'swatches', null);
+    let _parsedTheme = fetchDynamic<string>(context['field'], 'theme', 'classic');
+    let _parsedLockOpacity = fetchDynamic<boolean | null>(context['field'], 'lock_opacity', null);
+    let _parsedDefaultColorMode = fetchDynamic<string>(context['field'], 'default_color_mode', 'HEXA');
+    let _parsedColorModes = fetchDynamic<string[]>(context['field'], 'color_modes', ['HEXA', 'RGBA', 'HSLA', 'HSVA', 'CMYK', ]);
 
         let _tSets: ISet[] = [];
         let _tFields: IFieldDetails[] = [];
         if (typeof context['field'] !== 'undefined' && typeof context['field']['sets'] !== 'undefined') {
             _tSets = this.parseSets(context['field']['sets']);
         }
-
+        
         if (typeof context['field'] !== 'undefined' && typeof context['field']['fields'] !== 'undefined') {
             _tFields = this.parseFields(context['field']);
         }
 
-        const isRequired: boolean = fetchDynamic<boolean>(context['field'], 'required', false),
-            type: string = fetchDynamic<string>(context['field'], 'type', 'text'),
-            unlessArray: string[] = fetchDynamic<string[]>(context['field'], 'unless', []),
-            validateArray: string[] = fetchDynamic<string[]>(context['field'], 'validate', []),
-            display: string = fetchDynamic<string>(context['field'], 'display', ''),
-            developerDocumentation: string = fetchDynamic<string>(context['field'], '__documentation', '');
-        return {
-            swatches: _parsedSwatches,
-            theme: _parsedTheme,
-            lockOpacity: _parsedLockOpacity,
-            defaultColorMode: _parsedDefaultColorMode,
-            colorModes: _parsedColorModes,
-            required: isRequired,
-            type: type,
-            validate: validateArray,
-            unless: unlessArray,
-            display: display,
-            handle: 'temp_handle',
-            sets: _tSets,
-            fields: _tFields,
-            isLinked: false,
-            linkedFrom: '',
-            developerDocumentation: developerDocumentation,
-            internalIcon: 'color',
-        };
-    }
+    const isRequired: boolean = fetchDynamic<boolean>(context['field'], 'required', false),
+        type: string = fetchDynamic<string>(context['field'], 'type', 'text'),
+        unlessArray:string[] = fetchDynamic<string[]>(context['field'], 'unless', []),
+        validateArray:string[] = fetchDynamic<string[]>(context['field'], 'validate', []),
+        display:string = fetchDynamic<string>(context['field'], 'display', ''),
+        developerDocumentation:string = fetchDynamic<string>(context['field'], '__documentation', '');
+    return {
+        swatches: _parsedSwatches,
+        theme: _parsedTheme,
+        lockOpacity: _parsedLockOpacity,
+        defaultColorMode: _parsedDefaultColorMode,
+        colorModes: _parsedColorModes,
+        required: isRequired,
+        type: type,
+        validate: validateArray,
+        unless: unlessArray,
+        display: display,
+        handle: 'temp_handle',
+        sets: _tSets,
+        fields: _tFields,
+        isLinked: false,
+        linkedFrom: '',
+        developerDocumentation: developerDocumentation,
+        internalIcon: 'color',
+    };
+}
 
-    _parseDateFieldType(context: any): IDateFieldType {
-        let _parsedMode = fetchDynamic<string>(context['field'], 'mode', 'single');
-        let _parsedFormat = fetchDynamic<string | null>(context['field'], 'format', null);
-        let _parsedEarliestDate = fetchDynamic<string | null>(context['field'], 'earliest_date', null);
-        let _parsedLatestDate = fetchDynamic<string | null>(context['field'], 'latest_date', null);
-        let _parsedTimeEnabled = fetchDynamic<boolean | null>(context['field'], 'time_enabled', null);
-        let _parsedTimeSecondsEnabled = fetchDynamic<boolean | null>(context['field'], 'time_seconds_enabled', null);
-        let _parsedFullWidth = fetchDynamic<boolean | null>(context['field'], 'full_width', null);
-        let _parsedInline = fetchDynamic<boolean | null>(context['field'], 'inline', null);
-        let _parsedColumns = fetchDynamic<number>(context['field'], 'columns', 1);
-        let _parsedRows = fetchDynamic<number>(context['field'], 'rows', 1);
+_parseDateFieldType(context: any): IDateFieldType {
+    let _parsedMode = fetchDynamic<string>(context['field'], 'mode', 'single');
+    let _parsedFormat = fetchDynamic<string | null>(context['field'], 'format', null);
+    let _parsedEarliestDate = fetchDynamic<string | null>(context['field'], 'earliest_date', null);
+    let _parsedLatestDate = fetchDynamic<string | null>(context['field'], 'latest_date', null);
+    let _parsedTimeEnabled = fetchDynamic<boolean | null>(context['field'], 'time_enabled', null);
+    let _parsedTimeSecondsEnabled = fetchDynamic<boolean | null>(context['field'], 'time_seconds_enabled', null);
+    let _parsedFullWidth = fetchDynamic<boolean | null>(context['field'], 'full_width', null);
+    let _parsedInline = fetchDynamic<boolean | null>(context['field'], 'inline', null);
+    let _parsedColumns = fetchDynamic<number>(context['field'], 'columns', 1);
+    let _parsedRows = fetchDynamic<number>(context['field'], 'rows', 1);
 
         let _tSets: ISet[] = [];
         let _tFields: IFieldDetails[] = [];
         if (typeof context['field'] !== 'undefined' && typeof context['field']['sets'] !== 'undefined') {
             _tSets = this.parseSets(context['field']['sets']);
         }
-
+        
         if (typeof context['field'] !== 'undefined' && typeof context['field']['fields'] !== 'undefined') {
             _tFields = this.parseFields(context['field']);
         }
 
-        const isRequired: boolean = fetchDynamic<boolean>(context['field'], 'required', false),
-            type: string = fetchDynamic<string>(context['field'], 'type', 'text'),
-            unlessArray: string[] = fetchDynamic<string[]>(context['field'], 'unless', []),
-            validateArray: string[] = fetchDynamic<string[]>(context['field'], 'validate', []),
-            display: string = fetchDynamic<string>(context['field'], 'display', ''),
-            developerDocumentation: string = fetchDynamic<string>(context['field'], '__documentation', '');
-        return {
-            mode: _parsedMode,
-            format: _parsedFormat,
-            earliestDate: _parsedEarliestDate,
-            latestDate: _parsedLatestDate,
-            timeEnabled: _parsedTimeEnabled,
-            timeSecondsEnabled: _parsedTimeSecondsEnabled,
-            fullWidth: _parsedFullWidth,
-            inline: _parsedInline,
-            columns: _parsedColumns,
-            rows: _parsedRows,
-            required: isRequired,
-            type: type,
-            validate: validateArray,
-            unless: unlessArray,
-            display: display,
-            handle: 'temp_handle',
-            sets: _tSets,
-            fields: _tFields,
-            isLinked: false,
-            linkedFrom: '',
-            developerDocumentation: developerDocumentation,
-            internalIcon: 'date',
-        };
-    }
+    const isRequired: boolean = fetchDynamic<boolean>(context['field'], 'required', false),
+        type: string = fetchDynamic<string>(context['field'], 'type', 'text'),
+        unlessArray:string[] = fetchDynamic<string[]>(context['field'], 'unless', []),
+        validateArray:string[] = fetchDynamic<string[]>(context['field'], 'validate', []),
+        display:string = fetchDynamic<string>(context['field'], 'display', ''),
+        developerDocumentation:string = fetchDynamic<string>(context['field'], '__documentation', '');
+    return {
+        mode: _parsedMode,
+        format: _parsedFormat,
+        earliestDate: _parsedEarliestDate,
+        latestDate: _parsedLatestDate,
+        timeEnabled: _parsedTimeEnabled,
+        timeSecondsEnabled: _parsedTimeSecondsEnabled,
+        fullWidth: _parsedFullWidth,
+        inline: _parsedInline,
+        columns: _parsedColumns,
+        rows: _parsedRows,
+        required: isRequired,
+        type: type,
+        validate: validateArray,
+        unless: unlessArray,
+        display: display,
+        handle: 'temp_handle',
+        sets: _tSets,
+        fields: _tFields,
+        isLinked: false,
+        linkedFrom: '',
+        developerDocumentation: developerDocumentation,
+        internalIcon: 'date',
+    };
+}
 
-    _parseEntriesFieldType(context: any): IEntriesFieldType {
-        let _parsedMaxItems = fetchDynamic<number | null>(context['field'], 'max_items', null);
-        let _parsedMode = fetchDynamic<string>(context['field'], 'mode', 'default');
-        let _parsedCreate = fetchDynamic<boolean>(context['field'], 'create', true);
-        let _parsedCollections = fetchDynamic<string[] | null>(context['field'], 'collections', null);
+_parseEntriesFieldType(context: any): IEntriesFieldType {
+    let _parsedMaxItems = fetchDynamic<number | null>(context['field'], 'max_items', null);
+    let _parsedMode = fetchDynamic<string>(context['field'], 'mode', 'default');
+    let _parsedCreate = fetchDynamic<boolean>(context['field'], 'create', true);
+    let _parsedCollections = fetchDynamic<string[] | null>(context['field'], 'collections', null);
 
         let _tSets: ISet[] = [];
         let _tFields: IFieldDetails[] = [];
         if (typeof context['field'] !== 'undefined' && typeof context['field']['sets'] !== 'undefined') {
             _tSets = this.parseSets(context['field']['sets']);
         }
-
+        
         if (typeof context['field'] !== 'undefined' && typeof context['field']['fields'] !== 'undefined') {
             _tFields = this.parseFields(context['field']);
         }
 
-        const isRequired: boolean = fetchDynamic<boolean>(context['field'], 'required', false),
-            type: string = fetchDynamic<string>(context['field'], 'type', 'text'),
-            unlessArray: string[] = fetchDynamic<string[]>(context['field'], 'unless', []),
-            validateArray: string[] = fetchDynamic<string[]>(context['field'], 'validate', []),
-            display: string = fetchDynamic<string>(context['field'], 'display', ''),
-            developerDocumentation: string = fetchDynamic<string>(context['field'], '__documentation', '');
-        return {
-            maxItems: _parsedMaxItems,
-            mode: _parsedMode,
-            create: _parsedCreate,
-            collections: _parsedCollections,
-            required: isRequired,
-            type: type,
-            validate: validateArray,
-            unless: unlessArray,
-            display: display,
-            handle: 'temp_handle',
-            sets: _tSets,
-            fields: _tFields,
-            isLinked: false,
-            linkedFrom: '',
-            developerDocumentation: developerDocumentation,
-            internalIcon: 'entries',
-        };
-    }
+    const isRequired: boolean = fetchDynamic<boolean>(context['field'], 'required', false),
+        type: string = fetchDynamic<string>(context['field'], 'type', 'text'),
+        unlessArray:string[] = fetchDynamic<string[]>(context['field'], 'unless', []),
+        validateArray:string[] = fetchDynamic<string[]>(context['field'], 'validate', []),
+        display:string = fetchDynamic<string>(context['field'], 'display', ''),
+        developerDocumentation:string = fetchDynamic<string>(context['field'], '__documentation', '');
+    return {
+        maxItems: _parsedMaxItems,
+        mode: _parsedMode,
+        create: _parsedCreate,
+        collections: _parsedCollections,
+        required: isRequired,
+        type: type,
+        validate: validateArray,
+        unless: unlessArray,
+        display: display,
+        handle: 'temp_handle',
+        sets: _tSets,
+        fields: _tFields,
+        isLinked: false,
+        linkedFrom: '',
+        developerDocumentation: developerDocumentation,
+        internalIcon: 'entries',
+    };
+}
 
-    _parseFilesFieldType(context: any): IFilesFieldType {
-        let _parsedMaxFiles = fetchDynamic<number | null>(context['field'], 'max_files', null);
+_parseFilesFieldType(context: any): IFilesFieldType {
+    let _parsedMaxFiles = fetchDynamic<number | null>(context['field'], 'max_files', null);
 
         let _tSets: ISet[] = [];
         let _tFields: IFieldDetails[] = [];
         if (typeof context['field'] !== 'undefined' && typeof context['field']['sets'] !== 'undefined') {
             _tSets = this.parseSets(context['field']['sets']);
         }
-
+        
         if (typeof context['field'] !== 'undefined' && typeof context['field']['fields'] !== 'undefined') {
             _tFields = this.parseFields(context['field']);
         }
 
-        const isRequired: boolean = fetchDynamic<boolean>(context['field'], 'required', false),
-            type: string = fetchDynamic<string>(context['field'], 'type', 'text'),
-            unlessArray: string[] = fetchDynamic<string[]>(context['field'], 'unless', []),
-            validateArray: string[] = fetchDynamic<string[]>(context['field'], 'validate', []),
-            display: string = fetchDynamic<string>(context['field'], 'display', ''),
-            developerDocumentation: string = fetchDynamic<string>(context['field'], '__documentation', '');
-        return {
-            maxFiles: _parsedMaxFiles,
-            required: isRequired,
-            type: type,
-            validate: validateArray,
-            unless: unlessArray,
-            display: display,
-            handle: 'temp_handle',
-            sets: _tSets,
-            fields: _tFields,
-            isLinked: false,
-            linkedFrom: '',
-            developerDocumentation: developerDocumentation,
-            internalIcon: 'files',
-        };
-    }
+    const isRequired: boolean = fetchDynamic<boolean>(context['field'], 'required', false),
+        type: string = fetchDynamic<string>(context['field'], 'type', 'text'),
+        unlessArray:string[] = fetchDynamic<string[]>(context['field'], 'unless', []),
+        validateArray:string[] = fetchDynamic<string[]>(context['field'], 'validate', []),
+        display:string = fetchDynamic<string>(context['field'], 'display', ''),
+        developerDocumentation:string = fetchDynamic<string>(context['field'], '__documentation', '');
+    return {
+        maxFiles: _parsedMaxFiles,
+        required: isRequired,
+        type: type,
+        validate: validateArray,
+        unless: unlessArray,
+        display: display,
+        handle: 'temp_handle',
+        sets: _tSets,
+        fields: _tFields,
+        isLinked: false,
+        linkedFrom: '',
+        developerDocumentation: developerDocumentation,
+        internalIcon: 'files',
+    };
+}
 
-    _parseFloatFieldType(context: any): IFloatFieldType {
-        let _parsedDefault = fetchDynamic<string | null>(context['field'], 'default', null);
+_parseFloatFieldType(context: any): IFloatFieldType {
+    let _parsedDefault = fetchDynamic<string | null>(context['field'], 'default', null);
 
         let _tSets: ISet[] = [];
         let _tFields: IFieldDetails[] = [];
         if (typeof context['field'] !== 'undefined' && typeof context['field']['sets'] !== 'undefined') {
             _tSets = this.parseSets(context['field']['sets']);
         }
-
+        
         if (typeof context['field'] !== 'undefined' && typeof context['field']['fields'] !== 'undefined') {
             _tFields = this.parseFields(context['field']);
         }
 
-        const isRequired: boolean = fetchDynamic<boolean>(context['field'], 'required', false),
-            type: string = fetchDynamic<string>(context['field'], 'type', 'text'),
-            unlessArray: string[] = fetchDynamic<string[]>(context['field'], 'unless', []),
-            validateArray: string[] = fetchDynamic<string[]>(context['field'], 'validate', []),
-            display: string = fetchDynamic<string>(context['field'], 'display', ''),
-            developerDocumentation: string = fetchDynamic<string>(context['field'], '__documentation', '');
-        return {
-            default: _parsedDefault,
-            required: isRequired,
-            type: type,
-            validate: validateArray,
-            unless: unlessArray,
-            display: display,
-            handle: 'temp_handle',
-            sets: _tSets,
-            fields: _tFields,
-            isLinked: false,
-            linkedFrom: '',
-            developerDocumentation: developerDocumentation,
-            internalIcon: 'float',
-        };
-    }
+    const isRequired: boolean = fetchDynamic<boolean>(context['field'], 'required', false),
+        type: string = fetchDynamic<string>(context['field'], 'type', 'text'),
+        unlessArray:string[] = fetchDynamic<string[]>(context['field'], 'unless', []),
+        validateArray:string[] = fetchDynamic<string[]>(context['field'], 'validate', []),
+        display:string = fetchDynamic<string>(context['field'], 'display', ''),
+        developerDocumentation:string = fetchDynamic<string>(context['field'], '__documentation', '');
+    return {
+        default: _parsedDefault,
+        required: isRequired,
+        type: type,
+        validate: validateArray,
+        unless: unlessArray,
+        display: display,
+        handle: 'temp_handle',
+        sets: _tSets,
+        fields: _tFields,
+        isLinked: false,
+        linkedFrom: '',
+        developerDocumentation: developerDocumentation,
+        internalIcon: 'float',
+    };
+}
 
-    _parseGlobalSetSitesFieldType(context: any): IGlobalSetSitesFieldType {
+_parseGlobalSetSitesFieldType(context: any): IGlobalSetSitesFieldType {
 
         let _tSets: ISet[] = [];
         let _tFields: IFieldDetails[] = [];
         if (typeof context['field'] !== 'undefined' && typeof context['field']['sets'] !== 'undefined') {
             _tSets = this.parseSets(context['field']['sets']);
         }
-
+        
         if (typeof context['field'] !== 'undefined' && typeof context['field']['fields'] !== 'undefined') {
             _tFields = this.parseFields(context['field']);
         }
 
-        const isRequired: boolean = fetchDynamic<boolean>(context['field'], 'required', false),
-            type: string = fetchDynamic<string>(context['field'], 'type', 'text'),
-            unlessArray: string[] = fetchDynamic<string[]>(context['field'], 'unless', []),
-            validateArray: string[] = fetchDynamic<string[]>(context['field'], 'validate', []),
-            display: string = fetchDynamic<string>(context['field'], 'display', ''),
-            developerDocumentation: string = fetchDynamic<string>(context['field'], '__documentation', '');
-        return {
-            required: isRequired,
-            type: type,
-            validate: validateArray,
-            unless: unlessArray,
-            display: display,
-            handle: 'temp_handle',
-            sets: _tSets,
-            fields: _tFields,
-            isLinked: false,
-            linkedFrom: '',
-            developerDocumentation: developerDocumentation,
-            internalIcon: 'global_set_sites',
-        };
-    }
+    const isRequired: boolean = fetchDynamic<boolean>(context['field'], 'required', false),
+        type: string = fetchDynamic<string>(context['field'], 'type', 'text'),
+        unlessArray:string[] = fetchDynamic<string[]>(context['field'], 'unless', []),
+        validateArray:string[] = fetchDynamic<string[]>(context['field'], 'validate', []),
+        display:string = fetchDynamic<string>(context['field'], 'display', ''),
+        developerDocumentation:string = fetchDynamic<string>(context['field'], '__documentation', '');
+    return {
+        required: isRequired,
+        type: type,
+        validate: validateArray,
+        unless: unlessArray,
+        display: display,
+        handle: 'temp_handle',
+        sets: _tSets,
+        fields: _tFields,
+        isLinked: false,
+        linkedFrom: '',
+        developerDocumentation: developerDocumentation,
+        internalIcon: 'global_set_sites',
+    };
+}
 
-    _parseGridFieldType(context: any): IGridFieldType {
-        let _parsedMode = fetchDynamic<string>(context['field'], 'mode', 'table');
-        let _parsedMaxRows = fetchDynamic<number | null>(context['field'], 'max_rows', null);
-        let _parsedMinRows = fetchDynamic<number | null>(context['field'], 'min_rows', null);
-        let _parsedAddRow = fetchDynamic<string | null>(context['field'], 'add_row', null);
-        let _parsedReorderable = fetchDynamic<boolean>(context['field'], 'reorderable', true);
+_parseGridFieldType(context: any): IGridFieldType {
+    let _parsedMode = fetchDynamic<string>(context['field'], 'mode', 'table');
+    let _parsedMaxRows = fetchDynamic<number | null>(context['field'], 'max_rows', null);
+    let _parsedMinRows = fetchDynamic<number | null>(context['field'], 'min_rows', null);
+    let _parsedAddRow = fetchDynamic<string | null>(context['field'], 'add_row', null);
+    let _parsedReorderable = fetchDynamic<boolean>(context['field'], 'reorderable', true);
 
         let _tSets: ISet[] = [];
         let _tFields: IFieldDetails[] = [];
         if (typeof context['field'] !== 'undefined' && typeof context['field']['sets'] !== 'undefined') {
             _tSets = this.parseSets(context['field']['sets']);
         }
-
+        
         if (typeof context['field'] !== 'undefined' && typeof context['field']['fields'] !== 'undefined') {
             _tFields = this.parseFields(context['field']);
         }
 
-        const isRequired: boolean = fetchDynamic<boolean>(context['field'], 'required', false),
-            type: string = fetchDynamic<string>(context['field'], 'type', 'text'),
-            unlessArray: string[] = fetchDynamic<string[]>(context['field'], 'unless', []),
-            validateArray: string[] = fetchDynamic<string[]>(context['field'], 'validate', []),
-            display: string = fetchDynamic<string>(context['field'], 'display', ''),
-            developerDocumentation: string = fetchDynamic<string>(context['field'], '__documentation', '');
-        return {
-            mode: _parsedMode,
-            maxRows: _parsedMaxRows,
-            minRows: _parsedMinRows,
-            addRow: _parsedAddRow,
-            reorderable: _parsedReorderable,
-            required: isRequired,
-            type: type,
-            validate: validateArray,
-            unless: unlessArray,
-            display: display,
-            handle: 'temp_handle',
-            sets: _tSets,
-            fields: _tFields,
-            isLinked: false,
-            linkedFrom: '',
-            developerDocumentation: developerDocumentation,
-            internalIcon: 'grid',
-        };
-    }
+    const isRequired: boolean = fetchDynamic<boolean>(context['field'], 'required', false),
+        type: string = fetchDynamic<string>(context['field'], 'type', 'text'),
+        unlessArray:string[] = fetchDynamic<string[]>(context['field'], 'unless', []),
+        validateArray:string[] = fetchDynamic<string[]>(context['field'], 'validate', []),
+        display:string = fetchDynamic<string>(context['field'], 'display', ''),
+        developerDocumentation:string = fetchDynamic<string>(context['field'], '__documentation', '');
+    return {
+        mode: _parsedMode,
+        maxRows: _parsedMaxRows,
+        minRows: _parsedMinRows,
+        addRow: _parsedAddRow,
+        reorderable: _parsedReorderable,
+        required: isRequired,
+        type: type,
+        validate: validateArray,
+        unless: unlessArray,
+        display: display,
+        handle: 'temp_handle',
+        sets: _tSets,
+        fields: _tFields,
+        isLinked: false,
+        linkedFrom: '',
+        developerDocumentation: developerDocumentation,
+        internalIcon: 'grid',
+    };
+}
 
-    _parseHiddenFieldType(context: any): IHiddenFieldType {
-        let _parsedDefault = fetchDynamic<string | null>(context['field'], 'default', null);
+_parseHiddenFieldType(context: any): IHiddenFieldType {
+    let _parsedDefault = fetchDynamic<string | null>(context['field'], 'default', null);
 
         let _tSets: ISet[] = [];
         let _tFields: IFieldDetails[] = [];
         if (typeof context['field'] !== 'undefined' && typeof context['field']['sets'] !== 'undefined') {
             _tSets = this.parseSets(context['field']['sets']);
         }
-
+        
         if (typeof context['field'] !== 'undefined' && typeof context['field']['fields'] !== 'undefined') {
             _tFields = this.parseFields(context['field']);
         }
 
-        const isRequired: boolean = fetchDynamic<boolean>(context['field'], 'required', false),
-            type: string = fetchDynamic<string>(context['field'], 'type', 'text'),
-            unlessArray: string[] = fetchDynamic<string[]>(context['field'], 'unless', []),
-            validateArray: string[] = fetchDynamic<string[]>(context['field'], 'validate', []),
-            display: string = fetchDynamic<string>(context['field'], 'display', ''),
-            developerDocumentation: string = fetchDynamic<string>(context['field'], '__documentation', '');
-        return {
-            default: _parsedDefault,
-            required: isRequired,
-            type: type,
-            validate: validateArray,
-            unless: unlessArray,
-            display: display,
-            handle: 'temp_handle',
-            sets: _tSets,
-            fields: _tFields,
-            isLinked: false,
-            linkedFrom: '',
-            developerDocumentation: developerDocumentation,
-            internalIcon: 'hidden',
-        };
-    }
+    const isRequired: boolean = fetchDynamic<boolean>(context['field'], 'required', false),
+        type: string = fetchDynamic<string>(context['field'], 'type', 'text'),
+        unlessArray:string[] = fetchDynamic<string[]>(context['field'], 'unless', []),
+        validateArray:string[] = fetchDynamic<string[]>(context['field'], 'validate', []),
+        display:string = fetchDynamic<string>(context['field'], 'display', ''),
+        developerDocumentation:string = fetchDynamic<string>(context['field'], '__documentation', '');
+    return {
+        default: _parsedDefault,
+        required: isRequired,
+        type: type,
+        validate: validateArray,
+        unless: unlessArray,
+        display: display,
+        handle: 'temp_handle',
+        sets: _tSets,
+        fields: _tFields,
+        isLinked: false,
+        linkedFrom: '',
+        developerDocumentation: developerDocumentation,
+        internalIcon: 'hidden',
+    };
+}
 
-    _parseHtmlFieldType(context: any): IHtmlFieldType {
-        let _parsedHtml = fetchDynamic<string | null>(context['field'], 'html', null);
+_parseHtmlFieldType(context: any): IHtmlFieldType {
+    let _parsedHtml = fetchDynamic<string | null>(context['field'], 'html', null);
 
         let _tSets: ISet[] = [];
         let _tFields: IFieldDetails[] = [];
         if (typeof context['field'] !== 'undefined' && typeof context['field']['sets'] !== 'undefined') {
             _tSets = this.parseSets(context['field']['sets']);
         }
-
+        
         if (typeof context['field'] !== 'undefined' && typeof context['field']['fields'] !== 'undefined') {
             _tFields = this.parseFields(context['field']);
         }
 
-        const isRequired: boolean = fetchDynamic<boolean>(context['field'], 'required', false),
-            type: string = fetchDynamic<string>(context['field'], 'type', 'text'),
-            unlessArray: string[] = fetchDynamic<string[]>(context['field'], 'unless', []),
-            validateArray: string[] = fetchDynamic<string[]>(context['field'], 'validate', []),
-            display: string = fetchDynamic<string>(context['field'], 'display', ''),
-            developerDocumentation: string = fetchDynamic<string>(context['field'], '__documentation', '');
-        return {
-            html: _parsedHtml,
-            required: isRequired,
-            type: type,
-            validate: validateArray,
-            unless: unlessArray,
-            display: display,
-            handle: 'temp_handle',
-            sets: _tSets,
-            fields: _tFields,
-            isLinked: false,
-            linkedFrom: '',
-            developerDocumentation: developerDocumentation,
-            internalIcon: 'html',
-        };
-    }
+    const isRequired: boolean = fetchDynamic<boolean>(context['field'], 'required', false),
+        type: string = fetchDynamic<string>(context['field'], 'type', 'text'),
+        unlessArray:string[] = fetchDynamic<string[]>(context['field'], 'unless', []),
+        validateArray:string[] = fetchDynamic<string[]>(context['field'], 'validate', []),
+        display:string = fetchDynamic<string>(context['field'], 'display', ''),
+        developerDocumentation:string = fetchDynamic<string>(context['field'], '__documentation', '');
+    return {
+        html: _parsedHtml,
+        required: isRequired,
+        type: type,
+        validate: validateArray,
+        unless: unlessArray,
+        display: display,
+        handle: 'temp_handle',
+        sets: _tSets,
+        fields: _tFields,
+        isLinked: false,
+        linkedFrom: '',
+        developerDocumentation: developerDocumentation,
+        internalIcon: 'html',
+    };
+}
 
-    _parseIntegerFieldType(context: any): IIntegerFieldType {
-        let _parsedDefault = fetchDynamic<string | null>(context['field'], 'default', null);
+_parseIntegerFieldType(context: any): IIntegerFieldType {
+    let _parsedDefault = fetchDynamic<string | null>(context['field'], 'default', null);
 
         let _tSets: ISet[] = [];
         let _tFields: IFieldDetails[] = [];
         if (typeof context['field'] !== 'undefined' && typeof context['field']['sets'] !== 'undefined') {
             _tSets = this.parseSets(context['field']['sets']);
         }
-
+        
         if (typeof context['field'] !== 'undefined' && typeof context['field']['fields'] !== 'undefined') {
             _tFields = this.parseFields(context['field']);
         }
 
-        const isRequired: boolean = fetchDynamic<boolean>(context['field'], 'required', false),
-            type: string = fetchDynamic<string>(context['field'], 'type', 'text'),
-            unlessArray: string[] = fetchDynamic<string[]>(context['field'], 'unless', []),
-            validateArray: string[] = fetchDynamic<string[]>(context['field'], 'validate', []),
-            display: string = fetchDynamic<string>(context['field'], 'display', ''),
-            developerDocumentation: string = fetchDynamic<string>(context['field'], '__documentation', '');
-        return {
-            default: _parsedDefault,
-            required: isRequired,
-            type: type,
-            validate: validateArray,
-            unless: unlessArray,
-            display: display,
-            handle: 'temp_handle',
-            sets: _tSets,
-            fields: _tFields,
-            isLinked: false,
-            linkedFrom: '',
-            developerDocumentation: developerDocumentation,
-            internalIcon: 'integer',
-        };
-    }
+    const isRequired: boolean = fetchDynamic<boolean>(context['field'], 'required', false),
+        type: string = fetchDynamic<string>(context['field'], 'type', 'text'),
+        unlessArray:string[] = fetchDynamic<string[]>(context['field'], 'unless', []),
+        validateArray:string[] = fetchDynamic<string[]>(context['field'], 'validate', []),
+        display:string = fetchDynamic<string>(context['field'], 'display', ''),
+        developerDocumentation:string = fetchDynamic<string>(context['field'], '__documentation', '');
+    return {
+        default: _parsedDefault,
+        required: isRequired,
+        type: type,
+        validate: validateArray,
+        unless: unlessArray,
+        display: display,
+        handle: 'temp_handle',
+        sets: _tSets,
+        fields: _tFields,
+        isLinked: false,
+        linkedFrom: '',
+        developerDocumentation: developerDocumentation,
+        internalIcon: 'integer',
+    };
+}
 
-    _parseLinkFieldType(context: any): ILinkFieldType {
-        let _parsedCollections = fetchDynamic<string[] | null>(context['field'], 'collections', null);
-        let _parsedContainer = fetchDynamic<string | null>(context['field'], 'container', null);
+_parseLinkFieldType(context: any): ILinkFieldType {
+    let _parsedCollections = fetchDynamic<string[] | null>(context['field'], 'collections', null);
+    let _parsedContainer = fetchDynamic<string | null>(context['field'], 'container', null);
 
         let _tSets: ISet[] = [];
         let _tFields: IFieldDetails[] = [];
         if (typeof context['field'] !== 'undefined' && typeof context['field']['sets'] !== 'undefined') {
             _tSets = this.parseSets(context['field']['sets']);
         }
-
+        
         if (typeof context['field'] !== 'undefined' && typeof context['field']['fields'] !== 'undefined') {
             _tFields = this.parseFields(context['field']);
         }
 
-        const isRequired: boolean = fetchDynamic<boolean>(context['field'], 'required', false),
-            type: string = fetchDynamic<string>(context['field'], 'type', 'text'),
-            unlessArray: string[] = fetchDynamic<string[]>(context['field'], 'unless', []),
-            validateArray: string[] = fetchDynamic<string[]>(context['field'], 'validate', []),
-            display: string = fetchDynamic<string>(context['field'], 'display', ''),
-            developerDocumentation: string = fetchDynamic<string>(context['field'], '__documentation', '');
-        return {
-            collections: _parsedCollections,
-            container: _parsedContainer,
-            required: isRequired,
-            type: type,
-            validate: validateArray,
-            unless: unlessArray,
-            display: display,
-            handle: 'temp_handle',
-            sets: _tSets,
-            fields: _tFields,
-            isLinked: false,
-            linkedFrom: '',
-            developerDocumentation: developerDocumentation,
-            internalIcon: 'link',
-        };
-    }
+    const isRequired: boolean = fetchDynamic<boolean>(context['field'], 'required', false),
+        type: string = fetchDynamic<string>(context['field'], 'type', 'text'),
+        unlessArray:string[] = fetchDynamic<string[]>(context['field'], 'unless', []),
+        validateArray:string[] = fetchDynamic<string[]>(context['field'], 'validate', []),
+        display:string = fetchDynamic<string>(context['field'], 'display', ''),
+        developerDocumentation:string = fetchDynamic<string>(context['field'], '__documentation', '');
+    return {
+        collections: _parsedCollections,
+        container: _parsedContainer,
+        required: isRequired,
+        type: type,
+        validate: validateArray,
+        unless: unlessArray,
+        display: display,
+        handle: 'temp_handle',
+        sets: _tSets,
+        fields: _tFields,
+        isLinked: false,
+        linkedFrom: '',
+        developerDocumentation: developerDocumentation,
+        internalIcon: 'link',
+    };
+}
 
-    _parseListFieldType(context: any): IListFieldType {
-        let _parsedDefault = fetchDynamic<string[] | null>(context['field'], 'default', null);
+_parseListFieldType(context: any): IListFieldType {
+    let _parsedDefault = fetchDynamic<string[] | null>(context['field'], 'default', null);
 
         let _tSets: ISet[] = [];
         let _tFields: IFieldDetails[] = [];
         if (typeof context['field'] !== 'undefined' && typeof context['field']['sets'] !== 'undefined') {
             _tSets = this.parseSets(context['field']['sets']);
         }
-
+        
         if (typeof context['field'] !== 'undefined' && typeof context['field']['fields'] !== 'undefined') {
             _tFields = this.parseFields(context['field']);
         }
 
-        const isRequired: boolean = fetchDynamic<boolean>(context['field'], 'required', false),
-            type: string = fetchDynamic<string>(context['field'], 'type', 'text'),
-            unlessArray: string[] = fetchDynamic<string[]>(context['field'], 'unless', []),
-            validateArray: string[] = fetchDynamic<string[]>(context['field'], 'validate', []),
-            display: string = fetchDynamic<string>(context['field'], 'display', ''),
-            developerDocumentation: string = fetchDynamic<string>(context['field'], '__documentation', '');
-        return {
-            default: _parsedDefault,
-            required: isRequired,
-            type: type,
-            validate: validateArray,
-            unless: unlessArray,
-            display: display,
-            handle: 'temp_handle',
-            sets: _tSets,
-            fields: _tFields,
-            isLinked: false,
-            linkedFrom: '',
-            developerDocumentation: developerDocumentation,
-            internalIcon: 'list',
-        };
-    }
+    const isRequired: boolean = fetchDynamic<boolean>(context['field'], 'required', false),
+        type: string = fetchDynamic<string>(context['field'], 'type', 'text'),
+        unlessArray:string[] = fetchDynamic<string[]>(context['field'], 'unless', []),
+        validateArray:string[] = fetchDynamic<string[]>(context['field'], 'validate', []),
+        display:string = fetchDynamic<string>(context['field'], 'display', ''),
+        developerDocumentation:string = fetchDynamic<string>(context['field'], '__documentation', '');
+    return {
+        default: _parsedDefault,
+        required: isRequired,
+        type: type,
+        validate: validateArray,
+        unless: unlessArray,
+        display: display,
+        handle: 'temp_handle',
+        sets: _tSets,
+        fields: _tFields,
+        isLinked: false,
+        linkedFrom: '',
+        developerDocumentation: developerDocumentation,
+        internalIcon: 'list',
+    };
+}
 
-    _parseMarkdownFieldType(context: any): IMarkdownFieldType {
-        let _parsedContainer = fetchDynamic<string | null>(context['field'], 'container', null);
-        let _parsedFolder = fetchDynamic<IAssetFolderFieldType | null>(context['field'], 'folder', null);
-        let _parsedRestrict = fetchDynamic<boolean | null>(context['field'], 'restrict', null);
-        let _parsedAutomaticLineBreaks = fetchDynamic<boolean>(context['field'], 'automatic_line_breaks', true);
-        let _parsedAutomaticLinks = fetchDynamic<boolean | null>(context['field'], 'automatic_links', null);
-        let _parsedEscapeMarkup = fetchDynamic<boolean | null>(context['field'], 'escape_markup', null);
-        let _parsedSmartypants = fetchDynamic<boolean | null>(context['field'], 'smartypants', null);
-        let _parsedParser = fetchDynamic<string | null>(context['field'], 'parser', null);
-        let _parsedAntlers = fetchDynamic<boolean | null>(context['field'], 'antlers', null);
-        let _parsedDefault = fetchDynamic<string | null>(context['field'], 'default', null);
+_parseMarkdownFieldType(context: any): IMarkdownFieldType {
+    let _parsedContainer = fetchDynamic<string | null>(context['field'], 'container', null);
+    let _parsedFolder = fetchDynamic<IAssetFolderFieldType | null>(context['field'], 'folder', null);
+    let _parsedRestrict = fetchDynamic<boolean | null>(context['field'], 'restrict', null);
+    let _parsedAutomaticLineBreaks = fetchDynamic<boolean>(context['field'], 'automatic_line_breaks', true);
+    let _parsedAutomaticLinks = fetchDynamic<boolean | null>(context['field'], 'automatic_links', null);
+    let _parsedEscapeMarkup = fetchDynamic<boolean | null>(context['field'], 'escape_markup', null);
+    let _parsedSmartypants = fetchDynamic<boolean | null>(context['field'], 'smartypants', null);
+    let _parsedParser = fetchDynamic<string | null>(context['field'], 'parser', null);
+    let _parsedAntlers = fetchDynamic<boolean | null>(context['field'], 'antlers', null);
+    let _parsedDefault = fetchDynamic<string | null>(context['field'], 'default', null);
 
         let _tSets: ISet[] = [];
         let _tFields: IFieldDetails[] = [];
         if (typeof context['field'] !== 'undefined' && typeof context['field']['sets'] !== 'undefined') {
             _tSets = this.parseSets(context['field']['sets']);
         }
-
+        
         if (typeof context['field'] !== 'undefined' && typeof context['field']['fields'] !== 'undefined') {
             _tFields = this.parseFields(context['field']);
         }
 
-        const isRequired: boolean = fetchDynamic<boolean>(context['field'], 'required', false),
-            type: string = fetchDynamic<string>(context['field'], 'type', 'text'),
-            unlessArray: string[] = fetchDynamic<string[]>(context['field'], 'unless', []),
-            validateArray: string[] = fetchDynamic<string[]>(context['field'], 'validate', []),
-            display: string = fetchDynamic<string>(context['field'], 'display', ''),
-            developerDocumentation: string = fetchDynamic<string>(context['field'], '__documentation', '');
-        return {
-            container: _parsedContainer,
-            folder: _parsedFolder,
-            restrict: _parsedRestrict,
-            automaticLineBreaks: _parsedAutomaticLineBreaks,
-            automaticLinks: _parsedAutomaticLinks,
-            escapeMarkup: _parsedEscapeMarkup,
-            smartypants: _parsedSmartypants,
-            parser: _parsedParser,
-            antlers: _parsedAntlers,
-            default: _parsedDefault,
-            required: isRequired,
-            type: type,
-            validate: validateArray,
-            unless: unlessArray,
-            display: display,
-            handle: 'temp_handle',
-            sets: _tSets,
-            fields: _tFields,
-            isLinked: false,
-            linkedFrom: '',
-            developerDocumentation: developerDocumentation,
-            internalIcon: 'markdown',
-        };
-    }
+    const isRequired: boolean = fetchDynamic<boolean>(context['field'], 'required', false),
+        type: string = fetchDynamic<string>(context['field'], 'type', 'text'),
+        unlessArray:string[] = fetchDynamic<string[]>(context['field'], 'unless', []),
+        validateArray:string[] = fetchDynamic<string[]>(context['field'], 'validate', []),
+        display:string = fetchDynamic<string>(context['field'], 'display', ''),
+        developerDocumentation:string = fetchDynamic<string>(context['field'], '__documentation', '');
+    return {
+        container: _parsedContainer,
+        folder: _parsedFolder,
+        restrict: _parsedRestrict,
+        automaticLineBreaks: _parsedAutomaticLineBreaks,
+        automaticLinks: _parsedAutomaticLinks,
+        escapeMarkup: _parsedEscapeMarkup,
+        smartypants: _parsedSmartypants,
+        parser: _parsedParser,
+        antlers: _parsedAntlers,
+        default: _parsedDefault,
+        required: isRequired,
+        type: type,
+        validate: validateArray,
+        unless: unlessArray,
+        display: display,
+        handle: 'temp_handle',
+        sets: _tSets,
+        fields: _tFields,
+        isLinked: false,
+        linkedFrom: '',
+        developerDocumentation: developerDocumentation,
+        internalIcon: 'markdown',
+    };
+}
 
-    _parseFieldsFieldType(context: any): IFieldsFieldType {
+_parseFieldsFieldType(context: any): IFieldsFieldType {
 
         let _tSets: ISet[] = [];
         let _tFields: IFieldDetails[] = [];
         if (typeof context['field'] !== 'undefined' && typeof context['field']['sets'] !== 'undefined') {
             _tSets = this.parseSets(context['field']['sets']);
         }
-
+        
         if (typeof context['field'] !== 'undefined' && typeof context['field']['fields'] !== 'undefined') {
             _tFields = this.parseFields(context['field']);
         }
 
-        const isRequired: boolean = fetchDynamic<boolean>(context['field'], 'required', false),
-            type: string = fetchDynamic<string>(context['field'], 'type', 'text'),
-            unlessArray: string[] = fetchDynamic<string[]>(context['field'], 'unless', []),
-            validateArray: string[] = fetchDynamic<string[]>(context['field'], 'validate', []),
-            display: string = fetchDynamic<string>(context['field'], 'display', ''),
-            developerDocumentation: string = fetchDynamic<string>(context['field'], '__documentation', '');
-        return {
-            required: isRequired,
-            type: type,
-            validate: validateArray,
-            unless: unlessArray,
-            display: display,
-            handle: 'temp_handle',
-            sets: _tSets,
-            fields: _tFields,
-            isLinked: false,
-            linkedFrom: '',
-            developerDocumentation: developerDocumentation,
-            internalIcon: 'fields',
-        };
-    }
+    const isRequired: boolean = fetchDynamic<boolean>(context['field'], 'required', false),
+        type: string = fetchDynamic<string>(context['field'], 'type', 'text'),
+        unlessArray:string[] = fetchDynamic<string[]>(context['field'], 'unless', []),
+        validateArray:string[] = fetchDynamic<string[]>(context['field'], 'validate', []),
+        display:string = fetchDynamic<string>(context['field'], 'display', ''),
+        developerDocumentation:string = fetchDynamic<string>(context['field'], '__documentation', '');
+    return {
+        required: isRequired,
+        type: type,
+        validate: validateArray,
+        unless: unlessArray,
+        display: display,
+        handle: 'temp_handle',
+        sets: _tSets,
+        fields: _tFields,
+        isLinked: false,
+        linkedFrom: '',
+        developerDocumentation: developerDocumentation,
+        internalIcon: 'fields',
+    };
+}
 
-    _parseRadioFieldType(context: any): IRadioFieldType {
-        let _parsedOptions = fetchDynamic<string[] | null>(context['field'], 'options', null);
-        let _parsedInline = fetchDynamic<boolean | null>(context['field'], 'inline', null);
-        let _parsedCastBooleans = fetchDynamic<boolean | null>(context['field'], 'cast_booleans', null);
-        let _parsedDefault = fetchDynamic<string | null>(context['field'], 'default', null);
+_parseRadioFieldType(context: any): IRadioFieldType {
+    let _parsedOptions = fetchDynamic<string[] | null>(context['field'], 'options', null);
+    let _parsedInline = fetchDynamic<boolean | null>(context['field'], 'inline', null);
+    let _parsedCastBooleans = fetchDynamic<boolean | null>(context['field'], 'cast_booleans', null);
+    let _parsedDefault = fetchDynamic<string | null>(context['field'], 'default', null);
 
         let _tSets: ISet[] = [];
         let _tFields: IFieldDetails[] = [];
         if (typeof context['field'] !== 'undefined' && typeof context['field']['sets'] !== 'undefined') {
             _tSets = this.parseSets(context['field']['sets']);
         }
-
+        
         if (typeof context['field'] !== 'undefined' && typeof context['field']['fields'] !== 'undefined') {
             _tFields = this.parseFields(context['field']);
         }
 
-        const isRequired: boolean = fetchDynamic<boolean>(context['field'], 'required', false),
-            type: string = fetchDynamic<string>(context['field'], 'type', 'text'),
-            unlessArray: string[] = fetchDynamic<string[]>(context['field'], 'unless', []),
-            validateArray: string[] = fetchDynamic<string[]>(context['field'], 'validate', []),
-            display: string = fetchDynamic<string>(context['field'], 'display', ''),
-            developerDocumentation: string = fetchDynamic<string>(context['field'], '__documentation', '');
-        return {
-            options: _parsedOptions,
-            inline: _parsedInline,
-            castBooleans: _parsedCastBooleans,
-            default: _parsedDefault,
-            required: isRequired,
-            type: type,
-            validate: validateArray,
-            unless: unlessArray,
-            display: display,
-            handle: 'temp_handle',
-            sets: _tSets,
-            fields: _tFields,
-            isLinked: false,
-            linkedFrom: '',
-            developerDocumentation: developerDocumentation,
-            internalIcon: 'radio',
-        };
-    }
+    const isRequired: boolean = fetchDynamic<boolean>(context['field'], 'required', false),
+        type: string = fetchDynamic<string>(context['field'], 'type', 'text'),
+        unlessArray:string[] = fetchDynamic<string[]>(context['field'], 'unless', []),
+        validateArray:string[] = fetchDynamic<string[]>(context['field'], 'validate', []),
+        display:string = fetchDynamic<string>(context['field'], 'display', ''),
+        developerDocumentation:string = fetchDynamic<string>(context['field'], '__documentation', '');
+    return {
+        options: _parsedOptions,
+        inline: _parsedInline,
+        castBooleans: _parsedCastBooleans,
+        default: _parsedDefault,
+        required: isRequired,
+        type: type,
+        validate: validateArray,
+        unless: unlessArray,
+        display: display,
+        handle: 'temp_handle',
+        sets: _tSets,
+        fields: _tFields,
+        isLinked: false,
+        linkedFrom: '',
+        developerDocumentation: developerDocumentation,
+        internalIcon: 'radio',
+    };
+}
 
-    _parseRangeFieldType(context: any): IRangeFieldType {
-        let _parsedHidden = fetchDynamic<string | null>(context['field'], 'hidden', null);
-        let _parsedMin = fetchDynamic<number | null>(context['field'], 'min', null);
-        let _parsedMax = fetchDynamic<number>(context['field'], 'max', 100);
-        let _parsedStep = fetchDynamic<number>(context['field'], 'step', 1);
-        let _parsedDefault = fetchDynamic<string | null>(context['field'], 'default', null);
-        let _parsedPrepend = fetchDynamic<string | null>(context['field'], 'prepend', null);
-        let _parsedAppend = fetchDynamic<string | null>(context['field'], 'append', null);
+_parseRangeFieldType(context: any): IRangeFieldType {
+    let _parsedHidden = fetchDynamic<string | null>(context['field'], 'hidden', null);
+    let _parsedMin = fetchDynamic<number | null>(context['field'], 'min', null);
+    let _parsedMax = fetchDynamic<number>(context['field'], 'max', 100);
+    let _parsedStep = fetchDynamic<number>(context['field'], 'step', 1);
+    let _parsedDefault = fetchDynamic<string | null>(context['field'], 'default', null);
+    let _parsedPrepend = fetchDynamic<string | null>(context['field'], 'prepend', null);
+    let _parsedAppend = fetchDynamic<string | null>(context['field'], 'append', null);
 
         let _tSets: ISet[] = [];
         let _tFields: IFieldDetails[] = [];
         if (typeof context['field'] !== 'undefined' && typeof context['field']['sets'] !== 'undefined') {
             _tSets = this.parseSets(context['field']['sets']);
         }
-
+        
         if (typeof context['field'] !== 'undefined' && typeof context['field']['fields'] !== 'undefined') {
             _tFields = this.parseFields(context['field']);
         }
 
-        const isRequired: boolean = fetchDynamic<boolean>(context['field'], 'required', false),
-            type: string = fetchDynamic<string>(context['field'], 'type', 'text'),
-            unlessArray: string[] = fetchDynamic<string[]>(context['field'], 'unless', []),
-            validateArray: string[] = fetchDynamic<string[]>(context['field'], 'validate', []),
-            display: string = fetchDynamic<string>(context['field'], 'display', ''),
-            developerDocumentation: string = fetchDynamic<string>(context['field'], '__documentation', '');
-        return {
-            hidden: _parsedHidden,
-            min: _parsedMin,
-            max: _parsedMax,
-            step: _parsedStep,
-            default: _parsedDefault,
-            prepend: _parsedPrepend,
-            append: _parsedAppend,
-            required: isRequired,
-            type: type,
-            validate: validateArray,
-            unless: unlessArray,
-            display: display,
-            handle: 'temp_handle',
-            sets: _tSets,
-            fields: _tFields,
-            isLinked: false,
-            linkedFrom: '',
-            developerDocumentation: developerDocumentation,
-            internalIcon: 'range',
-        };
-    }
+    const isRequired: boolean = fetchDynamic<boolean>(context['field'], 'required', false),
+        type: string = fetchDynamic<string>(context['field'], 'type', 'text'),
+        unlessArray:string[] = fetchDynamic<string[]>(context['field'], 'unless', []),
+        validateArray:string[] = fetchDynamic<string[]>(context['field'], 'validate', []),
+        display:string = fetchDynamic<string>(context['field'], 'display', ''),
+        developerDocumentation:string = fetchDynamic<string>(context['field'], '__documentation', '');
+    return {
+        hidden: _parsedHidden,
+        min: _parsedMin,
+        max: _parsedMax,
+        step: _parsedStep,
+        default: _parsedDefault,
+        prepend: _parsedPrepend,
+        append: _parsedAppend,
+        required: isRequired,
+        type: type,
+        validate: validateArray,
+        unless: unlessArray,
+        display: display,
+        handle: 'temp_handle',
+        sets: _tSets,
+        fields: _tFields,
+        isLinked: false,
+        linkedFrom: '',
+        developerDocumentation: developerDocumentation,
+        internalIcon: 'range',
+    };
+}
 
-    _parseRevealerFieldType(context: any): IRevealerFieldType {
-        let _parsedMode = fetchDynamic<string>(context['field'], 'mode', 'button');
-        let _parsedInputLabel = fetchDynamic<string>(context['field'], 'input_label', '');
+_parseRevealerFieldType(context: any): IRevealerFieldType {
+    let _parsedMode = fetchDynamic<string>(context['field'], 'mode', 'button');
+    let _parsedInputLabel = fetchDynamic<string>(context['field'], 'input_label', '');
 
         let _tSets: ISet[] = [];
         let _tFields: IFieldDetails[] = [];
         if (typeof context['field'] !== 'undefined' && typeof context['field']['sets'] !== 'undefined') {
             _tSets = this.parseSets(context['field']['sets']);
         }
-
+        
         if (typeof context['field'] !== 'undefined' && typeof context['field']['fields'] !== 'undefined') {
             _tFields = this.parseFields(context['field']);
         }
 
-        const isRequired: boolean = fetchDynamic<boolean>(context['field'], 'required', false),
-            type: string = fetchDynamic<string>(context['field'], 'type', 'text'),
-            unlessArray: string[] = fetchDynamic<string[]>(context['field'], 'unless', []),
-            validateArray: string[] = fetchDynamic<string[]>(context['field'], 'validate', []),
-            display: string = fetchDynamic<string>(context['field'], 'display', ''),
-            developerDocumentation: string = fetchDynamic<string>(context['field'], '__documentation', '');
-        return {
-            mode: _parsedMode,
-            inputLabel: _parsedInputLabel,
-            required: isRequired,
-            type: type,
-            validate: validateArray,
-            unless: unlessArray,
-            display: display,
-            handle: 'temp_handle',
-            sets: _tSets,
-            fields: _tFields,
-            isLinked: false,
-            linkedFrom: '',
-            developerDocumentation: developerDocumentation,
-            internalIcon: 'revealer',
-        };
-    }
+    const isRequired: boolean = fetchDynamic<boolean>(context['field'], 'required', false),
+        type: string = fetchDynamic<string>(context['field'], 'type', 'text'),
+        unlessArray:string[] = fetchDynamic<string[]>(context['field'], 'unless', []),
+        validateArray:string[] = fetchDynamic<string[]>(context['field'], 'validate', []),
+        display:string = fetchDynamic<string>(context['field'], 'display', ''),
+        developerDocumentation:string = fetchDynamic<string>(context['field'], '__documentation', '');
+    return {
+        mode: _parsedMode,
+        inputLabel: _parsedInputLabel,
+        required: isRequired,
+        type: type,
+        validate: validateArray,
+        unless: unlessArray,
+        display: display,
+        handle: 'temp_handle',
+        sets: _tSets,
+        fields: _tFields,
+        isLinked: false,
+        linkedFrom: '',
+        developerDocumentation: developerDocumentation,
+        internalIcon: 'revealer',
+    };
+}
 
-    _parseSectionFieldType(context: any): ISectionFieldType {
+_parseSectionFieldType(context: any): ISectionFieldType {
 
         let _tSets: ISet[] = [];
         let _tFields: IFieldDetails[] = [];
         if (typeof context['field'] !== 'undefined' && typeof context['field']['sets'] !== 'undefined') {
             _tSets = this.parseSets(context['field']['sets']);
         }
-
+        
         if (typeof context['field'] !== 'undefined' && typeof context['field']['fields'] !== 'undefined') {
             _tFields = this.parseFields(context['field']);
         }
 
-        const isRequired: boolean = fetchDynamic<boolean>(context['field'], 'required', false),
-            type: string = fetchDynamic<string>(context['field'], 'type', 'text'),
-            unlessArray: string[] = fetchDynamic<string[]>(context['field'], 'unless', []),
-            validateArray: string[] = fetchDynamic<string[]>(context['field'], 'validate', []),
-            display: string = fetchDynamic<string>(context['field'], 'display', ''),
-            developerDocumentation: string = fetchDynamic<string>(context['field'], '__documentation', '');
-        return {
-            required: isRequired,
-            type: type,
-            validate: validateArray,
-            unless: unlessArray,
-            display: display,
-            handle: 'temp_handle',
-            sets: _tSets,
-            fields: _tFields,
-            isLinked: false,
-            linkedFrom: '',
-            developerDocumentation: developerDocumentation,
-            internalIcon: 'section',
-        };
-    }
+    const isRequired: boolean = fetchDynamic<boolean>(context['field'], 'required', false),
+        type: string = fetchDynamic<string>(context['field'], 'type', 'text'),
+        unlessArray:string[] = fetchDynamic<string[]>(context['field'], 'unless', []),
+        validateArray:string[] = fetchDynamic<string[]>(context['field'], 'validate', []),
+        display:string = fetchDynamic<string>(context['field'], 'display', ''),
+        developerDocumentation:string = fetchDynamic<string>(context['field'], '__documentation', '');
+    return {
+        required: isRequired,
+        type: type,
+        validate: validateArray,
+        unless: unlessArray,
+        display: display,
+        handle: 'temp_handle',
+        sets: _tSets,
+        fields: _tFields,
+        isLinked: false,
+        linkedFrom: '',
+        developerDocumentation: developerDocumentation,
+        internalIcon: 'section',
+    };
+}
 
-    _parseSelectFieldType(context: any): ISelectFieldType {
-        let _parsedPlaceholder = fetchDynamic<string>(context['field'], 'placeholder', '');
-        let _parsedOptions = fetchDynamic<string[] | null>(context['field'], 'options', null);
-        let _parsedMultiple = fetchDynamic<boolean | null>(context['field'], 'multiple', null);
-        let _parsedMaxItems = fetchDynamic<number | null>(context['field'], 'max_items', null);
-        let _parsedClearable = fetchDynamic<boolean | null>(context['field'], 'clearable', null);
-        let _parsedSearchable = fetchDynamic<boolean>(context['field'], 'searchable', true);
-        let _parsedTaggable = fetchDynamic<boolean | null>(context['field'], 'taggable', null);
-        let _parsedPushTags = fetchDynamic<boolean | null>(context['field'], 'push_tags', null);
-        let _parsedCastBooleans = fetchDynamic<boolean | null>(context['field'], 'cast_booleans', null);
-        let _parsedDefault = fetchDynamic<string | null>(context['field'], 'default', null);
+_parseSelectFieldType(context: any): ISelectFieldType {
+    let _parsedPlaceholder = fetchDynamic<string>(context['field'], 'placeholder', '');
+    let _parsedOptions = fetchDynamic<string[] | null>(context['field'], 'options', null);
+    let _parsedMultiple = fetchDynamic<boolean | null>(context['field'], 'multiple', null);
+    let _parsedMaxItems = fetchDynamic<number | null>(context['field'], 'max_items', null);
+    let _parsedClearable = fetchDynamic<boolean | null>(context['field'], 'clearable', null);
+    let _parsedSearchable = fetchDynamic<boolean>(context['field'], 'searchable', true);
+    let _parsedTaggable = fetchDynamic<boolean | null>(context['field'], 'taggable', null);
+    let _parsedPushTags = fetchDynamic<boolean | null>(context['field'], 'push_tags', null);
+    let _parsedCastBooleans = fetchDynamic<boolean | null>(context['field'], 'cast_booleans', null);
+    let _parsedDefault = fetchDynamic<string | null>(context['field'], 'default', null);
 
         let _tSets: ISet[] = [];
         let _tFields: IFieldDetails[] = [];
         if (typeof context['field'] !== 'undefined' && typeof context['field']['sets'] !== 'undefined') {
             _tSets = this.parseSets(context['field']['sets']);
         }
-
+        
         if (typeof context['field'] !== 'undefined' && typeof context['field']['fields'] !== 'undefined') {
             _tFields = this.parseFields(context['field']);
         }
 
-        const isRequired: boolean = fetchDynamic<boolean>(context['field'], 'required', false),
-            type: string = fetchDynamic<string>(context['field'], 'type', 'text'),
-            unlessArray: string[] = fetchDynamic<string[]>(context['field'], 'unless', []),
-            validateArray: string[] = fetchDynamic<string[]>(context['field'], 'validate', []),
-            display: string = fetchDynamic<string>(context['field'], 'display', ''),
-            developerDocumentation: string = fetchDynamic<string>(context['field'], '__documentation', '');
-        return {
-            placeholder: _parsedPlaceholder,
-            options: _parsedOptions,
-            multiple: _parsedMultiple,
-            maxItems: _parsedMaxItems,
-            clearable: _parsedClearable,
-            searchable: _parsedSearchable,
-            taggable: _parsedTaggable,
-            pushTags: _parsedPushTags,
-            castBooleans: _parsedCastBooleans,
-            default: _parsedDefault,
-            required: isRequired,
-            type: type,
-            validate: validateArray,
-            unless: unlessArray,
-            display: display,
-            handle: 'temp_handle',
-            sets: _tSets,
-            fields: _tFields,
-            isLinked: false,
-            linkedFrom: '',
-            developerDocumentation: developerDocumentation,
-            internalIcon: 'select',
-        };
-    }
+    const isRequired: boolean = fetchDynamic<boolean>(context['field'], 'required', false),
+        type: string = fetchDynamic<string>(context['field'], 'type', 'text'),
+        unlessArray:string[] = fetchDynamic<string[]>(context['field'], 'unless', []),
+        validateArray:string[] = fetchDynamic<string[]>(context['field'], 'validate', []),
+        display:string = fetchDynamic<string>(context['field'], 'display', ''),
+        developerDocumentation:string = fetchDynamic<string>(context['field'], '__documentation', '');
+    return {
+        placeholder: _parsedPlaceholder,
+        options: _parsedOptions,
+        multiple: _parsedMultiple,
+        maxItems: _parsedMaxItems,
+        clearable: _parsedClearable,
+        searchable: _parsedSearchable,
+        taggable: _parsedTaggable,
+        pushTags: _parsedPushTags,
+        castBooleans: _parsedCastBooleans,
+        default: _parsedDefault,
+        required: isRequired,
+        type: type,
+        validate: validateArray,
+        unless: unlessArray,
+        display: display,
+        handle: 'temp_handle',
+        sets: _tSets,
+        fields: _tFields,
+        isLinked: false,
+        linkedFrom: '',
+        developerDocumentation: developerDocumentation,
+        internalIcon: 'select',
+    };
+}
 
-    _parseSetsFieldType(context: any): ISetsFieldType {
+_parseSetsFieldType(context: any): ISetsFieldType {
 
         let _tSets: ISet[] = [];
         let _tFields: IFieldDetails[] = [];
         if (typeof context['field'] !== 'undefined' && typeof context['field']['sets'] !== 'undefined') {
             _tSets = this.parseSets(context['field']['sets']);
         }
-
+        
         if (typeof context['field'] !== 'undefined' && typeof context['field']['fields'] !== 'undefined') {
             _tFields = this.parseFields(context['field']);
         }
 
-        const isRequired: boolean = fetchDynamic<boolean>(context['field'], 'required', false),
-            type: string = fetchDynamic<string>(context['field'], 'type', 'text'),
-            unlessArray: string[] = fetchDynamic<string[]>(context['field'], 'unless', []),
-            validateArray: string[] = fetchDynamic<string[]>(context['field'], 'validate', []),
-            display: string = fetchDynamic<string>(context['field'], 'display', ''),
-            developerDocumentation: string = fetchDynamic<string>(context['field'], '__documentation', '');
-        return {
-            required: isRequired,
-            type: type,
-            validate: validateArray,
-            unless: unlessArray,
-            display: display,
-            handle: 'temp_handle',
-            sets: _tSets,
-            fields: _tFields,
-            isLinked: false,
-            linkedFrom: '',
-            developerDocumentation: developerDocumentation,
-            internalIcon: 'sets',
-        };
-    }
+    const isRequired: boolean = fetchDynamic<boolean>(context['field'], 'required', false),
+        type: string = fetchDynamic<string>(context['field'], 'type', 'text'),
+        unlessArray:string[] = fetchDynamic<string[]>(context['field'], 'unless', []),
+        validateArray:string[] = fetchDynamic<string[]>(context['field'], 'validate', []),
+        display:string = fetchDynamic<string>(context['field'], 'display', ''),
+        developerDocumentation:string = fetchDynamic<string>(context['field'], '__documentation', '');
+    return {
+        required: isRequired,
+        type: type,
+        validate: validateArray,
+        unless: unlessArray,
+        display: display,
+        handle: 'temp_handle',
+        sets: _tSets,
+        fields: _tFields,
+        isLinked: false,
+        linkedFrom: '',
+        developerDocumentation: developerDocumentation,
+        internalIcon: 'sets',
+    };
+}
 
-    _parseSitesFieldType(context: any): ISitesFieldType {
-        let _parsedMaxItems = fetchDynamic<number | null>(context['field'], 'max_items', null);
-        let _parsedMode = fetchDynamic<string>(context['field'], 'mode', 'default');
+_parseSitesFieldType(context: any): ISitesFieldType {
+    let _parsedMaxItems = fetchDynamic<number | null>(context['field'], 'max_items', null);
+    let _parsedMode = fetchDynamic<string>(context['field'], 'mode', 'default');
 
         let _tSets: ISet[] = [];
         let _tFields: IFieldDetails[] = [];
         if (typeof context['field'] !== 'undefined' && typeof context['field']['sets'] !== 'undefined') {
             _tSets = this.parseSets(context['field']['sets']);
         }
-
+        
         if (typeof context['field'] !== 'undefined' && typeof context['field']['fields'] !== 'undefined') {
             _tFields = this.parseFields(context['field']);
         }
 
-        const isRequired: boolean = fetchDynamic<boolean>(context['field'], 'required', false),
-            type: string = fetchDynamic<string>(context['field'], 'type', 'text'),
-            unlessArray: string[] = fetchDynamic<string[]>(context['field'], 'unless', []),
-            validateArray: string[] = fetchDynamic<string[]>(context['field'], 'validate', []),
-            display: string = fetchDynamic<string>(context['field'], 'display', ''),
-            developerDocumentation: string = fetchDynamic<string>(context['field'], '__documentation', '');
-        return {
-            maxItems: _parsedMaxItems,
-            mode: _parsedMode,
-            required: isRequired,
-            type: type,
-            validate: validateArray,
-            unless: unlessArray,
-            display: display,
-            handle: 'temp_handle',
-            sets: _tSets,
-            fields: _tFields,
-            isLinked: false,
-            linkedFrom: '',
-            developerDocumentation: developerDocumentation,
-            internalIcon: 'sites',
-        };
-    }
+    const isRequired: boolean = fetchDynamic<boolean>(context['field'], 'required', false),
+        type: string = fetchDynamic<string>(context['field'], 'type', 'text'),
+        unlessArray:string[] = fetchDynamic<string[]>(context['field'], 'unless', []),
+        validateArray:string[] = fetchDynamic<string[]>(context['field'], 'validate', []),
+        display:string = fetchDynamic<string>(context['field'], 'display', ''),
+        developerDocumentation:string = fetchDynamic<string>(context['field'], '__documentation', '');
+    return {
+        maxItems: _parsedMaxItems,
+        mode: _parsedMode,
+        required: isRequired,
+        type: type,
+        validate: validateArray,
+        unless: unlessArray,
+        display: display,
+        handle: 'temp_handle',
+        sets: _tSets,
+        fields: _tFields,
+        isLinked: false,
+        linkedFrom: '',
+        developerDocumentation: developerDocumentation,
+        internalIcon: 'sites',
+    };
+}
 
-    _parseStructuresFieldType(context: any): IStructuresFieldType {
-        let _parsedMaxItems = fetchDynamic<number | null>(context['field'], 'max_items', null);
-        let _parsedMode = fetchDynamic<string>(context['field'], 'mode', 'default');
+_parseStructuresFieldType(context: any): IStructuresFieldType {
+    let _parsedMaxItems = fetchDynamic<number | null>(context['field'], 'max_items', null);
+    let _parsedMode = fetchDynamic<string>(context['field'], 'mode', 'default');
 
         let _tSets: ISet[] = [];
         let _tFields: IFieldDetails[] = [];
         if (typeof context['field'] !== 'undefined' && typeof context['field']['sets'] !== 'undefined') {
             _tSets = this.parseSets(context['field']['sets']);
         }
-
+        
         if (typeof context['field'] !== 'undefined' && typeof context['field']['fields'] !== 'undefined') {
             _tFields = this.parseFields(context['field']);
         }
 
-        const isRequired: boolean = fetchDynamic<boolean>(context['field'], 'required', false),
-            type: string = fetchDynamic<string>(context['field'], 'type', 'text'),
-            unlessArray: string[] = fetchDynamic<string[]>(context['field'], 'unless', []),
-            validateArray: string[] = fetchDynamic<string[]>(context['field'], 'validate', []),
-            display: string = fetchDynamic<string>(context['field'], 'display', ''),
-            developerDocumentation: string = fetchDynamic<string>(context['field'], '__documentation', '');
-        return {
-            maxItems: _parsedMaxItems,
-            mode: _parsedMode,
-            required: isRequired,
-            type: type,
-            validate: validateArray,
-            unless: unlessArray,
-            display: display,
-            handle: 'temp_handle',
-            sets: _tSets,
-            fields: _tFields,
-            isLinked: false,
-            linkedFrom: '',
-            developerDocumentation: developerDocumentation,
-            internalIcon: 'structures',
-        };
-    }
+    const isRequired: boolean = fetchDynamic<boolean>(context['field'], 'required', false),
+        type: string = fetchDynamic<string>(context['field'], 'type', 'text'),
+        unlessArray:string[] = fetchDynamic<string[]>(context['field'], 'unless', []),
+        validateArray:string[] = fetchDynamic<string[]>(context['field'], 'validate', []),
+        display:string = fetchDynamic<string>(context['field'], 'display', ''),
+        developerDocumentation:string = fetchDynamic<string>(context['field'], '__documentation', '');
+    return {
+        maxItems: _parsedMaxItems,
+        mode: _parsedMode,
+        required: isRequired,
+        type: type,
+        validate: validateArray,
+        unless: unlessArray,
+        display: display,
+        handle: 'temp_handle',
+        sets: _tSets,
+        fields: _tFields,
+        isLinked: false,
+        linkedFrom: '',
+        developerDocumentation: developerDocumentation,
+        internalIcon: 'structures',
+    };
+}
 
-    _parseSlugFieldType(context: any): ISlugFieldType {
-        let _parsedFrom = fetchDynamic<string>(context['field'], 'from', 'title');
-        let _parsedGenerate = fetchDynamic<boolean>(context['field'], 'generate', true);
+_parseSlugFieldType(context: any): ISlugFieldType {
+    let _parsedFrom = fetchDynamic<string>(context['field'], 'from', 'title');
+    let _parsedGenerate = fetchDynamic<boolean>(context['field'], 'generate', true);
 
         let _tSets: ISet[] = [];
         let _tFields: IFieldDetails[] = [];
         if (typeof context['field'] !== 'undefined' && typeof context['field']['sets'] !== 'undefined') {
             _tSets = this.parseSets(context['field']['sets']);
         }
-
+        
         if (typeof context['field'] !== 'undefined' && typeof context['field']['fields'] !== 'undefined') {
             _tFields = this.parseFields(context['field']);
         }
 
-        const isRequired: boolean = fetchDynamic<boolean>(context['field'], 'required', false),
-            type: string = fetchDynamic<string>(context['field'], 'type', 'text'),
-            unlessArray: string[] = fetchDynamic<string[]>(context['field'], 'unless', []),
-            validateArray: string[] = fetchDynamic<string[]>(context['field'], 'validate', []),
-            display: string = fetchDynamic<string>(context['field'], 'display', ''),
-            developerDocumentation: string = fetchDynamic<string>(context['field'], '__documentation', '');
-        return {
-            from: _parsedFrom,
-            generate: _parsedGenerate,
-            required: isRequired,
-            type: type,
-            validate: validateArray,
-            unless: unlessArray,
-            display: display,
-            handle: 'temp_handle',
-            sets: _tSets,
-            fields: _tFields,
-            isLinked: false,
-            linkedFrom: '',
-            developerDocumentation: developerDocumentation,
-            internalIcon: 'slug',
-        };
-    }
+    const isRequired: boolean = fetchDynamic<boolean>(context['field'], 'required', false),
+        type: string = fetchDynamic<string>(context['field'], 'type', 'text'),
+        unlessArray:string[] = fetchDynamic<string[]>(context['field'], 'unless', []),
+        validateArray:string[] = fetchDynamic<string[]>(context['field'], 'validate', []),
+        display:string = fetchDynamic<string>(context['field'], 'display', ''),
+        developerDocumentation:string = fetchDynamic<string>(context['field'], '__documentation', '');
+    return {
+        from: _parsedFrom,
+        generate: _parsedGenerate,
+        required: isRequired,
+        type: type,
+        validate: validateArray,
+        unless: unlessArray,
+        display: display,
+        handle: 'temp_handle',
+        sets: _tSets,
+        fields: _tFields,
+        isLinked: false,
+        linkedFrom: '',
+        developerDocumentation: developerDocumentation,
+        internalIcon: 'slug',
+    };
+}
 
-    _parseTextFieldType(context: any): ITextFieldType {
-        let _parsedPlaceholder = fetchDynamic<string | null>(context['field'], 'placeholder', null);
-        let _parsedInputType = fetchDynamic<string>(context['field'], 'input_type', 'text');
-        let _parsedCharacterLimit = fetchDynamic<number | null>(context['field'], 'character_limit', null);
-        let _parsedPrepend = fetchDynamic<string | null>(context['field'], 'prepend', null);
-        let _parsedAppend = fetchDynamic<string | null>(context['field'], 'append', null);
-        let _parsedAntlers = fetchDynamic<boolean | null>(context['field'], 'antlers', null);
-        let _parsedDefault = fetchDynamic<string | null>(context['field'], 'default', null);
+_parseTextFieldType(context: any): ITextFieldType {
+    let _parsedPlaceholder = fetchDynamic<string | null>(context['field'], 'placeholder', null);
+    let _parsedInputType = fetchDynamic<string>(context['field'], 'input_type', 'text');
+    let _parsedCharacterLimit = fetchDynamic<number | null>(context['field'], 'character_limit', null);
+    let _parsedPrepend = fetchDynamic<string | null>(context['field'], 'prepend', null);
+    let _parsedAppend = fetchDynamic<string | null>(context['field'], 'append', null);
+    let _parsedAntlers = fetchDynamic<boolean | null>(context['field'], 'antlers', null);
+    let _parsedDefault = fetchDynamic<string | null>(context['field'], 'default', null);
 
         let _tSets: ISet[] = [];
         let _tFields: IFieldDetails[] = [];
         if (typeof context['field'] !== 'undefined' && typeof context['field']['sets'] !== 'undefined') {
             _tSets = this.parseSets(context['field']['sets']);
         }
-
+        
         if (typeof context['field'] !== 'undefined' && typeof context['field']['fields'] !== 'undefined') {
             _tFields = this.parseFields(context['field']);
         }
 
-        const isRequired: boolean = fetchDynamic<boolean>(context['field'], 'required', false),
-            type: string = fetchDynamic<string>(context['field'], 'type', 'text'),
-            unlessArray: string[] = fetchDynamic<string[]>(context['field'], 'unless', []),
-            validateArray: string[] = fetchDynamic<string[]>(context['field'], 'validate', []),
-            display: string = fetchDynamic<string>(context['field'], 'display', ''),
-            developerDocumentation: string = fetchDynamic<string>(context['field'], '__documentation', '');
-        return {
-            placeholder: _parsedPlaceholder,
-            inputType: _parsedInputType,
-            characterLimit: _parsedCharacterLimit,
-            prepend: _parsedPrepend,
-            append: _parsedAppend,
-            antlers: _parsedAntlers,
-            default: _parsedDefault,
-            required: isRequired,
-            type: type,
-            validate: validateArray,
-            unless: unlessArray,
-            display: display,
-            handle: 'temp_handle',
-            sets: _tSets,
-            fields: _tFields,
-            isLinked: false,
-            linkedFrom: '',
-            developerDocumentation: developerDocumentation,
-            internalIcon: 'text',
-        };
-    }
+    const isRequired: boolean = fetchDynamic<boolean>(context['field'], 'required', false),
+        type: string = fetchDynamic<string>(context['field'], 'type', 'text'),
+        unlessArray:string[] = fetchDynamic<string[]>(context['field'], 'unless', []),
+        validateArray:string[] = fetchDynamic<string[]>(context['field'], 'validate', []),
+        display:string = fetchDynamic<string>(context['field'], 'display', ''),
+        developerDocumentation:string = fetchDynamic<string>(context['field'], '__documentation', '');
+    return {
+        placeholder: _parsedPlaceholder,
+        inputType: _parsedInputType,
+        characterLimit: _parsedCharacterLimit,
+        prepend: _parsedPrepend,
+        append: _parsedAppend,
+        antlers: _parsedAntlers,
+        default: _parsedDefault,
+        required: isRequired,
+        type: type,
+        validate: validateArray,
+        unless: unlessArray,
+        display: display,
+        handle: 'temp_handle',
+        sets: _tSets,
+        fields: _tFields,
+        isLinked: false,
+        linkedFrom: '',
+        developerDocumentation: developerDocumentation,
+        internalIcon: 'text',
+    };
+}
 
-    _parseTableFieldType(context: any): ITableFieldType {
+_parseTableFieldType(context: any): ITableFieldType {
 
         let _tSets: ISet[] = [];
         let _tFields: IFieldDetails[] = [];
         if (typeof context['field'] !== 'undefined' && typeof context['field']['sets'] !== 'undefined') {
             _tSets = this.parseSets(context['field']['sets']);
         }
-
+        
         if (typeof context['field'] !== 'undefined' && typeof context['field']['fields'] !== 'undefined') {
             _tFields = this.parseFields(context['field']);
         }
 
-        const isRequired: boolean = fetchDynamic<boolean>(context['field'], 'required', false),
-            type: string = fetchDynamic<string>(context['field'], 'type', 'text'),
-            unlessArray: string[] = fetchDynamic<string[]>(context['field'], 'unless', []),
-            validateArray: string[] = fetchDynamic<string[]>(context['field'], 'validate', []),
-            display: string = fetchDynamic<string>(context['field'], 'display', ''),
-            developerDocumentation: string = fetchDynamic<string>(context['field'], '__documentation', '');
-        return {
-            required: isRequired,
-            type: type,
-            validate: validateArray,
-            unless: unlessArray,
-            display: display,
-            handle: 'temp_handle',
-            sets: _tSets,
-            fields: _tFields,
-            isLinked: false,
-            linkedFrom: '',
-            developerDocumentation: developerDocumentation,
-            internalIcon: 'table',
-        };
-    }
+    const isRequired: boolean = fetchDynamic<boolean>(context['field'], 'required', false),
+        type: string = fetchDynamic<string>(context['field'], 'type', 'text'),
+        unlessArray:string[] = fetchDynamic<string[]>(context['field'], 'unless', []),
+        validateArray:string[] = fetchDynamic<string[]>(context['field'], 'validate', []),
+        display:string = fetchDynamic<string>(context['field'], 'display', ''),
+        developerDocumentation:string = fetchDynamic<string>(context['field'], '__documentation', '');
+    return {
+        required: isRequired,
+        type: type,
+        validate: validateArray,
+        unless: unlessArray,
+        display: display,
+        handle: 'temp_handle',
+        sets: _tSets,
+        fields: _tFields,
+        isLinked: false,
+        linkedFrom: '',
+        developerDocumentation: developerDocumentation,
+        internalIcon: 'table',
+    };
+}
 
-    _parseTaggableFieldType(context: any): ITaggableFieldType {
-        let _parsedPlaceholder = fetchDynamic<string>(context['field'], 'placeholder', '');
+_parseTaggableFieldType(context: any): ITaggableFieldType {
+    let _parsedPlaceholder = fetchDynamic<string>(context['field'], 'placeholder', '');
 
         let _tSets: ISet[] = [];
         let _tFields: IFieldDetails[] = [];
         if (typeof context['field'] !== 'undefined' && typeof context['field']['sets'] !== 'undefined') {
             _tSets = this.parseSets(context['field']['sets']);
         }
-
+        
         if (typeof context['field'] !== 'undefined' && typeof context['field']['fields'] !== 'undefined') {
             _tFields = this.parseFields(context['field']);
         }
 
-        const isRequired: boolean = fetchDynamic<boolean>(context['field'], 'required', false),
-            type: string = fetchDynamic<string>(context['field'], 'type', 'text'),
-            unlessArray: string[] = fetchDynamic<string[]>(context['field'], 'unless', []),
-            validateArray: string[] = fetchDynamic<string[]>(context['field'], 'validate', []),
-            display: string = fetchDynamic<string>(context['field'], 'display', ''),
-            developerDocumentation: string = fetchDynamic<string>(context['field'], '__documentation', '');
-        return {
-            placeholder: _parsedPlaceholder,
-            required: isRequired,
-            type: type,
-            validate: validateArray,
-            unless: unlessArray,
-            display: display,
-            handle: 'temp_handle',
-            sets: _tSets,
-            fields: _tFields,
-            isLinked: false,
-            linkedFrom: '',
-            developerDocumentation: developerDocumentation,
-            internalIcon: 'tags',
-        };
-    }
+    const isRequired: boolean = fetchDynamic<boolean>(context['field'], 'required', false),
+        type: string = fetchDynamic<string>(context['field'], 'type', 'text'),
+        unlessArray:string[] = fetchDynamic<string[]>(context['field'], 'unless', []),
+        validateArray:string[] = fetchDynamic<string[]>(context['field'], 'validate', []),
+        display:string = fetchDynamic<string>(context['field'], 'display', ''),
+        developerDocumentation:string = fetchDynamic<string>(context['field'], '__documentation', '');
+    return {
+        placeholder: _parsedPlaceholder,
+        required: isRequired,
+        type: type,
+        validate: validateArray,
+        unless: unlessArray,
+        display: display,
+        handle: 'temp_handle',
+        sets: _tSets,
+        fields: _tFields,
+        isLinked: false,
+        linkedFrom: '',
+        developerDocumentation: developerDocumentation,
+        internalIcon: 'tags',
+    };
+}
 
-    _parseTermsFieldType(context: any): ITermsFieldType {
-        let _parsedMaxItems = fetchDynamic<number | null>(context['field'], 'max_items', null);
-        let _parsedMode = fetchDynamic<string>(context['field'], 'mode', 'default');
-        let _parsedCreate = fetchDynamic<boolean>(context['field'], 'create', true);
-        let _parsedTaxonomies = fetchDynamic<string[] | null>(context['field'], 'taxonomies', null);
+_parseTermsFieldType(context: any): ITermsFieldType {
+    let _parsedMaxItems = fetchDynamic<number | null>(context['field'], 'max_items', null);
+    let _parsedMode = fetchDynamic<string>(context['field'], 'mode', 'default');
+    let _parsedCreate = fetchDynamic<boolean>(context['field'], 'create', true);
+    let _parsedTaxonomies = fetchDynamic<string[] | null>(context['field'], 'taxonomies', null);
 
         let _tSets: ISet[] = [];
         let _tFields: IFieldDetails[] = [];
         if (typeof context['field'] !== 'undefined' && typeof context['field']['sets'] !== 'undefined') {
             _tSets = this.parseSets(context['field']['sets']);
         }
-
+        
         if (typeof context['field'] !== 'undefined' && typeof context['field']['fields'] !== 'undefined') {
             _tFields = this.parseFields(context['field']);
         }
 
-        const isRequired: boolean = fetchDynamic<boolean>(context['field'], 'required', false),
-            type: string = fetchDynamic<string>(context['field'], 'type', 'text'),
-            unlessArray: string[] = fetchDynamic<string[]>(context['field'], 'unless', []),
-            validateArray: string[] = fetchDynamic<string[]>(context['field'], 'validate', []),
-            display: string = fetchDynamic<string>(context['field'], 'display', ''),
-            developerDocumentation: string = fetchDynamic<string>(context['field'], '__documentation', '');
-        return {
-            maxItems: _parsedMaxItems,
-            mode: _parsedMode,
-            create: _parsedCreate,
-            taxonomies: _parsedTaxonomies,
-            required: isRequired,
-            type: type,
-            validate: validateArray,
-            unless: unlessArray,
-            display: display,
-            handle: 'temp_handle',
-            sets: _tSets,
-            fields: _tFields,
-            isLinked: false,
-            linkedFrom: '',
-            developerDocumentation: developerDocumentation,
-            internalIcon: 'taxonomy',
-        };
-    }
+    const isRequired: boolean = fetchDynamic<boolean>(context['field'], 'required', false),
+        type: string = fetchDynamic<string>(context['field'], 'type', 'text'),
+        unlessArray:string[] = fetchDynamic<string[]>(context['field'], 'unless', []),
+        validateArray:string[] = fetchDynamic<string[]>(context['field'], 'validate', []),
+        display:string = fetchDynamic<string>(context['field'], 'display', ''),
+        developerDocumentation:string = fetchDynamic<string>(context['field'], '__documentation', '');
+    return {
+        maxItems: _parsedMaxItems,
+        mode: _parsedMode,
+        create: _parsedCreate,
+        taxonomies: _parsedTaxonomies,
+        required: isRequired,
+        type: type,
+        validate: validateArray,
+        unless: unlessArray,
+        display: display,
+        handle: 'temp_handle',
+        sets: _tSets,
+        fields: _tFields,
+        isLinked: false,
+        linkedFrom: '',
+        developerDocumentation: developerDocumentation,
+        internalIcon: 'taxonomy',
+    };
+}
 
-    _parseTaxonomiesFieldType(context: any): ITaxonomiesFieldType {
-        let _parsedMaxItems = fetchDynamic<number | null>(context['field'], 'max_items', null);
-        let _parsedMode = fetchDynamic<string>(context['field'], 'mode', 'default');
+_parseTaxonomiesFieldType(context: any): ITaxonomiesFieldType {
+    let _parsedMaxItems = fetchDynamic<number | null>(context['field'], 'max_items', null);
+    let _parsedMode = fetchDynamic<string>(context['field'], 'mode', 'default');
 
         let _tSets: ISet[] = [];
         let _tFields: IFieldDetails[] = [];
         if (typeof context['field'] !== 'undefined' && typeof context['field']['sets'] !== 'undefined') {
             _tSets = this.parseSets(context['field']['sets']);
         }
-
+        
         if (typeof context['field'] !== 'undefined' && typeof context['field']['fields'] !== 'undefined') {
             _tFields = this.parseFields(context['field']);
         }
 
-        const isRequired: boolean = fetchDynamic<boolean>(context['field'], 'required', false),
-            type: string = fetchDynamic<string>(context['field'], 'type', 'text'),
-            unlessArray: string[] = fetchDynamic<string[]>(context['field'], 'unless', []),
-            validateArray: string[] = fetchDynamic<string[]>(context['field'], 'validate', []),
-            display: string = fetchDynamic<string>(context['field'], 'display', ''),
-            developerDocumentation: string = fetchDynamic<string>(context['field'], '__documentation', '');
-        return {
-            maxItems: _parsedMaxItems,
-            mode: _parsedMode,
-            required: isRequired,
-            type: type,
-            validate: validateArray,
-            unless: unlessArray,
-            display: display,
-            handle: 'temp_handle',
-            sets: _tSets,
-            fields: _tFields,
-            isLinked: false,
-            linkedFrom: '',
-            developerDocumentation: developerDocumentation,
-            internalIcon: 'taxonomy',
-        };
-    }
+    const isRequired: boolean = fetchDynamic<boolean>(context['field'], 'required', false),
+        type: string = fetchDynamic<string>(context['field'], 'type', 'text'),
+        unlessArray:string[] = fetchDynamic<string[]>(context['field'], 'unless', []),
+        validateArray:string[] = fetchDynamic<string[]>(context['field'], 'validate', []),
+        display:string = fetchDynamic<string>(context['field'], 'display', ''),
+        developerDocumentation:string = fetchDynamic<string>(context['field'], '__documentation', '');
+    return {
+        maxItems: _parsedMaxItems,
+        mode: _parsedMode,
+        required: isRequired,
+        type: type,
+        validate: validateArray,
+        unless: unlessArray,
+        display: display,
+        handle: 'temp_handle',
+        sets: _tSets,
+        fields: _tFields,
+        isLinked: false,
+        linkedFrom: '',
+        developerDocumentation: developerDocumentation,
+        internalIcon: 'taxonomy',
+    };
+}
 
-    _parseTemplateFieldType(context: any): ITemplateFieldType {
-        let _parsedHidePartials = fetchDynamic<boolean>(context['field'], 'hide_partials', true);
-        let _parsedBlueprint = fetchDynamic<boolean | null>(context['field'], 'blueprint', null);
-        let _parsedFolder = fetchDynamic<string | null>(context['field'], 'folder', null);
+_parseTemplateFieldType(context: any): ITemplateFieldType {
+    let _parsedHidePartials = fetchDynamic<boolean>(context['field'], 'hide_partials', true);
+    let _parsedBlueprint = fetchDynamic<boolean | null>(context['field'], 'blueprint', null);
+    let _parsedFolder = fetchDynamic<string | null>(context['field'], 'folder', null);
 
         let _tSets: ISet[] = [];
         let _tFields: IFieldDetails[] = [];
         if (typeof context['field'] !== 'undefined' && typeof context['field']['sets'] !== 'undefined') {
             _tSets = this.parseSets(context['field']['sets']);
         }
-
+        
         if (typeof context['field'] !== 'undefined' && typeof context['field']['fields'] !== 'undefined') {
             _tFields = this.parseFields(context['field']);
         }
 
-        const isRequired: boolean = fetchDynamic<boolean>(context['field'], 'required', false),
-            type: string = fetchDynamic<string>(context['field'], 'type', 'text'),
-            unlessArray: string[] = fetchDynamic<string[]>(context['field'], 'unless', []),
-            validateArray: string[] = fetchDynamic<string[]>(context['field'], 'validate', []),
-            display: string = fetchDynamic<string>(context['field'], 'display', ''),
-            developerDocumentation: string = fetchDynamic<string>(context['field'], '__documentation', '');
-        return {
-            hidePartials: _parsedHidePartials,
-            blueprint: _parsedBlueprint,
-            folder: _parsedFolder,
-            required: isRequired,
-            type: type,
-            validate: validateArray,
-            unless: unlessArray,
-            display: display,
-            handle: 'temp_handle',
-            sets: _tSets,
-            fields: _tFields,
-            isLinked: false,
-            linkedFrom: '',
-            developerDocumentation: developerDocumentation,
-            internalIcon: 'template',
-        };
-    }
+    const isRequired: boolean = fetchDynamic<boolean>(context['field'], 'required', false),
+        type: string = fetchDynamic<string>(context['field'], 'type', 'text'),
+        unlessArray:string[] = fetchDynamic<string[]>(context['field'], 'unless', []),
+        validateArray:string[] = fetchDynamic<string[]>(context['field'], 'validate', []),
+        display:string = fetchDynamic<string>(context['field'], 'display', ''),
+        developerDocumentation:string = fetchDynamic<string>(context['field'], '__documentation', '');
+    return {
+        hidePartials: _parsedHidePartials,
+        blueprint: _parsedBlueprint,
+        folder: _parsedFolder,
+        required: isRequired,
+        type: type,
+        validate: validateArray,
+        unless: unlessArray,
+        display: display,
+        handle: 'temp_handle',
+        sets: _tSets,
+        fields: _tFields,
+        isLinked: false,
+        linkedFrom: '',
+        developerDocumentation: developerDocumentation,
+        internalIcon: 'template',
+    };
+}
 
-    _parseTemplateFolderFieldType(context: any): ITemplateFolderFieldType {
-        let _parsedMaxItems = fetchDynamic<number | null>(context['field'], 'max_items', null);
-        let _parsedMode = fetchDynamic<string>(context['field'], 'mode', 'default');
+_parseTemplateFolderFieldType(context: any): ITemplateFolderFieldType {
+    let _parsedMaxItems = fetchDynamic<number | null>(context['field'], 'max_items', null);
+    let _parsedMode = fetchDynamic<string>(context['field'], 'mode', 'default');
 
         let _tSets: ISet[] = [];
         let _tFields: IFieldDetails[] = [];
         if (typeof context['field'] !== 'undefined' && typeof context['field']['sets'] !== 'undefined') {
             _tSets = this.parseSets(context['field']['sets']);
         }
-
+        
         if (typeof context['field'] !== 'undefined' && typeof context['field']['fields'] !== 'undefined') {
             _tFields = this.parseFields(context['field']);
         }
 
-        const isRequired: boolean = fetchDynamic<boolean>(context['field'], 'required', false),
-            type: string = fetchDynamic<string>(context['field'], 'type', 'text'),
-            unlessArray: string[] = fetchDynamic<string[]>(context['field'], 'unless', []),
-            validateArray: string[] = fetchDynamic<string[]>(context['field'], 'validate', []),
-            display: string = fetchDynamic<string>(context['field'], 'display', ''),
-            developerDocumentation: string = fetchDynamic<string>(context['field'], '__documentation', '');
-        return {
-            maxItems: _parsedMaxItems,
-            mode: _parsedMode,
-            required: isRequired,
-            type: type,
-            validate: validateArray,
-            unless: unlessArray,
-            display: display,
-            handle: 'temp_handle',
-            sets: _tSets,
-            fields: _tFields,
-            isLinked: false,
-            linkedFrom: '',
-            developerDocumentation: developerDocumentation,
-            internalIcon: 'template_folder',
-        };
-    }
+    const isRequired: boolean = fetchDynamic<boolean>(context['field'], 'required', false),
+        type: string = fetchDynamic<string>(context['field'], 'type', 'text'),
+        unlessArray:string[] = fetchDynamic<string[]>(context['field'], 'unless', []),
+        validateArray:string[] = fetchDynamic<string[]>(context['field'], 'validate', []),
+        display:string = fetchDynamic<string>(context['field'], 'display', ''),
+        developerDocumentation:string = fetchDynamic<string>(context['field'], '__documentation', '');
+    return {
+        maxItems: _parsedMaxItems,
+        mode: _parsedMode,
+        required: isRequired,
+        type: type,
+        validate: validateArray,
+        unless: unlessArray,
+        display: display,
+        handle: 'temp_handle',
+        sets: _tSets,
+        fields: _tFields,
+        isLinked: false,
+        linkedFrom: '',
+        developerDocumentation: developerDocumentation,
+        internalIcon: 'template_folder',
+    };
+}
 
-    _parseTextareaFieldType(context: any): ITextareaFieldType {
-        let _parsedPlaceholder = fetchDynamic<string | null>(context['field'], 'placeholder', null);
-        let _parsedCharacterLimit = fetchDynamic<string | null>(context['field'], 'character_limit', null);
-        let _parsedAntlers = fetchDynamic<boolean | null>(context['field'], 'antlers', null);
-        let _parsedDefault = fetchDynamic<string | null>(context['field'], 'default', null);
+_parseTextareaFieldType(context: any): ITextareaFieldType {
+    let _parsedPlaceholder = fetchDynamic<string | null>(context['field'], 'placeholder', null);
+    let _parsedCharacterLimit = fetchDynamic<string | null>(context['field'], 'character_limit', null);
+    let _parsedAntlers = fetchDynamic<boolean | null>(context['field'], 'antlers', null);
+    let _parsedDefault = fetchDynamic<string | null>(context['field'], 'default', null);
 
         let _tSets: ISet[] = [];
         let _tFields: IFieldDetails[] = [];
         if (typeof context['field'] !== 'undefined' && typeof context['field']['sets'] !== 'undefined') {
             _tSets = this.parseSets(context['field']['sets']);
         }
-
+        
         if (typeof context['field'] !== 'undefined' && typeof context['field']['fields'] !== 'undefined') {
             _tFields = this.parseFields(context['field']);
         }
 
-        const isRequired: boolean = fetchDynamic<boolean>(context['field'], 'required', false),
-            type: string = fetchDynamic<string>(context['field'], 'type', 'text'),
-            unlessArray: string[] = fetchDynamic<string[]>(context['field'], 'unless', []),
-            validateArray: string[] = fetchDynamic<string[]>(context['field'], 'validate', []),
-            display: string = fetchDynamic<string>(context['field'], 'display', ''),
-            developerDocumentation: string = fetchDynamic<string>(context['field'], '__documentation', '');
-        return {
-            placeholder: _parsedPlaceholder,
-            characterLimit: _parsedCharacterLimit,
-            antlers: _parsedAntlers,
-            default: _parsedDefault,
-            required: isRequired,
-            type: type,
-            validate: validateArray,
-            unless: unlessArray,
-            display: display,
-            handle: 'temp_handle',
-            sets: _tSets,
-            fields: _tFields,
-            isLinked: false,
-            linkedFrom: '',
-            developerDocumentation: developerDocumentation,
-            internalIcon: 'textarea',
-        };
-    }
+    const isRequired: boolean = fetchDynamic<boolean>(context['field'], 'required', false),
+        type: string = fetchDynamic<string>(context['field'], 'type', 'text'),
+        unlessArray:string[] = fetchDynamic<string[]>(context['field'], 'unless', []),
+        validateArray:string[] = fetchDynamic<string[]>(context['field'], 'validate', []),
+        display:string = fetchDynamic<string>(context['field'], 'display', ''),
+        developerDocumentation:string = fetchDynamic<string>(context['field'], '__documentation', '');
+    return {
+        placeholder: _parsedPlaceholder,
+        characterLimit: _parsedCharacterLimit,
+        antlers: _parsedAntlers,
+        default: _parsedDefault,
+        required: isRequired,
+        type: type,
+        validate: validateArray,
+        unless: unlessArray,
+        display: display,
+        handle: 'temp_handle',
+        sets: _tSets,
+        fields: _tFields,
+        isLinked: false,
+        linkedFrom: '',
+        developerDocumentation: developerDocumentation,
+        internalIcon: 'textarea',
+    };
+}
 
-    _parseTimeFieldType(context: any): ITimeFieldType {
-        let _parsedSecondsEnabled = fetchDynamic<boolean | null>(context['field'], 'seconds_enabled', null);
-        let _parsedDefault = fetchDynamic<string | null>(context['field'], 'default', null);
+_parseTimeFieldType(context: any): ITimeFieldType {
+    let _parsedSecondsEnabled = fetchDynamic<boolean | null>(context['field'], 'seconds_enabled', null);
+    let _parsedDefault = fetchDynamic<string | null>(context['field'], 'default', null);
 
         let _tSets: ISet[] = [];
         let _tFields: IFieldDetails[] = [];
         if (typeof context['field'] !== 'undefined' && typeof context['field']['sets'] !== 'undefined') {
             _tSets = this.parseSets(context['field']['sets']);
         }
-
+        
         if (typeof context['field'] !== 'undefined' && typeof context['field']['fields'] !== 'undefined') {
             _tFields = this.parseFields(context['field']);
         }
 
-        const isRequired: boolean = fetchDynamic<boolean>(context['field'], 'required', false),
-            type: string = fetchDynamic<string>(context['field'], 'type', 'text'),
-            unlessArray: string[] = fetchDynamic<string[]>(context['field'], 'unless', []),
-            validateArray: string[] = fetchDynamic<string[]>(context['field'], 'validate', []),
-            display: string = fetchDynamic<string>(context['field'], 'display', ''),
-            developerDocumentation: string = fetchDynamic<string>(context['field'], '__documentation', '');
-        return {
-            secondsEnabled: _parsedSecondsEnabled,
-            default: _parsedDefault,
-            required: isRequired,
-            type: type,
-            validate: validateArray,
-            unless: unlessArray,
-            display: display,
-            handle: 'temp_handle',
-            sets: _tSets,
-            fields: _tFields,
-            isLinked: false,
-            linkedFrom: '',
-            developerDocumentation: developerDocumentation,
-            internalIcon: 'time',
-        };
-    }
+    const isRequired: boolean = fetchDynamic<boolean>(context['field'], 'required', false),
+        type: string = fetchDynamic<string>(context['field'], 'type', 'text'),
+        unlessArray:string[] = fetchDynamic<string[]>(context['field'], 'unless', []),
+        validateArray:string[] = fetchDynamic<string[]>(context['field'], 'validate', []),
+        display:string = fetchDynamic<string>(context['field'], 'display', ''),
+        developerDocumentation:string = fetchDynamic<string>(context['field'], '__documentation', '');
+    return {
+        secondsEnabled: _parsedSecondsEnabled,
+        default: _parsedDefault,
+        required: isRequired,
+        type: type,
+        validate: validateArray,
+        unless: unlessArray,
+        display: display,
+        handle: 'temp_handle',
+        sets: _tSets,
+        fields: _tFields,
+        isLinked: false,
+        linkedFrom: '',
+        developerDocumentation: developerDocumentation,
+        internalIcon: 'time',
+    };
+}
 
-    _parseToggleFieldType(context: any): IToggleFieldType {
-        let _parsedInlineLabel = fetchDynamic<string>(context['field'], 'inline_label', '');
-        let _parsedDefault = fetchDynamic<boolean | null>(context['field'], 'default', null);
+_parseToggleFieldType(context: any): IToggleFieldType {
+    let _parsedInlineLabel = fetchDynamic<string>(context['field'], 'inline_label', '');
+    let _parsedDefault = fetchDynamic<boolean | null>(context['field'], 'default', null);
 
         let _tSets: ISet[] = [];
         let _tFields: IFieldDetails[] = [];
         if (typeof context['field'] !== 'undefined' && typeof context['field']['sets'] !== 'undefined') {
             _tSets = this.parseSets(context['field']['sets']);
         }
-
+        
         if (typeof context['field'] !== 'undefined' && typeof context['field']['fields'] !== 'undefined') {
             _tFields = this.parseFields(context['field']);
         }
 
-        const isRequired: boolean = fetchDynamic<boolean>(context['field'], 'required', false),
-            type: string = fetchDynamic<string>(context['field'], 'type', 'text'),
-            unlessArray: string[] = fetchDynamic<string[]>(context['field'], 'unless', []),
-            validateArray: string[] = fetchDynamic<string[]>(context['field'], 'validate', []),
-            display: string = fetchDynamic<string>(context['field'], 'display', ''),
-            developerDocumentation: string = fetchDynamic<string>(context['field'], '__documentation', '');
-        return {
-            inlineLabel: _parsedInlineLabel,
-            default: _parsedDefault,
-            required: isRequired,
-            type: type,
-            validate: validateArray,
-            unless: unlessArray,
-            display: display,
-            handle: 'temp_handle',
-            sets: _tSets,
-            fields: _tFields,
-            isLinked: false,
-            linkedFrom: '',
-            developerDocumentation: developerDocumentation,
-            internalIcon: 'toggle',
-        };
-    }
+    const isRequired: boolean = fetchDynamic<boolean>(context['field'], 'required', false),
+        type: string = fetchDynamic<string>(context['field'], 'type', 'text'),
+        unlessArray:string[] = fetchDynamic<string[]>(context['field'], 'unless', []),
+        validateArray:string[] = fetchDynamic<string[]>(context['field'], 'validate', []),
+        display:string = fetchDynamic<string>(context['field'], 'display', ''),
+        developerDocumentation:string = fetchDynamic<string>(context['field'], '__documentation', '');
+    return {
+        inlineLabel: _parsedInlineLabel,
+        default: _parsedDefault,
+        required: isRequired,
+        type: type,
+        validate: validateArray,
+        unless: unlessArray,
+        display: display,
+        handle: 'temp_handle',
+        sets: _tSets,
+        fields: _tFields,
+        isLinked: false,
+        linkedFrom: '',
+        developerDocumentation: developerDocumentation,
+        internalIcon: 'toggle',
+    };
+}
 
-    _parseUserGroupsFieldType(context: any): IUserGroupsFieldType {
-        let _parsedMaxItems = fetchDynamic<number | null>(context['field'], 'max_items', null);
-        let _parsedMode = fetchDynamic<string>(context['field'], 'mode', 'default');
+_parseUserGroupsFieldType(context: any): IUserGroupsFieldType {
+    let _parsedMaxItems = fetchDynamic<number | null>(context['field'], 'max_items', null);
+    let _parsedMode = fetchDynamic<string>(context['field'], 'mode', 'default');
 
         let _tSets: ISet[] = [];
         let _tFields: IFieldDetails[] = [];
         if (typeof context['field'] !== 'undefined' && typeof context['field']['sets'] !== 'undefined') {
             _tSets = this.parseSets(context['field']['sets']);
         }
-
+        
         if (typeof context['field'] !== 'undefined' && typeof context['field']['fields'] !== 'undefined') {
             _tFields = this.parseFields(context['field']);
         }
 
-        const isRequired: boolean = fetchDynamic<boolean>(context['field'], 'required', false),
-            type: string = fetchDynamic<string>(context['field'], 'type', 'text'),
-            unlessArray: string[] = fetchDynamic<string[]>(context['field'], 'unless', []),
-            validateArray: string[] = fetchDynamic<string[]>(context['field'], 'validate', []),
-            display: string = fetchDynamic<string>(context['field'], 'display', ''),
-            developerDocumentation: string = fetchDynamic<string>(context['field'], '__documentation', '');
-        return {
-            maxItems: _parsedMaxItems,
-            mode: _parsedMode,
-            required: isRequired,
-            type: type,
-            validate: validateArray,
-            unless: unlessArray,
-            display: display,
-            handle: 'temp_handle',
-            sets: _tSets,
-            fields: _tFields,
-            isLinked: false,
-            linkedFrom: '',
-            developerDocumentation: developerDocumentation,
-            internalIcon: 'user_groups',
-        };
-    }
+    const isRequired: boolean = fetchDynamic<boolean>(context['field'], 'required', false),
+        type: string = fetchDynamic<string>(context['field'], 'type', 'text'),
+        unlessArray:string[] = fetchDynamic<string[]>(context['field'], 'unless', []),
+        validateArray:string[] = fetchDynamic<string[]>(context['field'], 'validate', []),
+        display:string = fetchDynamic<string>(context['field'], 'display', ''),
+        developerDocumentation:string = fetchDynamic<string>(context['field'], '__documentation', '');
+    return {
+        maxItems: _parsedMaxItems,
+        mode: _parsedMode,
+        required: isRequired,
+        type: type,
+        validate: validateArray,
+        unless: unlessArray,
+        display: display,
+        handle: 'temp_handle',
+        sets: _tSets,
+        fields: _tFields,
+        isLinked: false,
+        linkedFrom: '',
+        developerDocumentation: developerDocumentation,
+        internalIcon: 'user_groups',
+    };
+}
 
-    _parseUserRolesFieldType(context: any): IUserRolesFieldType {
-        let _parsedMaxItems = fetchDynamic<number | null>(context['field'], 'max_items', null);
-        let _parsedMode = fetchDynamic<string>(context['field'], 'mode', 'default');
+_parseUserRolesFieldType(context: any): IUserRolesFieldType {
+    let _parsedMaxItems = fetchDynamic<number | null>(context['field'], 'max_items', null);
+    let _parsedMode = fetchDynamic<string>(context['field'], 'mode', 'default');
 
         let _tSets: ISet[] = [];
         let _tFields: IFieldDetails[] = [];
         if (typeof context['field'] !== 'undefined' && typeof context['field']['sets'] !== 'undefined') {
             _tSets = this.parseSets(context['field']['sets']);
         }
-
+        
         if (typeof context['field'] !== 'undefined' && typeof context['field']['fields'] !== 'undefined') {
             _tFields = this.parseFields(context['field']);
         }
 
-        const isRequired: boolean = fetchDynamic<boolean>(context['field'], 'required', false),
-            type: string = fetchDynamic<string>(context['field'], 'type', 'text'),
-            unlessArray: string[] = fetchDynamic<string[]>(context['field'], 'unless', []),
-            validateArray: string[] = fetchDynamic<string[]>(context['field'], 'validate', []),
-            display: string = fetchDynamic<string>(context['field'], 'display', ''),
-            developerDocumentation: string = fetchDynamic<string>(context['field'], '__documentation', '');
-        return {
-            maxItems: _parsedMaxItems,
-            mode: _parsedMode,
-            required: isRequired,
-            type: type,
-            validate: validateArray,
-            unless: unlessArray,
-            display: display,
-            handle: 'temp_handle',
-            sets: _tSets,
-            fields: _tFields,
-            isLinked: false,
-            linkedFrom: '',
-            developerDocumentation: developerDocumentation,
-            internalIcon: 'user_roles',
-        };
-    }
+    const isRequired: boolean = fetchDynamic<boolean>(context['field'], 'required', false),
+        type: string = fetchDynamic<string>(context['field'], 'type', 'text'),
+        unlessArray:string[] = fetchDynamic<string[]>(context['field'], 'unless', []),
+        validateArray:string[] = fetchDynamic<string[]>(context['field'], 'validate', []),
+        display:string = fetchDynamic<string>(context['field'], 'display', ''),
+        developerDocumentation:string = fetchDynamic<string>(context['field'], '__documentation', '');
+    return {
+        maxItems: _parsedMaxItems,
+        mode: _parsedMode,
+        required: isRequired,
+        type: type,
+        validate: validateArray,
+        unless: unlessArray,
+        display: display,
+        handle: 'temp_handle',
+        sets: _tSets,
+        fields: _tFields,
+        isLinked: false,
+        linkedFrom: '',
+        developerDocumentation: developerDocumentation,
+        internalIcon: 'user_roles',
+    };
+}
 
-    _parseUsersFieldType(context: any): IUsersFieldType {
-        let _parsedMaxItems = fetchDynamic<number | null>(context['field'], 'max_items', null);
-        let _parsedMode = fetchDynamic<string>(context['field'], 'mode', 'select');
+_parseUsersFieldType(context: any): IUsersFieldType {
+    let _parsedMaxItems = fetchDynamic<number | null>(context['field'], 'max_items', null);
+    let _parsedMode = fetchDynamic<string>(context['field'], 'mode', 'select');
 
         let _tSets: ISet[] = [];
         let _tFields: IFieldDetails[] = [];
         if (typeof context['field'] !== 'undefined' && typeof context['field']['sets'] !== 'undefined') {
             _tSets = this.parseSets(context['field']['sets']);
         }
-
+        
         if (typeof context['field'] !== 'undefined' && typeof context['field']['fields'] !== 'undefined') {
             _tFields = this.parseFields(context['field']);
         }
 
-        const isRequired: boolean = fetchDynamic<boolean>(context['field'], 'required', false),
-            type: string = fetchDynamic<string>(context['field'], 'type', 'text'),
-            unlessArray: string[] = fetchDynamic<string[]>(context['field'], 'unless', []),
-            validateArray: string[] = fetchDynamic<string[]>(context['field'], 'validate', []),
-            display: string = fetchDynamic<string>(context['field'], 'display', ''),
-            developerDocumentation: string = fetchDynamic<string>(context['field'], '__documentation', '');
-        return {
-            maxItems: _parsedMaxItems,
-            mode: _parsedMode,
-            required: isRequired,
-            type: type,
-            validate: validateArray,
-            unless: unlessArray,
-            display: display,
-            handle: 'temp_handle',
-            sets: _tSets,
-            fields: _tFields,
-            isLinked: false,
-            linkedFrom: '',
-            developerDocumentation: developerDocumentation,
-            internalIcon: 'users',
-        };
-    }
+    const isRequired: boolean = fetchDynamic<boolean>(context['field'], 'required', false),
+        type: string = fetchDynamic<string>(context['field'], 'type', 'text'),
+        unlessArray:string[] = fetchDynamic<string[]>(context['field'], 'unless', []),
+        validateArray:string[] = fetchDynamic<string[]>(context['field'], 'validate', []),
+        display:string = fetchDynamic<string>(context['field'], 'display', ''),
+        developerDocumentation:string = fetchDynamic<string>(context['field'], '__documentation', '');
+    return {
+        maxItems: _parsedMaxItems,
+        mode: _parsedMode,
+        required: isRequired,
+        type: type,
+        validate: validateArray,
+        unless: unlessArray,
+        display: display,
+        handle: 'temp_handle',
+        sets: _tSets,
+        fields: _tFields,
+        isLinked: false,
+        linkedFrom: '',
+        developerDocumentation: developerDocumentation,
+        internalIcon: 'users',
+    };
+}
 
-    _parseVideoFieldType(context: any): IVideoFieldType {
-        let _parsedDefault = fetchDynamic<string | null>(context['field'], 'default', null);
-        let _parsedPlaceholder = fetchDynamic<string | null>(context['field'], 'placeholder', null);
+_parseVideoFieldType(context: any): IVideoFieldType {
+    let _parsedDefault = fetchDynamic<string | null>(context['field'], 'default', null);
+    let _parsedPlaceholder = fetchDynamic<string | null>(context['field'], 'placeholder', null);
 
         let _tSets: ISet[] = [];
         let _tFields: IFieldDetails[] = [];
         if (typeof context['field'] !== 'undefined' && typeof context['field']['sets'] !== 'undefined') {
             _tSets = this.parseSets(context['field']['sets']);
         }
-
+        
         if (typeof context['field'] !== 'undefined' && typeof context['field']['fields'] !== 'undefined') {
             _tFields = this.parseFields(context['field']);
         }
 
-        const isRequired: boolean = fetchDynamic<boolean>(context['field'], 'required', false),
-            type: string = fetchDynamic<string>(context['field'], 'type', 'text'),
-            unlessArray: string[] = fetchDynamic<string[]>(context['field'], 'unless', []),
-            validateArray: string[] = fetchDynamic<string[]>(context['field'], 'validate', []),
-            display: string = fetchDynamic<string>(context['field'], 'display', ''),
-            developerDocumentation: string = fetchDynamic<string>(context['field'], '__documentation', '');
-        return {
-            default: _parsedDefault,
-            placeholder: _parsedPlaceholder,
-            required: isRequired,
-            type: type,
-            validate: validateArray,
-            unless: unlessArray,
-            display: display,
-            handle: 'temp_handle',
-            sets: _tSets,
-            fields: _tFields,
-            isLinked: false,
-            linkedFrom: '',
-            developerDocumentation: developerDocumentation,
-            internalIcon: 'video',
-        };
-    }
+    const isRequired: boolean = fetchDynamic<boolean>(context['field'], 'required', false),
+        type: string = fetchDynamic<string>(context['field'], 'type', 'text'),
+        unlessArray:string[] = fetchDynamic<string[]>(context['field'], 'unless', []),
+        validateArray:string[] = fetchDynamic<string[]>(context['field'], 'validate', []),
+        display:string = fetchDynamic<string>(context['field'], 'display', ''),
+        developerDocumentation:string = fetchDynamic<string>(context['field'], '__documentation', '');
+    return {
+        default: _parsedDefault,
+        placeholder: _parsedPlaceholder,
+        required: isRequired,
+        type: type,
+        validate: validateArray,
+        unless: unlessArray,
+        display: display,
+        handle: 'temp_handle',
+        sets: _tSets,
+        fields: _tFields,
+        isLinked: false,
+        linkedFrom: '',
+        developerDocumentation: developerDocumentation,
+        internalIcon: 'video',
+    };
+}
 
-    _parseYamlFieldType(context: any): IYamlFieldType {
-        let _parsedDefault = fetchDynamic<string | null>(context['field'], 'default', null);
+_parseYamlFieldType(context: any): IYamlFieldType {
+    let _parsedDefault = fetchDynamic<string | null>(context['field'], 'default', null);
 
         let _tSets: ISet[] = [];
         let _tFields: IFieldDetails[] = [];
         if (typeof context['field'] !== 'undefined' && typeof context['field']['sets'] !== 'undefined') {
             _tSets = this.parseSets(context['field']['sets']);
         }
-
+        
         if (typeof context['field'] !== 'undefined' && typeof context['field']['fields'] !== 'undefined') {
             _tFields = this.parseFields(context['field']);
         }
 
-        const isRequired: boolean = fetchDynamic<boolean>(context['field'], 'required', false),
-            type: string = fetchDynamic<string>(context['field'], 'type', 'text'),
-            unlessArray: string[] = fetchDynamic<string[]>(context['field'], 'unless', []),
-            validateArray: string[] = fetchDynamic<string[]>(context['field'], 'validate', []),
-            display: string = fetchDynamic<string>(context['field'], 'display', ''),
-            developerDocumentation: string = fetchDynamic<string>(context['field'], '__documentation', '');
-        return {
-            default: _parsedDefault,
-            required: isRequired,
-            type: type,
-            validate: validateArray,
-            unless: unlessArray,
-            display: display,
-            handle: 'temp_handle',
-            sets: _tSets,
-            fields: _tFields,
-            isLinked: false,
-            linkedFrom: '',
-            developerDocumentation: developerDocumentation,
-            internalIcon: 'yaml',
-        };
-    }
+    const isRequired: boolean = fetchDynamic<boolean>(context['field'], 'required', false),
+        type: string = fetchDynamic<string>(context['field'], 'type', 'text'),
+        unlessArray:string[] = fetchDynamic<string[]>(context['field'], 'unless', []),
+        validateArray:string[] = fetchDynamic<string[]>(context['field'], 'validate', []),
+        display:string = fetchDynamic<string>(context['field'], 'display', ''),
+        developerDocumentation:string = fetchDynamic<string>(context['field'], '__documentation', '');
+    return {
+        default: _parsedDefault,
+        required: isRequired,
+        type: type,
+        validate: validateArray,
+        unless: unlessArray,
+        display: display,
+        handle: 'temp_handle',
+        sets: _tSets,
+        fields: _tFields,
+        isLinked: false,
+        linkedFrom: '',
+        developerDocumentation: developerDocumentation,
+        internalIcon: 'yaml',
+    };
+}
 
-    _parseFormFieldType(context: any): IFormFieldType {
-        let _parsedPlaceholder = fetchDynamic<string | null>(context['field'], 'placeholder', null);
-        let _parsedMaxItems = fetchDynamic<number>(context['field'], 'max_items', 1);
+_parseFormFieldType(context: any): IFormFieldType {
+    let _parsedPlaceholder = fetchDynamic<string | null>(context['field'], 'placeholder', null);
+    let _parsedMaxItems = fetchDynamic<number>(context['field'], 'max_items', 1);
 
         let _tSets: ISet[] = [];
         let _tFields: IFieldDetails[] = [];
         if (typeof context['field'] !== 'undefined' && typeof context['field']['sets'] !== 'undefined') {
             _tSets = this.parseSets(context['field']['sets']);
         }
-
+        
         if (typeof context['field'] !== 'undefined' && typeof context['field']['fields'] !== 'undefined') {
             _tFields = this.parseFields(context['field']);
         }
 
-        const isRequired: boolean = fetchDynamic<boolean>(context['field'], 'required', false),
-            type: string = fetchDynamic<string>(context['field'], 'type', 'text'),
-            unlessArray: string[] = fetchDynamic<string[]>(context['field'], 'unless', []),
-            validateArray: string[] = fetchDynamic<string[]>(context['field'], 'validate', []),
-            display: string = fetchDynamic<string>(context['field'], 'display', ''),
-            developerDocumentation: string = fetchDynamic<string>(context['field'], '__documentation', '');
-        return {
-            placeholder: _parsedPlaceholder,
-            maxItems: _parsedMaxItems,
-            required: isRequired,
-            type: type,
-            validate: validateArray,
-            unless: unlessArray,
-            display: display,
-            handle: 'temp_handle',
-            sets: _tSets,
-            fields: _tFields,
-            isLinked: false,
-            linkedFrom: '',
-            developerDocumentation: developerDocumentation,
-            internalIcon: 'form',
-        };
-    }
+    const isRequired: boolean = fetchDynamic<boolean>(context['field'], 'required', false),
+        type: string = fetchDynamic<string>(context['field'], 'type', 'text'),
+        unlessArray:string[] = fetchDynamic<string[]>(context['field'], 'unless', []),
+        validateArray:string[] = fetchDynamic<string[]>(context['field'], 'validate', []),
+        display:string = fetchDynamic<string>(context['field'], 'display', ''),
+        developerDocumentation:string = fetchDynamic<string>(context['field'], '__documentation', '');
+    return {
+        placeholder: _parsedPlaceholder,
+        maxItems: _parsedMaxItems,
+        required: isRequired,
+        type: type,
+        validate: validateArray,
+        unless: unlessArray,
+        display: display,
+        handle: 'temp_handle',
+        sets: _tSets,
+        fields: _tFields,
+        isLinked: false,
+        linkedFrom: '',
+        developerDocumentation: developerDocumentation,
+        internalIcon: 'form',
+    };
+}
 
-    parse(context: any): IFieldDetails | null {
-        const fields: IFieldDetails[] = [];
-        if (typeof context.field !== 'undefined' && typeof context.field.type !== 'undefined') {
-            const fType = context.field.type as string;
-            if (fType == 'array') {
-                fields.push(this._parseArrayFieldType(context));
-            }
-            if (fType == 'asset_container') {
-                fields.push(this._parseAssetContainerFieldType(context));
-            }
-            if (fType == 'asset_folder') {
-                fields.push(this._parseAssetFolderFieldType(context));
-            }
-            if (fType == 'assets') {
-                fields.push(this._parseAssetsFieldType(context));
-            }
-            if (fType == 'bard') {
-                fields.push(this._parseBardFieldType(context));
-            }
-            if (fType == 'replicator') {
-                fields.push(this._parseReplicatorFieldType(context));
-            }
-            if (fType == 'bard_buttons_setting') {
-                fields.push(this._parseBardButtonsSettingFieldType(context));
-            }
-            if (fType == 'button_group') {
-                fields.push(this._parseButtonGroupFieldType(context));
-            }
-            if (fType == 'checkboxes') {
-                fields.push(this._parseCheckboxesFieldType(context));
-            }
-            if (fType == 'code') {
-                fields.push(this._parseCodeFieldType(context));
-            }
-            if (fType == 'collection_routes') {
-                fields.push(this._parseCollectionRoutesFieldType(context));
-            }
-            if (fType == 'collection_title_formats') {
-                fields.push(this._parseCollectionTitleFormatsFieldType(context));
-            }
-            if (fType == 'collections') {
-                fields.push(this._parseCollectionsFieldType(context));
-            }
-            if (fType == 'color') {
-                fields.push(this._parseColorFieldType(context));
-            }
-            if (fType == 'date') {
-                fields.push(this._parseDateFieldType(context));
-            }
-            if (fType == 'entries') {
-                fields.push(this._parseEntriesFieldType(context));
-            }
-            if (fType == 'files') {
-                fields.push(this._parseFilesFieldType(context));
-            }
-            if (fType == 'float') {
-                fields.push(this._parseFloatFieldType(context));
-            }
-            if (fType == 'global_set_sites') {
-                fields.push(this._parseGlobalSetSitesFieldType(context));
-            }
-            if (fType == 'grid') {
-                fields.push(this._parseGridFieldType(context));
-            }
-            if (fType == 'hidden') {
-                fields.push(this._parseHiddenFieldType(context));
-            }
-            if (fType == 'html') {
-                fields.push(this._parseHtmlFieldType(context));
-            }
-            if (fType == 'integer') {
-                fields.push(this._parseIntegerFieldType(context));
-            }
-            if (fType == 'link') {
-                fields.push(this._parseLinkFieldType(context));
-            }
-            if (fType == 'list') {
-                fields.push(this._parseListFieldType(context));
-            }
-            if (fType == 'markdown') {
-                fields.push(this._parseMarkdownFieldType(context));
-            }
-            if (fType == 'fields') {
-                fields.push(this._parseFieldsFieldType(context));
-            }
-            if (fType == 'radio') {
-                fields.push(this._parseRadioFieldType(context));
-            }
-            if (fType == 'range') {
-                fields.push(this._parseRangeFieldType(context));
-            }
-            if (fType == 'revealer') {
-                fields.push(this._parseRevealerFieldType(context));
-            }
-            if (fType == 'section') {
-                fields.push(this._parseSectionFieldType(context));
-            }
-            if (fType == 'select') {
-                fields.push(this._parseSelectFieldType(context));
-            }
-            if (fType == 'sets') {
-                fields.push(this._parseSetsFieldType(context));
-            }
-            if (fType == 'sites') {
-                fields.push(this._parseSitesFieldType(context));
-            }
-            if (fType == 'structures') {
-                fields.push(this._parseStructuresFieldType(context));
-            }
-            if (fType == 'slug') {
-                fields.push(this._parseSlugFieldType(context));
-            }
-            if (fType == 'text') {
-                fields.push(this._parseTextFieldType(context));
-            }
-            if (fType == 'table') {
-                fields.push(this._parseTableFieldType(context));
-            }
-            if (fType == 'taggable') {
-                fields.push(this._parseTaggableFieldType(context));
-            }
-            if (fType == 'terms') {
-                fields.push(this._parseTermsFieldType(context));
-            }
-            if (fType == 'taxonomies') {
-                fields.push(this._parseTaxonomiesFieldType(context));
-            }
-            if (fType == 'template') {
-                fields.push(this._parseTemplateFieldType(context));
-            }
-            if (fType == 'template_folder') {
-                fields.push(this._parseTemplateFolderFieldType(context));
-            }
-            if (fType == 'textarea') {
-                fields.push(this._parseTextareaFieldType(context));
-            }
-            if (fType == 'time') {
-                fields.push(this._parseTimeFieldType(context));
-            }
-            if (fType == 'toggle') {
-                fields.push(this._parseToggleFieldType(context));
-            }
-            if (fType == 'user_groups') {
-                fields.push(this._parseUserGroupsFieldType(context));
-            }
-            if (fType == 'user_roles') {
-                fields.push(this._parseUserRolesFieldType(context));
-            }
-            if (fType == 'users') {
-                fields.push(this._parseUsersFieldType(context));
-            }
-            if (fType == 'video') {
-                fields.push(this._parseVideoFieldType(context));
-            }
-            if (fType == 'yaml') {
-                fields.push(this._parseYamlFieldType(context));
-            }
-            if (fType == 'form') {
-                fields.push(this._parseFormFieldType(context));
-            }
-        }
-        if (fields.length == 1) { return fields[0]; } return null;
+    parse(context:any) : IFieldDetails | null {    const fields:IFieldDetails[] = [];
+if (typeof context.field !== 'undefined' && typeof context.field.type !== 'undefined') {
+    const fType = context.field.type as string;
+if (fType == 'array') {
+    fields.push(this._parseArrayFieldType(context));
+}
+if (fType == 'asset_container') {
+    fields.push(this._parseAssetContainerFieldType(context));
+}
+if (fType == 'asset_folder') {
+    fields.push(this._parseAssetFolderFieldType(context));
+}
+if (fType == 'assets') {
+    fields.push(this._parseAssetsFieldType(context));
+}
+if (fType == 'bard') {
+    fields.push(this._parseBardFieldType(context));
+}
+if (fType == 'replicator') {
+    fields.push(this._parseReplicatorFieldType(context));
+}
+if (fType == 'bard_buttons_setting') {
+    fields.push(this._parseBardButtonsSettingFieldType(context));
+}
+if (fType == 'button_group') {
+    fields.push(this._parseButtonGroupFieldType(context));
+}
+if (fType == 'checkboxes') {
+    fields.push(this._parseCheckboxesFieldType(context));
+}
+if (fType == 'code') {
+    fields.push(this._parseCodeFieldType(context));
+}
+if (fType == 'collection_routes') {
+    fields.push(this._parseCollectionRoutesFieldType(context));
+}
+if (fType == 'collection_title_formats') {
+    fields.push(this._parseCollectionTitleFormatsFieldType(context));
+}
+if (fType == 'collections') {
+    fields.push(this._parseCollectionsFieldType(context));
+}
+if (fType == 'color') {
+    fields.push(this._parseColorFieldType(context));
+}
+if (fType == 'date') {
+    fields.push(this._parseDateFieldType(context));
+}
+if (fType == 'entries') {
+    fields.push(this._parseEntriesFieldType(context));
+}
+if (fType == 'files') {
+    fields.push(this._parseFilesFieldType(context));
+}
+if (fType == 'float') {
+    fields.push(this._parseFloatFieldType(context));
+}
+if (fType == 'global_set_sites') {
+    fields.push(this._parseGlobalSetSitesFieldType(context));
+}
+if (fType == 'grid') {
+    fields.push(this._parseGridFieldType(context));
+}
+if (fType == 'hidden') {
+    fields.push(this._parseHiddenFieldType(context));
+}
+if (fType == 'html') {
+    fields.push(this._parseHtmlFieldType(context));
+}
+if (fType == 'integer') {
+    fields.push(this._parseIntegerFieldType(context));
+}
+if (fType == 'link') {
+    fields.push(this._parseLinkFieldType(context));
+}
+if (fType == 'list') {
+    fields.push(this._parseListFieldType(context));
+}
+if (fType == 'markdown') {
+    fields.push(this._parseMarkdownFieldType(context));
+}
+if (fType == 'fields') {
+    fields.push(this._parseFieldsFieldType(context));
+}
+if (fType == 'radio') {
+    fields.push(this._parseRadioFieldType(context));
+}
+if (fType == 'range') {
+    fields.push(this._parseRangeFieldType(context));
+}
+if (fType == 'revealer') {
+    fields.push(this._parseRevealerFieldType(context));
+}
+if (fType == 'section') {
+    fields.push(this._parseSectionFieldType(context));
+}
+if (fType == 'select') {
+    fields.push(this._parseSelectFieldType(context));
+}
+if (fType == 'sets') {
+    fields.push(this._parseSetsFieldType(context));
+}
+if (fType == 'sites') {
+    fields.push(this._parseSitesFieldType(context));
+}
+if (fType == 'structures') {
+    fields.push(this._parseStructuresFieldType(context));
+}
+if (fType == 'slug') {
+    fields.push(this._parseSlugFieldType(context));
+}
+if (fType == 'text') {
+    fields.push(this._parseTextFieldType(context));
+}
+if (fType == 'table') {
+    fields.push(this._parseTableFieldType(context));
+}
+if (fType == 'taggable') {
+    fields.push(this._parseTaggableFieldType(context));
+}
+if (fType == 'terms') {
+    fields.push(this._parseTermsFieldType(context));
+}
+if (fType == 'taxonomies') {
+    fields.push(this._parseTaxonomiesFieldType(context));
+}
+if (fType == 'template') {
+    fields.push(this._parseTemplateFieldType(context));
+}
+if (fType == 'template_folder') {
+    fields.push(this._parseTemplateFolderFieldType(context));
+}
+if (fType == 'textarea') {
+    fields.push(this._parseTextareaFieldType(context));
+}
+if (fType == 'time') {
+    fields.push(this._parseTimeFieldType(context));
+}
+if (fType == 'toggle') {
+    fields.push(this._parseToggleFieldType(context));
+}
+if (fType == 'user_groups') {
+    fields.push(this._parseUserGroupsFieldType(context));
+}
+if (fType == 'user_roles') {
+    fields.push(this._parseUserRolesFieldType(context));
+}
+if (fType == 'users') {
+    fields.push(this._parseUsersFieldType(context));
+}
+if (fType == 'video') {
+    fields.push(this._parseVideoFieldType(context));
+}
+if (fType == 'yaml') {
+    fields.push(this._parseYamlFieldType(context));
+}
+if (fType == 'form') {
+    fields.push(this._parseFormFieldType(context));
+}
+}
+    if (fields.length == 1) { return fields[0]; }    return null;
 
 
-    } parseFields(context: any): IFieldDetails[] {
+}    parseFields(context: any): IFieldDetails[] {
         const fields: IFieldDetails[] = [];
 
         if (typeof context['fields'] === 'undefined' || context['fields'] == null) {
             return fields;
         }
-
+        
         if (typeof context['fields'] === 'object' && !Array.isArray(context['fields'])) {
             return fields;
         }
@@ -3453,11 +3452,11 @@ export function getProperties(context: any): any {
             try {
                 if (typeof field['field'] === 'string') {
                     const fsName = this.getFieldsetName(field['field']);
-
-                    if (fsName == null || !this.fieldSets.has(fsName)) { return; }
+    
+                    if (fsName == null || ! this.fieldSets.has(fsName)) { return; }
                     const _tFs = this.fieldSets.get(fsName) as IParsedFieldset;
                     const fsField = locateField(this.getFieldName(field['field']), _tFs);
-
+    
                     if (fsField == null) { return; }
                     const targetHandle = field['handle'] as string;
                     const newField: IFieldDetails = {
@@ -3466,26 +3465,26 @@ export function getProperties(context: any): any {
                         isLinked: true,
                         linkedFrom: field['field'] as string
                     };
-
+                    
                     fields.push(newField);
                     return;
                 }
-
+    
                 if (typeof field['import'] === 'string') {
                     if (this.fieldSets.has(field['import']) == false) { return; }
                     const _tFs = this.fieldSets.get(field['import']) as IParsedFieldset;
-                    let importPrefix: string | null = null;
-
+                    let importPrefix: string|null = null;
+    
                     if (typeof field['prefix'] === 'string') {
                         const _tImportPrefix = field['prefix'] as string;
-
+    
                         if (_tImportPrefix.trim().length > 0) {
                             importPrefix = _tImportPrefix.trim();
                         }
                     }
-
+    
                     const _tFields = fetchFields(importPrefix, _tFs);
-
+                    
                     if (_tFields.length > 0) {
                         try {
                             _tFields.forEach((importedField) => {
@@ -3493,12 +3492,12 @@ export function getProperties(context: any): any {
                             });
                         } catch (nestedE) { }
                     }
-
+    
                     return;
                 }
-
+    
                 const parsedField = this.parse(field);
-
+    
                 if (parsedField != null) {
                     parsedField.handle = field['handle'];
                     fields.push(parsedField);
@@ -3512,7 +3511,7 @@ export function getProperties(context: any): any {
     private getFieldsetName(path: string): string | null {
         if (path.includes('.') == false) { return null; }
         const parts = path.split('.') as string[];
-
+        
         return parts[0];
     }
 
@@ -3532,7 +3531,7 @@ export function getProperties(context: any): any {
             try {
                 const _tSet = context[setName];
                 let _tSetFields = this.parseFields(_tSet);
-
+    
                 sets.push({
                     display: _tSet['display'] ?? '',
                     handle: setName,
@@ -3553,6 +3552,7 @@ export interface IParsedSection {
 export interface IParsedBlueprint {
     title: string,
     handle: string,
+    collection: string,
     sections: IParsedSection[],
     allFields: IFieldDetails[]
     fields: IFieldDetails[],
@@ -3573,15 +3573,15 @@ export interface IProjectFields {
 }
 
 export class BlueprintParser {
-    private fieldParser: FieldParser = new FieldParser();
-    private parsedBlueprints: IParsedBlueprint[] = [];
+    private fieldParser:FieldParser = new FieldParser();
+    private parsedBlueprints:IParsedBlueprint[] = [];
 
     setParsedFieldSet(fieldSets: Map<string, IParsedFieldset>) {
         this.fieldParser.setFieldSets(fieldSets);
     }
 
-    parseSections(context: any): IParsedSection[] {
-        const sections: IParsedSection[] = [],
+    parseSections(context: any) :IParsedSection[] {
+        const sections:IParsedSection[] = [],
             sectionNames = Object.keys(context);
 
         sectionNames.forEach((sectionHandle) => {
@@ -3589,7 +3589,7 @@ export class BlueprintParser {
                 const _tSectionContext = context[sectionHandle];
                 const _tSectionDisplay = _tSectionContext['display'] ?? '';
                 const _tSectionFields = this.fieldParser.parseFields(_tSectionContext);
-
+    
                 sections.push({
                     display: _tSectionDisplay,
                     handle: sectionHandle,
@@ -3601,11 +3601,11 @@ export class BlueprintParser {
         return sections;
     }
 
-    parseBlueprint(context: any, handle: string, blueprintType: string, filePath?: string, contents?: string): IParsedBlueprint | null {
+    parseBlueprint(context: any, handle: string, blueprintType: string, collectionName: string, filePath?:string, contents?:string): IParsedBlueprint | null {
         const title = context['title'] ?? '';
         let _tSections: IParsedSection[] = [];
-        let _tFields: IFieldDetails[] = [];
-        let _tAllFields: IFieldDetails[] = [];
+        let _tFields:IFieldDetails[] = [];
+        let _tAllFields:IFieldDetails[] = [];
         if (typeof context['sections'] !== 'undefined') {
             _tSections = this.parseSections(context['sections']);
         }
@@ -3620,10 +3620,11 @@ export class BlueprintParser {
             } catch (e) { }
         });
 
-        const parsedBlueprint: IParsedBlueprint = {
+        const parsedBlueprint:IParsedBlueprint = {
             allFields: _tAllFields,
             fields: _tFields,
             handle: handle,
+            collection: collectionName,
             sections: _tSections,
             title: title,
             type: blueprintType,
@@ -3653,14 +3654,14 @@ export interface IParsedFieldset extends IParsedBlueprint {
 export class FieldSetParser {
     private blueprintParser: BlueprintParser = new BlueprintParser();
     private parsedFieldsets: Map<string, IParsedFieldset> = new Map();
-    private fieldsetArray: IParsedFieldset[] = [];
+    private fieldsetArray:IParsedFieldset[] = [];
 
     parseFieldset(context: any, handle: string): IParsedFieldset | null {
-        let _blueprint = this.blueprintParser.parseBlueprint(context, handle, '');
+        let _blueprint = this.blueprintParser.parseBlueprint(context, handle, '', '');
 
         if (_blueprint == null) { return null; }
 
-        let prefixedFields: IPrefixedField[] = [];
+        let prefixedFields:IPrefixedField[] = [];
 
         _blueprint.allFields.forEach((field) => {
             try {
