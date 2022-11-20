@@ -54,7 +54,9 @@ export default {
         parsedDescription() {
             const context = (this as any);
 
-            return marked.parse(context.modifier.description);
+            return marked.parse(context.modifier.description, {
+                sanitize: true
+            });
         }
     },
     created() {

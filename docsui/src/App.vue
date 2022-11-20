@@ -107,7 +107,9 @@ export default {
             curContext.currentFilter = e.target.value as string;
         },
         parseMarkdown(content: string): string {
-            return marked.parse(content);
+            return marked.parse(content, {
+                sanitize: true
+            });
         }
     },
     created() {
