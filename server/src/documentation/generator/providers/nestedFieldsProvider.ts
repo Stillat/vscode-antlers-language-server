@@ -2,6 +2,14 @@ import { Faker } from '../faker';
 import { SnippetBuffer } from '../snippetBuffer';
 import { IDocumentationSnippet, IInjectedField } from '../types';
 
+function isArrayLike(fieldType: string): boolean {
+    if (fieldType === 'array' || fieldType == 'entry' || fieldType == 'builder' || fieldType == 'entries') {
+        return true;
+    }
+
+    return false;
+}
+
 export class NestedFieldsProvider {
     static generate(rootHandle: string, keys: IInjectedField[], tabSize: number = 4): IDocumentationSnippet[] {
         const snippets: IDocumentationSnippet[] = [];
@@ -37,7 +45,7 @@ export class NestedFieldsProvider {
         const buffer = new SnippetBuffer(tabSize);
 
         keys.forEach((field) => {
-            if (field.type === 'array') {
+            if (isArrayLike(field.type)) {
                 buffer.pairedFieldAccess(handle, field.name).indent().nestedFieldsComment().nl().closingFieldAccess(handle, field.name);
             } else {
                 buffer.fieldAccess(handle, field.name);
@@ -54,7 +62,7 @@ export class NestedFieldsProvider {
         const buffer = new SnippetBuffer(tabSize);
 
         keys.forEach((field) => {
-            if (field.type === 'array') {
+            if (isArrayLike(field.type)) {
                 buffer.pairedAccessorFieldAccess(handle, accessor, field.name);
                 buffer.indent().nestedFieldsComment();
                 buffer.nl().closingAccessorFieldAccess(handle, accessor, field.name);
@@ -75,7 +83,7 @@ export class NestedFieldsProvider {
         buffer.opening(handle);
 
         keys.forEach((field) => {
-            if (field.type === 'array') {
+            if (isArrayLike(field.type)) {
                 buffer.indentedField(field.name).nl().indent().indent().nestedFieldsComment().indentedClosing(field.name);
             } else {
                 buffer.indentedField(field.name);
