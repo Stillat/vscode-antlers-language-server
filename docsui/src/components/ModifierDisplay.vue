@@ -6,8 +6,6 @@ import {
 } from "@vscode/webview-ui-toolkit";
 import type { IDocumentationModifier, IFieldtypeDocumentationOverview } from '../documentation/types';
 import { ModifierGenerator } from '../documentation/modifierGenerator';
-import type { DataGrid } from '@microsoft/fast-foundation';
-import { toRaw } from 'vue';
 import { vscode } from '@/utilities/vscode';
 import { marked } from 'marked';
 
@@ -29,9 +27,7 @@ export default {
         }
     },
     computed: {
-        lines(): string[] {
-            return (this as any).code.replace(/\r?\n/g, "\n").split("\n");
-        }
+
     },
     data() {
         return {
@@ -40,10 +36,13 @@ export default {
         };
     },
     methods: {
+        lines(): string[] {
+            return (this as any).generateSnippet().replace(/\r?\n/g, "\n").split("\n");
+        },
         generateSnippet() {
             const context = (this as any);
 
-            context.code = ModifierGenerator.generateDocs(context.modifier, context.field, context.field.augmentsTo == 'builder');
+            return ModifierGenerator.generateDocs(context.modifier, context.field, context.field.augmentsTo == 'builder');
         },
         copySnippet() {
             navigator.clipboard.writeText((this as any).code).then(() => {
@@ -58,24 +57,7 @@ export default {
             return marked.parse(context.modifier.description);
         }
     },
-    mounted() {
-        const context = (this as any);
-        context.$nextTick(function () {
-            const dataGridView = context.$refs['gridView' + context.id] as DataGrid;
-
-            if (typeof dataGridView !== 'undefined') {
-                const injectedDetails = toRaw(context.modifier.parameters);
-
-                dataGridView.rowsData = injectedDetails;
-                dataGridView.columnDefinitions = [
-                    { columnDataKey: 'name', title: 'Parameter Name' },
-                    { columnDataKey: 'description', title: 'Description' }
-                ];
-            }
-        });
-    },
     created() {
-        (this as any).generateSnippet();
         (this as any).id = 'view_' + (Date.now().toString(32) + Math.random().toString(16)).replace(/\./g, '');
     }
 }
@@ -108,11 +90,20 @@ export default {
                     </vscode-panel-tab>
 
                     <vscode-panel-view :id="'modifier__snippet' + id">
-                        <pre><code v-for="line in lines" style="display:block;">{{ line }}</code></pre>
+                        <pre><code v-for="line in lines()" style="display:block;">{{ line }}</code></pre>
                     </vscode-panel-view>
                     
                     <vscode-panel-view :id="'modifier__params' + id">
-                        <vscode-data-grid :ref="'gridView' + id"></vscode-data-grid>
+                        <vscode-data-grid>
+                            <vscode-data-grid-row row-type="header">
+                                <vscode-data-grid-cell cell-type="columnheader" grid-column="1">Name</vscode-data-grid-cell>
+                                <vscode-data-grid-cell cell-type="columnheader" grid-column="2">Description</vscode-data-grid-cell>
+                            </vscode-data-grid-row>
+                            <vscode-data-grid-row v-for="modifierParam in modifier.parameters">
+                                <vscode-data-grid-cell grid-column="1">{{ modifierParam.name }}</vscode-data-grid-cell>
+                                <vscode-data-grid-cell grid-column="2">{{ modifierParam.description }}</vscode-data-grid-cell>
+                            </vscode-data-grid-row>
+                        </vscode-data-grid>
                     </vscode-panel-view>
                 </vscode-panels>
             </div>

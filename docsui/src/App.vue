@@ -174,7 +174,9 @@ export default {
                     <p>Your field's configuration will augment to a query builder instance. In order to use modifiers on this field you will need to aliase your field with the <pre style="display:inline;">as</pre> modifier.</p>
                 </div>
 
-                <modifier-display v-for="modifier in displayModifiers" :modifier="modifier" :field="docs"></modifier-display>
+                <template v-for="modifier in displayModifiers">
+                    <modifier-display :modifier="modifier" :field="docs"></modifier-display>
+                </template>
             </div>
         </vscode-panel-view>
     </vscode-panels>
