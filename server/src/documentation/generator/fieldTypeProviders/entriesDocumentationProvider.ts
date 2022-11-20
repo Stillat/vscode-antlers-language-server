@@ -9,7 +9,41 @@ import { GeneralQueryBuilderDocumentationProvider } from './generalQueryBuilderD
 export class EntriesDocumentationProvider implements IDocumentationProvider {
     resolve(context: IEntriesFieldType, currentProject: IProjectFields): IDocumentationResult {
         if (context.maxItems !== 1) {
-            return (new GeneralQueryBuilderDocumentationProvider()).resolve(context, currentProject);
+            const documentation = (new GeneralQueryBuilderDocumentationProvider()).resolve(context, currentProject);
+
+            if (documentation.resolved && documentation.documentation != null) {
+                let injectedFields: IInjectedField[] = [],
+                    overviewSnippets: IDocumentationSnippet[] = [];
+
+                if (context.collections != null && context.collections.length > 0) {
+                    let fields: IFieldDetails[] = [],
+                        addedKeys:string[] = [];
+
+                    currentProject.collections.forEach((collection) => {
+                        if (context.collections?.includes(collection.collection)) {
+                            if (typeof collection.allFields != 'undefined' && collection.allFields != null) {
+                                collection.allFields.forEach((field) => {
+                                    if (addedKeys.includes(field.handle) == false) {
+                                        addedKeys.push(field.handle);
+                                        fields.push(field);
+                                    }
+                                });
+                            }
+                        }
+                    });
+
+                    injectedFields = KeysResolver.fieldsToInjectedFields(fields);
+                    overviewSnippets = NestedFieldsProvider.generate(context.handle, injectedFields);
+                }
+
+                overviewSnippets.forEach((snippet) => {
+                    documentation.documentation?.overviewSnippets.unshift(snippet);
+                });
+
+                documentation.documentation.injects = injectedFields;
+            }
+
+            return documentation;
         }
 
         const docLink = OfficialDocumentationLinkProvider.getDocLink(context.type),
@@ -19,12 +53,18 @@ export class EntriesDocumentationProvider implements IDocumentationProvider {
             overviewSnippets: IDocumentationSnippet[] = [];
 
         if (context.collections != null && context.collections.length > 0) {
-            let fields: IFieldDetails[] = [];
+            let fields: IFieldDetails[] = [],
+                addedKeys:string[] = [];
 
             currentProject.collections.forEach((collection) => {
                 if (context.collections?.includes(collection.collection)) {
                     if (typeof collection.allFields != 'undefined' && collection.allFields != null) {
-                        fields = fields.concat(collection.allFields);
+                        collection.allFields.forEach((field) => {
+                            if (addedKeys.includes(field.handle) == false) {
+                                addedKeys.push(field.handle);
+                                fields.push(field);
+                            }
+                        });
                     }
                 }
             });
@@ -32,8 +72,6 @@ export class EntriesDocumentationProvider implements IDocumentationProvider {
             injectedFields = KeysResolver.fieldsToInjectedFields(fields);
             overviewSnippets = NestedFieldsProvider.generate(context.handle, injectedFields);
         }
-
-
 
         return {
             resolved: true,
