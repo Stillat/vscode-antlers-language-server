@@ -9,6 +9,7 @@ import { ModifierGenerator } from '../documentation/modifierGenerator';
 import type { DataGrid } from '@microsoft/fast-foundation';
 import { toRaw } from 'vue';
 import { vscode } from '@/utilities/vscode';
+import { marked } from 'marked';
 
 provideVSCodeDesignSystem().register(
     vsCodeButton(), vsCodeTextField(), vsCodePanelTab(),
@@ -50,6 +51,11 @@ export default {
             }).catch(() => {
                 vscode.postMessage({ type: 'error', text: 'The snippet could not be copied to the clipboard.' });
             });
+        },
+        parsedDescription() {
+            const context = (this as any);
+
+            return marked.parse(context.modifier.description);
         }
     },
     mounted() {
@@ -88,7 +94,7 @@ export default {
                 </div>
             </div>
 
-            <p>{{ modifier.description }}</p>
+            <div v-html="parsedDescription()"></div>
             <p v-if="modifier.docLink != null">Documentation <a :href="modifier.docLink">{{ modifier.docLink }}</a></p>
             <pre v-if="modifier.parameters.length == 0"><code v-for="line in lines" style="display:block;">{{ line }}</code></pre>
 
