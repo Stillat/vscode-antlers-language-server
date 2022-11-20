@@ -12,6 +12,8 @@ import CodeSnippet from './components/CodeSnippet.vue';
 import InjectedFields from './components/InjectedFields.vue';
 import ModifierDisplay from './components/ModifierDisplay.vue';
 
+import {marked} from 'marked';
+
 import Fuse from 'fuse.js';
 import { vscode } from './utilities/vscode';
 
@@ -103,6 +105,9 @@ export default {
         syncFilter(e: any) {
             const curContext = (this as any);
             curContext.currentFilter = e.target.value as string;
+        },
+        parseMarkdown(content: string): string {
+            return marked.parse(content);
         }
     },
     created() {
@@ -136,6 +141,10 @@ export default {
         </div>
 
         <p v-if="docs.officialDocumentation != null" style="margin:0;">Documentation: <a :href="docs.officialDocumentation">{{ docs.officialDocumentation }}</a></p>
+    </div>
+
+    <div v-if="docs != null && docs.field.developerDocumentation.trim().length > 0" style="margin:0;margin-top:5px;">
+        <div style="margin:0;max-width:75ch;" v-html="parseMarkdown(docs.field.developerDocumentation)"></div>
     </div>
 
     <vscode-panels v-if="docs != null">
