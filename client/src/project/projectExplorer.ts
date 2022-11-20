@@ -61,7 +61,8 @@ function getObjectPropertyItems(object: any): ProjectItem[] {
             context: any = null;
 
         if (tempValueType == 'object' && tempVal !== null) {
-            strVal = '{}';
+            const objKeys = Object.keys(tempVal);
+            strVal = '{' + objKeys.length + '}';
             type = ItemType.ObjectProperty;
             state = vscode.TreeItemCollapsibleState.Collapsed;
             context = tempVal;
