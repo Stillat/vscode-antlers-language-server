@@ -73,7 +73,8 @@ export class Faker {
             internalIcon: Faker.getInternalIcon(type),
             handle: handle,
             fields: [],
-            display: ''
+            display: '',
+            developerDocumentation: ''
         };
     }
 

@@ -4,7 +4,7 @@
  * made directly to this file are likely to be lost.
  */
 
- export interface IFieldDetails {
+export interface IFieldDetails {
     required: boolean;
     type: string;
     display: string;
@@ -16,6 +16,7 @@
     isLinked: boolean;
     linkedFrom: string;
     internalIcon: string;
+    developerDocumentation: string;
 }
 
 export interface ISet {
@@ -38,18 +39,20 @@ function fetchFields(prefix: string | null, fieldSet: IParsedFieldset): IFieldDe
     const returnFields: IFieldDetails[] = [];
 
     fieldSet.allFields.forEach((field) => {
-        let newHandle = field.handle;
+        try {
+            let newHandle = field.handle;
 
-        if (prefix != null) {
-            newHandle = prefix + newHandle;
-        }
+            if (prefix != null) {
+                newHandle = prefix + newHandle;
+            }
 
-        returnFields.push({
-            ...field,
-            handle: newHandle,
-            isLinked: true,
-            linkedFrom: fieldSet.handle + '.' + field.handle
-        });
+            returnFields.push({
+                ...field,
+                handle: newHandle,
+                isLinked: true,
+                linkedFrom: fieldSet.handle + '.' + field.handle
+            });
+        } catch (e) { }
     });
 
     return returnFields;
@@ -1203,7 +1206,8 @@ export function getProperties(context: any): any {
             type: string = fetchDynamic<string>(context['field'], 'type', 'text'),
             unlessArray: string[] = fetchDynamic<string[]>(context['field'], 'unless', []),
             validateArray: string[] = fetchDynamic<string[]>(context['field'], 'validate', []),
-            display: string = fetchDynamic<string>(context['field'], 'display', '');
+            display: string = fetchDynamic<string>(context['field'], 'display', ''),
+            developerDocumentation: string = fetchDynamic<string>(context['field'], '__documentation', '');
         return {
             mode: _parsedMode,
             keys: _parsedKeys,
@@ -1217,6 +1221,7 @@ export function getProperties(context: any): any {
             fields: _tFields,
             isLinked: false,
             linkedFrom: '',
+            developerDocumentation: developerDocumentation,
             internalIcon: 'array',
         };
     }
@@ -1239,7 +1244,8 @@ export function getProperties(context: any): any {
             type: string = fetchDynamic<string>(context['field'], 'type', 'text'),
             unlessArray: string[] = fetchDynamic<string[]>(context['field'], 'unless', []),
             validateArray: string[] = fetchDynamic<string[]>(context['field'], 'validate', []),
-            display: string = fetchDynamic<string>(context['field'], 'display', '');
+            display: string = fetchDynamic<string>(context['field'], 'display', ''),
+            developerDocumentation: string = fetchDynamic<string>(context['field'], '__documentation', '');
         return {
             maxItems: _parsedMaxItems,
             mode: _parsedMode,
@@ -1253,6 +1259,7 @@ export function getProperties(context: any): any {
             fields: _tFields,
             isLinked: false,
             linkedFrom: '',
+            developerDocumentation: developerDocumentation,
             internalIcon: 'asset_container',
         };
     }
@@ -1275,7 +1282,8 @@ export function getProperties(context: any): any {
             type: string = fetchDynamic<string>(context['field'], 'type', 'text'),
             unlessArray: string[] = fetchDynamic<string[]>(context['field'], 'unless', []),
             validateArray: string[] = fetchDynamic<string[]>(context['field'], 'validate', []),
-            display: string = fetchDynamic<string>(context['field'], 'display', '');
+            display: string = fetchDynamic<string>(context['field'], 'display', ''),
+            developerDocumentation: string = fetchDynamic<string>(context['field'], '__documentation', '');
         return {
             maxItems: _parsedMaxItems,
             mode: _parsedMode,
@@ -1289,6 +1297,7 @@ export function getProperties(context: any): any {
             fields: _tFields,
             isLinked: false,
             linkedFrom: '',
+            developerDocumentation: developerDocumentation,
             internalIcon: 'asset_folder',
         };
     }
@@ -1316,7 +1325,8 @@ export function getProperties(context: any): any {
             type: string = fetchDynamic<string>(context['field'], 'type', 'text'),
             unlessArray: string[] = fetchDynamic<string[]>(context['field'], 'unless', []),
             validateArray: string[] = fetchDynamic<string[]>(context['field'], 'validate', []),
-            display: string = fetchDynamic<string>(context['field'], 'display', '');
+            display: string = fetchDynamic<string>(context['field'], 'display', ''),
+            developerDocumentation: string = fetchDynamic<string>(context['field'], '__documentation', '');
         return {
             mode: _parsedMode,
             container: _parsedContainer,
@@ -1335,6 +1345,7 @@ export function getProperties(context: any): any {
             fields: _tFields,
             isLinked: false,
             linkedFrom: '',
+            developerDocumentation: developerDocumentation,
             internalIcon: 'assets',
         };
     }
@@ -1373,7 +1384,8 @@ export function getProperties(context: any): any {
             type: string = fetchDynamic<string>(context['field'], 'type', 'text'),
             unlessArray: string[] = fetchDynamic<string[]>(context['field'], 'unless', []),
             validateArray: string[] = fetchDynamic<string[]>(context['field'], 'validate', []),
-            display: string = fetchDynamic<string>(context['field'], 'display', '');
+            display: string = fetchDynamic<string>(context['field'], 'display', ''),
+            developerDocumentation: string = fetchDynamic<string>(context['field'], '__documentation', '');
         return {
             collapse: _parsedCollapse,
             alwaysShowSetButton: _parsedAlwaysShowSetButton,
@@ -1403,6 +1415,7 @@ export function getProperties(context: any): any {
             fields: _tFields,
             isLinked: false,
             linkedFrom: '',
+            developerDocumentation: developerDocumentation,
             internalIcon: 'bard',
         };
     }
@@ -1426,7 +1439,8 @@ export function getProperties(context: any): any {
             type: string = fetchDynamic<string>(context['field'], 'type', 'text'),
             unlessArray: string[] = fetchDynamic<string[]>(context['field'], 'unless', []),
             validateArray: string[] = fetchDynamic<string[]>(context['field'], 'validate', []),
-            display: string = fetchDynamic<string>(context['field'], 'display', '');
+            display: string = fetchDynamic<string>(context['field'], 'display', ''),
+            developerDocumentation: string = fetchDynamic<string>(context['field'], '__documentation', '');
         return {
             collapse: _parsedCollapse,
             previews: _parsedPreviews,
@@ -1441,6 +1455,7 @@ export function getProperties(context: any): any {
             fields: _tFields,
             isLinked: false,
             linkedFrom: '',
+            developerDocumentation: developerDocumentation,
             internalIcon: 'replicator',
         };
     }
@@ -1461,7 +1476,8 @@ export function getProperties(context: any): any {
             type: string = fetchDynamic<string>(context['field'], 'type', 'text'),
             unlessArray: string[] = fetchDynamic<string[]>(context['field'], 'unless', []),
             validateArray: string[] = fetchDynamic<string[]>(context['field'], 'validate', []),
-            display: string = fetchDynamic<string>(context['field'], 'display', '');
+            display: string = fetchDynamic<string>(context['field'], 'display', ''),
+            developerDocumentation: string = fetchDynamic<string>(context['field'], '__documentation', '');
         return {
             required: isRequired,
             type: type,
@@ -1473,6 +1489,7 @@ export function getProperties(context: any): any {
             fields: _tFields,
             isLinked: false,
             linkedFrom: '',
+            developerDocumentation: developerDocumentation,
             internalIcon: 'bard_buttons_setting',
         };
     }
@@ -1495,7 +1512,8 @@ export function getProperties(context: any): any {
             type: string = fetchDynamic<string>(context['field'], 'type', 'text'),
             unlessArray: string[] = fetchDynamic<string[]>(context['field'], 'unless', []),
             validateArray: string[] = fetchDynamic<string[]>(context['field'], 'validate', []),
-            display: string = fetchDynamic<string>(context['field'], 'display', '');
+            display: string = fetchDynamic<string>(context['field'], 'display', ''),
+            developerDocumentation: string = fetchDynamic<string>(context['field'], '__documentation', '');
         return {
             options: _parsedOptions,
             default: _parsedDefault,
@@ -1509,6 +1527,7 @@ export function getProperties(context: any): any {
             fields: _tFields,
             isLinked: false,
             linkedFrom: '',
+            developerDocumentation: developerDocumentation,
             internalIcon: 'button_group',
         };
     }
@@ -1532,7 +1551,8 @@ export function getProperties(context: any): any {
             type: string = fetchDynamic<string>(context['field'], 'type', 'text'),
             unlessArray: string[] = fetchDynamic<string[]>(context['field'], 'unless', []),
             validateArray: string[] = fetchDynamic<string[]>(context['field'], 'validate', []),
-            display: string = fetchDynamic<string>(context['field'], 'display', '');
+            display: string = fetchDynamic<string>(context['field'], 'display', ''),
+            developerDocumentation: string = fetchDynamic<string>(context['field'], '__documentation', '');
         return {
             inline: _parsedInline,
             options: _parsedOptions,
@@ -1547,6 +1567,7 @@ export function getProperties(context: any): any {
             fields: _tFields,
             isLinked: false,
             linkedFrom: '',
+            developerDocumentation: developerDocumentation,
             internalIcon: 'checkboxes',
         };
     }
@@ -1575,7 +1596,8 @@ export function getProperties(context: any): any {
             type: string = fetchDynamic<string>(context['field'], 'type', 'text'),
             unlessArray: string[] = fetchDynamic<string[]>(context['field'], 'unless', []),
             validateArray: string[] = fetchDynamic<string[]>(context['field'], 'validate', []),
-            display: string = fetchDynamic<string>(context['field'], 'display', '');
+            display: string = fetchDynamic<string>(context['field'], 'display', ''),
+            developerDocumentation: string = fetchDynamic<string>(context['field'], '__documentation', '');
         return {
             theme: _parsedTheme,
             mode: _parsedMode,
@@ -1595,6 +1617,7 @@ export function getProperties(context: any): any {
             fields: _tFields,
             isLinked: false,
             linkedFrom: '',
+            developerDocumentation: developerDocumentation,
             internalIcon: 'code',
         };
     }
@@ -1615,7 +1638,8 @@ export function getProperties(context: any): any {
             type: string = fetchDynamic<string>(context['field'], 'type', 'text'),
             unlessArray: string[] = fetchDynamic<string[]>(context['field'], 'unless', []),
             validateArray: string[] = fetchDynamic<string[]>(context['field'], 'validate', []),
-            display: string = fetchDynamic<string>(context['field'], 'display', '');
+            display: string = fetchDynamic<string>(context['field'], 'display', ''),
+            developerDocumentation: string = fetchDynamic<string>(context['field'], '__documentation', '');
         return {
             required: isRequired,
             type: type,
@@ -1627,6 +1651,7 @@ export function getProperties(context: any): any {
             fields: _tFields,
             isLinked: false,
             linkedFrom: '',
+            developerDocumentation: developerDocumentation,
             internalIcon: 'collection_routes',
         };
     }
@@ -1647,7 +1672,8 @@ export function getProperties(context: any): any {
             type: string = fetchDynamic<string>(context['field'], 'type', 'text'),
             unlessArray: string[] = fetchDynamic<string[]>(context['field'], 'unless', []),
             validateArray: string[] = fetchDynamic<string[]>(context['field'], 'validate', []),
-            display: string = fetchDynamic<string>(context['field'], 'display', '');
+            display: string = fetchDynamic<string>(context['field'], 'display', ''),
+            developerDocumentation: string = fetchDynamic<string>(context['field'], '__documentation', '');
         return {
             required: isRequired,
             type: type,
@@ -1659,6 +1685,7 @@ export function getProperties(context: any): any {
             fields: _tFields,
             isLinked: false,
             linkedFrom: '',
+            developerDocumentation: developerDocumentation,
             internalIcon: 'collection_title_formats',
         };
     }
@@ -1681,7 +1708,8 @@ export function getProperties(context: any): any {
             type: string = fetchDynamic<string>(context['field'], 'type', 'text'),
             unlessArray: string[] = fetchDynamic<string[]>(context['field'], 'unless', []),
             validateArray: string[] = fetchDynamic<string[]>(context['field'], 'validate', []),
-            display: string = fetchDynamic<string>(context['field'], 'display', '');
+            display: string = fetchDynamic<string>(context['field'], 'display', ''),
+            developerDocumentation: string = fetchDynamic<string>(context['field'], '__documentation', '');
         return {
             maxItems: _parsedMaxItems,
             mode: _parsedMode,
@@ -1695,6 +1723,7 @@ export function getProperties(context: any): any {
             fields: _tFields,
             isLinked: false,
             linkedFrom: '',
+            developerDocumentation: developerDocumentation,
             internalIcon: 'collections',
         };
     }
@@ -1720,7 +1749,8 @@ export function getProperties(context: any): any {
             type: string = fetchDynamic<string>(context['field'], 'type', 'text'),
             unlessArray: string[] = fetchDynamic<string[]>(context['field'], 'unless', []),
             validateArray: string[] = fetchDynamic<string[]>(context['field'], 'validate', []),
-            display: string = fetchDynamic<string>(context['field'], 'display', '');
+            display: string = fetchDynamic<string>(context['field'], 'display', ''),
+            developerDocumentation: string = fetchDynamic<string>(context['field'], '__documentation', '');
         return {
             swatches: _parsedSwatches,
             theme: _parsedTheme,
@@ -1737,6 +1767,7 @@ export function getProperties(context: any): any {
             fields: _tFields,
             isLinked: false,
             linkedFrom: '',
+            developerDocumentation: developerDocumentation,
             internalIcon: 'color',
         };
     }
@@ -1767,7 +1798,8 @@ export function getProperties(context: any): any {
             type: string = fetchDynamic<string>(context['field'], 'type', 'text'),
             unlessArray: string[] = fetchDynamic<string[]>(context['field'], 'unless', []),
             validateArray: string[] = fetchDynamic<string[]>(context['field'], 'validate', []),
-            display: string = fetchDynamic<string>(context['field'], 'display', '');
+            display: string = fetchDynamic<string>(context['field'], 'display', ''),
+            developerDocumentation: string = fetchDynamic<string>(context['field'], '__documentation', '');
         return {
             mode: _parsedMode,
             format: _parsedFormat,
@@ -1789,6 +1821,7 @@ export function getProperties(context: any): any {
             fields: _tFields,
             isLinked: false,
             linkedFrom: '',
+            developerDocumentation: developerDocumentation,
             internalIcon: 'date',
         };
     }
@@ -1813,7 +1846,8 @@ export function getProperties(context: any): any {
             type: string = fetchDynamic<string>(context['field'], 'type', 'text'),
             unlessArray: string[] = fetchDynamic<string[]>(context['field'], 'unless', []),
             validateArray: string[] = fetchDynamic<string[]>(context['field'], 'validate', []),
-            display: string = fetchDynamic<string>(context['field'], 'display', '');
+            display: string = fetchDynamic<string>(context['field'], 'display', ''),
+            developerDocumentation: string = fetchDynamic<string>(context['field'], '__documentation', '');
         return {
             maxItems: _parsedMaxItems,
             mode: _parsedMode,
@@ -1829,6 +1863,7 @@ export function getProperties(context: any): any {
             fields: _tFields,
             isLinked: false,
             linkedFrom: '',
+            developerDocumentation: developerDocumentation,
             internalIcon: 'entries',
         };
     }
@@ -1850,7 +1885,8 @@ export function getProperties(context: any): any {
             type: string = fetchDynamic<string>(context['field'], 'type', 'text'),
             unlessArray: string[] = fetchDynamic<string[]>(context['field'], 'unless', []),
             validateArray: string[] = fetchDynamic<string[]>(context['field'], 'validate', []),
-            display: string = fetchDynamic<string>(context['field'], 'display', '');
+            display: string = fetchDynamic<string>(context['field'], 'display', ''),
+            developerDocumentation: string = fetchDynamic<string>(context['field'], '__documentation', '');
         return {
             maxFiles: _parsedMaxFiles,
             required: isRequired,
@@ -1863,6 +1899,7 @@ export function getProperties(context: any): any {
             fields: _tFields,
             isLinked: false,
             linkedFrom: '',
+            developerDocumentation: developerDocumentation,
             internalIcon: 'files',
         };
     }
@@ -1884,7 +1921,8 @@ export function getProperties(context: any): any {
             type: string = fetchDynamic<string>(context['field'], 'type', 'text'),
             unlessArray: string[] = fetchDynamic<string[]>(context['field'], 'unless', []),
             validateArray: string[] = fetchDynamic<string[]>(context['field'], 'validate', []),
-            display: string = fetchDynamic<string>(context['field'], 'display', '');
+            display: string = fetchDynamic<string>(context['field'], 'display', ''),
+            developerDocumentation: string = fetchDynamic<string>(context['field'], '__documentation', '');
         return {
             default: _parsedDefault,
             required: isRequired,
@@ -1897,6 +1935,7 @@ export function getProperties(context: any): any {
             fields: _tFields,
             isLinked: false,
             linkedFrom: '',
+            developerDocumentation: developerDocumentation,
             internalIcon: 'float',
         };
     }
@@ -1917,7 +1956,8 @@ export function getProperties(context: any): any {
             type: string = fetchDynamic<string>(context['field'], 'type', 'text'),
             unlessArray: string[] = fetchDynamic<string[]>(context['field'], 'unless', []),
             validateArray: string[] = fetchDynamic<string[]>(context['field'], 'validate', []),
-            display: string = fetchDynamic<string>(context['field'], 'display', '');
+            display: string = fetchDynamic<string>(context['field'], 'display', ''),
+            developerDocumentation: string = fetchDynamic<string>(context['field'], '__documentation', '');
         return {
             required: isRequired,
             type: type,
@@ -1929,6 +1969,7 @@ export function getProperties(context: any): any {
             fields: _tFields,
             isLinked: false,
             linkedFrom: '',
+            developerDocumentation: developerDocumentation,
             internalIcon: 'global_set_sites',
         };
     }
@@ -1954,7 +1995,8 @@ export function getProperties(context: any): any {
             type: string = fetchDynamic<string>(context['field'], 'type', 'text'),
             unlessArray: string[] = fetchDynamic<string[]>(context['field'], 'unless', []),
             validateArray: string[] = fetchDynamic<string[]>(context['field'], 'validate', []),
-            display: string = fetchDynamic<string>(context['field'], 'display', '');
+            display: string = fetchDynamic<string>(context['field'], 'display', ''),
+            developerDocumentation: string = fetchDynamic<string>(context['field'], '__documentation', '');
         return {
             mode: _parsedMode,
             maxRows: _parsedMaxRows,
@@ -1971,6 +2013,7 @@ export function getProperties(context: any): any {
             fields: _tFields,
             isLinked: false,
             linkedFrom: '',
+            developerDocumentation: developerDocumentation,
             internalIcon: 'grid',
         };
     }
@@ -1992,7 +2035,8 @@ export function getProperties(context: any): any {
             type: string = fetchDynamic<string>(context['field'], 'type', 'text'),
             unlessArray: string[] = fetchDynamic<string[]>(context['field'], 'unless', []),
             validateArray: string[] = fetchDynamic<string[]>(context['field'], 'validate', []),
-            display: string = fetchDynamic<string>(context['field'], 'display', '');
+            display: string = fetchDynamic<string>(context['field'], 'display', ''),
+            developerDocumentation: string = fetchDynamic<string>(context['field'], '__documentation', '');
         return {
             default: _parsedDefault,
             required: isRequired,
@@ -2005,6 +2049,7 @@ export function getProperties(context: any): any {
             fields: _tFields,
             isLinked: false,
             linkedFrom: '',
+            developerDocumentation: developerDocumentation,
             internalIcon: 'hidden',
         };
     }
@@ -2026,7 +2071,8 @@ export function getProperties(context: any): any {
             type: string = fetchDynamic<string>(context['field'], 'type', 'text'),
             unlessArray: string[] = fetchDynamic<string[]>(context['field'], 'unless', []),
             validateArray: string[] = fetchDynamic<string[]>(context['field'], 'validate', []),
-            display: string = fetchDynamic<string>(context['field'], 'display', '');
+            display: string = fetchDynamic<string>(context['field'], 'display', ''),
+            developerDocumentation: string = fetchDynamic<string>(context['field'], '__documentation', '');
         return {
             html: _parsedHtml,
             required: isRequired,
@@ -2039,6 +2085,7 @@ export function getProperties(context: any): any {
             fields: _tFields,
             isLinked: false,
             linkedFrom: '',
+            developerDocumentation: developerDocumentation,
             internalIcon: 'html',
         };
     }
@@ -2060,7 +2107,8 @@ export function getProperties(context: any): any {
             type: string = fetchDynamic<string>(context['field'], 'type', 'text'),
             unlessArray: string[] = fetchDynamic<string[]>(context['field'], 'unless', []),
             validateArray: string[] = fetchDynamic<string[]>(context['field'], 'validate', []),
-            display: string = fetchDynamic<string>(context['field'], 'display', '');
+            display: string = fetchDynamic<string>(context['field'], 'display', ''),
+            developerDocumentation: string = fetchDynamic<string>(context['field'], '__documentation', '');
         return {
             default: _parsedDefault,
             required: isRequired,
@@ -2073,6 +2121,7 @@ export function getProperties(context: any): any {
             fields: _tFields,
             isLinked: false,
             linkedFrom: '',
+            developerDocumentation: developerDocumentation,
             internalIcon: 'integer',
         };
     }
@@ -2095,7 +2144,8 @@ export function getProperties(context: any): any {
             type: string = fetchDynamic<string>(context['field'], 'type', 'text'),
             unlessArray: string[] = fetchDynamic<string[]>(context['field'], 'unless', []),
             validateArray: string[] = fetchDynamic<string[]>(context['field'], 'validate', []),
-            display: string = fetchDynamic<string>(context['field'], 'display', '');
+            display: string = fetchDynamic<string>(context['field'], 'display', ''),
+            developerDocumentation: string = fetchDynamic<string>(context['field'], '__documentation', '');
         return {
             collections: _parsedCollections,
             container: _parsedContainer,
@@ -2109,6 +2159,7 @@ export function getProperties(context: any): any {
             fields: _tFields,
             isLinked: false,
             linkedFrom: '',
+            developerDocumentation: developerDocumentation,
             internalIcon: 'link',
         };
     }
@@ -2130,7 +2181,8 @@ export function getProperties(context: any): any {
             type: string = fetchDynamic<string>(context['field'], 'type', 'text'),
             unlessArray: string[] = fetchDynamic<string[]>(context['field'], 'unless', []),
             validateArray: string[] = fetchDynamic<string[]>(context['field'], 'validate', []),
-            display: string = fetchDynamic<string>(context['field'], 'display', '');
+            display: string = fetchDynamic<string>(context['field'], 'display', ''),
+            developerDocumentation: string = fetchDynamic<string>(context['field'], '__documentation', '');
         return {
             default: _parsedDefault,
             required: isRequired,
@@ -2143,6 +2195,7 @@ export function getProperties(context: any): any {
             fields: _tFields,
             isLinked: false,
             linkedFrom: '',
+            developerDocumentation: developerDocumentation,
             internalIcon: 'list',
         };
     }
@@ -2173,7 +2226,8 @@ export function getProperties(context: any): any {
             type: string = fetchDynamic<string>(context['field'], 'type', 'text'),
             unlessArray: string[] = fetchDynamic<string[]>(context['field'], 'unless', []),
             validateArray: string[] = fetchDynamic<string[]>(context['field'], 'validate', []),
-            display: string = fetchDynamic<string>(context['field'], 'display', '');
+            display: string = fetchDynamic<string>(context['field'], 'display', ''),
+            developerDocumentation: string = fetchDynamic<string>(context['field'], '__documentation', '');
         return {
             container: _parsedContainer,
             folder: _parsedFolder,
@@ -2195,6 +2249,7 @@ export function getProperties(context: any): any {
             fields: _tFields,
             isLinked: false,
             linkedFrom: '',
+            developerDocumentation: developerDocumentation,
             internalIcon: 'markdown',
         };
     }
@@ -2215,7 +2270,8 @@ export function getProperties(context: any): any {
             type: string = fetchDynamic<string>(context['field'], 'type', 'text'),
             unlessArray: string[] = fetchDynamic<string[]>(context['field'], 'unless', []),
             validateArray: string[] = fetchDynamic<string[]>(context['field'], 'validate', []),
-            display: string = fetchDynamic<string>(context['field'], 'display', '');
+            display: string = fetchDynamic<string>(context['field'], 'display', ''),
+            developerDocumentation: string = fetchDynamic<string>(context['field'], '__documentation', '');
         return {
             required: isRequired,
             type: type,
@@ -2227,6 +2283,7 @@ export function getProperties(context: any): any {
             fields: _tFields,
             isLinked: false,
             linkedFrom: '',
+            developerDocumentation: developerDocumentation,
             internalIcon: 'fields',
         };
     }
@@ -2251,7 +2308,8 @@ export function getProperties(context: any): any {
             type: string = fetchDynamic<string>(context['field'], 'type', 'text'),
             unlessArray: string[] = fetchDynamic<string[]>(context['field'], 'unless', []),
             validateArray: string[] = fetchDynamic<string[]>(context['field'], 'validate', []),
-            display: string = fetchDynamic<string>(context['field'], 'display', '');
+            display: string = fetchDynamic<string>(context['field'], 'display', ''),
+            developerDocumentation: string = fetchDynamic<string>(context['field'], '__documentation', '');
         return {
             options: _parsedOptions,
             inline: _parsedInline,
@@ -2267,6 +2325,7 @@ export function getProperties(context: any): any {
             fields: _tFields,
             isLinked: false,
             linkedFrom: '',
+            developerDocumentation: developerDocumentation,
             internalIcon: 'radio',
         };
     }
@@ -2294,7 +2353,8 @@ export function getProperties(context: any): any {
             type: string = fetchDynamic<string>(context['field'], 'type', 'text'),
             unlessArray: string[] = fetchDynamic<string[]>(context['field'], 'unless', []),
             validateArray: string[] = fetchDynamic<string[]>(context['field'], 'validate', []),
-            display: string = fetchDynamic<string>(context['field'], 'display', '');
+            display: string = fetchDynamic<string>(context['field'], 'display', ''),
+            developerDocumentation: string = fetchDynamic<string>(context['field'], '__documentation', '');
         return {
             hidden: _parsedHidden,
             min: _parsedMin,
@@ -2313,6 +2373,7 @@ export function getProperties(context: any): any {
             fields: _tFields,
             isLinked: false,
             linkedFrom: '',
+            developerDocumentation: developerDocumentation,
             internalIcon: 'range',
         };
     }
@@ -2335,7 +2396,8 @@ export function getProperties(context: any): any {
             type: string = fetchDynamic<string>(context['field'], 'type', 'text'),
             unlessArray: string[] = fetchDynamic<string[]>(context['field'], 'unless', []),
             validateArray: string[] = fetchDynamic<string[]>(context['field'], 'validate', []),
-            display: string = fetchDynamic<string>(context['field'], 'display', '');
+            display: string = fetchDynamic<string>(context['field'], 'display', ''),
+            developerDocumentation: string = fetchDynamic<string>(context['field'], '__documentation', '');
         return {
             mode: _parsedMode,
             inputLabel: _parsedInputLabel,
@@ -2349,6 +2411,7 @@ export function getProperties(context: any): any {
             fields: _tFields,
             isLinked: false,
             linkedFrom: '',
+            developerDocumentation: developerDocumentation,
             internalIcon: 'revealer',
         };
     }
@@ -2369,7 +2432,8 @@ export function getProperties(context: any): any {
             type: string = fetchDynamic<string>(context['field'], 'type', 'text'),
             unlessArray: string[] = fetchDynamic<string[]>(context['field'], 'unless', []),
             validateArray: string[] = fetchDynamic<string[]>(context['field'], 'validate', []),
-            display: string = fetchDynamic<string>(context['field'], 'display', '');
+            display: string = fetchDynamic<string>(context['field'], 'display', ''),
+            developerDocumentation: string = fetchDynamic<string>(context['field'], '__documentation', '');
         return {
             required: isRequired,
             type: type,
@@ -2381,6 +2445,7 @@ export function getProperties(context: any): any {
             fields: _tFields,
             isLinked: false,
             linkedFrom: '',
+            developerDocumentation: developerDocumentation,
             internalIcon: 'section',
         };
     }
@@ -2411,7 +2476,8 @@ export function getProperties(context: any): any {
             type: string = fetchDynamic<string>(context['field'], 'type', 'text'),
             unlessArray: string[] = fetchDynamic<string[]>(context['field'], 'unless', []),
             validateArray: string[] = fetchDynamic<string[]>(context['field'], 'validate', []),
-            display: string = fetchDynamic<string>(context['field'], 'display', '');
+            display: string = fetchDynamic<string>(context['field'], 'display', ''),
+            developerDocumentation: string = fetchDynamic<string>(context['field'], '__documentation', '');
         return {
             placeholder: _parsedPlaceholder,
             options: _parsedOptions,
@@ -2433,6 +2499,7 @@ export function getProperties(context: any): any {
             fields: _tFields,
             isLinked: false,
             linkedFrom: '',
+            developerDocumentation: developerDocumentation,
             internalIcon: 'select',
         };
     }
@@ -2453,7 +2520,8 @@ export function getProperties(context: any): any {
             type: string = fetchDynamic<string>(context['field'], 'type', 'text'),
             unlessArray: string[] = fetchDynamic<string[]>(context['field'], 'unless', []),
             validateArray: string[] = fetchDynamic<string[]>(context['field'], 'validate', []),
-            display: string = fetchDynamic<string>(context['field'], 'display', '');
+            display: string = fetchDynamic<string>(context['field'], 'display', ''),
+            developerDocumentation: string = fetchDynamic<string>(context['field'], '__documentation', '');
         return {
             required: isRequired,
             type: type,
@@ -2465,6 +2533,7 @@ export function getProperties(context: any): any {
             fields: _tFields,
             isLinked: false,
             linkedFrom: '',
+            developerDocumentation: developerDocumentation,
             internalIcon: 'sets',
         };
     }
@@ -2487,7 +2556,8 @@ export function getProperties(context: any): any {
             type: string = fetchDynamic<string>(context['field'], 'type', 'text'),
             unlessArray: string[] = fetchDynamic<string[]>(context['field'], 'unless', []),
             validateArray: string[] = fetchDynamic<string[]>(context['field'], 'validate', []),
-            display: string = fetchDynamic<string>(context['field'], 'display', '');
+            display: string = fetchDynamic<string>(context['field'], 'display', ''),
+            developerDocumentation: string = fetchDynamic<string>(context['field'], '__documentation', '');
         return {
             maxItems: _parsedMaxItems,
             mode: _parsedMode,
@@ -2501,6 +2571,7 @@ export function getProperties(context: any): any {
             fields: _tFields,
             isLinked: false,
             linkedFrom: '',
+            developerDocumentation: developerDocumentation,
             internalIcon: 'sites',
         };
     }
@@ -2523,7 +2594,8 @@ export function getProperties(context: any): any {
             type: string = fetchDynamic<string>(context['field'], 'type', 'text'),
             unlessArray: string[] = fetchDynamic<string[]>(context['field'], 'unless', []),
             validateArray: string[] = fetchDynamic<string[]>(context['field'], 'validate', []),
-            display: string = fetchDynamic<string>(context['field'], 'display', '');
+            display: string = fetchDynamic<string>(context['field'], 'display', ''),
+            developerDocumentation: string = fetchDynamic<string>(context['field'], '__documentation', '');
         return {
             maxItems: _parsedMaxItems,
             mode: _parsedMode,
@@ -2537,6 +2609,7 @@ export function getProperties(context: any): any {
             fields: _tFields,
             isLinked: false,
             linkedFrom: '',
+            developerDocumentation: developerDocumentation,
             internalIcon: 'structures',
         };
     }
@@ -2559,7 +2632,8 @@ export function getProperties(context: any): any {
             type: string = fetchDynamic<string>(context['field'], 'type', 'text'),
             unlessArray: string[] = fetchDynamic<string[]>(context['field'], 'unless', []),
             validateArray: string[] = fetchDynamic<string[]>(context['field'], 'validate', []),
-            display: string = fetchDynamic<string>(context['field'], 'display', '');
+            display: string = fetchDynamic<string>(context['field'], 'display', ''),
+            developerDocumentation: string = fetchDynamic<string>(context['field'], '__documentation', '');
         return {
             from: _parsedFrom,
             generate: _parsedGenerate,
@@ -2573,6 +2647,7 @@ export function getProperties(context: any): any {
             fields: _tFields,
             isLinked: false,
             linkedFrom: '',
+            developerDocumentation: developerDocumentation,
             internalIcon: 'slug',
         };
     }
@@ -2600,7 +2675,8 @@ export function getProperties(context: any): any {
             type: string = fetchDynamic<string>(context['field'], 'type', 'text'),
             unlessArray: string[] = fetchDynamic<string[]>(context['field'], 'unless', []),
             validateArray: string[] = fetchDynamic<string[]>(context['field'], 'validate', []),
-            display: string = fetchDynamic<string>(context['field'], 'display', '');
+            display: string = fetchDynamic<string>(context['field'], 'display', ''),
+            developerDocumentation: string = fetchDynamic<string>(context['field'], '__documentation', '');
         return {
             placeholder: _parsedPlaceholder,
             inputType: _parsedInputType,
@@ -2619,6 +2695,7 @@ export function getProperties(context: any): any {
             fields: _tFields,
             isLinked: false,
             linkedFrom: '',
+            developerDocumentation: developerDocumentation,
             internalIcon: 'text',
         };
     }
@@ -2639,7 +2716,8 @@ export function getProperties(context: any): any {
             type: string = fetchDynamic<string>(context['field'], 'type', 'text'),
             unlessArray: string[] = fetchDynamic<string[]>(context['field'], 'unless', []),
             validateArray: string[] = fetchDynamic<string[]>(context['field'], 'validate', []),
-            display: string = fetchDynamic<string>(context['field'], 'display', '');
+            display: string = fetchDynamic<string>(context['field'], 'display', ''),
+            developerDocumentation: string = fetchDynamic<string>(context['field'], '__documentation', '');
         return {
             required: isRequired,
             type: type,
@@ -2651,6 +2729,7 @@ export function getProperties(context: any): any {
             fields: _tFields,
             isLinked: false,
             linkedFrom: '',
+            developerDocumentation: developerDocumentation,
             internalIcon: 'table',
         };
     }
@@ -2672,7 +2751,8 @@ export function getProperties(context: any): any {
             type: string = fetchDynamic<string>(context['field'], 'type', 'text'),
             unlessArray: string[] = fetchDynamic<string[]>(context['field'], 'unless', []),
             validateArray: string[] = fetchDynamic<string[]>(context['field'], 'validate', []),
-            display: string = fetchDynamic<string>(context['field'], 'display', '');
+            display: string = fetchDynamic<string>(context['field'], 'display', ''),
+            developerDocumentation: string = fetchDynamic<string>(context['field'], '__documentation', '');
         return {
             placeholder: _parsedPlaceholder,
             required: isRequired,
@@ -2685,6 +2765,7 @@ export function getProperties(context: any): any {
             fields: _tFields,
             isLinked: false,
             linkedFrom: '',
+            developerDocumentation: developerDocumentation,
             internalIcon: 'tags',
         };
     }
@@ -2709,7 +2790,8 @@ export function getProperties(context: any): any {
             type: string = fetchDynamic<string>(context['field'], 'type', 'text'),
             unlessArray: string[] = fetchDynamic<string[]>(context['field'], 'unless', []),
             validateArray: string[] = fetchDynamic<string[]>(context['field'], 'validate', []),
-            display: string = fetchDynamic<string>(context['field'], 'display', '');
+            display: string = fetchDynamic<string>(context['field'], 'display', ''),
+            developerDocumentation: string = fetchDynamic<string>(context['field'], '__documentation', '');
         return {
             maxItems: _parsedMaxItems,
             mode: _parsedMode,
@@ -2725,6 +2807,7 @@ export function getProperties(context: any): any {
             fields: _tFields,
             isLinked: false,
             linkedFrom: '',
+            developerDocumentation: developerDocumentation,
             internalIcon: 'taxonomy',
         };
     }
@@ -2747,7 +2830,8 @@ export function getProperties(context: any): any {
             type: string = fetchDynamic<string>(context['field'], 'type', 'text'),
             unlessArray: string[] = fetchDynamic<string[]>(context['field'], 'unless', []),
             validateArray: string[] = fetchDynamic<string[]>(context['field'], 'validate', []),
-            display: string = fetchDynamic<string>(context['field'], 'display', '');
+            display: string = fetchDynamic<string>(context['field'], 'display', ''),
+            developerDocumentation: string = fetchDynamic<string>(context['field'], '__documentation', '');
         return {
             maxItems: _parsedMaxItems,
             mode: _parsedMode,
@@ -2761,6 +2845,7 @@ export function getProperties(context: any): any {
             fields: _tFields,
             isLinked: false,
             linkedFrom: '',
+            developerDocumentation: developerDocumentation,
             internalIcon: 'taxonomy',
         };
     }
@@ -2784,7 +2869,8 @@ export function getProperties(context: any): any {
             type: string = fetchDynamic<string>(context['field'], 'type', 'text'),
             unlessArray: string[] = fetchDynamic<string[]>(context['field'], 'unless', []),
             validateArray: string[] = fetchDynamic<string[]>(context['field'], 'validate', []),
-            display: string = fetchDynamic<string>(context['field'], 'display', '');
+            display: string = fetchDynamic<string>(context['field'], 'display', ''),
+            developerDocumentation: string = fetchDynamic<string>(context['field'], '__documentation', '');
         return {
             hidePartials: _parsedHidePartials,
             blueprint: _parsedBlueprint,
@@ -2799,6 +2885,7 @@ export function getProperties(context: any): any {
             fields: _tFields,
             isLinked: false,
             linkedFrom: '',
+            developerDocumentation: developerDocumentation,
             internalIcon: 'template',
         };
     }
@@ -2821,7 +2908,8 @@ export function getProperties(context: any): any {
             type: string = fetchDynamic<string>(context['field'], 'type', 'text'),
             unlessArray: string[] = fetchDynamic<string[]>(context['field'], 'unless', []),
             validateArray: string[] = fetchDynamic<string[]>(context['field'], 'validate', []),
-            display: string = fetchDynamic<string>(context['field'], 'display', '');
+            display: string = fetchDynamic<string>(context['field'], 'display', ''),
+            developerDocumentation: string = fetchDynamic<string>(context['field'], '__documentation', '');
         return {
             maxItems: _parsedMaxItems,
             mode: _parsedMode,
@@ -2835,6 +2923,7 @@ export function getProperties(context: any): any {
             fields: _tFields,
             isLinked: false,
             linkedFrom: '',
+            developerDocumentation: developerDocumentation,
             internalIcon: 'template_folder',
         };
     }
@@ -2859,7 +2948,8 @@ export function getProperties(context: any): any {
             type: string = fetchDynamic<string>(context['field'], 'type', 'text'),
             unlessArray: string[] = fetchDynamic<string[]>(context['field'], 'unless', []),
             validateArray: string[] = fetchDynamic<string[]>(context['field'], 'validate', []),
-            display: string = fetchDynamic<string>(context['field'], 'display', '');
+            display: string = fetchDynamic<string>(context['field'], 'display', ''),
+            developerDocumentation: string = fetchDynamic<string>(context['field'], '__documentation', '');
         return {
             placeholder: _parsedPlaceholder,
             characterLimit: _parsedCharacterLimit,
@@ -2875,6 +2965,7 @@ export function getProperties(context: any): any {
             fields: _tFields,
             isLinked: false,
             linkedFrom: '',
+            developerDocumentation: developerDocumentation,
             internalIcon: 'textarea',
         };
     }
@@ -2897,7 +2988,8 @@ export function getProperties(context: any): any {
             type: string = fetchDynamic<string>(context['field'], 'type', 'text'),
             unlessArray: string[] = fetchDynamic<string[]>(context['field'], 'unless', []),
             validateArray: string[] = fetchDynamic<string[]>(context['field'], 'validate', []),
-            display: string = fetchDynamic<string>(context['field'], 'display', '');
+            display: string = fetchDynamic<string>(context['field'], 'display', ''),
+            developerDocumentation: string = fetchDynamic<string>(context['field'], '__documentation', '');
         return {
             secondsEnabled: _parsedSecondsEnabled,
             default: _parsedDefault,
@@ -2911,6 +3003,7 @@ export function getProperties(context: any): any {
             fields: _tFields,
             isLinked: false,
             linkedFrom: '',
+            developerDocumentation: developerDocumentation,
             internalIcon: 'time',
         };
     }
@@ -2933,7 +3026,8 @@ export function getProperties(context: any): any {
             type: string = fetchDynamic<string>(context['field'], 'type', 'text'),
             unlessArray: string[] = fetchDynamic<string[]>(context['field'], 'unless', []),
             validateArray: string[] = fetchDynamic<string[]>(context['field'], 'validate', []),
-            display: string = fetchDynamic<string>(context['field'], 'display', '');
+            display: string = fetchDynamic<string>(context['field'], 'display', ''),
+            developerDocumentation: string = fetchDynamic<string>(context['field'], '__documentation', '');
         return {
             inlineLabel: _parsedInlineLabel,
             default: _parsedDefault,
@@ -2947,6 +3041,7 @@ export function getProperties(context: any): any {
             fields: _tFields,
             isLinked: false,
             linkedFrom: '',
+            developerDocumentation: developerDocumentation,
             internalIcon: 'toggle',
         };
     }
@@ -2969,7 +3064,8 @@ export function getProperties(context: any): any {
             type: string = fetchDynamic<string>(context['field'], 'type', 'text'),
             unlessArray: string[] = fetchDynamic<string[]>(context['field'], 'unless', []),
             validateArray: string[] = fetchDynamic<string[]>(context['field'], 'validate', []),
-            display: string = fetchDynamic<string>(context['field'], 'display', '');
+            display: string = fetchDynamic<string>(context['field'], 'display', ''),
+            developerDocumentation: string = fetchDynamic<string>(context['field'], '__documentation', '');
         return {
             maxItems: _parsedMaxItems,
             mode: _parsedMode,
@@ -2983,6 +3079,7 @@ export function getProperties(context: any): any {
             fields: _tFields,
             isLinked: false,
             linkedFrom: '',
+            developerDocumentation: developerDocumentation,
             internalIcon: 'user_groups',
         };
     }
@@ -3005,7 +3102,8 @@ export function getProperties(context: any): any {
             type: string = fetchDynamic<string>(context['field'], 'type', 'text'),
             unlessArray: string[] = fetchDynamic<string[]>(context['field'], 'unless', []),
             validateArray: string[] = fetchDynamic<string[]>(context['field'], 'validate', []),
-            display: string = fetchDynamic<string>(context['field'], 'display', '');
+            display: string = fetchDynamic<string>(context['field'], 'display', ''),
+            developerDocumentation: string = fetchDynamic<string>(context['field'], '__documentation', '');
         return {
             maxItems: _parsedMaxItems,
             mode: _parsedMode,
@@ -3019,6 +3117,7 @@ export function getProperties(context: any): any {
             fields: _tFields,
             isLinked: false,
             linkedFrom: '',
+            developerDocumentation: developerDocumentation,
             internalIcon: 'user_roles',
         };
     }
@@ -3041,7 +3140,8 @@ export function getProperties(context: any): any {
             type: string = fetchDynamic<string>(context['field'], 'type', 'text'),
             unlessArray: string[] = fetchDynamic<string[]>(context['field'], 'unless', []),
             validateArray: string[] = fetchDynamic<string[]>(context['field'], 'validate', []),
-            display: string = fetchDynamic<string>(context['field'], 'display', '');
+            display: string = fetchDynamic<string>(context['field'], 'display', ''),
+            developerDocumentation: string = fetchDynamic<string>(context['field'], '__documentation', '');
         return {
             maxItems: _parsedMaxItems,
             mode: _parsedMode,
@@ -3055,6 +3155,7 @@ export function getProperties(context: any): any {
             fields: _tFields,
             isLinked: false,
             linkedFrom: '',
+            developerDocumentation: developerDocumentation,
             internalIcon: 'users',
         };
     }
@@ -3077,7 +3178,8 @@ export function getProperties(context: any): any {
             type: string = fetchDynamic<string>(context['field'], 'type', 'text'),
             unlessArray: string[] = fetchDynamic<string[]>(context['field'], 'unless', []),
             validateArray: string[] = fetchDynamic<string[]>(context['field'], 'validate', []),
-            display: string = fetchDynamic<string>(context['field'], 'display', '');
+            display: string = fetchDynamic<string>(context['field'], 'display', ''),
+            developerDocumentation: string = fetchDynamic<string>(context['field'], '__documentation', '');
         return {
             default: _parsedDefault,
             placeholder: _parsedPlaceholder,
@@ -3091,6 +3193,7 @@ export function getProperties(context: any): any {
             fields: _tFields,
             isLinked: false,
             linkedFrom: '',
+            developerDocumentation: developerDocumentation,
             internalIcon: 'video',
         };
     }
@@ -3112,7 +3215,8 @@ export function getProperties(context: any): any {
             type: string = fetchDynamic<string>(context['field'], 'type', 'text'),
             unlessArray: string[] = fetchDynamic<string[]>(context['field'], 'unless', []),
             validateArray: string[] = fetchDynamic<string[]>(context['field'], 'validate', []),
-            display: string = fetchDynamic<string>(context['field'], 'display', '');
+            display: string = fetchDynamic<string>(context['field'], 'display', ''),
+            developerDocumentation: string = fetchDynamic<string>(context['field'], '__documentation', '');
         return {
             default: _parsedDefault,
             required: isRequired,
@@ -3125,6 +3229,7 @@ export function getProperties(context: any): any {
             fields: _tFields,
             isLinked: false,
             linkedFrom: '',
+            developerDocumentation: developerDocumentation,
             internalIcon: 'yaml',
         };
     }
@@ -3147,7 +3252,8 @@ export function getProperties(context: any): any {
             type: string = fetchDynamic<string>(context['field'], 'type', 'text'),
             unlessArray: string[] = fetchDynamic<string[]>(context['field'], 'unless', []),
             validateArray: string[] = fetchDynamic<string[]>(context['field'], 'validate', []),
-            display: string = fetchDynamic<string>(context['field'], 'display', '');
+            display: string = fetchDynamic<string>(context['field'], 'display', ''),
+            developerDocumentation: string = fetchDynamic<string>(context['field'], '__documentation', '');
         return {
             placeholder: _parsedPlaceholder,
             maxItems: _parsedMaxItems,
@@ -3161,6 +3267,7 @@ export function getProperties(context: any): any {
             fields: _tFields,
             isLinked: false,
             linkedFrom: '',
+            developerDocumentation: developerDocumentation,
             internalIcon: 'form',
         };
     }
@@ -3342,15 +3449,15 @@ export function getProperties(context: any): any {
 
         const contextFields = context.fields as [];
 
-        try {
-            contextFields.forEach((field) => {
+        contextFields.forEach((field) => {
+            try {
                 if (typeof field['field'] === 'string') {
                     const fsName = this.getFieldsetName(field['field']);
-    
+
                     if (fsName == null || !this.fieldSets.has(fsName)) { return; }
                     const _tFs = this.fieldSets.get(fsName) as IParsedFieldset;
                     const fsField = locateField(this.getFieldName(field['field']), _tFs);
-    
+
                     if (fsField == null) { return; }
                     const targetHandle = field['handle'] as string;
                     const newField: IFieldDetails = {
@@ -3359,45 +3466,45 @@ export function getProperties(context: any): any {
                         isLinked: true,
                         linkedFrom: field['field'] as string
                     };
-    
+
                     fields.push(newField);
                     return;
                 }
-    
+
                 if (typeof field['import'] === 'string') {
                     if (this.fieldSets.has(field['import']) == false) { return; }
                     const _tFs = this.fieldSets.get(field['import']) as IParsedFieldset;
                     let importPrefix: string | null = null;
-    
+
                     if (typeof field['prefix'] === 'string') {
                         const _tImportPrefix = field['prefix'] as string;
-    
+
                         if (_tImportPrefix.trim().length > 0) {
                             importPrefix = _tImportPrefix.trim();
                         }
                     }
-    
+
                     const _tFields = fetchFields(importPrefix, _tFs);
-    
+
                     if (_tFields.length > 0) {
-                        _tFields.forEach((importedField) => {
-                            fields.push(importedField);
-                        });
+                        try {
+                            _tFields.forEach((importedField) => {
+                                fields.push(importedField);
+                            });
+                        } catch (nestedE) { }
                     }
-    
+
                     return;
                 }
-    
+
                 const parsedField = this.parse(field);
-    
+
                 if (parsedField != null) {
                     parsedField.handle = field['handle'];
                     fields.push(parsedField);
                 }
-            });
-        } catch (err) {
-            var hm = 'asdf';
-        }
+            } catch (e) { }
+        });
 
         return fields;
     }
@@ -3419,17 +3526,19 @@ export function getProperties(context: any): any {
     parseSets(context: any): ISet[] {
         const sets: ISet[] = [];
 
-        const handles = Object.keys(context);   
+        const handles = Object.keys(context);
 
         handles.forEach((setName) => {
-            const _tSet = context[setName];
-            let _tSetFields = this.parseFields(_tSet);
+            try {
+                const _tSet = context[setName];
+                let _tSetFields = this.parseFields(_tSet);
 
-            sets.push({
-                display: _tSet['display'] ?? '',
-                handle: setName,
-                fields: _tSetFields
-            });
+                sets.push({
+                    display: _tSet['display'] ?? '',
+                    handle: setName,
+                    fields: _tSetFields
+                });
+            } catch (e) { }
         });
 
         return sets;
@@ -3476,21 +3585,23 @@ export class BlueprintParser {
             sectionNames = Object.keys(context);
 
         sectionNames.forEach((sectionHandle) => {
-            const _tSectionContext = context[sectionHandle];
-            const _tSectionDisplay = _tSectionContext['display'] ?? '';
-            const _tSectionFields = this.fieldParser.parseFields(_tSectionContext);
+            try {
+                const _tSectionContext = context[sectionHandle];
+                const _tSectionDisplay = _tSectionContext['display'] ?? '';
+                const _tSectionFields = this.fieldParser.parseFields(_tSectionContext);
 
-            sections.push({
-                display: _tSectionDisplay,
-                handle: sectionHandle,
-                fields: _tSectionFields
-            })
+                sections.push({
+                    display: _tSectionDisplay,
+                    handle: sectionHandle,
+                    fields: _tSectionFields
+                });
+            } catch (e) { }
         });
 
         return sections;
     }
 
-    parseBlueprint(context: any, handle: string, blueprintType: string, filePath?:string, contents?:string): IParsedBlueprint | null {
+    parseBlueprint(context: any, handle: string, blueprintType: string, filePath?: string, contents?: string): IParsedBlueprint | null {
         const title = context['title'] ?? '';
         let _tSections: IParsedSection[] = [];
         let _tFields: IFieldDetails[] = [];
@@ -3504,7 +3615,9 @@ export class BlueprintParser {
         _tAllFields = _tFields.concat([]);
 
         _tSections.forEach((section) => {
-            _tAllFields = _tAllFields.concat(section.fields);
+            try {
+                _tAllFields = _tAllFields.concat(section.fields);
+            } catch (e) { }
         });
 
         const parsedBlueprint: IParsedBlueprint = {
@@ -3550,10 +3663,12 @@ export class FieldSetParser {
         let prefixedFields: IPrefixedField[] = [];
 
         _blueprint.allFields.forEach((field) => {
-            prefixedFields.push({
-                field: field,
-                prefixedHandle: handle + '.' + field.handle
-            });
+            try {
+                prefixedFields.push({
+                    field: field,
+                    prefixedHandle: handle + '.' + field.handle
+                });
+            } catch (e) { }
         });
 
         const parsedFieldset = {
