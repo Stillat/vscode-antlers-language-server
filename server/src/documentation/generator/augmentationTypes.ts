@@ -3,6 +3,7 @@ export enum AugmentationTypes {
     Boolean = 'boolean',
     Number = 'number',
     Date = 'date',
+    Entry = 'entry',
     Array = 'array',
     ArrayableString = 'arrayableString',
     Builder = 'builder',
