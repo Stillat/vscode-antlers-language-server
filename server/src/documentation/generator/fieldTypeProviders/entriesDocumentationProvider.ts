@@ -33,7 +33,7 @@ export class EntriesDocumentationProvider implements IDocumentationProvider {
                     });
 
                     injectedFields = KeysResolver.fieldsToInjectedFields(fields);
-                    overviewSnippets = NestedFieldsProvider.generate(context.handle, injectedFields);
+                    overviewSnippets = [NestedFieldsProvider.generateNestedFields(context.handle, injectedFields, 4)];
                 }
 
                 overviewSnippets.forEach((snippet) => {
@@ -70,7 +70,7 @@ export class EntriesDocumentationProvider implements IDocumentationProvider {
             });
 
             injectedFields = KeysResolver.fieldsToInjectedFields(fields);
-            overviewSnippets = NestedFieldsProvider.generate(context.handle, injectedFields);
+            overviewSnippets = [NestedFieldsProvider.generateNestedFields(context.handle, injectedFields, 4)];
         }
 
         return {
