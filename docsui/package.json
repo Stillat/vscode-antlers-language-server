@@ -11,9 +11,11 @@
   "dependencies": {
     "@vscode/webview-ui-toolkit": "^1.0.0",
     "fuse.js": "^6.6.2",
+    "marked": "^4.2.2",
     "vue": "^3.2.33"
   },
   "devDependencies": {
+    "@types/marked": "^4.0.7",
     "@types/node": "^16.11.27",
     "@types/vscode-webview": "^1.57.0",
     "@vitejs/plugin-vue": "^2.3.1",
