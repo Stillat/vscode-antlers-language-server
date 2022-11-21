@@ -56,7 +56,7 @@ const specialModifiers: IModifier[] = [
         parameters: [
             {
                 name: 'value',
-                description: 'The truthy value to convert to a string'
+                description: 'The truthy value to convert to a string.'
             }
         ]
     }

@@ -89,7 +89,7 @@ const stringModifiers: IModifier[] = [
         parameters: [
             {
                 name: 'term',
-                description: 'The sub-string to search for'
+                description: 'The sub-string to search for.'
             }
         ],
         canBeParameter: true,
@@ -133,7 +133,7 @@ const stringModifiers: IModifier[] = [
         acceptsType: ['string'],
         returnsType: ['string'],
         forFieldType: [],
-        description: 'Get the embed URL when given a youtube or vimeo link that\'s direct to the page.',
+        description: 'Get the embed URL when given a YouTube or Vimeo link that\'s direct to the page.',
         docLink: null,
         parameters: [],
         canBeParameter: false,
@@ -192,7 +192,7 @@ const stringModifiers: IModifier[] = [
         parameters: [
             {
                 name: 'marker',
-                description: 'The string to break by.'
+                description: 'The substring to break on.'
             }
         ],
         canBeParameter: false,
@@ -370,7 +370,7 @@ const stringModifiers: IModifier[] = [
         acceptsType: ['string'],
         returnsType: ['string'],
         forFieldType: [],
-        description: 'Replaces all regex matches with a string.',
+        description: 'Replaces all regex matches within a string.',
         docLink: 'https://statamic.dev/modifiers/regex_replace',
         parameters: [
             {
@@ -733,7 +733,7 @@ const stringModifiers: IModifier[] = [
         acceptsType: ['string'],
         returnsType: ['string'],
         forFieldType: [],
-        description: 'Parses the provided value as Antlers, and returns the result',
+        description: 'Parses the provided value as Antlers, and returns the result.',
         docLink: null,
         canBeParameter: false,
         parameters: [],
@@ -744,7 +744,7 @@ const stringModifiers: IModifier[] = [
         acceptsType: ['string'],
         returnsType: ['array'],
         forFieldType: ['bard'],
-        description: 'Converts a Bard value to a flat array of nodes and marks',
+        description: 'Converts a Bard value to a flat array of nodes and marks.',
         docLink: null,
         canBeParameter: false,
         parameters: [],
@@ -755,7 +755,7 @@ const stringModifiers: IModifier[] = [
         acceptsType: ['array', 'string'],
         returnsType: ['string'],
         forFieldType: ['bard'],
-        description: 'Converts a Bard value to plain text (excluding sets)',
+        description: 'Converts a Bard value to plain text (excluding sets).',
         docLink: null,
         canBeParameter: false,
         parameters: [],
@@ -766,7 +766,7 @@ const stringModifiers: IModifier[] = [
         acceptsType: ['array', 'string'],
         returnsType: ['string'],
         forFieldType: ['bard'],
-        description: 'Converts a Bard value to HTML (excluding sets)',
+        description: 'Converts a Bard value to HTML (excluding sets).',
         docLink: null,
         canBeParameter: false,
         parameters: [],

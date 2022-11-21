@@ -4,7 +4,9 @@ Bugs fixed, what's new, and more! :)
 
 ## Unreleased
 
-- Improved descriptions for the `first` and `last` modifiers
+- Improves descriptions for the `first` and `last` modifiers
+- Improves the consistency of modifier and modifier parameter descriptions
+- Corrects a handful of typos in modifier descriptions
 
 ## v2.3.9
 
