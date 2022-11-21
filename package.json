@@ -172,16 +172,6 @@
             }
         ],
         "views": {
-            "explorer": [
-                {
-                    "id": "antlers.projectExplorer",
-                    "name": "Blueprint Explorer",
-                    "contextualTitle": "Statamic Blueprint Explorer",
-                    "type": "tree",
-                    "icon": "explorer.svg",
-                    "when": "resourceExtname == .html"
-                }
-            ]
         }
     },
     "bundleDependencies": false,

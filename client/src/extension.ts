@@ -131,7 +131,7 @@ export function activate(context: ExtensionContext) {
         }
     };
 
-    projectExplorer = new ProjectExplorer(context);
+    // projectExplorer = new ProjectExplorer(context);
 
     // Options to control the language client
     const clientOptions: LanguageClientOptions = {
@@ -183,7 +183,7 @@ export function activate(context: ExtensionContext) {
         });
     }
 
-    context.subscriptions.push(
+    /* context.subscriptions.push(
         vscode.commands.registerCommand('extension.antlersLanguageServer.generateHelpInformation', (obj) => {
             if (isClientReady) {
                 client.sendRequest(GenerateHelpRequest.type, { context: obj }).then((result) => {
@@ -193,7 +193,7 @@ export function activate(context: ExtensionContext) {
                 });
             }
         })
-    );
+    ); */
 
     context.subscriptions.push(
         vscode.commands.registerCommand("extension.antlersLanguageServer.reloadProjectDetails", () => {
@@ -241,9 +241,9 @@ export function activate(context: ExtensionContext) {
 
         isClientReady = true;
 
-        client.onRequest(ProjectUpdatedRequest.type, (f) => {
+        /*client.onRequest(ProjectUpdatedRequest.type, (f) => {
             projectExplorer.updateStructure(f.content);
-        });
+        });*/
 
         setTimeout(() => {
             client.sendRequest(SemanticTokenLegendRequest.type).then(legend => {
