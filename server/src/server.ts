@@ -339,11 +339,11 @@ function contentChangeHandler(change: TextDocumentChangeEvent<TextDocument>) {
     validateTextDocument(change.document, connection);
 }
 
-const debouncedContentChangeHandler = debounce(contentChangeHandler, 250);
+const debouncedCompletionHandler = debounce(handleOnCompletion, 97);
 
 // The content of a text document has changed. This event is emitted
 // when the text document first opened or when its content has changed.
-documents.onDidChangeContent(debouncedContentChangeHandler);
+documents.onDidChangeContent(contentChangeHandler);
 
 connection.onDidChangeWatchedFiles((_change) => {
     // Monitored files have change in VSCode
@@ -364,7 +364,7 @@ connection.onDefinition(handleDefinitionRequest);
 connection.onFoldingRanges(handleFoldingRequest);
 connection.onSignatureHelp(handleSignatureHelpRequest);
 connection.onDocumentFormatting(formatAntlersDocument);
-connection.onCompletion(handleOnCompletion);
+connection.onCompletion(debouncedCompletionHandler);
 connection.onCompletionResolve(handleOnCompletionResolve);
 documents.listen(connection);
 

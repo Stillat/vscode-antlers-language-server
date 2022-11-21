@@ -18,6 +18,7 @@ Bugs fixed, what's new, and more! :)
 - Adds support for the `bool_string` modifier
 - Adds common date/time format variables to the `format` modifier's hover tooltip
 - Adds support for the `when` and `unless` partial tag parameters
+- Improves tag-specific contextual completion suggestions
 
 ## v2.3.8
 
