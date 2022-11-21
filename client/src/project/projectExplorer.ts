@@ -108,16 +108,38 @@ class ProjectDataProvider implements vscode.TreeDataProvider<ProjectItem> {
     private structure: IProjectFields | null = null;
 
     constructor() {
-        this.rootItems.push(new ProjectItem('Assets', 'collections', ItemType.AssetListing, vscode.TreeItemCollapsibleState.Collapsed));
-        this.rootItems.push(new ProjectItem('Collections', 'collections', ItemType.CollectionListing, vscode.TreeItemCollapsibleState.Collapsed));
-        this.rootItems.push(new ProjectItem('Forms', 'collections', ItemType.FormListing, vscode.TreeItemCollapsibleState.Collapsed));
-        this.rootItems.push(new ProjectItem('General Blueprints', 'collections', ItemType.BlueprintListing, vscode.TreeItemCollapsibleState.Collapsed));
-        this.rootItems.push(new ProjectItem('Globals', 'collections', ItemType.GlobalListing, vscode.TreeItemCollapsibleState.Collapsed));
-        this.rootItems.push(new ProjectItem('Navigations', 'collections', ItemType.NavigationListing, vscode.TreeItemCollapsibleState.Collapsed));
+
+    }
+
+    private rebuildRoot() {
+        if (this.structure?.assets.length > 0) {
+            this.rootItems.push(new ProjectItem('Assets', 'collections', ItemType.AssetListing, vscode.TreeItemCollapsibleState.Collapsed));
+        }
+        
+        if (this.structure?.collections.length > 0) {
+            this.rootItems.push(new ProjectItem('Collections', 'collections', ItemType.CollectionListing, vscode.TreeItemCollapsibleState.Collapsed));
+        }
+
+        if (this.structure?.forms.length > 0) {
+            this.rootItems.push(new ProjectItem('Forms', 'collections', ItemType.FormListing, vscode.TreeItemCollapsibleState.Collapsed));
+        }
+
+        if (this.structure?.general.length > 0) {
+            this.rootItems.push(new ProjectItem('General Blueprints', 'collections', ItemType.BlueprintListing, vscode.TreeItemCollapsibleState.Collapsed));
+        }
+
+        if (this.structure?.globals.length > 0) {
+            this.rootItems.push(new ProjectItem('Globals', 'collections', ItemType.GlobalListing, vscode.TreeItemCollapsibleState.Collapsed));
+        }
+        
+        if (this.structure?.navigations.length > 0) {
+            this.rootItems.push(new ProjectItem('Navigations', 'collections', ItemType.NavigationListing, vscode.TreeItemCollapsibleState.Collapsed));
+        }
     }
 
     updateStructure(structure: IProjectFields) {
         this.structure = structure;
+        this.rebuildRoot();
         this.refresh();
     }
 
