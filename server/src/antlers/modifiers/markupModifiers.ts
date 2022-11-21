@@ -33,7 +33,7 @@ const markupModifiers: IModifier[] = [
         acceptsType: ['string', 'array'],
         returnsType: ['*'],
         forFieldType: [],
-        description: 'Returns the specified number of characters from the beginning of the string.',
+        description: 'Returns the specified number of characters/items from the beginning of the string/array.',
         docLink: 'https://statamic.dev/modifiers/first',
         parameters: [
             {
@@ -49,7 +49,7 @@ const markupModifiers: IModifier[] = [
         acceptsType: ['string', 'array'],
         returnsType: ['*'],
         forFieldType: [],
-        description: 'Returns the specified number of characters from the end of the string.',
+        description: 'Returns the specified number of characters/items from the end of the string/array.',
         docLink: 'https://statamic.dev/modifiers/last',
         parameters: [
             {

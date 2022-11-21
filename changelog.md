@@ -2,6 +2,10 @@
 
 Bugs fixed, what's new, and more! :)
 
+## Unreleased
+
+- Improved descriptions for the `first` and `last` modifiers
+
 ## v2.3.9
 
 - Improves parser support for Antlers `list` keyword
