@@ -7,6 +7,7 @@ Bugs fixed, what's new, and more! :)
 - Improves descriptions for the `first` and `last` modifiers
 - Improves the consistency of modifier and modifier parameter descriptions
 - Corrects a handful of typos in modifier descriptions
+- Improves the internal support for `assets` variables
 
 ## v2.3.9
 
