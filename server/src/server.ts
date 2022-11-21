@@ -491,7 +491,6 @@ export function requestEdits(edit: WorkspaceEdit) {
 }
 
 export function sendProjectDetails(contents: IProjectFields) {
-    return;
     updateCurrentDetails(contents);
     const params: ProjectDetailsParams = {
         content: contents
