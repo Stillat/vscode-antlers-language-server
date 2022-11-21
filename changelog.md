@@ -17,6 +17,7 @@ Bugs fixed, what's new, and more! :)
 - Improvements to internal modifier suggestion management and parsing
 - Adds support for the `bool_string` modifier
 - Adds common date/time format variables to the `format` modifier's hover tooltip
+- Adds support for the `when` and `unless` partial tag parameters
 
 ## v2.3.8
 
