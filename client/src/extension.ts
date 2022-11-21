@@ -242,7 +242,9 @@ export function activate(context: ExtensionContext) {
         isClientReady = true;
 
         client.onRequest(ProjectUpdatedRequest.type, (f) => {
-            projectExplorer.updateStructure(f.content);
+            if (projectExplorer != null) {
+                projectExplorer.updateStructure(f.content);
+            }
         });
 
         setTimeout(() => {

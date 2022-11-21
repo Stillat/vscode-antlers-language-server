@@ -325,7 +325,9 @@ export class ProjectExplorer {
     }
 
     updateStructure(structure: IProjectFields) {
-        this.provider.updateStructure(structure);
+        if (this.provider != null) {
+            this.provider.updateStructure(structure);
+        }
     }
 
 }
