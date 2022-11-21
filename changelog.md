@@ -2,7 +2,7 @@
 
 Bugs fixed, what's new, and more! :)
 
-## Unreleased
+## v2.3.9
 
 - Improves parser support for Antlers `list` keyword
 - Improves internal support for `assets` fieldtypes
