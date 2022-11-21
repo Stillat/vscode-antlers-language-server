@@ -11,6 +11,26 @@ const PartialParameters: IAntlersParameter[] = [
         expectsTypes: ["string"],
         isDynamic: false,
     },
+    {
+        isRequired: false,
+        name: "when",
+        description: "A condition to control whether the partial renders",
+        allowsVariableReference: true,
+        acceptsVariableInterpolation: false,
+        aliases: [],
+        expectsTypes: ['*'],
+        isDynamic: false
+    },
+    {
+        isRequired: false,
+        name: "unless",
+        description: "A condition to control whether the partial renders",
+        allowsVariableReference: true,
+        acceptsVariableInterpolation: false,
+        aliases: [],
+        expectsTypes: ['*'],
+        isDynamic: false
+    }
 ];
 
 export { PartialParameters };
