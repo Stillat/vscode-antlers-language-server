@@ -88,7 +88,7 @@ const User: IAntlersTag = {
     resolveDocumentation: (params?: ISuggestionRequest) => {
         return makeTagDoc(
             'user Tag',
-            'The `user` tag provides access to the currently logged in user information, or for a specific user when using the `id`, `email`, or `field` parameter',
+            'The `user` tag provides access to the currently logged in user information, or for a specific user when using the `id`, `email`, or `field` parameter.',
             null
         );
     }

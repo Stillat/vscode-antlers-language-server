@@ -22,7 +22,7 @@ const Translate: IAntlersTag = {
         {
             isRequired: false,
             name: 'key',
-            description: 'The key of the translation string to find',
+            description: 'The key of the translation string to find.',
             acceptsVariableInterpolation: false,
             aliases: [],
             allowsVariableReference: false,
@@ -32,7 +32,7 @@ const Translate: IAntlersTag = {
         {
             isRequired: false,
             name: 'locale',
-            description: 'The locale to be used when translating',
+            description: 'The locale to be used when translating.',
             acceptsVariableInterpolation: false,
             aliases: ['site'],
             allowsVariableReference: false,
@@ -42,7 +42,7 @@ const Translate: IAntlersTag = {
         {
             isRequired: false,
             name: 'count',
-            description: 'The number of items to use for pluralization',
+            description: 'The number of items to use for pluralization.',
             acceptsVariableInterpolation: false,
             aliases: [],
             allowsVariableReference: false,

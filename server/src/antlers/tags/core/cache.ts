@@ -27,7 +27,7 @@ const Cache: IAntlersTag = {
         {
             isRequired: false,
             name: "for",
-            description: "The duration the cache is valid for",
+            description: "The duration the cache is valid for.",
             acceptsVariableInterpolation: false,
             aliases: [],
             allowsVariableReference: false,
@@ -37,7 +37,7 @@ const Cache: IAntlersTag = {
         {
             isRequired: false,
             name: "key",
-            description: "An arbitrary name the cache entry may be referenced by",
+            description: "An arbitrary name the cache entry may be referenced by.",
             acceptsVariableInterpolation: false,
             aliases: [],
             allowsVariableReference: false,

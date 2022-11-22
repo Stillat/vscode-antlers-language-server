@@ -18,7 +18,7 @@ const UserIsnt: IAntlersTag = {
             aliases: ['roles'],
             allowsVariableReference: false,
             name: 'role',
-            description: 'The roles to check against',
+            description: 'The roles to check against.',
             expectsTypes: ['string', 'array'],
             isDynamic: false
         }

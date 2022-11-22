@@ -17,7 +17,7 @@ const GetContent: IAntlersTag = {
             acceptsVariableInterpolation: false,
             aliases: [],
             allowsVariableReference: true,
-            description: 'The ID to retrieve data for',
+            description: 'The ID to retrieve data for.',
             expectsTypes: ['string', 'array'],
             isDynamic: false,
         },
@@ -27,7 +27,7 @@ const GetContent: IAntlersTag = {
             aliases: ['site'],
             acceptsVariableInterpolation: false,
             allowsVariableReference: false,
-            description: 'The locale to show the content in',
+            description: 'The locale to show the content in.',
             expectsTypes: ['string'],
             isDynamic: false
         }

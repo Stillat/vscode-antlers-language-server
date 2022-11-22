@@ -18,7 +18,7 @@ const UserNotIn: IAntlersTag = {
             aliases: ['groups'],
             allowsVariableReference: false,
             name: 'group',
-            description: 'The groups to check against',
+            description: 'The groups to check against.',
             expectsTypes: ['string', 'array'],
             isDynamic: false
         }

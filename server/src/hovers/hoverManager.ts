@@ -6,7 +6,6 @@ import { IAntlersParameter } from "../antlers/tagManager";
 import TagManager from '../antlers/tagManagerInstance';
 import { IBlueprintField } from '../projects/blueprints/fields';
 import { AntlersNode } from '../runtime/nodes/abstractNode';
-import { Position } from '../runtime/nodes/position';
 import { ISuggestionRequest } from '../suggestions/suggestionRequest';
 import { antlersPositionToVsCode } from '../utils/conversions';
 
@@ -33,7 +32,7 @@ export class HoverManager {
         if (param.documentationLink != null && param.documentationLink.trim().length > 0) {
             value += "  \n\n";
 
-            let linkName = 'Documentation Reference]';
+            let linkName = 'Documentation Reference';
 
             if (param.docLinkName != null && param.docLinkName.trim().length > 0) {
                 linkName = param.docLinkName.trim();

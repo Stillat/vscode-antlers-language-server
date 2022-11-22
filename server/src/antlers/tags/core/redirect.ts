@@ -13,7 +13,7 @@ const Redirect: IAntlersTag = {
     introducedIn: null,
     parameters: [{
         name: 'to',
-        description: 'The destination URL',
+        description: 'The destination URL.',
         aliases: ['url'],
         allowsVariableReference: false,
         acceptsVariableInterpolation: false,
@@ -22,7 +22,7 @@ const Redirect: IAntlersTag = {
         isRequired: true
     }, {
         name: 'response',
-        description: 'The HTTP response code to use',
+        description: 'The HTTP response code to use.',
         acceptsVariableInterpolation: false,
         aliases: [],
         allowsVariableReference: false,

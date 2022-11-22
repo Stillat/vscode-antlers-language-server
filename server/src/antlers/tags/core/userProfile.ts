@@ -40,7 +40,7 @@ const UserProfile: IAntlersTag = {
     resolveDocumentation: (params?: ISuggestionRequest) => {
         return makeTagDoc(
             'user:profile Tag',
-            'The `user:profile` tag provides access to the currently logged in user information, or for a specific user when using the `id`, `email`, or `field` parameter',
+            'The `user:profile` tag provides access to the currently logged in user information, or for a specific user when using the `id`, `email`, or `field` parameter.',
             null
         );
     }

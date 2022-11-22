@@ -1,14 +1,11 @@
-import {
-    CompletionItem,
-    CompletionItemKind,
-} from "vscode-languageserver-types";
+import { CompletionItem } from "vscode-languageserver-types";
 import { makeTagDoc } from '../../../documentation/utils';
 import { AntlersNode } from '../../../runtime/nodes/abstractNode';
 import { ISuggestionRequest } from '../../../suggestions/suggestionRequest';
 import { tagToCompletionItem } from '../../documentedLabel';
 import { Scope } from '../../scope/scope';
 import { IScopeVariable } from '../../scope/types';
-import {
+import { 
     EmptyCompletionResult,
     exclusiveResultList,
     IAntlersParameter,
@@ -28,7 +25,7 @@ const SearchResultsTag: IAntlersTag = {
     parameters: [
         {
             name: "index",
-            description: "The index to search in",
+            description: "The index to search in.",
             acceptsVariableInterpolation: false,
             aliases: [],
             allowsVariableReference: true,
@@ -38,7 +35,7 @@ const SearchResultsTag: IAntlersTag = {
         },
         {
             name: "query",
-            description: "The query string parameter to use",
+            description: "The query string parameter to use.",
             acceptsVariableInterpolation: false,
             aliases: [],
             allowsVariableReference: true,
@@ -48,7 +45,7 @@ const SearchResultsTag: IAntlersTag = {
         },
         {
             name: "limit",
-            description: "The maximum number of search results to return",
+            description: "The maximum number of search results to return.",
             allowsVariableReference: false,
             acceptsVariableInterpolation: false,
             aliases: [],
@@ -58,7 +55,7 @@ const SearchResultsTag: IAntlersTag = {
         },
         {
             name: "offset",
-            description: "The number of results to skip",
+            description: "The number of results to skip.",
             allowsVariableReference: false,
             acceptsVariableInterpolation: false,
             aliases: [],
@@ -70,7 +67,7 @@ const SearchResultsTag: IAntlersTag = {
             acceptsVariableInterpolation: false,
             allowsVariableReference: false,
             aliases: null,
-            description: "Sets whether not to paginate entry results",
+            description: "Sets whether or not to paginate entry results.",
             expectsTypes: ["boolean"],
             isRequired: false,
             name: "paginate",
@@ -78,7 +75,7 @@ const SearchResultsTag: IAntlersTag = {
         },
         {
             name: "as",
-            description: "Specifies an alias for search results",
+            description: "Specifies an alias for search results.",
             acceptsVariableInterpolation: false,
             aliases: [],
             allowsVariableReference: false,
@@ -88,7 +85,7 @@ const SearchResultsTag: IAntlersTag = {
         },
         {
             name: "supplement_data",
-            description: "Controls whether non-indexed fields are returned",
+            description: "Controls whether non-indexed fields are returned.",
             acceptsVariableInterpolation: false,
             allowsVariableReference: false,
             aliases: [],

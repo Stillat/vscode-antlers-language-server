@@ -585,7 +585,6 @@ export class SuggestionManager {
                                 );
                             }
                         } else {
-                            // Given some active parameter and a tag reference, can we provide a list of valid completion items?
                             if (params.position.character <= (tActiveParam.valuePosition?.end?.char ?? - 1)) {
                                 let tagParameter: IAntlersParameter | null = null,
                                     didSearchForDynamicParameter = false;

@@ -3,7 +3,7 @@ import { IAntlersParameter } from '../../../tagManager';
 const TaxonomyParameters: IAntlersParameter[] = [
     {
         name: 'from',
-        description: 'The taxonomy to use',
+        description: 'The taxonomy to use.',
         aliases: ['taxonomy', 'is', 'use', 'folder'],
         acceptsVariableInterpolation: false,
         allowsVariableReference: false,
@@ -13,7 +13,7 @@ const TaxonomyParameters: IAntlersParameter[] = [
     },
     {
         name: 'not_from',
-        description: 'Taxonomies to exclude',
+        description: 'Taxonomies to exclude.',
         aliases: ['not_in', 'not_folder', 'dont_use', 'not_taxonomy'],
         allowsVariableReference: false,
         acceptsVariableInterpolation: false,
@@ -23,7 +23,7 @@ const TaxonomyParameters: IAntlersParameter[] = [
     },
     {
         name: 'min_count',
-        description: 'The minimum number of entries a taxonomy term must have to be returned',
+        description: 'The minimum number of entries a taxonomy term must have to be returned.',
         acceptsVariableInterpolation: false,
         aliases: [],
         allowsVariableReference: false,
@@ -33,7 +33,7 @@ const TaxonomyParameters: IAntlersParameter[] = [
     },
     {
         name: 'collection',
-        description: 'Filter the terms to those that appear in the specified collections',
+        description: 'Filter the terms to those that appear in the specified collections.',
         acceptsVariableInterpolation: false,
         allowsVariableReference: false,
         aliases: [],
@@ -43,7 +43,7 @@ const TaxonomyParameters: IAntlersParameter[] = [
     },
     {
         name: 'sort',
-        description: 'The field to sort terms by',
+        description: 'The field to sort the terms by.',
         acceptsVariableInterpolation: false,
         aliases: [],
         allowsVariableReference: false,
@@ -57,7 +57,7 @@ const TaxonomyParameters: IAntlersParameter[] = [
         aliases: ['query_scope'],
         acceptsVariableInterpolation: false,
         allowsVariableReference: false,
-        description: 'Specifies a custom query scope',
+        description: 'Specifies a custom query scope.',
         expectsTypes: ['string'],
         isDynamic: false
     }

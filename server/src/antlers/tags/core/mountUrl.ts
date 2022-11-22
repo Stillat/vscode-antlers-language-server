@@ -18,7 +18,7 @@ const MountUrlTag: IAntlersTag = {
             acceptsVariableInterpolation: true,
             aliases: [],
             allowsVariableReference: true,
-            description: 'The collection handle',
+            description: 'The collection handle.',
             name: 'handle',
             isDynamic: false,
             expectsTypes: ['string']

@@ -12,7 +12,7 @@ const OAuth: IAntlersTag = {
     introducedIn: null,
     parameters: [{
         name: 'provider',
-        description: 'The OAuth provider to be used',
+        description: 'The OAuth provider to be used.',
         aliases: [],
         isRequired: true,
         acceptsVariableInterpolation: true,
@@ -21,7 +21,7 @@ const OAuth: IAntlersTag = {
         expectsTypes: ['string']
     }, {
         name: 'redirect',
-        description: 'The URL to be taken to after authenticating',
+        description: 'The URL to be redirected to after authenticating.',
         aliases: [],
         isRequired: true,
         acceptsVariableInterpolation: true,
