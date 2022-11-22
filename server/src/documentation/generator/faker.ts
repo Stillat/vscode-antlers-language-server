@@ -1,4 +1,4 @@
-import { IArrayFieldType, IDateFieldType, IFieldDetails, IIntegerFieldType, IToggleFieldType } from '../../projects/structuredFieldTypes/types';
+import { IArrayFieldType, IDateFieldType, IFieldDetails, IIntegerFieldType, ISlugFieldType, IToggleFieldType } from '../../projects/structuredFieldTypes/types';
 import { ITextField } from './fieldTypeProviders/generalTextDocumentationProvider';
 import { IInjectedField } from './types';
 
@@ -82,6 +82,14 @@ export class Faker {
         return {
             ...this.baseField(handle, 'text')
         }
+    }
+
+    static slugField(handle: string): ISlugFieldType {
+        return {
+            ...this.baseField(handle, 'slug'),
+            from: '',
+            generate: true
+        };
     }
 
     static injectedTextField(handle: string): IInjectedField {
