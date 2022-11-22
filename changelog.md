@@ -10,6 +10,9 @@ Bugs fixed, what's new, and more! :)
 - Improves the internal support for `assets` variables
 - Improves the consistency of tag and tag parameter descriptions
 - Corrects a handful of tag/parameter description typos
+- Improves internal management of collections without any user blueprint customizations
+- Adds collections without any user blueprint modifications to suggestions
+- Adds field injections to completion results for collections without any user blueprint modifications
 
 ## v2.3.9
 

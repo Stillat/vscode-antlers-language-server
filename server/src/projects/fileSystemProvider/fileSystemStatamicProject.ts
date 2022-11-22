@@ -27,6 +27,7 @@ import { normalizePath } from '../../utils/uris';
 import { replaceAllInString } from '../../utils/strings';
 import { sendProjectDetails } from '../../server';
 import { FieldSetParser, BlueprintParser, IParsedBlueprint } from '../structuredFieldTypes/types';
+import { EnsureFields } from '../structuredFieldTypes/ensureFields';
 
 function getRootProjectPath(path: string): string {
     const parts = normalizePath(path).split("/");
@@ -331,11 +332,14 @@ export function getProjectStructure(resourcePath: string): FileSystemStatamicPro
     }
 
     // Collection details.
-    const collectionPaths = getDirectFiles(collectionContentDirectory, ".yaml");
+    const collectionPaths = getDirectFiles(collectionContentDirectory, ".yaml"),
+        discoveredCollections: string[] = [];
 
     for (let i = 0; i < collectionPaths.length; i++) {
         if (shouldProcessPath(collectionPaths[i])) {
             const collection = getCollectionDetails(collectionPaths[i]);
+
+            discoveredCollectionNames.push(collection.handle);
 
             collections.set(collection.handle, collection);
         }
@@ -494,6 +498,8 @@ export function getProjectStructure(resourcePath: string): FileSystemStatamicPro
         }
     }
 
+    const collectionsWithCustomBlueprints: string[] = [];
+
     for (let i = 0; i < blueprintsPaths.length; i++) {
         if (shouldProcessPath(blueprintsPaths[i])) {
             const contents = fs.readFileSync(blueprintsPaths[i]).toString();
@@ -501,6 +507,10 @@ export function getProjectStructure(resourcePath: string): FileSystemStatamicPro
 
             const blueprint = getBlueprintFields(blueprintsPaths[i], blueprintName, 'collection', fieldsets);
             const collectionName = normalizePath(dirname(blueprintsPaths[i])).split("/").pop() as string;
+
+            if (!collectionsWithCustomBlueprints.includes(collectionName)) {
+                collectionsWithCustomBlueprints.push(collectionName);
+            }
 
             try {
                 bpParser.parseBlueprint(YAML.parse(contents), blueprintName, 'collection', collectionName, blueprintsPaths[i]);
@@ -526,6 +536,39 @@ export function getProjectStructure(resourcePath: string): FileSystemStatamicPro
             fieldMapping.set(blueprintName, blueprint.fields);
         }
     }
+
+    const collectionsWithoutCustomBlueprints: string[] = [],
+        otherCollections: IParsedBlueprint[] = [];
+
+    discoveredCollectionNames.forEach((collectionName) => {
+        if (!collectionsWithCustomBlueprints.includes(collectionName)) {
+            collectionsWithoutCustomBlueprints.push(collectionName);
+
+            otherCollections.push({
+                sections: [],
+                fields: [],
+                allFields: [],
+                collection: collectionName,
+                type: 'collection',
+                handle: collectionName,
+                title: collectionName
+            });
+        }
+    });
+
+    collectionsWithoutCustomBlueprints.forEach((collection) => {
+        collections.set(collection, {
+            handle: collection,
+            injectFields: [],
+            isStructure: false,
+            title: collection,
+            layout: '',
+            viewModel: null,
+            template: '',
+            taxonomies: [],
+            structure: null
+        });
+    });
 
     // Navigation
     const navPaths = getDirectFiles(navigationDirectory, ".yaml");
@@ -640,7 +683,7 @@ export function getProjectStructure(resourcePath: string): FileSystemStatamicPro
     });
 
     const assetBlueprints: IParsedBlueprint[] = [],
-        collectionBlueprints: IParsedBlueprint[] = [],
+        collectionBlueprints: IParsedBlueprint[] = otherCollections,
         taxonomyBlueprints: IParsedBlueprint[] = [],
         navigationBlueprints: IParsedBlueprint[] = [],
         formBlueprints: IParsedBlueprint[] = [],
@@ -661,6 +704,14 @@ export function getProjectStructure(resourcePath: string): FileSystemStatamicPro
         } else if (blueprint.type == 'form') {
             formBlueprints.push(blueprint);
         }
+    });
+
+    collectionBlueprints.forEach((collection) => {
+        EnsureFields.ensureCollectionFields(collection);
+    });
+
+    navigationBlueprints.forEach((nav) => {
+        EnsureFields.ensureNavigationFields(nav);
     });
 
     sendProjectDetails({
