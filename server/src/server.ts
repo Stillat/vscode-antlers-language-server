@@ -491,6 +491,7 @@ export function requestEdits(edit: WorkspaceEdit) {
 }
 
 export function sendProjectDetails(contents: IProjectFields) {
+    ProjectManager.instance?.setStructuredProject(contents);
     updateCurrentDetails(contents);
     const params: ProjectDetailsParams = {
         content: contents

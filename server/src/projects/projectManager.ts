@@ -1,10 +1,20 @@
 import { IProjectDetailsProvider } from './projectDetailsProvider';
+import { IProjectFields } from './structuredFieldTypes/types';
 
 class ProjectManager {
     public static instance: ProjectManager | null = null;
     private currentStructure: IProjectDetailsProvider | null = null;
     private isReloading = false;
     private isDirtyState = true;
+    private structuredProject: IProjectFields | null = null;
+
+    setStructuredProject(fields: IProjectFields) {
+        this.structuredProject = fields;
+    }
+
+    getStructuredProject(): IProjectFields | null {
+        return this.structuredProject;
+    }
 
     setActiveProject(project: IProjectDetailsProvider) {
         this.currentStructure = project;
