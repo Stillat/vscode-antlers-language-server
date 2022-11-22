@@ -112,10 +112,12 @@ class ProjectDataProvider implements vscode.TreeDataProvider<ProjectItem> {
     }
 
     private rebuildRoot() {
+        this.rootItems = [];
+
         if (this.structure?.assets.length > 0) {
             this.rootItems.push(new ProjectItem('Assets', 'collections', ItemType.AssetListing, vscode.TreeItemCollapsibleState.Collapsed));
         }
-        
+
         if (this.structure?.collections.length > 0) {
             this.rootItems.push(new ProjectItem('Collections', 'collections', ItemType.CollectionListing, vscode.TreeItemCollapsibleState.Collapsed));
         }
@@ -131,7 +133,7 @@ class ProjectDataProvider implements vscode.TreeDataProvider<ProjectItem> {
         if (this.structure?.globals.length > 0) {
             this.rootItems.push(new ProjectItem('Globals', 'collections', ItemType.GlobalListing, vscode.TreeItemCollapsibleState.Collapsed));
         }
-        
+
         if (this.structure?.navigations.length > 0) {
             this.rootItems.push(new ProjectItem('Navigations', 'collections', ItemType.NavigationListing, vscode.TreeItemCollapsibleState.Collapsed));
         }
