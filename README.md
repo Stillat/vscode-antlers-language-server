@@ -22,16 +22,6 @@ Want to take your install even further? Consider checking out the documentation 
 
 If you have made significant changes to your project's blueprints, globals, etc. and have Visual Studio Code open to just the `resources/` directory, you may want to force the extension to reload your project's details. This can be done from Visual Studio Code's [Command Palette](https://code.visualstudio.com/docs/getstarted/userinterface#_command-palette) and searching for "Antlers: Reload Statamic Project Details".
 
-## Migrating from Version 1
-
-Antlers Toolbox versions 1.x shipped with a bundled PHP analyzer. This has been removed with version 2, and may be replaced with a standalone Composer package at a later date. This bundled PHP analyzer would create an `.antlers.json` file at the root of your project, and may have created a `/storage/antlers-language-server/` directory.
-
-The file(s) and directorie(s) created by the PHP analyzer from version 1 can be safely removed without any issues.
-
-Some features like auto-detecting your project's custom tags, modifiers, etc. (as well as those from your Composer dependencies) will no longer work starting with version 2 because of the analyzer's removal.
-
-This analyzer was removed to reduce the complexity (slightly) and bundle size of the extension.
-
 ## Reporting Issues
 
 If you come across an issue, or have a suggestion to improve Antlers Toolbox, feel free to create an issue on the project's GitHub repository here:
