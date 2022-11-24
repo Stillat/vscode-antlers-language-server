@@ -32,11 +32,11 @@ export class EnsureFields {
     }
 
     static hasField(handle: string, blueprint: IParsedBlueprint): boolean {
-        blueprint.allFields.forEach((field) => {
-            if (field.handle == handle) {
+        for (let i = 0; i < blueprint.allFields.length; i++) {
+            if (blueprint.allFields[i].handle == handle) {
                 return true;
             }
-        });
+        }
 
         return false;
     }
