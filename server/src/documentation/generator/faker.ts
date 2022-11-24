@@ -74,7 +74,8 @@ export class Faker {
             handle: handle,
             fields: [],
             display: '',
-            developerDocumentation: ''
+            developerDocumentation: '',
+            instructionText: ''
         };
     }
 

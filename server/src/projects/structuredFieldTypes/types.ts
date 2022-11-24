@@ -16,6 +16,7 @@
     isLinked: boolean;
     linkedFrom: string;
     internalIcon: string;
+    instructionText: string;
     developerDocumentation: string;
 }
 
@@ -1207,7 +1208,8 @@ export function getProperties(context: any): any {
         unlessArray:string[] = fetchDynamic<string[]>(context['field'], 'unless', []),
         validateArray:string[] = fetchDynamic<string[]>(context['field'], 'validate', []),
         display:string = fetchDynamic<string>(context['field'], 'display', ''),
-        developerDocumentation:string = fetchDynamic<string>(context['field'], '__documentation', '');
+        developerDocumentation:string = fetchDynamic<string>(context['field'], '__documentation', ''),
+        instructionText:string = fetchDynamic<string>(context['field'], 'instructions', '');
     return {
         mode: _parsedMode,
         keys: _parsedKeys,
@@ -1222,6 +1224,7 @@ export function getProperties(context: any): any {
         isLinked: false,
         linkedFrom: '',
         developerDocumentation: developerDocumentation,
+        instructionText: instructionText,
         internalIcon: 'array',
     };
 }
@@ -1245,7 +1248,8 @@ _parseAssetContainerFieldType(context: any): IAssetContainerFieldType {
         unlessArray:string[] = fetchDynamic<string[]>(context['field'], 'unless', []),
         validateArray:string[] = fetchDynamic<string[]>(context['field'], 'validate', []),
         display:string = fetchDynamic<string>(context['field'], 'display', ''),
-        developerDocumentation:string = fetchDynamic<string>(context['field'], '__documentation', '');
+        developerDocumentation:string = fetchDynamic<string>(context['field'], '__documentation', ''),
+        instructionText:string = fetchDynamic<string>(context['field'], 'instructions', '');
     return {
         maxItems: _parsedMaxItems,
         mode: _parsedMode,
@@ -1260,6 +1264,7 @@ _parseAssetContainerFieldType(context: any): IAssetContainerFieldType {
         isLinked: false,
         linkedFrom: '',
         developerDocumentation: developerDocumentation,
+        instructionText: instructionText,
         internalIcon: 'asset_container',
     };
 }
@@ -1283,7 +1288,8 @@ _parseAssetFolderFieldType(context: any): IAssetFolderFieldType {
         unlessArray:string[] = fetchDynamic<string[]>(context['field'], 'unless', []),
         validateArray:string[] = fetchDynamic<string[]>(context['field'], 'validate', []),
         display:string = fetchDynamic<string>(context['field'], 'display', ''),
-        developerDocumentation:string = fetchDynamic<string>(context['field'], '__documentation', '');
+        developerDocumentation:string = fetchDynamic<string>(context['field'], '__documentation', ''),
+        instructionText:string = fetchDynamic<string>(context['field'], 'instructions', '');
     return {
         maxItems: _parsedMaxItems,
         mode: _parsedMode,
@@ -1298,6 +1304,7 @@ _parseAssetFolderFieldType(context: any): IAssetFolderFieldType {
         isLinked: false,
         linkedFrom: '',
         developerDocumentation: developerDocumentation,
+        instructionText: instructionText,
         internalIcon: 'asset_folder',
     };
 }
@@ -1326,7 +1333,8 @@ _parseAssetsFieldType(context: any): IAssetsFieldType {
         unlessArray:string[] = fetchDynamic<string[]>(context['field'], 'unless', []),
         validateArray:string[] = fetchDynamic<string[]>(context['field'], 'validate', []),
         display:string = fetchDynamic<string>(context['field'], 'display', ''),
-        developerDocumentation:string = fetchDynamic<string>(context['field'], '__documentation', '');
+        developerDocumentation:string = fetchDynamic<string>(context['field'], '__documentation', ''),
+        instructionText:string = fetchDynamic<string>(context['field'], 'instructions', '');
     return {
         mode: _parsedMode,
         container: _parsedContainer,
@@ -1346,6 +1354,7 @@ _parseAssetsFieldType(context: any): IAssetsFieldType {
         isLinked: false,
         linkedFrom: '',
         developerDocumentation: developerDocumentation,
+        instructionText: instructionText,
         internalIcon: 'assets',
     };
 }
@@ -1385,7 +1394,8 @@ _parseBardFieldType(context: any): IBardFieldType {
         unlessArray:string[] = fetchDynamic<string[]>(context['field'], 'unless', []),
         validateArray:string[] = fetchDynamic<string[]>(context['field'], 'validate', []),
         display:string = fetchDynamic<string>(context['field'], 'display', ''),
-        developerDocumentation:string = fetchDynamic<string>(context['field'], '__documentation', '');
+        developerDocumentation:string = fetchDynamic<string>(context['field'], '__documentation', ''),
+        instructionText:string = fetchDynamic<string>(context['field'], 'instructions', '');
     return {
         collapse: _parsedCollapse,
         alwaysShowSetButton: _parsedAlwaysShowSetButton,
@@ -1416,6 +1426,7 @@ _parseBardFieldType(context: any): IBardFieldType {
         isLinked: false,
         linkedFrom: '',
         developerDocumentation: developerDocumentation,
+        instructionText: instructionText,
         internalIcon: 'bard',
     };
 }
@@ -1440,7 +1451,8 @@ _parseReplicatorFieldType(context: any): IReplicatorFieldType {
         unlessArray:string[] = fetchDynamic<string[]>(context['field'], 'unless', []),
         validateArray:string[] = fetchDynamic<string[]>(context['field'], 'validate', []),
         display:string = fetchDynamic<string>(context['field'], 'display', ''),
-        developerDocumentation:string = fetchDynamic<string>(context['field'], '__documentation', '');
+        developerDocumentation:string = fetchDynamic<string>(context['field'], '__documentation', ''),
+        instructionText:string = fetchDynamic<string>(context['field'], 'instructions', '');
     return {
         collapse: _parsedCollapse,
         previews: _parsedPreviews,
@@ -1456,6 +1468,7 @@ _parseReplicatorFieldType(context: any): IReplicatorFieldType {
         isLinked: false,
         linkedFrom: '',
         developerDocumentation: developerDocumentation,
+        instructionText: instructionText,
         internalIcon: 'replicator',
     };
 }
@@ -1477,7 +1490,8 @@ _parseBardButtonsSettingFieldType(context: any): IBardButtonsSettingFieldType {
         unlessArray:string[] = fetchDynamic<string[]>(context['field'], 'unless', []),
         validateArray:string[] = fetchDynamic<string[]>(context['field'], 'validate', []),
         display:string = fetchDynamic<string>(context['field'], 'display', ''),
-        developerDocumentation:string = fetchDynamic<string>(context['field'], '__documentation', '');
+        developerDocumentation:string = fetchDynamic<string>(context['field'], '__documentation', ''),
+        instructionText:string = fetchDynamic<string>(context['field'], 'instructions', '');
     return {
         required: isRequired,
         type: type,
@@ -1490,6 +1504,7 @@ _parseBardButtonsSettingFieldType(context: any): IBardButtonsSettingFieldType {
         isLinked: false,
         linkedFrom: '',
         developerDocumentation: developerDocumentation,
+        instructionText: instructionText,
         internalIcon: 'bard_buttons_setting',
     };
 }
@@ -1513,7 +1528,8 @@ _parseButtonGroupFieldType(context: any): IButtonGroupFieldType {
         unlessArray:string[] = fetchDynamic<string[]>(context['field'], 'unless', []),
         validateArray:string[] = fetchDynamic<string[]>(context['field'], 'validate', []),
         display:string = fetchDynamic<string>(context['field'], 'display', ''),
-        developerDocumentation:string = fetchDynamic<string>(context['field'], '__documentation', '');
+        developerDocumentation:string = fetchDynamic<string>(context['field'], '__documentation', ''),
+        instructionText:string = fetchDynamic<string>(context['field'], 'instructions', '');
     return {
         options: _parsedOptions,
         default: _parsedDefault,
@@ -1528,6 +1544,7 @@ _parseButtonGroupFieldType(context: any): IButtonGroupFieldType {
         isLinked: false,
         linkedFrom: '',
         developerDocumentation: developerDocumentation,
+        instructionText: instructionText,
         internalIcon: 'button_group',
     };
 }
@@ -1552,7 +1569,8 @@ _parseCheckboxesFieldType(context: any): ICheckboxesFieldType {
         unlessArray:string[] = fetchDynamic<string[]>(context['field'], 'unless', []),
         validateArray:string[] = fetchDynamic<string[]>(context['field'], 'validate', []),
         display:string = fetchDynamic<string>(context['field'], 'display', ''),
-        developerDocumentation:string = fetchDynamic<string>(context['field'], '__documentation', '');
+        developerDocumentation:string = fetchDynamic<string>(context['field'], '__documentation', ''),
+        instructionText:string = fetchDynamic<string>(context['field'], 'instructions', '');
     return {
         inline: _parsedInline,
         options: _parsedOptions,
@@ -1568,6 +1586,7 @@ _parseCheckboxesFieldType(context: any): ICheckboxesFieldType {
         isLinked: false,
         linkedFrom: '',
         developerDocumentation: developerDocumentation,
+        instructionText: instructionText,
         internalIcon: 'checkboxes',
     };
 }
@@ -1597,7 +1616,8 @@ _parseCodeFieldType(context: any): ICodeFieldType {
         unlessArray:string[] = fetchDynamic<string[]>(context['field'], 'unless', []),
         validateArray:string[] = fetchDynamic<string[]>(context['field'], 'validate', []),
         display:string = fetchDynamic<string>(context['field'], 'display', ''),
-        developerDocumentation:string = fetchDynamic<string>(context['field'], '__documentation', '');
+        developerDocumentation:string = fetchDynamic<string>(context['field'], '__documentation', ''),
+        instructionText:string = fetchDynamic<string>(context['field'], 'instructions', '');
     return {
         theme: _parsedTheme,
         mode: _parsedMode,
@@ -1618,6 +1638,7 @@ _parseCodeFieldType(context: any): ICodeFieldType {
         isLinked: false,
         linkedFrom: '',
         developerDocumentation: developerDocumentation,
+        instructionText: instructionText,
         internalIcon: 'code',
     };
 }
@@ -1639,7 +1660,8 @@ _parseCollectionRoutesFieldType(context: any): ICollectionRoutesFieldType {
         unlessArray:string[] = fetchDynamic<string[]>(context['field'], 'unless', []),
         validateArray:string[] = fetchDynamic<string[]>(context['field'], 'validate', []),
         display:string = fetchDynamic<string>(context['field'], 'display', ''),
-        developerDocumentation:string = fetchDynamic<string>(context['field'], '__documentation', '');
+        developerDocumentation:string = fetchDynamic<string>(context['field'], '__documentation', ''),
+        instructionText:string = fetchDynamic<string>(context['field'], 'instructions', '');
     return {
         required: isRequired,
         type: type,
@@ -1652,6 +1674,7 @@ _parseCollectionRoutesFieldType(context: any): ICollectionRoutesFieldType {
         isLinked: false,
         linkedFrom: '',
         developerDocumentation: developerDocumentation,
+        instructionText: instructionText,
         internalIcon: 'collection_routes',
     };
 }
@@ -1673,7 +1696,8 @@ _parseCollectionTitleFormatsFieldType(context: any): ICollectionTitleFormatsFiel
         unlessArray:string[] = fetchDynamic<string[]>(context['field'], 'unless', []),
         validateArray:string[] = fetchDynamic<string[]>(context['field'], 'validate', []),
         display:string = fetchDynamic<string>(context['field'], 'display', ''),
-        developerDocumentation:string = fetchDynamic<string>(context['field'], '__documentation', '');
+        developerDocumentation:string = fetchDynamic<string>(context['field'], '__documentation', ''),
+        instructionText:string = fetchDynamic<string>(context['field'], 'instructions', '');
     return {
         required: isRequired,
         type: type,
@@ -1686,6 +1710,7 @@ _parseCollectionTitleFormatsFieldType(context: any): ICollectionTitleFormatsFiel
         isLinked: false,
         linkedFrom: '',
         developerDocumentation: developerDocumentation,
+        instructionText: instructionText,
         internalIcon: 'collection_title_formats',
     };
 }
@@ -1709,7 +1734,8 @@ _parseCollectionsFieldType(context: any): ICollectionsFieldType {
         unlessArray:string[] = fetchDynamic<string[]>(context['field'], 'unless', []),
         validateArray:string[] = fetchDynamic<string[]>(context['field'], 'validate', []),
         display:string = fetchDynamic<string>(context['field'], 'display', ''),
-        developerDocumentation:string = fetchDynamic<string>(context['field'], '__documentation', '');
+        developerDocumentation:string = fetchDynamic<string>(context['field'], '__documentation', ''),
+        instructionText:string = fetchDynamic<string>(context['field'], 'instructions', '');
     return {
         maxItems: _parsedMaxItems,
         mode: _parsedMode,
@@ -1724,6 +1750,7 @@ _parseCollectionsFieldType(context: any): ICollectionsFieldType {
         isLinked: false,
         linkedFrom: '',
         developerDocumentation: developerDocumentation,
+        instructionText: instructionText,
         internalIcon: 'collections',
     };
 }
@@ -1750,7 +1777,8 @@ _parseColorFieldType(context: any): IColorFieldType {
         unlessArray:string[] = fetchDynamic<string[]>(context['field'], 'unless', []),
         validateArray:string[] = fetchDynamic<string[]>(context['field'], 'validate', []),
         display:string = fetchDynamic<string>(context['field'], 'display', ''),
-        developerDocumentation:string = fetchDynamic<string>(context['field'], '__documentation', '');
+        developerDocumentation:string = fetchDynamic<string>(context['field'], '__documentation', ''),
+        instructionText:string = fetchDynamic<string>(context['field'], 'instructions', '');
     return {
         swatches: _parsedSwatches,
         theme: _parsedTheme,
@@ -1768,6 +1796,7 @@ _parseColorFieldType(context: any): IColorFieldType {
         isLinked: false,
         linkedFrom: '',
         developerDocumentation: developerDocumentation,
+        instructionText: instructionText,
         internalIcon: 'color',
     };
 }
@@ -1799,7 +1828,8 @@ _parseDateFieldType(context: any): IDateFieldType {
         unlessArray:string[] = fetchDynamic<string[]>(context['field'], 'unless', []),
         validateArray:string[] = fetchDynamic<string[]>(context['field'], 'validate', []),
         display:string = fetchDynamic<string>(context['field'], 'display', ''),
-        developerDocumentation:string = fetchDynamic<string>(context['field'], '__documentation', '');
+        developerDocumentation:string = fetchDynamic<string>(context['field'], '__documentation', ''),
+        instructionText:string = fetchDynamic<string>(context['field'], 'instructions', '');
     return {
         mode: _parsedMode,
         format: _parsedFormat,
@@ -1822,6 +1852,7 @@ _parseDateFieldType(context: any): IDateFieldType {
         isLinked: false,
         linkedFrom: '',
         developerDocumentation: developerDocumentation,
+        instructionText: instructionText,
         internalIcon: 'date',
     };
 }
@@ -1847,7 +1878,8 @@ _parseEntriesFieldType(context: any): IEntriesFieldType {
         unlessArray:string[] = fetchDynamic<string[]>(context['field'], 'unless', []),
         validateArray:string[] = fetchDynamic<string[]>(context['field'], 'validate', []),
         display:string = fetchDynamic<string>(context['field'], 'display', ''),
-        developerDocumentation:string = fetchDynamic<string>(context['field'], '__documentation', '');
+        developerDocumentation:string = fetchDynamic<string>(context['field'], '__documentation', ''),
+        instructionText:string = fetchDynamic<string>(context['field'], 'instructions', '');
     return {
         maxItems: _parsedMaxItems,
         mode: _parsedMode,
@@ -1864,6 +1896,7 @@ _parseEntriesFieldType(context: any): IEntriesFieldType {
         isLinked: false,
         linkedFrom: '',
         developerDocumentation: developerDocumentation,
+        instructionText: instructionText,
         internalIcon: 'entries',
     };
 }
@@ -1886,7 +1919,8 @@ _parseFilesFieldType(context: any): IFilesFieldType {
         unlessArray:string[] = fetchDynamic<string[]>(context['field'], 'unless', []),
         validateArray:string[] = fetchDynamic<string[]>(context['field'], 'validate', []),
         display:string = fetchDynamic<string>(context['field'], 'display', ''),
-        developerDocumentation:string = fetchDynamic<string>(context['field'], '__documentation', '');
+        developerDocumentation:string = fetchDynamic<string>(context['field'], '__documentation', ''),
+        instructionText:string = fetchDynamic<string>(context['field'], 'instructions', '');
     return {
         maxFiles: _parsedMaxFiles,
         required: isRequired,
@@ -1900,6 +1934,7 @@ _parseFilesFieldType(context: any): IFilesFieldType {
         isLinked: false,
         linkedFrom: '',
         developerDocumentation: developerDocumentation,
+        instructionText: instructionText,
         internalIcon: 'files',
     };
 }
@@ -1922,7 +1957,8 @@ _parseFloatFieldType(context: any): IFloatFieldType {
         unlessArray:string[] = fetchDynamic<string[]>(context['field'], 'unless', []),
         validateArray:string[] = fetchDynamic<string[]>(context['field'], 'validate', []),
         display:string = fetchDynamic<string>(context['field'], 'display', ''),
-        developerDocumentation:string = fetchDynamic<string>(context['field'], '__documentation', '');
+        developerDocumentation:string = fetchDynamic<string>(context['field'], '__documentation', ''),
+        instructionText:string = fetchDynamic<string>(context['field'], 'instructions', '');
     return {
         default: _parsedDefault,
         required: isRequired,
@@ -1936,6 +1972,7 @@ _parseFloatFieldType(context: any): IFloatFieldType {
         isLinked: false,
         linkedFrom: '',
         developerDocumentation: developerDocumentation,
+        instructionText: instructionText,
         internalIcon: 'float',
     };
 }
@@ -1957,7 +1994,8 @@ _parseGlobalSetSitesFieldType(context: any): IGlobalSetSitesFieldType {
         unlessArray:string[] = fetchDynamic<string[]>(context['field'], 'unless', []),
         validateArray:string[] = fetchDynamic<string[]>(context['field'], 'validate', []),
         display:string = fetchDynamic<string>(context['field'], 'display', ''),
-        developerDocumentation:string = fetchDynamic<string>(context['field'], '__documentation', '');
+        developerDocumentation:string = fetchDynamic<string>(context['field'], '__documentation', ''),
+        instructionText:string = fetchDynamic<string>(context['field'], 'instructions', '');
     return {
         required: isRequired,
         type: type,
@@ -1970,6 +2008,7 @@ _parseGlobalSetSitesFieldType(context: any): IGlobalSetSitesFieldType {
         isLinked: false,
         linkedFrom: '',
         developerDocumentation: developerDocumentation,
+        instructionText: instructionText,
         internalIcon: 'global_set_sites',
     };
 }
@@ -1996,7 +2035,8 @@ _parseGridFieldType(context: any): IGridFieldType {
         unlessArray:string[] = fetchDynamic<string[]>(context['field'], 'unless', []),
         validateArray:string[] = fetchDynamic<string[]>(context['field'], 'validate', []),
         display:string = fetchDynamic<string>(context['field'], 'display', ''),
-        developerDocumentation:string = fetchDynamic<string>(context['field'], '__documentation', '');
+        developerDocumentation:string = fetchDynamic<string>(context['field'], '__documentation', ''),
+        instructionText:string = fetchDynamic<string>(context['field'], 'instructions', '');
     return {
         mode: _parsedMode,
         maxRows: _parsedMaxRows,
@@ -2014,6 +2054,7 @@ _parseGridFieldType(context: any): IGridFieldType {
         isLinked: false,
         linkedFrom: '',
         developerDocumentation: developerDocumentation,
+        instructionText: instructionText,
         internalIcon: 'grid',
     };
 }
@@ -2036,7 +2077,8 @@ _parseHiddenFieldType(context: any): IHiddenFieldType {
         unlessArray:string[] = fetchDynamic<string[]>(context['field'], 'unless', []),
         validateArray:string[] = fetchDynamic<string[]>(context['field'], 'validate', []),
         display:string = fetchDynamic<string>(context['field'], 'display', ''),
-        developerDocumentation:string = fetchDynamic<string>(context['field'], '__documentation', '');
+        developerDocumentation:string = fetchDynamic<string>(context['field'], '__documentation', ''),
+        instructionText:string = fetchDynamic<string>(context['field'], 'instructions', '');
     return {
         default: _parsedDefault,
         required: isRequired,
@@ -2050,6 +2092,7 @@ _parseHiddenFieldType(context: any): IHiddenFieldType {
         isLinked: false,
         linkedFrom: '',
         developerDocumentation: developerDocumentation,
+        instructionText: instructionText,
         internalIcon: 'hidden',
     };
 }
@@ -2072,7 +2115,8 @@ _parseHtmlFieldType(context: any): IHtmlFieldType {
         unlessArray:string[] = fetchDynamic<string[]>(context['field'], 'unless', []),
         validateArray:string[] = fetchDynamic<string[]>(context['field'], 'validate', []),
         display:string = fetchDynamic<string>(context['field'], 'display', ''),
-        developerDocumentation:string = fetchDynamic<string>(context['field'], '__documentation', '');
+        developerDocumentation:string = fetchDynamic<string>(context['field'], '__documentation', ''),
+        instructionText:string = fetchDynamic<string>(context['field'], 'instructions', '');
     return {
         html: _parsedHtml,
         required: isRequired,
@@ -2086,6 +2130,7 @@ _parseHtmlFieldType(context: any): IHtmlFieldType {
         isLinked: false,
         linkedFrom: '',
         developerDocumentation: developerDocumentation,
+        instructionText: instructionText,
         internalIcon: 'html',
     };
 }
@@ -2108,7 +2153,8 @@ _parseIntegerFieldType(context: any): IIntegerFieldType {
         unlessArray:string[] = fetchDynamic<string[]>(context['field'], 'unless', []),
         validateArray:string[] = fetchDynamic<string[]>(context['field'], 'validate', []),
         display:string = fetchDynamic<string>(context['field'], 'display', ''),
-        developerDocumentation:string = fetchDynamic<string>(context['field'], '__documentation', '');
+        developerDocumentation:string = fetchDynamic<string>(context['field'], '__documentation', ''),
+        instructionText:string = fetchDynamic<string>(context['field'], 'instructions', '');
     return {
         default: _parsedDefault,
         required: isRequired,
@@ -2122,6 +2168,7 @@ _parseIntegerFieldType(context: any): IIntegerFieldType {
         isLinked: false,
         linkedFrom: '',
         developerDocumentation: developerDocumentation,
+        instructionText: instructionText,
         internalIcon: 'integer',
     };
 }
@@ -2145,7 +2192,8 @@ _parseLinkFieldType(context: any): ILinkFieldType {
         unlessArray:string[] = fetchDynamic<string[]>(context['field'], 'unless', []),
         validateArray:string[] = fetchDynamic<string[]>(context['field'], 'validate', []),
         display:string = fetchDynamic<string>(context['field'], 'display', ''),
-        developerDocumentation:string = fetchDynamic<string>(context['field'], '__documentation', '');
+        developerDocumentation:string = fetchDynamic<string>(context['field'], '__documentation', ''),
+        instructionText:string = fetchDynamic<string>(context['field'], 'instructions', '');
     return {
         collections: _parsedCollections,
         container: _parsedContainer,
@@ -2160,6 +2208,7 @@ _parseLinkFieldType(context: any): ILinkFieldType {
         isLinked: false,
         linkedFrom: '',
         developerDocumentation: developerDocumentation,
+        instructionText: instructionText,
         internalIcon: 'link',
     };
 }
@@ -2182,7 +2231,8 @@ _parseListFieldType(context: any): IListFieldType {
         unlessArray:string[] = fetchDynamic<string[]>(context['field'], 'unless', []),
         validateArray:string[] = fetchDynamic<string[]>(context['field'], 'validate', []),
         display:string = fetchDynamic<string>(context['field'], 'display', ''),
-        developerDocumentation:string = fetchDynamic<string>(context['field'], '__documentation', '');
+        developerDocumentation:string = fetchDynamic<string>(context['field'], '__documentation', ''),
+        instructionText:string = fetchDynamic<string>(context['field'], 'instructions', '');
     return {
         default: _parsedDefault,
         required: isRequired,
@@ -2196,6 +2246,7 @@ _parseListFieldType(context: any): IListFieldType {
         isLinked: false,
         linkedFrom: '',
         developerDocumentation: developerDocumentation,
+        instructionText: instructionText,
         internalIcon: 'list',
     };
 }
@@ -2227,7 +2278,8 @@ _parseMarkdownFieldType(context: any): IMarkdownFieldType {
         unlessArray:string[] = fetchDynamic<string[]>(context['field'], 'unless', []),
         validateArray:string[] = fetchDynamic<string[]>(context['field'], 'validate', []),
         display:string = fetchDynamic<string>(context['field'], 'display', ''),
-        developerDocumentation:string = fetchDynamic<string>(context['field'], '__documentation', '');
+        developerDocumentation:string = fetchDynamic<string>(context['field'], '__documentation', ''),
+        instructionText:string = fetchDynamic<string>(context['field'], 'instructions', '');
     return {
         container: _parsedContainer,
         folder: _parsedFolder,
@@ -2250,6 +2302,7 @@ _parseMarkdownFieldType(context: any): IMarkdownFieldType {
         isLinked: false,
         linkedFrom: '',
         developerDocumentation: developerDocumentation,
+        instructionText: instructionText,
         internalIcon: 'markdown',
     };
 }
@@ -2271,7 +2324,8 @@ _parseFieldsFieldType(context: any): IFieldsFieldType {
         unlessArray:string[] = fetchDynamic<string[]>(context['field'], 'unless', []),
         validateArray:string[] = fetchDynamic<string[]>(context['field'], 'validate', []),
         display:string = fetchDynamic<string>(context['field'], 'display', ''),
-        developerDocumentation:string = fetchDynamic<string>(context['field'], '__documentation', '');
+        developerDocumentation:string = fetchDynamic<string>(context['field'], '__documentation', ''),
+        instructionText:string = fetchDynamic<string>(context['field'], 'instructions', '');
     return {
         required: isRequired,
         type: type,
@@ -2284,6 +2338,7 @@ _parseFieldsFieldType(context: any): IFieldsFieldType {
         isLinked: false,
         linkedFrom: '',
         developerDocumentation: developerDocumentation,
+        instructionText: instructionText,
         internalIcon: 'fields',
     };
 }
@@ -2309,7 +2364,8 @@ _parseRadioFieldType(context: any): IRadioFieldType {
         unlessArray:string[] = fetchDynamic<string[]>(context['field'], 'unless', []),
         validateArray:string[] = fetchDynamic<string[]>(context['field'], 'validate', []),
         display:string = fetchDynamic<string>(context['field'], 'display', ''),
-        developerDocumentation:string = fetchDynamic<string>(context['field'], '__documentation', '');
+        developerDocumentation:string = fetchDynamic<string>(context['field'], '__documentation', ''),
+        instructionText:string = fetchDynamic<string>(context['field'], 'instructions', '');
     return {
         options: _parsedOptions,
         inline: _parsedInline,
@@ -2326,6 +2382,7 @@ _parseRadioFieldType(context: any): IRadioFieldType {
         isLinked: false,
         linkedFrom: '',
         developerDocumentation: developerDocumentation,
+        instructionText: instructionText,
         internalIcon: 'radio',
     };
 }
@@ -2354,7 +2411,8 @@ _parseRangeFieldType(context: any): IRangeFieldType {
         unlessArray:string[] = fetchDynamic<string[]>(context['field'], 'unless', []),
         validateArray:string[] = fetchDynamic<string[]>(context['field'], 'validate', []),
         display:string = fetchDynamic<string>(context['field'], 'display', ''),
-        developerDocumentation:string = fetchDynamic<string>(context['field'], '__documentation', '');
+        developerDocumentation:string = fetchDynamic<string>(context['field'], '__documentation', ''),
+        instructionText:string = fetchDynamic<string>(context['field'], 'instructions', '');
     return {
         hidden: _parsedHidden,
         min: _parsedMin,
@@ -2374,6 +2432,7 @@ _parseRangeFieldType(context: any): IRangeFieldType {
         isLinked: false,
         linkedFrom: '',
         developerDocumentation: developerDocumentation,
+        instructionText: instructionText,
         internalIcon: 'range',
     };
 }
@@ -2397,7 +2456,8 @@ _parseRevealerFieldType(context: any): IRevealerFieldType {
         unlessArray:string[] = fetchDynamic<string[]>(context['field'], 'unless', []),
         validateArray:string[] = fetchDynamic<string[]>(context['field'], 'validate', []),
         display:string = fetchDynamic<string>(context['field'], 'display', ''),
-        developerDocumentation:string = fetchDynamic<string>(context['field'], '__documentation', '');
+        developerDocumentation:string = fetchDynamic<string>(context['field'], '__documentation', ''),
+        instructionText:string = fetchDynamic<string>(context['field'], 'instructions', '');
     return {
         mode: _parsedMode,
         inputLabel: _parsedInputLabel,
@@ -2412,6 +2472,7 @@ _parseRevealerFieldType(context: any): IRevealerFieldType {
         isLinked: false,
         linkedFrom: '',
         developerDocumentation: developerDocumentation,
+        instructionText: instructionText,
         internalIcon: 'revealer',
     };
 }
@@ -2433,7 +2494,8 @@ _parseSectionFieldType(context: any): ISectionFieldType {
         unlessArray:string[] = fetchDynamic<string[]>(context['field'], 'unless', []),
         validateArray:string[] = fetchDynamic<string[]>(context['field'], 'validate', []),
         display:string = fetchDynamic<string>(context['field'], 'display', ''),
-        developerDocumentation:string = fetchDynamic<string>(context['field'], '__documentation', '');
+        developerDocumentation:string = fetchDynamic<string>(context['field'], '__documentation', ''),
+        instructionText:string = fetchDynamic<string>(context['field'], 'instructions', '');
     return {
         required: isRequired,
         type: type,
@@ -2446,6 +2508,7 @@ _parseSectionFieldType(context: any): ISectionFieldType {
         isLinked: false,
         linkedFrom: '',
         developerDocumentation: developerDocumentation,
+        instructionText: instructionText,
         internalIcon: 'section',
     };
 }
@@ -2477,7 +2540,8 @@ _parseSelectFieldType(context: any): ISelectFieldType {
         unlessArray:string[] = fetchDynamic<string[]>(context['field'], 'unless', []),
         validateArray:string[] = fetchDynamic<string[]>(context['field'], 'validate', []),
         display:string = fetchDynamic<string>(context['field'], 'display', ''),
-        developerDocumentation:string = fetchDynamic<string>(context['field'], '__documentation', '');
+        developerDocumentation:string = fetchDynamic<string>(context['field'], '__documentation', ''),
+        instructionText:string = fetchDynamic<string>(context['field'], 'instructions', '');
     return {
         placeholder: _parsedPlaceholder,
         options: _parsedOptions,
@@ -2500,6 +2564,7 @@ _parseSelectFieldType(context: any): ISelectFieldType {
         isLinked: false,
         linkedFrom: '',
         developerDocumentation: developerDocumentation,
+        instructionText: instructionText,
         internalIcon: 'select',
     };
 }
@@ -2521,7 +2586,8 @@ _parseSetsFieldType(context: any): ISetsFieldType {
         unlessArray:string[] = fetchDynamic<string[]>(context['field'], 'unless', []),
         validateArray:string[] = fetchDynamic<string[]>(context['field'], 'validate', []),
         display:string = fetchDynamic<string>(context['field'], 'display', ''),
-        developerDocumentation:string = fetchDynamic<string>(context['field'], '__documentation', '');
+        developerDocumentation:string = fetchDynamic<string>(context['field'], '__documentation', ''),
+        instructionText:string = fetchDynamic<string>(context['field'], 'instructions', '');
     return {
         required: isRequired,
         type: type,
@@ -2534,6 +2600,7 @@ _parseSetsFieldType(context: any): ISetsFieldType {
         isLinked: false,
         linkedFrom: '',
         developerDocumentation: developerDocumentation,
+        instructionText: instructionText,
         internalIcon: 'sets',
     };
 }
@@ -2557,7 +2624,8 @@ _parseSitesFieldType(context: any): ISitesFieldType {
         unlessArray:string[] = fetchDynamic<string[]>(context['field'], 'unless', []),
         validateArray:string[] = fetchDynamic<string[]>(context['field'], 'validate', []),
         display:string = fetchDynamic<string>(context['field'], 'display', ''),
-        developerDocumentation:string = fetchDynamic<string>(context['field'], '__documentation', '');
+        developerDocumentation:string = fetchDynamic<string>(context['field'], '__documentation', ''),
+        instructionText:string = fetchDynamic<string>(context['field'], 'instructions', '');
     return {
         maxItems: _parsedMaxItems,
         mode: _parsedMode,
@@ -2572,6 +2640,7 @@ _parseSitesFieldType(context: any): ISitesFieldType {
         isLinked: false,
         linkedFrom: '',
         developerDocumentation: developerDocumentation,
+        instructionText: instructionText,
         internalIcon: 'sites',
     };
 }
@@ -2595,7 +2664,8 @@ _parseStructuresFieldType(context: any): IStructuresFieldType {
         unlessArray:string[] = fetchDynamic<string[]>(context['field'], 'unless', []),
         validateArray:string[] = fetchDynamic<string[]>(context['field'], 'validate', []),
         display:string = fetchDynamic<string>(context['field'], 'display', ''),
-        developerDocumentation:string = fetchDynamic<string>(context['field'], '__documentation', '');
+        developerDocumentation:string = fetchDynamic<string>(context['field'], '__documentation', ''),
+        instructionText:string = fetchDynamic<string>(context['field'], 'instructions', '');
     return {
         maxItems: _parsedMaxItems,
         mode: _parsedMode,
@@ -2610,6 +2680,7 @@ _parseStructuresFieldType(context: any): IStructuresFieldType {
         isLinked: false,
         linkedFrom: '',
         developerDocumentation: developerDocumentation,
+        instructionText: instructionText,
         internalIcon: 'structures',
     };
 }
@@ -2633,7 +2704,8 @@ _parseSlugFieldType(context: any): ISlugFieldType {
         unlessArray:string[] = fetchDynamic<string[]>(context['field'], 'unless', []),
         validateArray:string[] = fetchDynamic<string[]>(context['field'], 'validate', []),
         display:string = fetchDynamic<string>(context['field'], 'display', ''),
-        developerDocumentation:string = fetchDynamic<string>(context['field'], '__documentation', '');
+        developerDocumentation:string = fetchDynamic<string>(context['field'], '__documentation', ''),
+        instructionText:string = fetchDynamic<string>(context['field'], 'instructions', '');
     return {
         from: _parsedFrom,
         generate: _parsedGenerate,
@@ -2648,6 +2720,7 @@ _parseSlugFieldType(context: any): ISlugFieldType {
         isLinked: false,
         linkedFrom: '',
         developerDocumentation: developerDocumentation,
+        instructionText: instructionText,
         internalIcon: 'slug',
     };
 }
@@ -2676,7 +2749,8 @@ _parseTextFieldType(context: any): ITextFieldType {
         unlessArray:string[] = fetchDynamic<string[]>(context['field'], 'unless', []),
         validateArray:string[] = fetchDynamic<string[]>(context['field'], 'validate', []),
         display:string = fetchDynamic<string>(context['field'], 'display', ''),
-        developerDocumentation:string = fetchDynamic<string>(context['field'], '__documentation', '');
+        developerDocumentation:string = fetchDynamic<string>(context['field'], '__documentation', ''),
+        instructionText:string = fetchDynamic<string>(context['field'], 'instructions', '');
     return {
         placeholder: _parsedPlaceholder,
         inputType: _parsedInputType,
@@ -2696,6 +2770,7 @@ _parseTextFieldType(context: any): ITextFieldType {
         isLinked: false,
         linkedFrom: '',
         developerDocumentation: developerDocumentation,
+        instructionText: instructionText,
         internalIcon: 'text',
     };
 }
@@ -2717,7 +2792,8 @@ _parseTableFieldType(context: any): ITableFieldType {
         unlessArray:string[] = fetchDynamic<string[]>(context['field'], 'unless', []),
         validateArray:string[] = fetchDynamic<string[]>(context['field'], 'validate', []),
         display:string = fetchDynamic<string>(context['field'], 'display', ''),
-        developerDocumentation:string = fetchDynamic<string>(context['field'], '__documentation', '');
+        developerDocumentation:string = fetchDynamic<string>(context['field'], '__documentation', ''),
+        instructionText:string = fetchDynamic<string>(context['field'], 'instructions', '');
     return {
         required: isRequired,
         type: type,
@@ -2730,6 +2806,7 @@ _parseTableFieldType(context: any): ITableFieldType {
         isLinked: false,
         linkedFrom: '',
         developerDocumentation: developerDocumentation,
+        instructionText: instructionText,
         internalIcon: 'table',
     };
 }
@@ -2752,7 +2829,8 @@ _parseTaggableFieldType(context: any): ITaggableFieldType {
         unlessArray:string[] = fetchDynamic<string[]>(context['field'], 'unless', []),
         validateArray:string[] = fetchDynamic<string[]>(context['field'], 'validate', []),
         display:string = fetchDynamic<string>(context['field'], 'display', ''),
-        developerDocumentation:string = fetchDynamic<string>(context['field'], '__documentation', '');
+        developerDocumentation:string = fetchDynamic<string>(context['field'], '__documentation', ''),
+        instructionText:string = fetchDynamic<string>(context['field'], 'instructions', '');
     return {
         placeholder: _parsedPlaceholder,
         required: isRequired,
@@ -2766,6 +2844,7 @@ _parseTaggableFieldType(context: any): ITaggableFieldType {
         isLinked: false,
         linkedFrom: '',
         developerDocumentation: developerDocumentation,
+        instructionText: instructionText,
         internalIcon: 'tags',
     };
 }
@@ -2791,7 +2870,8 @@ _parseTermsFieldType(context: any): ITermsFieldType {
         unlessArray:string[] = fetchDynamic<string[]>(context['field'], 'unless', []),
         validateArray:string[] = fetchDynamic<string[]>(context['field'], 'validate', []),
         display:string = fetchDynamic<string>(context['field'], 'display', ''),
-        developerDocumentation:string = fetchDynamic<string>(context['field'], '__documentation', '');
+        developerDocumentation:string = fetchDynamic<string>(context['field'], '__documentation', ''),
+        instructionText:string = fetchDynamic<string>(context['field'], 'instructions', '');
     return {
         maxItems: _parsedMaxItems,
         mode: _parsedMode,
@@ -2808,6 +2888,7 @@ _parseTermsFieldType(context: any): ITermsFieldType {
         isLinked: false,
         linkedFrom: '',
         developerDocumentation: developerDocumentation,
+        instructionText: instructionText,
         internalIcon: 'taxonomy',
     };
 }
@@ -2831,7 +2912,8 @@ _parseTaxonomiesFieldType(context: any): ITaxonomiesFieldType {
         unlessArray:string[] = fetchDynamic<string[]>(context['field'], 'unless', []),
         validateArray:string[] = fetchDynamic<string[]>(context['field'], 'validate', []),
         display:string = fetchDynamic<string>(context['field'], 'display', ''),
-        developerDocumentation:string = fetchDynamic<string>(context['field'], '__documentation', '');
+        developerDocumentation:string = fetchDynamic<string>(context['field'], '__documentation', ''),
+        instructionText:string = fetchDynamic<string>(context['field'], 'instructions', '');
     return {
         maxItems: _parsedMaxItems,
         mode: _parsedMode,
@@ -2846,6 +2928,7 @@ _parseTaxonomiesFieldType(context: any): ITaxonomiesFieldType {
         isLinked: false,
         linkedFrom: '',
         developerDocumentation: developerDocumentation,
+        instructionText: instructionText,
         internalIcon: 'taxonomy',
     };
 }
@@ -2870,7 +2953,8 @@ _parseTemplateFieldType(context: any): ITemplateFieldType {
         unlessArray:string[] = fetchDynamic<string[]>(context['field'], 'unless', []),
         validateArray:string[] = fetchDynamic<string[]>(context['field'], 'validate', []),
         display:string = fetchDynamic<string>(context['field'], 'display', ''),
-        developerDocumentation:string = fetchDynamic<string>(context['field'], '__documentation', '');
+        developerDocumentation:string = fetchDynamic<string>(context['field'], '__documentation', ''),
+        instructionText:string = fetchDynamic<string>(context['field'], 'instructions', '');
     return {
         hidePartials: _parsedHidePartials,
         blueprint: _parsedBlueprint,
@@ -2886,6 +2970,7 @@ _parseTemplateFieldType(context: any): ITemplateFieldType {
         isLinked: false,
         linkedFrom: '',
         developerDocumentation: developerDocumentation,
+        instructionText: instructionText,
         internalIcon: 'template',
     };
 }
@@ -2909,7 +2994,8 @@ _parseTemplateFolderFieldType(context: any): ITemplateFolderFieldType {
         unlessArray:string[] = fetchDynamic<string[]>(context['field'], 'unless', []),
         validateArray:string[] = fetchDynamic<string[]>(context['field'], 'validate', []),
         display:string = fetchDynamic<string>(context['field'], 'display', ''),
-        developerDocumentation:string = fetchDynamic<string>(context['field'], '__documentation', '');
+        developerDocumentation:string = fetchDynamic<string>(context['field'], '__documentation', ''),
+        instructionText:string = fetchDynamic<string>(context['field'], 'instructions', '');
     return {
         maxItems: _parsedMaxItems,
         mode: _parsedMode,
@@ -2924,6 +3010,7 @@ _parseTemplateFolderFieldType(context: any): ITemplateFolderFieldType {
         isLinked: false,
         linkedFrom: '',
         developerDocumentation: developerDocumentation,
+        instructionText: instructionText,
         internalIcon: 'template_folder',
     };
 }
@@ -2949,7 +3036,8 @@ _parseTextareaFieldType(context: any): ITextareaFieldType {
         unlessArray:string[] = fetchDynamic<string[]>(context['field'], 'unless', []),
         validateArray:string[] = fetchDynamic<string[]>(context['field'], 'validate', []),
         display:string = fetchDynamic<string>(context['field'], 'display', ''),
-        developerDocumentation:string = fetchDynamic<string>(context['field'], '__documentation', '');
+        developerDocumentation:string = fetchDynamic<string>(context['field'], '__documentation', ''),
+        instructionText:string = fetchDynamic<string>(context['field'], 'instructions', '');
     return {
         placeholder: _parsedPlaceholder,
         characterLimit: _parsedCharacterLimit,
@@ -2966,6 +3054,7 @@ _parseTextareaFieldType(context: any): ITextareaFieldType {
         isLinked: false,
         linkedFrom: '',
         developerDocumentation: developerDocumentation,
+        instructionText: instructionText,
         internalIcon: 'textarea',
     };
 }
@@ -2989,7 +3078,8 @@ _parseTimeFieldType(context: any): ITimeFieldType {
         unlessArray:string[] = fetchDynamic<string[]>(context['field'], 'unless', []),
         validateArray:string[] = fetchDynamic<string[]>(context['field'], 'validate', []),
         display:string = fetchDynamic<string>(context['field'], 'display', ''),
-        developerDocumentation:string = fetchDynamic<string>(context['field'], '__documentation', '');
+        developerDocumentation:string = fetchDynamic<string>(context['field'], '__documentation', ''),
+        instructionText:string = fetchDynamic<string>(context['field'], 'instructions', '');
     return {
         secondsEnabled: _parsedSecondsEnabled,
         default: _parsedDefault,
@@ -3004,6 +3094,7 @@ _parseTimeFieldType(context: any): ITimeFieldType {
         isLinked: false,
         linkedFrom: '',
         developerDocumentation: developerDocumentation,
+        instructionText: instructionText,
         internalIcon: 'time',
     };
 }
@@ -3027,7 +3118,8 @@ _parseToggleFieldType(context: any): IToggleFieldType {
         unlessArray:string[] = fetchDynamic<string[]>(context['field'], 'unless', []),
         validateArray:string[] = fetchDynamic<string[]>(context['field'], 'validate', []),
         display:string = fetchDynamic<string>(context['field'], 'display', ''),
-        developerDocumentation:string = fetchDynamic<string>(context['field'], '__documentation', '');
+        developerDocumentation:string = fetchDynamic<string>(context['field'], '__documentation', ''),
+        instructionText:string = fetchDynamic<string>(context['field'], 'instructions', '');
     return {
         inlineLabel: _parsedInlineLabel,
         default: _parsedDefault,
@@ -3042,6 +3134,7 @@ _parseToggleFieldType(context: any): IToggleFieldType {
         isLinked: false,
         linkedFrom: '',
         developerDocumentation: developerDocumentation,
+        instructionText: instructionText,
         internalIcon: 'toggle',
     };
 }
@@ -3065,7 +3158,8 @@ _parseUserGroupsFieldType(context: any): IUserGroupsFieldType {
         unlessArray:string[] = fetchDynamic<string[]>(context['field'], 'unless', []),
         validateArray:string[] = fetchDynamic<string[]>(context['field'], 'validate', []),
         display:string = fetchDynamic<string>(context['field'], 'display', ''),
-        developerDocumentation:string = fetchDynamic<string>(context['field'], '__documentation', '');
+        developerDocumentation:string = fetchDynamic<string>(context['field'], '__documentation', ''),
+        instructionText:string = fetchDynamic<string>(context['field'], 'instructions', '');
     return {
         maxItems: _parsedMaxItems,
         mode: _parsedMode,
@@ -3080,6 +3174,7 @@ _parseUserGroupsFieldType(context: any): IUserGroupsFieldType {
         isLinked: false,
         linkedFrom: '',
         developerDocumentation: developerDocumentation,
+        instructionText: instructionText,
         internalIcon: 'user_groups',
     };
 }
@@ -3103,7 +3198,8 @@ _parseUserRolesFieldType(context: any): IUserRolesFieldType {
         unlessArray:string[] = fetchDynamic<string[]>(context['field'], 'unless', []),
         validateArray:string[] = fetchDynamic<string[]>(context['field'], 'validate', []),
         display:string = fetchDynamic<string>(context['field'], 'display', ''),
-        developerDocumentation:string = fetchDynamic<string>(context['field'], '__documentation', '');
+        developerDocumentation:string = fetchDynamic<string>(context['field'], '__documentation', ''),
+        instructionText:string = fetchDynamic<string>(context['field'], 'instructions', '');
     return {
         maxItems: _parsedMaxItems,
         mode: _parsedMode,
@@ -3118,6 +3214,7 @@ _parseUserRolesFieldType(context: any): IUserRolesFieldType {
         isLinked: false,
         linkedFrom: '',
         developerDocumentation: developerDocumentation,
+        instructionText: instructionText,
         internalIcon: 'user_roles',
     };
 }
@@ -3141,7 +3238,8 @@ _parseUsersFieldType(context: any): IUsersFieldType {
         unlessArray:string[] = fetchDynamic<string[]>(context['field'], 'unless', []),
         validateArray:string[] = fetchDynamic<string[]>(context['field'], 'validate', []),
         display:string = fetchDynamic<string>(context['field'], 'display', ''),
-        developerDocumentation:string = fetchDynamic<string>(context['field'], '__documentation', '');
+        developerDocumentation:string = fetchDynamic<string>(context['field'], '__documentation', ''),
+        instructionText:string = fetchDynamic<string>(context['field'], 'instructions', '');
     return {
         maxItems: _parsedMaxItems,
         mode: _parsedMode,
@@ -3156,6 +3254,7 @@ _parseUsersFieldType(context: any): IUsersFieldType {
         isLinked: false,
         linkedFrom: '',
         developerDocumentation: developerDocumentation,
+        instructionText: instructionText,
         internalIcon: 'users',
     };
 }
@@ -3179,7 +3278,8 @@ _parseVideoFieldType(context: any): IVideoFieldType {
         unlessArray:string[] = fetchDynamic<string[]>(context['field'], 'unless', []),
         validateArray:string[] = fetchDynamic<string[]>(context['field'], 'validate', []),
         display:string = fetchDynamic<string>(context['field'], 'display', ''),
-        developerDocumentation:string = fetchDynamic<string>(context['field'], '__documentation', '');
+        developerDocumentation:string = fetchDynamic<string>(context['field'], '__documentation', ''),
+        instructionText:string = fetchDynamic<string>(context['field'], 'instructions', '');
     return {
         default: _parsedDefault,
         placeholder: _parsedPlaceholder,
@@ -3194,6 +3294,7 @@ _parseVideoFieldType(context: any): IVideoFieldType {
         isLinked: false,
         linkedFrom: '',
         developerDocumentation: developerDocumentation,
+        instructionText: instructionText,
         internalIcon: 'video',
     };
 }
@@ -3216,7 +3317,8 @@ _parseYamlFieldType(context: any): IYamlFieldType {
         unlessArray:string[] = fetchDynamic<string[]>(context['field'], 'unless', []),
         validateArray:string[] = fetchDynamic<string[]>(context['field'], 'validate', []),
         display:string = fetchDynamic<string>(context['field'], 'display', ''),
-        developerDocumentation:string = fetchDynamic<string>(context['field'], '__documentation', '');
+        developerDocumentation:string = fetchDynamic<string>(context['field'], '__documentation', ''),
+        instructionText:string = fetchDynamic<string>(context['field'], 'instructions', '');
     return {
         default: _parsedDefault,
         required: isRequired,
@@ -3230,6 +3332,7 @@ _parseYamlFieldType(context: any): IYamlFieldType {
         isLinked: false,
         linkedFrom: '',
         developerDocumentation: developerDocumentation,
+        instructionText: instructionText,
         internalIcon: 'yaml',
     };
 }
@@ -3253,7 +3356,8 @@ _parseFormFieldType(context: any): IFormFieldType {
         unlessArray:string[] = fetchDynamic<string[]>(context['field'], 'unless', []),
         validateArray:string[] = fetchDynamic<string[]>(context['field'], 'validate', []),
         display:string = fetchDynamic<string>(context['field'], 'display', ''),
-        developerDocumentation:string = fetchDynamic<string>(context['field'], '__documentation', '');
+        developerDocumentation:string = fetchDynamic<string>(context['field'], '__documentation', ''),
+        instructionText:string = fetchDynamic<string>(context['field'], 'instructions', '');
     return {
         placeholder: _parsedPlaceholder,
         maxItems: _parsedMaxItems,
@@ -3268,6 +3372,7 @@ _parseFormFieldType(context: any): IFormFieldType {
         isLinked: false,
         linkedFrom: '',
         developerDocumentation: developerDocumentation,
+        instructionText: instructionText,
         internalIcon: 'form',
     };
 }
