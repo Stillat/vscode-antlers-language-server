@@ -97,7 +97,8 @@ export class Faker {
         return {
             name: handle,
             type: 'string',
-            field: this.textField(handle)
+            field: this.textField(handle),
+            description: ''
         };
     }
 
@@ -113,7 +114,8 @@ export class Faker {
         return {
             name: handle,
             type: 'boolean',
-            field: this.boolField(handle)
+            field: this.boolField(handle),
+            description: ''
         };
     }
 
@@ -128,7 +130,8 @@ export class Faker {
         return {
             name: handle,
             type: 'integer',
-            field: this.integerField(handle)
+            field: this.integerField(handle),
+            description: ''
         };
     }
 
@@ -143,7 +146,8 @@ export class Faker {
         return {
             name: handle,
             type: 'float',
-            field: this.floatField(handle)
+            field: this.floatField(handle),
+            description: ''
         };
     }
 
@@ -159,7 +163,8 @@ export class Faker {
         return {
             name: handle,
             type: 'array',
-            field: this.arrayField(handle)
+            field: this.arrayField(handle),
+            description: ''
         };
     }
 
@@ -184,7 +189,8 @@ export class Faker {
         return {
             name: handle,
             type: 'date',
-            field: this.dateField(handle)
+            field: this.dateField(handle),
+            description: ''
         };
     }
 }

@@ -44,7 +44,8 @@ export class KeysResolver {
             returnFields.push({
                 name: field.handle,
                 type: this.massageInjectedType(field.type),
-                field: field
+                field: field,
+                description: field.instructionText
             });
         });
 

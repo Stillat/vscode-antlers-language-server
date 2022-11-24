@@ -17,6 +17,7 @@ export interface IInjectedField {
     name: string,
     type: string,
     field: IFieldDetails,
+    description: string
 }
 
 export interface IFieldtypeDocumentationOverview {

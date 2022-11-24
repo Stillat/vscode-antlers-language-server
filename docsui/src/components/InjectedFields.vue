@@ -19,10 +19,12 @@ export default {
         <vscode-data-grid-row row-type="header">
             <vscode-data-grid-cell cell-type="columnheader" grid-column="1">Name</vscode-data-grid-cell>
             <vscode-data-grid-cell cell-type="columnheader" grid-column="2">Type</vscode-data-grid-cell>
+            <vscode-data-grid-cell cell-type="columnheader" grid-column="3">Description</vscode-data-grid-cell>
         </vscode-data-grid-row>
         <vscode-data-grid-row v-for="field in fields">
             <vscode-data-grid-cell grid-column="1">{{ field.name }}</vscode-data-grid-cell>
             <vscode-data-grid-cell grid-column="2">{{ field.type }}</vscode-data-grid-cell>
+            <vscode-data-grid-cell grid-column="3">{{ field.description }}</vscode-data-grid-cell>
         </vscode-data-grid-row>
     </vscode-data-grid>
 </template>
