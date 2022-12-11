@@ -61,7 +61,7 @@ export class Faker {
         return '';
     }
 
-    static baseField(handle: string, type: string): IFieldDetails {
+    static baseField(handle: string, type: string, instructionText: string): IFieldDetails {
         return {
             validate: [],
             unless: [],
@@ -75,103 +75,103 @@ export class Faker {
             fields: [],
             display: '',
             developerDocumentation: '',
-            instructionText: ''
+            instructionText: instructionText
         };
     }
 
-    static textField(handle: string): ITextField {
+    static textField(handle: string, instructionText: string): ITextField {
         return {
-            ...this.baseField(handle, 'text')
+            ...this.baseField(handle, 'text', instructionText)
         }
     }
 
-    static slugField(handle: string): ISlugFieldType {
+    static slugField(handle: string, instructionText: string): ISlugFieldType {
         return {
-            ...this.baseField(handle, 'slug'),
+            ...this.baseField(handle, 'slug', instructionText),
             from: '',
             generate: true
         };
     }
 
-    static injectedTextField(handle: string): IInjectedField {
+    static injectedTextField(handle: string, instructionText: string): IInjectedField {
         return {
             name: handle,
             type: 'string',
-            field: this.textField(handle),
-            description: ''
+            field: this.textField(handle, instructionText),
+            description: instructionText
         };
     }
 
-    static boolField(handle: string): IToggleFieldType {
+    static boolField(handle: string, instructionText: string): IToggleFieldType {
         return {
-            ...this.baseField(handle, 'toggle'),
+            ...this.baseField(handle, 'toggle', instructionText),
             inlineLabel: '',
             default: false
         }
     }
 
-    static injectedBoolField(handle: string): IInjectedField {
+    static injectedBoolField(handle: string, instructionText: string): IInjectedField {
         return {
             name: handle,
             type: 'boolean',
-            field: this.boolField(handle),
-            description: ''
+            field: this.boolField(handle, instructionText),
+            description: instructionText
         };
     }
 
-    static integerField(handle: string): IIntegerFieldType {
+    static integerField(handle: string, instructionText: string): IIntegerFieldType {
         return {
-            ...this.baseField(handle, 'integer'),
+            ...this.baseField(handle, 'integer', instructionText),
             default: ''
         };
     }
 
-    static injectedIntegerField(handle: string): IInjectedField {
+    static injectedIntegerField(handle: string, instructionText: string): IInjectedField {
         return {
             name: handle,
             type: 'integer',
-            field: this.integerField(handle),
-            description: ''
+            field: this.integerField(handle, instructionText),
+            description: instructionText
         };
     }
 
-    static floatField(handle: string): IIntegerFieldType {
+    static floatField(handle: string, instructionText: string): IIntegerFieldType {
         return {
-            ...this.baseField(handle, 'float'),
+            ...this.baseField(handle, 'float', instructionText),
             default: ''
         };
     }
 
-    static injectedFloatField(handle: string): IInjectedField {
+    static injectedFloatField(handle: string, instructionText: string): IInjectedField {
         return {
             name: handle,
             type: 'float',
-            field: this.floatField(handle),
-            description: ''
+            field: this.floatField(handle, instructionText),
+            description: instructionText
         };
     }
 
-    static arrayField(handle: string): IArrayFieldType {
+    static arrayField(handle: string, instructionText: string): IArrayFieldType {
         return {
-            ...this.baseField(handle, 'array'),
+            ...this.baseField(handle, 'array', instructionText),
             mode: 'dynamic',
             keys: []
         };
     }
 
-    static injectedArrayField(handle: string): IInjectedField {
+    static injectedArrayField(handle: string, instructionText: string): IInjectedField {
         return {
             name: handle,
             type: 'array',
-            field: this.arrayField(handle),
-            description: ''
+            field: this.arrayField(handle, instructionText),
+            description: instructionText
         };
     }
 
 
-    static dateField(handle: string): IDateFieldType {
+    static dateField(handle: string, instructionText: string): IDateFieldType {
         return {
-            ...this.baseField(handle, 'date'),
+            ...this.baseField(handle, 'date', instructionText),
             mode: '',
             format: null,
             earliestDate: null,
@@ -185,12 +185,12 @@ export class Faker {
         };
     }
 
-    static injectedDateField(handle: string): IInjectedField {
+    static injectedDateField(handle: string, instructionText: string): IInjectedField {
         return {
             name: handle,
             type: 'date',
-            field: this.dateField(handle),
-            description: ''
+            field: this.dateField(handle, instructionText),
+            description: instructionText
         };
     }
 }

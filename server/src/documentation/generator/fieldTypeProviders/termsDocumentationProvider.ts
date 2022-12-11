@@ -15,8 +15,8 @@ export class TermsDocumentationProvider implements IDocumentationProvider {
             overviewProperties: IDocumentationProperty[] = [];
 
 
-        let rawReturns: AugmentationTypes = AugmentationTypes.TermArray,
-            augmentsTo: AugmentationTypes = AugmentationTypes.TermArray,
+        let rawReturns: AugmentationTypes = AugmentationTypes.Builder,
+            augmentsTo: AugmentationTypes = AugmentationTypes.Builder,
             overviewSnippets: IDocumentationSnippet[] = [],
             stringable = false;
 

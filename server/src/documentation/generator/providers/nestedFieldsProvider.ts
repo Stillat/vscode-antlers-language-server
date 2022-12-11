@@ -15,7 +15,7 @@ export class NestedFieldsProvider {
         const snippets: IDocumentationSnippet[] = [];
 
         if (keys.length == 0) {
-            snippets.push(NestedFieldsProvider.generateNestedFields(rootHandle, [Faker.injectedTextField('value')], tabSize));
+            snippets.push(NestedFieldsProvider.generateNestedFields(rootHandle, [Faker.injectedTextField('value', '')], tabSize));
 
             return snippets;
         }
@@ -30,7 +30,7 @@ export class NestedFieldsProvider {
         const snippets: IDocumentationSnippet[] = [];
 
         if (keys.length == 0) {
-            snippets.push(NestedFieldsProvider.generateNestedFields(rootHandle, [Faker.injectedTextField('value')], tabSize));
+            snippets.push(NestedFieldsProvider.generateNestedFields(rootHandle, [Faker.injectedTextField('value', '')], tabSize));
 
             return snippets;
         }

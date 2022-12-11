@@ -27,13 +27,13 @@ export class DynamicYamlFieldsParser {
             const tempVar = context[rootVariable];
             const varType = typeof tempVar;
             if (varType === 'string') {
-                parsedObject.fields.push(Faker.textField(rootVariable));
+                parsedObject.fields.push(Faker.textField(rootVariable, ''));
             } else if (varType === 'number') {
-                parsedObject.fields.push(Faker.floatField(rootVariable));
+                parsedObject.fields.push(Faker.floatField(rootVariable, ''));
             } else if (varType === 'boolean') {
-                parsedObject.fields.push(Faker.boolField(rootVariable));
+                parsedObject.fields.push(Faker.boolField(rootVariable, ''));
             } else if (varType === 'object' && Array.isArray(tempVar)) {
-                parsedObject.fields.push(Faker.arrayField(rootVariable));
+                parsedObject.fields.push(Faker.arrayField(rootVariable, ''));
             } else {
                 objectVars.set(rootVariable, this.parseObject(rootVariable, tempVar));
             }
@@ -41,7 +41,7 @@ export class DynamicYamlFieldsParser {
 
         if (objectVars.size > 0) {
             objectVars.forEach((value, key) => {
-                const keyedArray = Faker.arrayField(key);
+                const keyedArray = Faker.arrayField(key, '');
                 keyedArray.mode = 'keyed';
                 keyedArray.fields = value.fields;
 

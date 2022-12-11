@@ -3,14 +3,14 @@ import { IFieldDetails, IParsedBlueprint } from './types';
 
 export class EnsureFields {
     static ensureCollectionFields(blueprint: IParsedBlueprint) {
-        this.ensureFieldPrepended(Faker.textField('title'), blueprint);
-        this.ensureField(Faker.slugField('slug'), blueprint);
-        this.ensureField(Faker.dateField('date'), blueprint);
+        this.ensureFieldPrepended(Faker.textField('title', 'The entry\'s title'), blueprint);
+        this.ensureField(Faker.slugField('slug', 'The entry\'s slug'), blueprint);
+        this.ensureField(Faker.dateField('date', 'The date the entry was created'), blueprint);
     }
 
     static ensureNavigationFields(blueprint: IParsedBlueprint) {
-        this.ensureField(Faker.textField('title'), blueprint);
-        this.ensureField(Faker.textField('url'), blueprint);
+        this.ensureField(Faker.textField('title', 'The navigation\'s title'), blueprint);
+        this.ensureField(Faker.textField('url', 'The navigation\'s URL'), blueprint);
     }
 
     static ensureFieldPrepended(field: IFieldDetails, blueprint: IParsedBlueprint) {

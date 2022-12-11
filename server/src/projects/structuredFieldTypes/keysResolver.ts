@@ -21,7 +21,7 @@ export class KeysResolver {
         const returnFields: IInjectedField[] = [];
 
         fields.forEach((field) => {
-            returnFields.push(Faker.injectedTextField(field));
+            returnFields.push(Faker.injectedTextField(field, ''));
         });
 
         return returnFields;

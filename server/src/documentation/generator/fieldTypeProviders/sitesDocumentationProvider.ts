@@ -11,7 +11,7 @@ export class SitesDocumentationProvider implements IDocumentationProvider {
 
     resolve(site: ISitesFieldType, currentProject: IProjectFields): IDocumentationResult {
         const docLink = OfficialDocumentationLinkProvider.getDocLink(site.type),
-            injectedFields: IInjectedField[] = KeysResolver.keysToInjectedField(this.injectsKeys).concat([Faker.injectedArrayField('attributes')]),
+            injectedFields: IInjectedField[] = KeysResolver.keysToInjectedField(this.injectsKeys).concat([Faker.injectedArrayField('attributes', '')]),
             overviewProperties: IDocumentationProperty[] = [];
 
 
