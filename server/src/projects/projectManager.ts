@@ -1,5 +1,6 @@
+import { ThemePath } from '../antlers/tags/core/theme/themePath';
 import { IProjectDetailsProvider } from './projectDetailsProvider';
-import { IProjectFields } from './structuredFieldTypes/types';
+import { IFieldDetails, IParsedBlueprint, IProjectFields } from './structuredFieldTypes/types';
 
 class ProjectManager {
     public static instance: ProjectManager | null = null;
@@ -10,6 +11,23 @@ class ProjectManager {
 
     setStructuredProject(fields: IProjectFields) {
         this.structuredProject = fields;
+    }
+
+    hasStructuredBlueprints(): boolean {
+        return this.structuredProject != null;
+    }
+
+    getAllStructuredBlueprints(): IParsedBlueprint[] {
+        if (this.structuredProject == null) {
+            return [];
+        }
+
+        return this.structuredProject.assets
+            .concat(this.structuredProject.collections)
+            .concat(this.structuredProject.forms)
+            .concat(this.structuredProject.general)
+            .concat(this.structuredProject.navigations)
+            .concat(this.structuredProject.taxonomies);
     }
 
     getStructuredProject(): IProjectFields | null {
