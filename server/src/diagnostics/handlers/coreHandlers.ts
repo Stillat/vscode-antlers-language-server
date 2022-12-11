@@ -5,7 +5,6 @@ import DoubleColonHandler from './doubleColonHandler';
 import FieldTypeModifierSequenceHandler from './fieldTypeModifierSequenceHandler';
 import InterleavedNodeHandler from './interleavedNodes';
 import InvalidParameterHandler from './invalidParameterHandler';
-import MinCountHandler from './minCountHandlers';
 import MixedModifierHandler from './mixedModifierHandler';
 import ModifierRuntimeTypeHandler from './modifierRuntimeTypeHandler';
 import ParameterValidatorHandler from './parameterValidatorHandler';
@@ -31,7 +30,6 @@ const CoreHandlers: IDiagnosticsHandler[] = [
     InvalidParameterHandler,
     PartialParametersHandler,
     ParameterValidatorHandler,
-    MinCountHandler,
     QueryBuildersHandler
 ];
 
