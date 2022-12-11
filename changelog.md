@@ -2,7 +2,7 @@
 
 Bugs fixed, what's new, and more! :)
 
-## Unreleased
+## v2.4.0
 
 - Improves descriptions for the `first` and `last` modifiers
 - Improves the consistency of modifier and modifier parameter descriptions
@@ -13,6 +13,7 @@ Bugs fixed, what's new, and more! :)
 - Improves internal management of collections without any user blueprint customizations
 - Adds collections without any user blueprint modifications to suggestions
 - Adds field injections to completion results for collections without any user blueprint modifications
+- Adds blueprint overview and automated documentation generation (beta)
 
 ## v2.3.9
 
