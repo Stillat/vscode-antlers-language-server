@@ -22,8 +22,10 @@ import UserIsnt from './userIsnt';
 import UserLogout from './userLogout';
 import UserLogoutUrl from './userLogoutUrl';
 import UserNotIn from './userNotIn';
+import UserPasswordForm from './userPasswordForm';
 import { UserPasswordReset } from './userPasswordReset';
 import UserProfile from './userProfile';
+import UserProfileForm from './userProfileForm';
 import { UserProfileParameters } from './userProfileParameters';
 import { UserRegister } from './userRegister';
 
@@ -39,6 +41,8 @@ const UserTagCompletionItems: CompletionItem[] = [
     tagToCompletionItem(UserLogoutUrl),
     tagToCompletionItem(UserRegister),
     tagToCompletionItem(UserPasswordReset),
+    tagToCompletionItem(UserProfileForm),
+    tagToCompletionItem(UserPasswordForm),
 ];
 
 const User: IAntlersTag = {

@@ -2,6 +2,11 @@
 
 Bugs fixed, what's new, and more! :)
 
+## v2.4.1
+
+- Adds support for the `user:password_form` tag
+- Adds support for the `user:profile_form` tag
+
 ## v2.4.0
 
 - Improves descriptions for the `first` and `last` modifiers

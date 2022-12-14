@@ -121,6 +121,8 @@ import CookieForget from './core/cookie/cookieForget';
 import CookieHas from './core/cookie/cookieHas';
 import CookieSet from './core/cookie/cookieSet';
 import CookieValue from './core/cookie/cookieValue';
+import UserProfileForm from './core/userProfileForm';
+import UserPasswordForm from './core/userPasswordForm';
 
 const coreTags = [
     If,
@@ -218,6 +220,8 @@ const coreTags = [
     UserLoginForm,
     UserPasswordReset,
     UserForgotPasswordForm,
+    UserProfileForm,
+    UserPasswordForm,
     UserRegister,
 
     MemberTag,

@@ -18,6 +18,10 @@ function getDisplayItems(blueprints: IParsedBlueprint[]): ProjectItem[] {
     blueprints.sort((a, b) => a.handle.localeCompare(b.handle)).forEach((blueprint) => {
         var item = new ProjectItem(getDisplayTitle(blueprint), '', ItemType.Collection, vscode.TreeItemCollapsibleState.Collapsed);
 
+        if (blueprint.allFields.length == 0) {
+            return;
+        }
+
         item.setContext(blueprint);
 
         blueprintsToReturn.push(item);
