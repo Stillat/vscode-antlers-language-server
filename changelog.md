@@ -2,6 +2,10 @@
 
 Bugs fixed, what's new, and more! :)
 
+## v2.4.2
+
+- Improves formatting of dynamic HTML elements
+
 ## v2.4.1
 
 - Adds support for the `user:password_form` tag

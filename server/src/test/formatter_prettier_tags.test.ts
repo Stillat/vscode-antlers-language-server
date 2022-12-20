@@ -149,4 +149,13 @@ After Partial
 {{ /tag }}`;
         assert.strictEqual(formatStringWithPrettier(template).trim(), output);
     });
+
+    test('it formats inline antlers nodes', () => {
+        const template = `<{{ as or 'a' }}  
+{{ slot:attributes }}
+class="font-bold">
+</{{ as or 'a' }}>`;
+
+        assert.strictEqual(formatStringWithPrettier(template).trim(), "<{{ as or 'a' }} {{ slot:attributes }} class=\"font-bold\"></{{ as or 'a' }}>");
+    });
 });

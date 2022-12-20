@@ -614,6 +614,10 @@ export class Transformer {
     }
 
     private registerInlineAntlers(node: AntlersNode): string {
+        if (node.fragmentPosition == FragmentPosition.InsideFragment) {
+            node.isInlineAntlers = true;
+        }
+
         if (this.parentTransformer != null) {
             return this.parentTransformer.registerInlineAntlers(node);
         } else {
