@@ -99,4 +99,29 @@ suite('Formatter Prettier Conditional Elements', () => {
         assert.strictEqual(formatStringWithPrettier(template).trim(), expected);
         assert.strictEqual(formatStringWithPrettier(expected).trim(), expected);
     });
+
+    test('nested nodes within conditions do not get corrupted', () => {
+        const input = `<!DOCTYPE html>
+        <html>
+            <head>
+                <title>
+                    {{ if ! segment_1 }}
+                        {{ something }}
+                    {{ /if }}
+                </title>
+        </head>
+        </html>
+        
+            
+            `;
+        const output = `<!DOCTYPE html>
+<html>
+    <head>
+        <title>
+            {{ if !segment_1 }} {{ something }}{{ /if }}
+        </title>
+    </head>
+</html>`;
+        assert.strictEqual(formatStringWithPrettier(input).trim(), output);
+    });
 });

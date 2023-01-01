@@ -353,6 +353,13 @@ export class Transformer {
                 if (!structure.isLast) {
                     const virtualInline = this.selfClosing(structure.virtualSlug);
 
+                    if (! value.includes(virtualInline)) {
+                        const replaceRegex = '<' + structure.virtualSlug + '(\\s)+\\/>',
+                            regex = new RegExp(replaceRegex, 'gm');
+
+                        value = value.replace(regex, virtualInline);
+                    }
+
                     if (value.includes(virtualInline)) {
                         value = value.replace(virtualInline, structure.doc.trim());
                     }
@@ -361,6 +368,13 @@ export class Transformer {
                     value = value.replace(structure.pairOpen, this.printNode(structureTag, this.indentLevel(structure.pairOpen)));
                 } else {
                     const virtualInline = this.selfClosing(structure.virtualSlug);
+
+                    if (! value.includes(virtualInline)) {
+                        const replaceRegex = '<' + structure.virtualSlug + '(\\s)+\\/>',
+                            regex = new RegExp(replaceRegex, 'gm');
+
+                        value = value.replace(regex, virtualInline);
+                    }
 
                     if (value.includes(virtualInline)) {
                         value = value.replace(virtualInline, structure.doc.trim());
