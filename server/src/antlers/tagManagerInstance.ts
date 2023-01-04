@@ -162,6 +162,10 @@ class TagManager {
         let resolvedParams: CompletionItem[] = [];
         let runDefaultAnalysis = true;
 
+        if (params.context != null && params.context.node != null) {
+            params.currentNode = params.context.node;
+        }
+
         if (params.nodesInScope.length > 0) {
             lastScopeItem = params.nodesInScope[params.nodesInScope.length - 1];
         }

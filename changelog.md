@@ -2,6 +2,10 @@
 
 Bugs fixed, what's new, and more! :)
 
+## v2.4.4
+
+- Improves partial tag completions inside nested scopes
+
 ## v2.4.2
 
 - Improves formatting of dynamic HTML elements
