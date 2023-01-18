@@ -170,7 +170,9 @@ export class Transformer {
                 charactersLength));
         }
 
-        const slug = 'A' + result + 'A';
+        let slug = 'A' + result + 'A';
+
+        slug = slug.toLowerCase();
 
         if (this.slugs.includes(slug)) {
             return this.makeSlug(length + 1);
@@ -353,7 +355,7 @@ export class Transformer {
                 if (!structure.isLast) {
                     const virtualInline = this.selfClosing(structure.virtualSlug);
 
-                    if (! value.includes(virtualInline)) {
+                    if (!value.includes(virtualInline)) {
                         const replaceRegex = '<' + structure.virtualSlug + '(\\s)+\\/>',
                             regex = new RegExp(replaceRegex, 'gm');
 
@@ -369,7 +371,7 @@ export class Transformer {
                 } else {
                     const virtualInline = this.selfClosing(structure.virtualSlug);
 
-                    if (! value.includes(virtualInline)) {
+                    if (!value.includes(virtualInline)) {
                         const replaceRegex = '<' + structure.virtualSlug + '(\\s)+\\/>',
                             regex = new RegExp(replaceRegex, 'gm');
 
@@ -628,7 +630,7 @@ export class Transformer {
     }
 
     private registerInlineAntlers(node: AntlersNode): string {
-        if (node.fragmentPosition == FragmentPosition.InsideFragment) {
+        if (node.fragmentPosition == FragmentPosition.InsideFragment || node.fragmentPosition == FragmentPosition.InsideFragmentParameter) {
             node.isInlineAntlers = true;
         }
 
@@ -1109,12 +1111,23 @@ export class Transformer {
 
         let pruneLines = false,
             prunedCount = 0,
-            isProbablyOpen = false;
+            isProbablyOpen = false,
+            isPartial = false;
         for (let i = 0; i < lines.length; i++) {
             const checkLine = lines[i].trim(),
                 line = lines[i];
 
-            if (checkLine.startsWith('{{') && checkLine.endsWith('}}')) {
+            if (checkLine.startsWith('{{')) { //&& checkLine.endsWith('}}')) {
+                if (checkLine.endsWith('}}')) {
+                    isPartial = false;
+                } else {
+                    isPartial = true;
+                }
+
+                if (checkLine.startsWith('{{#')) {
+                    isPartial = false;
+                }
+
                 if (pruneLines) {
                     prunedCount = 0;
                 }
@@ -1131,6 +1144,13 @@ export class Transformer {
             if (!pruneLines) {
                 newLines.push(line);
             } else {
+                if (isPartial) {
+                    newLines.push(line);
+                    if (line.trim().endsWith('}}')) {
+                        isPartial = false;
+                    }
+                    continue;
+                }
                 if (checkLine.length == 0) {
                     if (isProbablyOpen == false) {
                         prunedCount = 0;

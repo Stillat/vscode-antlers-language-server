@@ -171,7 +171,7 @@ suite("Document Formatting Test", () => {
 after`;
         assert.strictEqual(formatAntlers(template), output);
     });
-    
+
     test('template test 17', () => {
         const template = `{{ test where="type:yup" }}{{ text }}{{ /test }}`;
         const output = `{{ test where="type:yup" }}
@@ -179,7 +179,7 @@ after`;
 {{ /test }}`;
         assert.strictEqual(formatAntlers(template), output);
     });
-    
+
     test('template test 16', () => {
         const template = `{{ hello }}{{ value }}, {{ label }}{{ /hello }}`;
         const output = `{{ hello }}
@@ -197,7 +197,7 @@ after`;
 {{ /array }}`;
         assert.strictEqual(formatAntlers(template), output);
     });
-    
+
     test('template test 13', () => {
         const template = `{{ items limit="2" }}<{{ value }}>{{ /items }}{{ items | count }}`;
         const output = `{{ items limit="2" }}
@@ -381,7 +381,7 @@ after`;
         const template = `{{$ $test = 10; $}}abvc {{? $hello = 10; ?}}`;
         assert.strictEqual(formatAntlers(template), `{{$ $test = 10; $}}abvc {{? $hello = 10; ?}}`);
     });
-    
+
     test('it indents code', () => {
         const expected = `{{#
     @name Article
@@ -453,7 +453,7 @@ after`;
 {{ /collection }}`;
         assert.strictEqual(formatAntlers(template), output);
     });
-    
+
     test('basic nodes', () => {
         assert.strictEqual(formatAntlers(`{{ var += ' test!'; var }}`), `{{ var += ' test!'; var }}`);
         assert.strictEqual(formatAntlers(`{{ meta_title["No Title Set"] ?? title param="Test" }}`), `{{ meta_title["No Title Set"] ?? title param="Test" }}`);
@@ -495,7 +495,7 @@ after`;
         );
     });
 
-    
+
 
     test('it respects nested block elements', () => {
         const expected = `{{#
@@ -670,7 +670,7 @@ After Yield
         assert.strictEqual(formatAntlers(template), output);
     });
 
-    
+
 
     test('it produces reasonable indentation on documents with many nested Antlers regions', () => {
         const template = `{{ scope:test }}
@@ -704,7 +704,7 @@ activity: {{ activity }}
         assert.strictEqual(formatAntlers(template), output);
     });
 
-    
+
     test('default HTML settings does not randomly break on simple Antlers regions', () => {
         const template = `var: {{ drink }}
         page: {{ page:drink }}
@@ -721,5 +721,24 @@ nested: {{ nested:drink }}
 augmented: {{ augmented:drink }}
 nested augmented: {{ nested:augmented:drink }}`;
         assert.strictEqual(formatAntlers(template), output);
+    });
+
+    test('repeated formatting doesnt add extra lines', () => {
+        const input = `{{ headings }}
+{{ if attrs:level == 3 || 2
+&& !first }}
+
+    <div></div>
+{{ /if }}
+{{ /headings }}`;
+        let out = formatAntlers(input);
+        const expected = "{{ headings }}\n    {{ if attrs:level == 3 || 2\n && !first }}\n\n        <div></div>\n    {{ /if }}\n{{ /headings }}";
+
+        assert.strictEqual(out, expected);
+
+        for (let i = 0; i < 10; i++) {
+            out = formatAntlers(out);
+            assert.strictEqual(out, expected);
+        }
     });
 });

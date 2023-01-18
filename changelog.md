@@ -2,6 +2,12 @@
 
 Bugs fixed, what's new, and more! :)
 
+## v2.4.5
+
+- Improves tag parameter suggestions
+- Corrects an issue that could lead to incomplete tags adding extra newlines after formatting
+- Corrects an issue with formatting Antlers tags within HTML attributes
+
 ## v2.4.4
 
 - Improves partial tag completions inside nested scopes

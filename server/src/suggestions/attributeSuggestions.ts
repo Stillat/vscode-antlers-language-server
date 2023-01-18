@@ -32,7 +32,13 @@ export function makeTagParameterSuggestions(
 
         // Check if the tag already includes the parameter. If so, we ignore it.
         if (!request.currentNode.hasParameter(curParam.name)) {
-            const paramSnippet = curParam.name + '="$1"';
+            let insertParamName = curParam.name;
+
+            if (request.leftWord != null && insertParamName.startsWith(request.leftWord)) {
+                insertParamName = insertParamName.substring(request.leftWord.length);
+            }
+
+            const paramSnippet = insertParamName + '="$1"';
 
             paramSuggestions.push({
                 label: curParam.name,
