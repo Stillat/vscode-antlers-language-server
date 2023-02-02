@@ -1,7 +1,6 @@
 import { AntlersDocument } from '../document/antlersDocument';
 import { AbstractNode, AntlersNode, ConditionNode, ExecutionBranch, FragmentPosition, LiteralNode, PathNode, VariableReference } from '../nodes/abstractNode';
 import * as yaml from 'js-yaml';
-import { LanguageParser } from '../parser/languageParser';
 
 export interface ClassSearchResults {
     node: AbstractNode,
@@ -124,46 +123,53 @@ export class DynamicClassAnalyzer {
 
                 // First check if we can extract any data from the view.
                 if (this.yamlData != null && nestedClassParts.length == 0 && (classPrefix.length + classSuffix.length) > 0) {
-                    const langParser = node.getParser()?.getLanguageParser() as LanguageParser,
-                        variables = langParser.getCreatedVariables();
+                    const nParser = node.getParser();
 
-                    variables.forEach((createdVariable) => {
-                        if (createdVariable.variableReference == null || createdVariable.variableReference.pathParts.length != 3) { return; }
-                        if (createdVariable.variableReference.pathParts[0] instanceof PathNode == false) { return; }
-                        if (createdVariable.variableReference.pathParts[1] instanceof PathNode == false) { return; }
-                        if (createdVariable.variableReference.pathParts[2] instanceof VariableReference == false) { return; }
+                    if (typeof nParser !== 'undefined' && nParser !== null) {
+                        const langParser = nParser.getLanguageParser();
+                        
+                        if (typeof langParser !== 'undefined' && langParser !== null) {
+                            const variables = langParser.getCreatedVariables();
 
-                        const firstPath = createdVariable.variableReference.pathParts[0] as PathNode,
-                            secondPath = createdVariable.variableReference.pathParts[1] as PathNode;
+                            variables.forEach((createdVariable) => {
+                                if (createdVariable.variableReference == null || createdVariable.variableReference.pathParts.length != 3) { return; }
+                                if (createdVariable.variableReference.pathParts[0] instanceof PathNode == false) { return; }
+                                if (createdVariable.variableReference.pathParts[1] instanceof PathNode == false) { return; }
+                                if (createdVariable.variableReference.pathParts[2] instanceof VariableReference == false) { return; }
 
-                        if (firstPath.name != 'view') { return; }
+                                const firstPath = createdVariable.variableReference.pathParts[0] as PathNode,
+                                    secondPath = createdVariable.variableReference.pathParts[1] as PathNode;
 
-                        if (typeof this.yamlData[secondPath.name] === 'undefined') { return; }
-                        const loadedData = this.yamlData[secondPath.name],
-                            tempValues: string[] = [],
-                            yamlKeys = Object.keys(loadedData);
+                                if (firstPath.name != 'view') { return; }
 
-                        let isValid = true;
+                                if (typeof this.yamlData[secondPath.name] === 'undefined') { return; }
+                                const loadedData = this.yamlData[secondPath.name],
+                                    tempValues: string[] = [],
+                                    yamlKeys = Object.keys(loadedData);
 
-                        for (let i = 0; i < yamlKeys.length; i++) {
-                            const tempValue = loadedData[yamlKeys[i]];
+                                let isValid = true;
 
-                            if (typeof tempValue !== 'string') {
-                                isValid = false;
-                                break;
-                            }
+                                for (let i = 0; i < yamlKeys.length; i++) {
+                                    const tempValue = loadedData[yamlKeys[i]];
 
-                            tempValues.push(tempValue as string);
-                        }
+                                    if (typeof tempValue !== 'string') {
+                                        isValid = false;
+                                        break;
+                                    }
 
-                        if (isValid) {
-                            tempValues.forEach((value) => {
-                                if (!nestedClassParts.includes(value)) {
-                                    nestedClassParts.push(value);
+                                    tempValues.push(tempValue as string);
+                                }
+
+                                if (isValid) {
+                                    tempValues.forEach((value) => {
+                                        if (!nestedClassParts.includes(value)) {
+                                            nestedClassParts.push(value);
+                                        }
+                                    });
                                 }
                             });
                         }
-                    });
+                    }
                 }
 
                 // Create a dynamic pattern.

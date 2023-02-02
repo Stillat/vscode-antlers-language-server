@@ -2,6 +2,10 @@
 
 Bugs fixed, what's new, and more! :)
 
+## v2.4.6
+
+- Improves server stability when analyzing dynamic classes
+
 ## v2.4.5
 
 - Improves tag parameter suggestions
