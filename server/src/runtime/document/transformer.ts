@@ -152,6 +152,10 @@ export class Transformer {
         return '<' + value + ' />';
     }
 
+    private selfClosingNs(value: string): string {
+        return '<' + value + '/>';
+    }
+
     private pair(value: string, innerContent = ''): string {
         return '<' + value + '>' + innerContent + '</' + value + '>';
     }
@@ -178,9 +182,9 @@ export class Transformer {
             return this.makeSlug(length + 1);
         }
 
-        this.slugs.push(slug);
+        this.slugs.push(slug.toLowerCase());
 
-        return slug;
+        return slug.toLowerCase();
     }
 
     private transformInlineConditions(value: string): string {
@@ -824,9 +828,11 @@ export class Transformer {
         let value = content;
 
         this.inlineNodes.forEach((node: AntlersNode, slug: string) => {
-            const inline = this.selfClosing(slug);
-            const level = this.indentLevel(inline);
-            value = value.replace(inline, this.printNode(node, this.indentLevel(inline)));
+            const inline = this.selfClosing(slug),
+                inlineNs = this.selfClosingNs(slug),
+                printed = this.printNode(node, this.indentLevel(inline));
+            value = value.replace(inline, printed);
+            value = value.replace(inlineNs, printed);
         });
 
         this.spanNodes.forEach((node: AntlersNode, slug: string) => {
@@ -836,7 +842,11 @@ export class Transformer {
                 level = this.indentLevel(slug, true);
             }
 
-            value = value.replace(slug, this.printNode(node, level));
+            const printed = this.printNode(node, level),
+                slugNs = this.selfClosingNs(slug);
+
+            value = value.replace(slug, printed);
+            value = value.replace(slugNs, printed);
         });
 
         return value;
