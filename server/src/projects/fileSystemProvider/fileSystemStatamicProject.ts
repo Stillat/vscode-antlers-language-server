@@ -545,7 +545,7 @@ export function getProjectStructure(resourcePath: string): FileSystemStatamicPro
             collectionsWithoutCustomBlueprints.push(collectionName);
 
             otherCollections.push({
-                sections: [],
+                tabs: [],
                 fields: [],
                 allFields: [],
                 collection: collectionName,

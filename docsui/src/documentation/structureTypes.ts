@@ -3648,7 +3648,7 @@ if (fType == 'form') {
         return sets;
     }
 }
-export interface IParsedSection {
+export interface IParsedTab {
     display: string;
     handle: string;
     fields: IFieldDetails[]
@@ -3658,7 +3658,7 @@ export interface IParsedBlueprint {
     title: string,
     handle: string,
     collection: string,
-    sections: IParsedSection[],
+    tabs: IParsedTab[],
     allFields: IFieldDetails[]
     fields: IFieldDetails[],
     type: string,
@@ -3685,41 +3685,47 @@ export class BlueprintParser {
         this.fieldParser.setFieldSets(fieldSets);
     }
 
-    parseSections(context: any) :IParsedSection[] {
-        const sections:IParsedSection[] = [],
-            sectionNames = Object.keys(context);
+    parseTabs(context: any) :IParsedTab[] {
+        const tabs:IParsedTab[] = [],
+            tabNames = Object.keys(context);
 
-        sectionNames.forEach((sectionHandle) => {
+        tabNames.forEach((tabHandle) => {
             try {
-                const _tSectionContext = context[sectionHandle];
-                const _tSectionDisplay = _tSectionContext['display'] ?? '';
-                const _tSectionFields = this.fieldParser.parseFields(_tSectionContext);
+                const _tTabContext = context[tabHandle];
+                const _tTabDisplay = _tTabContext['display'] ?? '';
+                const _tTabFields = this.fieldParser.parseFields(_tTabContext);
     
-                sections.push({
-                    display: _tSectionDisplay,
-                    handle: sectionHandle,
-                    fields: _tSectionFields
+                tabs.push({
+                    display: _tTabDisplay,
+                    handle: tabHandle,
+                    fields: _tTabFields
                 });
             } catch (e) { }
         });
 
-        return sections;
+        return tabs;
     }
 
     parseBlueprint(context: any, handle: string, blueprintType: string, collectionName: string, filePath?:string, contents?:string): IParsedBlueprint | null {
         const title = context['title'] ?? '';
-        let _tSections: IParsedSection[] = [];
+        let _tTabs: IParsedTab[] = [];
         let _tFields:IFieldDetails[] = [];
         let _tAllFields:IFieldDetails[] = [];
-        if (typeof context['sections'] !== 'undefined') {
-            _tSections = this.parseSections(context['sections']);
+
+        if (typeof context['tabs'] !== 'undefined') {
+            // Statamic 4
+            _tTabs = this.parseTabs(context['tabs']);
+        } else if (typeof context['sections'] !== 'undefined') {
+            // Statamic 3
+            _tTabs = this.parseTabs(context['sections']);
         }
+
         if (typeof context['fields'] !== 'undefined') {
             _tFields = this.fieldParser.parseFields(context);
         }
         _tAllFields = _tFields.concat([]);
 
-        _tSections.forEach((section) => {
+        _tTabs.forEach((section) => {
             try {
                 _tAllFields = _tAllFields.concat(section.fields);
             } catch (e) { }
@@ -3730,7 +3736,7 @@ export class BlueprintParser {
             fields: _tFields,
             handle: handle,
             collection: collectionName,
-            sections: _tSections,
+            tabs: _tTabs,
             title: title,
             type: blueprintType,
             fileName: filePath,

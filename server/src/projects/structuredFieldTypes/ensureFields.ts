@@ -16,8 +16,8 @@ export class EnsureFields {
     static ensureFieldPrepended(field: IFieldDetails, blueprint: IParsedBlueprint) {
         if (!this.hasField(field.handle, blueprint)) {
             blueprint.allFields.unshift(field);
-            if (blueprint.sections.length > 0) {
-                blueprint.sections[0].fields.unshift(field);
+            if (blueprint.tabs.length > 0) {
+                blueprint.tabs[0].fields.unshift(field);
             }
         }
     }
@@ -25,8 +25,8 @@ export class EnsureFields {
     static ensureField(field: IFieldDetails, blueprint: IParsedBlueprint) {
         if (!this.hasField(field.handle, blueprint)) {
             blueprint.allFields.push(field);
-            if (blueprint.sections.length > 0) {
-                blueprint.sections[0].fields.push(field);
+            if (blueprint.tabs.length > 0) {
+                blueprint.tabs[0].fields.push(field);
             }
         }
     }

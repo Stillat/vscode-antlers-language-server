@@ -120,7 +120,8 @@ export function getBlueprintFields(fileName: string, blueprintName: string, blue
     try {
         const contents = fs.readFileSync(fileName, { encoding: "utf8" }),
             document = YAML.parse(contents),
-            sections = document.sections;
+            sections = document.sections,
+            tabs = document.tabs;
 
         newBlueprint.filePath = fileName;
         newBlueprint.handle = blueprintName;
@@ -130,7 +131,27 @@ export function getBlueprintFields(fileName: string, blueprintName: string, blue
             newBlueprint.title = document.title as string;
         }
 
-        if (typeof sections !== "undefined") {
+        if (typeof tabs !== 'undefined') {
+            // Statamic 4
+            for (const tabName of Object.keys(tabs)) {
+                const tab = tabs[tabName];
+
+                if (typeof tab.fields !== "undefined") {
+                    const sectionFields = getFields(
+                        tab,
+                        blueprintName,
+                        "fields",
+                        blueprintName,
+                        fieldsets
+                    );
+
+                    if (sectionFields.length > 0) {
+                        fields = fields.concat(sectionFields);
+                    }
+                }
+            }
+        } else if (typeof sections !== "undefined") {
+            // Statamic 3
             for (const sectionName of Object.keys(sections)) {
                 const section = sections[sectionName];
 
