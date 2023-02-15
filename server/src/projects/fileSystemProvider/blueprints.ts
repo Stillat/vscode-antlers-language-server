@@ -137,7 +137,7 @@ export function getBlueprintFields(fileName: string, blueprintName: string, blue
                 const tab = tabs[tabName];
 
                 if (typeof tab.fields !== "undefined") {
-                    const sectionFields = getFields(
+                    const tabFields = getFields(
                         tab,
                         blueprintName,
                         "fields",
@@ -145,8 +145,8 @@ export function getBlueprintFields(fileName: string, blueprintName: string, blue
                         fieldsets
                     );
 
-                    if (sectionFields.length > 0) {
-                        fields = fields.concat(sectionFields);
+                    if (tabFields.length > 0) {
+                        fields = fields.concat(tabFields);
                     }
                 }
             }
