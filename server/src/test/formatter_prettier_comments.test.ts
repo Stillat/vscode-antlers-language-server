@@ -18,4 +18,32 @@ suite('Formatter Prettier Comments', () => {
             assert.strictEqual(formatStringWithPrettier(output).trim(), output);
         }
     });
+
+    test('it preserves relative indents when formatting comments', () => {
+        const template = `
+<div>
+    {{# 
+    {{ collection:articles limit="5" as="articles" }}
+        {{ if no_results }}
+            <h2 class="text-3xl italic tracking-tight">
+                Feel the rhythm! Feel the rhyme! Get on up, it's writing time! Cool writings!
+            </h2>
+        {{ /if }}
+    {{ /collection:articles }}
+    #}}
+</div>
+`;
+        const formatted = `<div>
+    {{#
+        {{ collection:articles limit="5" as="articles" }}
+            {{ if no_results }}
+                <h2 class="text-3xl italic tracking-tight">
+                    Feel the rhythm! Feel the rhyme! Get on up, it's writing time! Cool writings!
+                </h2>
+            {{ /if }}
+        {{ /collection:articles }}
+    #}}
+</div>`;
+assert.strictEqual(formatStringWithPrettier(template).trim(), formatted);
+    })
 });

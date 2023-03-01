@@ -36968,10 +36968,25 @@ var init_commentPrinter = __esm({
       static printComment(comment, tabSize, targetIndent) {
         const sourceContent = comment.getContent(), content = sourceContent.trim();
         if (content.includes("\n")) {
-          const lines = StringUtilities.breakByNewLine(sourceContent.trim()), reflowedLines = [];
+          const lines = StringUtilities.breakByNewLine(sourceContent), reflowedLines = [];
+          const firstIndent = lines[0].length - lines[0].trim().length;
           lines.forEach((line) => {
-            reflowedLines.push(" ".repeat(tabSize + targetIndent) + line.trim());
+            if (line.trim().length == 0) {
+              reflowedLines.push(" ".repeat(tabSize + targetIndent) + line.trim());
+              return;
+            }
+            let curRelIndent = line.length - line.trim().length;
+            const checkLine = line.trim();
+            if (checkLine.startsWith("@desc") || checkLine.startsWith("@set") || checkLine.startsWith("@name")) {
+              curRelIndent = tabSize;
+            }
+            reflowedLines.push(" ".repeat(tabSize + targetIndent + curRelIndent - tabSize) + line.trim());
           });
+          if (reflowedLines.length > 0) {
+            if (reflowedLines[reflowedLines.length - 1].trim().length == 0) {
+              reflowedLines.pop();
+            }
+          }
           const content2 = reflowedLines.join("\n");
           let newComment = "{{#\n";
           newComment += content2;
