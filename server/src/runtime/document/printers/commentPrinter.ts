@@ -72,8 +72,6 @@ export class CommentPrinter {
                     // Preserve relative indentation.
                     let curRelIndent = line.length - line.trim().length;
 
-                    const checkLine = line.trim();
-
                     reflowedLines.push(' '.repeat(tabSize + targetIndent + curRelIndent) + line.trim());
                 });
 
