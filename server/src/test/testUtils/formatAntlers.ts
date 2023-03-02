@@ -1,6 +1,6 @@
 import { AntlersSettings } from '../../antlersSettings';
 import { AntlersFormattingOptions } from '../../formatting/antlersFormattingOptions';
-import { BeautifyDocumentFormatter } from '../../formatting/BeautifyDocumentFormatter';
+import { BeautifyDocumentFormatter } from '../../formatting/beautifyDocumentFormatter';
 import { IHTMLFormatConfiguration } from '../../formatting/htmlCompat';
 import { AntlersDocument } from '../../runtime/document/antlersDocument';
 
