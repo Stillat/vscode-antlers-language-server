@@ -9,6 +9,7 @@ export class DocumentFormatter {
     private yamlFormatter: YAMLFormatter | null = null;
     private phpFormatter: PHPFormatter | null = null;
     private preFormatter: PreFormatter | null = null;
+    private isPrettier = false;
     private transformOptions: TransformOptions | null = null;
     protected createExtraVirtualStructures = false;
 
@@ -20,6 +21,12 @@ export class DocumentFormatter {
 
     withPreFormatter(preFormatter: PreFormatter | null) {
         this.preFormatter = preFormatter;
+
+        return this;
+    }
+
+    isPrettierFormatter(isPrettier: boolean) {
+        this.isPrettier = isPrettier;
 
         return this;
     }
@@ -76,6 +83,7 @@ export class DocumentFormatter {
         }
 
         document.transform()
+            .isPrettierFormatter(this.isPrettier)
             .produceExtraStructuralPairs(this.createExtraVirtualStructures)
             .withHtmlFormatter(this.htmlFormatter)
             .withPhpFormatter(this.phpFormatter)

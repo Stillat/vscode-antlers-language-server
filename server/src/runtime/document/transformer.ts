@@ -84,6 +84,7 @@ export class Transformer {
     private noParses: Map<string, EscapedContentNode> = new Map();
     private options: TransformOptions;
     private forceBreaks: string[] = [];
+    private isPrettier = false;
 
     constructor(doc: AntlersDocument) {
         this.doc = doc;
@@ -94,6 +95,12 @@ export class Transformer {
             maxAntlersStatementsPerLine: 3,
             endNewline: true
         };
+    }
+
+    isPrettierFormatter(isPrettier: boolean) {
+        this.isPrettier = isPrettier;
+
+        return this;
     }
 
     produceExtraStructuralPairs(doCreate: boolean) {
@@ -858,13 +865,13 @@ export class Transformer {
         this.inlineComments.forEach((comment, slug) => {
             const open = this.selfClosing(slug);
 
-            value = value.replace(open, CommentPrinter.printComment(comment, this.options.tabSize, 0));
+            value = value.replace(open, CommentPrinter.printComment(comment, this.options.tabSize, 0, this.isPrettier));
         });
 
         this.blockComments.forEach((structure) => {
             const comment = structure.node as AntlersNode;
 
-            value = value.replace(structure.pairOpen, CommentPrinter.printComment(comment, this.options.tabSize, this.indentLevel(structure.pairOpen)));
+            value = value.replace(structure.pairOpen, CommentPrinter.printComment(comment, this.options.tabSize, this.indentLevel(structure.pairOpen), this.isPrettier));
             this.removeLines.push(structure.pairClose);
             this.removeLines.push(structure.virtualElement);
         });
