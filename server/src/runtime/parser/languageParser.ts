@@ -490,7 +490,7 @@ export class LanguageParser {
 
 
         newNodes.forEach((node) => {
-            if (node instanceof VariableNode) {
+            if (node instanceof VariableNode && ! node.name.trim().startsWith('[')) {
                 node.variableReference = this.pathParser.parse(node.name);
                 node.mergeErrors(this.pathParser.getAntlersErrors());
             }

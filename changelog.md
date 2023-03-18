@@ -12,6 +12,11 @@ Bugs fixed, what's new, and more! :)
 - Corrects an issue that could lead to incomplete tags adding extra newlines after formatting
 - Corrects an issue with formatting Antlers tags within HTML attributes
 
+## v2.4.5
+
+- Improves error reporting of tags containing `::` to align with latest Antlers version
+- Improves error reporting of Antlers tags starting with array literals
+
 ## v2.4.4
 
 - Improves partial tag completions inside nested scopes

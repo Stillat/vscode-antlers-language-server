@@ -61,7 +61,9 @@ export class AntlersNodeParser {
             recursiveNode.name.name = nodeContent;
             recursiveNode.isNestedRecursive = true;
 
-            recursiveNode.pathReference = this.pathParser.parse(nodeContent);
+            if (! nodeContent.trim().startsWith('[')) {
+                recursiveNode.pathReference = this.pathParser.parse(nodeContent);
+            }
             recursiveNode.mergeErrors(this.pathParser.getAntlersErrors());
             recursiveNode.content = nodeContent;
             recursiveNode.runtimeContent = nodeContent;

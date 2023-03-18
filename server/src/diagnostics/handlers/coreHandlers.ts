@@ -1,7 +1,6 @@
 import { IDiagnosticsHandler } from '../diagnosticsHandler';
 import DataDumpHandler from './dataDumpHandler';
 import DeprecatedModifierHandler from './deprecatedModifierHandler';
-import DoubleColonHandler from './doubleColonHandler';
 import FieldTypeModifierSequenceHandler from './fieldTypeModifierSequenceHandler';
 import InterleavedNodeHandler from './interleavedNodes';
 import InvalidParameterHandler from './invalidParameterHandler';
@@ -21,7 +20,6 @@ const CoreHandlers: IDiagnosticsHandler[] = [
     ModifierRuntimeTypeHandler,
     FieldTypeModifierSequenceHandler,
     DeprecatedModifierHandler,
-    DoubleColonHandler,
     RelateTagHandler,
     TagsThatErrorHandler,
     ShorthandModifierHandler,
