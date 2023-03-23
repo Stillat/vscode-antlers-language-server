@@ -2,6 +2,10 @@
 
 Bugs fixed, what's new, and more! :)
 
+## v2.4.9
+
+- Improves formatting of strings inside `unless` Tags
+
 ## v2.4.6
 
 - Improves server stability when analyzing dynamic classes

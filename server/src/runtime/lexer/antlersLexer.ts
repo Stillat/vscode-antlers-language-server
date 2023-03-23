@@ -389,10 +389,14 @@ export class AntlersLexer {
                     continue;
                 } else if (this.next == DocumentParser.String_Terminator_SingleQuote) {
                     this.appendContent(DocumentParser.String_Terminator_SingleQuote);
+                    this.rawContent.push(DocumentParser.String_EscapeCharacter);
+                    this.rawContent.push(DocumentParser.String_Terminator_SingleQuote);
                     this.currentIndex += 1;
                     continue;
                 } else if (this.next == DocumentParser.String_Terminator_DoubleQuote) {
                     this.appendContent(DocumentParser.String_Terminator_DoubleQuote);
+                    this.rawContent.push(DocumentParser.String_EscapeCharacter);
+                    this.rawContent.push(DocumentParser.String_Terminator_DoubleQuote);
                     this.currentIndex += 1;
                     continue;
                 } else if (this.next == 'n') {

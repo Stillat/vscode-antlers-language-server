@@ -770,6 +770,10 @@ export class AntlersNode extends AbstractNode {
             if (!ConditionPairAnalyzer.isConditionalStructure(this)) {
                 relativeIndex -= this.rawStart.length;
             }
+
+            if (this.name?.name == 'unless') {
+                relativeIndex += 6;
+            }
         }
 
         const resolvedOffset = this.parser.positionFromOffset(

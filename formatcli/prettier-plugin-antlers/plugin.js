@@ -4781,7 +4781,7 @@ var init_abstractNode = __esm({
         return null;
       }
       _lexerRelativeOffset(offset, index = null) {
-        var _a, _b;
+        var _a, _b, _c;
         let indexToUse = offset;
         if (index != null) {
           indexToUse = index;
@@ -4797,6 +4797,9 @@ var init_abstractNode = __esm({
           relativeIndex = this.nameStartsOn.index + offset;
           if (!ConditionPairAnalyzer.isConditionalStructure(this)) {
             relativeIndex -= this.rawStart.length;
+          }
+          if (((_c = this.name) == null ? void 0 : _c.name) == "unless") {
+            relativeIndex += 6;
           }
         }
         const resolvedOffset = this.parser.positionFromOffset(relativeIndex, relativeIndex, true);
@@ -23687,10 +23690,14 @@ var init_antlersLexer = __esm({
               continue;
             } else if (this.next == DocumentParser.String_Terminator_SingleQuote) {
               this.appendContent(DocumentParser.String_Terminator_SingleQuote);
+              this.rawContent.push(DocumentParser.String_EscapeCharacter);
+              this.rawContent.push(DocumentParser.String_Terminator_SingleQuote);
               this.currentIndex += 1;
               continue;
             } else if (this.next == DocumentParser.String_Terminator_DoubleQuote) {
               this.appendContent(DocumentParser.String_Terminator_DoubleQuote);
+              this.rawContent.push(DocumentParser.String_EscapeCharacter);
+              this.rawContent.push(DocumentParser.String_Terminator_DoubleQuote);
               this.currentIndex += 1;
               continue;
             } else if (this.next == "n") {
@@ -24758,7 +24765,9 @@ var init_antlersNodeParser = __esm({
           recursiveNode.name = new TagIdentifier();
           recursiveNode.name.name = nodeContent;
           recursiveNode.isNestedRecursive = true;
-          recursiveNode.pathReference = this.pathParser.parse(nodeContent);
+          if (!nodeContent.trim().startsWith("[")) {
+            recursiveNode.pathReference = this.pathParser.parse(nodeContent);
+          }
           recursiveNode.mergeErrors(this.pathParser.getAntlersErrors());
           recursiveNode.content = nodeContent;
           recursiveNode.runtimeContent = nodeContent;
@@ -26187,7 +26196,7 @@ var init_languageParser = __esm({
           }
         }
         newNodes.forEach((node) => {
-          if (node instanceof VariableNode) {
+          if (node instanceof VariableNode && !node.name.trim().startsWith("[")) {
             node.variableReference = this.pathParser.parse(node.name);
             node.mergeErrors(this.pathParser.getAntlersErrors());
           }

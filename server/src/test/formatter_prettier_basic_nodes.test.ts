@@ -251,4 +251,14 @@ class="bg-blue mx-auto flex max-w-5xl flex-wrap items-center justify-between py-
             output
         );
     });
+
+    test('it formats strings inside unless', () => {
+        const input = `{{ unless type == 'section' }}{{ /unless }}`;
+        const output = `{{ unless type == 'section' }}
+{{ /unless }}`;
+        assert.strictEqual(
+            formatStringWithPrettier(input).trim(),
+            output
+        );
+    });
 });
