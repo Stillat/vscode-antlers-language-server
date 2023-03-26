@@ -4,6 +4,7 @@ import { ConditionPairAnalyzer } from '../analyzers/conditionPairAnalyzer';
 import { AbstractNode, AntlersNode, ConditionNode, EscapedContentNode, ExecutionBranch, FragmentPosition, LiteralNode } from '../nodes/abstractNode';
 import { StringUtilities } from '../utilities/stringUtilities';
 import { AntlersDocument } from './antlersDocument';
+import { InlineFormatter } from './inlineFormatter';
 import { CommentPrinter } from './printers/commentPrinter';
 import { IndentLevel } from './printers/indentLevel';
 import { NodePrinter } from './printers/nodePrinter';
@@ -84,7 +85,7 @@ export class Transformer {
     private noParses: Map<string, EscapedContentNode> = new Map();
     private options: TransformOptions;
     private forceBreaks: string[] = [];
-    private isPrettier = false;
+    private inlineFormatter: InlineFormatter | null = null;
 
     constructor(doc: AntlersDocument) {
         this.doc = doc;
@@ -97,8 +98,8 @@ export class Transformer {
         };
     }
 
-    isPrettierFormatter(isPrettier: boolean) {
-        this.isPrettier = isPrettier;
+    withInlineFormatter(inlineFormatter: InlineFormatter) {
+        this.inlineFormatter = inlineFormatter;
 
         return this;
     }
@@ -865,13 +866,13 @@ export class Transformer {
         this.inlineComments.forEach((comment, slug) => {
             const open = this.selfClosing(slug);
 
-            value = value.replace(open, CommentPrinter.printComment(comment, this.options.tabSize, 0, this.isPrettier));
+            value = value.replace(open, CommentPrinter.printComment(comment, this.options.tabSize, 0, this.inlineFormatter));
         });
 
         this.blockComments.forEach((structure) => {
             const comment = structure.node as AntlersNode;
 
-            value = value.replace(structure.pairOpen, CommentPrinter.printComment(comment, this.options.tabSize, this.indentLevel(structure.pairOpen), this.isPrettier));
+            value = value.replace(structure.pairOpen, CommentPrinter.printComment(comment, this.options.tabSize, this.indentLevel(structure.pairOpen), this.inlineFormatter));
             this.removeLines.push(structure.pairClose);
             this.removeLines.push(structure.virtualElement);
         });

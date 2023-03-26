@@ -1,7 +1,6 @@
-import { formatStringWithPrettier } from '../../../formatting/prettier/utils';
-import { formatAntlers } from '../../../test/testUtils/formatAntlers';
 import { AntlersNode } from '../../nodes/abstractNode';
 import { StringUtilities } from '../../utilities/stringUtilities';
+import { InlineFormatter } from '../inlineFormatter';
 
 export class CommentPrinter {
 
@@ -47,18 +46,16 @@ export class CommentPrinter {
         return '{{# ' + content + ' #}}';
     }
 
-    static printComment(comment: AntlersNode, tabSize: number, targetIndent: number, isPrettier = false): string {
+    static printComment(comment: AntlersNode, tabSize: number, targetIndent: number, stringFormatter: InlineFormatter | null): string {
         const sourceContent = comment.getContent(),
             content = sourceContent.trim();
 
-        if (content.includes("\n") &&  !(content.includes('@desc') || content.includes('@set') || content.includes('@name'))) {
+        if (content.includes("\n") && !(content.includes('@desc') || content.includes('@set') || content.includes('@name'))) {
             try {
                 let formattedCommentContent = content;
 
-                if (isPrettier) {
-                    formattedCommentContent = formatStringWithPrettier(formattedCommentContent);
-                } else {
-                    formattedCommentContent = formatAntlers(formattedCommentContent);
+                if (stringFormatter != null) {
+                    formattedCommentContent = stringFormatter(formattedCommentContent);
                 }
 
                 const lines = StringUtilities.breakByNewLine(formattedCommentContent),

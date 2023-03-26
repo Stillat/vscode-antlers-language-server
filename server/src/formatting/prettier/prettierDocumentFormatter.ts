@@ -13,7 +13,6 @@ export class PrettierDocumentFormatter extends DocumentFormatter {
         setOptions(options);
 
         this.withHtmlFormatter(formatAsHtml)
-            .isPrettierFormatter(true)
             .withYamlFormatter(FrontMatterFormatter.formatFrontMatter)
             .withTransformOptions({
                 endNewline: true,
