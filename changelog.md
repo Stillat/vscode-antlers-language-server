@@ -2,6 +2,27 @@
 
 Bugs fixed, what's new, and more! :)
 
+## v2.5.0
+
+- Adds the ability to disable formatting template sections
+
+To disable formatting, we can use the special `{{# format-ignore-start #}}` and `{{# format-ignore-end #}}` Antlers comments:
+
+```antlers
+<div>
+<div>
+{{# format-ignore-start #}}
+<div class="class1 class2">
+            This section
+                will not be formatted.
+        </div>
+{{# format-ignore-end #}}
+</div>
+</div>
+```
+
+The special formatting comments must appear on separate lines by themselves.
+
 ## v2.4.9
 
 - Improves formatting of strings inside `unless` Tags
