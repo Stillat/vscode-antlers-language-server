@@ -53,7 +53,7 @@ const utilityModifiers: IModifier[] = [
         description: 'Repeats a value a given number of times.',
         docLink: 'https://statamic.dev/modifiers/repeat',
         parameters: [{
-            name: 'repeat_count',
+            name: 'times',
             description: 'The number of times to repeat the value.'
         }],
         canBeParameter: true,
