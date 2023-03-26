@@ -55,7 +55,8 @@ interface TransformedTagPair {
 
 export class Transformer {
     private doc: AntlersDocument;
-
+    private formatIgnoreStart = 'format-ignore-start';
+    private formatIgnoreEnd = 'format-ignore-end';
     private htmlFormatter: HTMLFormatter | null = null;
     private yamlFormatter: YAMLFormatter | null = null;
     private phpFormatter: PHPFormatter | null = null;
@@ -86,6 +87,9 @@ export class Transformer {
     private options: TransformOptions;
     private forceBreaks: string[] = [];
     private inlineFormatter: InlineFormatter | null = null;
+    private ignoredLiteralBlocks: Map<string, AbstractNode[]> = new Map();
+    private activeLiteralSlug: string = '';
+    private isInsideIgnoreFormatter: boolean = false;
 
     constructor(doc: AntlersDocument) {
         this.doc = doc;
@@ -909,6 +913,17 @@ export class Transformer {
         }
 
         renderNodes.forEach((node) => {
+            if (this.isInsideIgnoreFormatter) {
+                this.ignoredLiteralBlocks.get(this.activeLiteralSlug)?.push(node);
+
+                if (node instanceof AntlersNode && node.isComment) {
+                    if (node.content.trim().toLowerCase() == this.formatIgnoreEnd) {
+                        this.isInsideIgnoreFormatter = false;
+                        return;
+                    }
+                }
+                return;
+            }
             if (node instanceof LiteralNode) {
                 if (node.sourceContent == '') {
                     result += node.content;
@@ -921,7 +936,16 @@ export class Transformer {
                 result += this.prepareNoParse(node);
             } else if (node instanceof AntlersNode) {
                 if (node.isComment) {
-                    result += this.prepareComment(node);
+                    if (node.content.trim() == this.formatIgnoreStart) {
+                        this.isInsideIgnoreFormatter = true;
+                        this.activeLiteralSlug = this.makeSlug(16);
+                        this.ignoredLiteralBlocks.set(this.activeLiteralSlug, []);
+                        this.ignoredLiteralBlocks.get(this.activeLiteralSlug)?.push(node);
+
+                        result += this.selfClosing(this.activeLiteralSlug);
+                    } else {
+                        result += this.prepareComment(node);
+                    }
                 } else {
                     result += this.prepareAntlers(node);
                 }
@@ -1225,10 +1249,54 @@ export class Transformer {
 
         results = results.trimRight();
 
+        this.ignoredLiteralBlocks.forEach((nodes, slug) => {
+            const replace = this.selfClosing(slug),
+                startIndent = this.indentLevel(replace);
+
+            results = results.replace(replace, this.dumpPreservedNodes(nodes, startIndent));
+        });
+
         if (this.options.endNewline) {
             results += "\n";
         }
 
         return results;
+    }
+
+    private dumpPreservedNodes(nodes: AbstractNode[], finalIndent: number): string {
+        let stringResults = '';
+
+        nodes.forEach((node) => {
+            if (node instanceof LiteralNode) {
+                stringResults += node.sourceContent;
+            } else if (node instanceof ConditionNode) {
+                stringResults += node.nodeContent;
+            } else if (node instanceof EscapedContentNode) {
+                stringResults += node.documentText;
+            } else if (node instanceof AntlersNode) {
+                if (node.isComment) {
+                    if (node.content.trim().toLowerCase() == this.formatIgnoreEnd) {
+                        let preservedLines = stringResults.split("\n");
+                        if (preservedLines.length > 0) {
+                            if (preservedLines[preservedLines.length - 1].trim().length == 0) {
+                                preservedLines.pop();
+                                preservedLines.push('');
+
+                                stringResults = preservedLines.join("\n");
+                            }
+                        }
+                        stringResults += ' '.repeat(finalIndent) + '{{#' + node.content + '#}}';
+                    } else {
+                        stringResults += '{{#' + node.content + '#}}';
+                    }
+
+                    return;
+                }
+
+                stringResults += '{{' + node.content + '}}';
+            }
+        });
+
+        return stringResults;
     }
 }

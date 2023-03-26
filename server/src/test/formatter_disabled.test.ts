@@ -107,4 +107,70 @@ suite('Formatter Disabled', () => {
 
         assert.strictEqual(formatAntlers(input), input);
     });
+
+    test('formatting can be disabled for specific regions', () => {
+        const input = `
+<div><div><div>
+{{# format-ignore-start #}}
+<div class="dont format me"
+another="attribute">
+<div>asdf {{     title }}</div>
+{{ if that == 'this' }}
+    this should not be changed {{ /if    }}
+</div>
+{{# Embedded comment #}}
+{{ noparse }}
+        <p>Hello {{ world }}</p>
+    {{ /noparse }}
+{{# format-ignore-end #}}
+</div></div>
+</div>
+
+
+<div><div><div>
+<div>
+{{# format-ignore-start #}}
+one
+     two
+          three
+                {{# format-ignore-end #}}
+</div>
+</div></div>
+</div>`;
+        const expected = `<div>
+    <div>
+        <div>
+            {{# format-ignore-start #}}
+<div class="dont format me"
+another="attribute">
+<div>asdf {{     title }}</div>
+{{ if that == 'this' }}
+    this should not be changed {{ /if    }}
+</div>
+{{# Embedded comment #}}
+
+{{ noparse }}
+        <p>Hello {{ world }}</p>
+    {{ /noparse }
+            {{# format-ignore-end #}}
+        </div>
+    </div>
+</div>
+
+
+<div>
+    <div>
+        <div>
+            <div>
+                {{# format-ignore-start #}}
+one
+     two
+          three
+                {{# format-ignore-end #}}
+            </div>
+        </div>
+    </div>
+</div>`;
+        assert.strictEqual(formatAntlers(input).trim(), expected);
+    });
 });
