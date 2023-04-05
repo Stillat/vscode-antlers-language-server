@@ -37605,7 +37605,8 @@ var init_nodePrinter = __esm({
           nodeBuffer.close();
           let bContent = nodeBuffer.getContent();
           if (antlersNode.processedInterpolationRegions.size > 0) {
-            antlersNode.processedInterpolationRegions.forEach((region, key) => {
+            const regions = new Map([...antlersNode.processedInterpolationRegions.entries()].sort().reverse());
+            regions.forEach((region, key) => {
               const iTResult = NodePrinter.prettyPrintNode(region[0], doc, indent, options, null, null);
               bContent = replaceAllInString(bContent, key, iTResult);
             });
@@ -37851,7 +37852,7 @@ var init_transformer = __esm({
           if (printNode.runtimeName() == "endunless") {
             return `{{ /unless }}`;
           }
-          return `{{ ${printNode.content.trim()} }}`;
+          return `{{ ${printNode.sourceContent.trim()} }}`;
         }
         let result = NodePrinter.prettyPrintNode(printNode, doc, 0, this.options, prepend, null);
         const forceBreakOperatorNames = ["switch", "list"];

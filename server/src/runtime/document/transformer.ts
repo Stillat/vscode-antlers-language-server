@@ -329,8 +329,8 @@ export class Transformer {
             if (printNode.runtimeName() == 'endunless') {
                 return `{{ /unless }}`;
             }
-
-            return `{{ ${printNode.content.trim()} }}`;
+            
+            return `{{ ${printNode.sourceContent.trim()} }}`;
         }
 
         let result = NodePrinter.prettyPrintNode(printNode, doc, 0, this.options, prepend, null);

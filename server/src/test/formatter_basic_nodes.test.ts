@@ -741,4 +741,28 @@ nested augmented: {{ nested:augmented:drink }}`;
             assert.strictEqual(out, expected);
         }
     });
+
+    test('it uses source content when formatting closing tags', () => {
+        const template = `{{ collection:{thing} }}
+{{ unless no_results }}
+<p>Hello, world.</p>
+{{ /unless }}
+{{ /collection:{thing} }}`;
+        const expected = `{{ collection:{thing} }}
+    {{ unless no_results }}
+        <p>Hello, world.</p>
+    {{ /unless }}
+{{ /collection:{thing} }}`;
+        assert.strictEqual(formatAntlers(template), expected);
+    });
+
+    test('it does not trash documents containing multiple interpolation regions with the same internal prefix', () => {
+        const input = `
+{{ author_articles = collection:articles author:is="{author:id}" id:isnt="{id}" limit="3" }}
+{{ responsive style="object-position: '{author:avatar:focus|background_position}'" }}
+`;
+        const output = `{{ author_articles = collection:articles author:is="{author:id}" id:isnt="{id}" limit="3" }}
+{{ responsive style="object-position: '{author:avatar:focus | background_position}'" }}`;
+        assert.strictEqual(formatAntlers(input), output);
+    });
 });

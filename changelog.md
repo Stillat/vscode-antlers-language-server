@@ -2,6 +2,10 @@
 
 Bugs fixed, what's new, and more! :)
 
+## 2.5.1
+
+- Improves formatting of interpolated variables
+
 ## v2.5.0
 
 - Adds the ability to disable formatting template sections

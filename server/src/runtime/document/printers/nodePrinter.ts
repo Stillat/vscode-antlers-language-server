@@ -325,7 +325,8 @@ export class NodePrinter {
             let bContent = nodeBuffer.getContent();
 
             if (antlersNode.processedInterpolationRegions.size > 0) {
-                antlersNode.processedInterpolationRegions.forEach((region, key) => {
+                const regions = new Map([...antlersNode.processedInterpolationRegions.entries()].sort().reverse());
+                regions.forEach((region, key) => {
                     const iTResult = NodePrinter.prettyPrintNode(region[0] as AntlersNode, doc, indent, options, null, null );
                     bContent = replaceAllInString(bContent, key, iTResult);
                 });
