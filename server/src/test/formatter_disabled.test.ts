@@ -173,4 +173,14 @@ one
 </div>`;
         assert.strictEqual(formatAntlers(input).trim(), expected);
     });
+
+    test('it preserves paired content when ignoring regions', () => {
+        const input = `{{# format-ignore-start #}}
+    <title>{{ yield:document_title_section }}{{ document_title ?? title + ' / ' + config:app:name }}{{ /yield:document_title_section }}</title>
+    {{# format-ignore-end #}}`;
+        const expected = `{{# format-ignore-start #}}
+    <title>{{ yield:document_title_section }}{{ document_title ?? title + ' / ' + config:app:name }}{{ /yield:document_title_section }}</title>
+{{# format-ignore-end #}}`;
+        assert.strictEqual(formatAntlers(input), expected);
+    })
 });

@@ -38576,7 +38576,11 @@ ${frontMatter}
               }
               return;
             }
-            stringResults += "{{" + node.content + "}}";
+            if (node.isPaired()) {
+              stringResults += node.nodeContent;
+            } else {
+              stringResults += "{{" + node.content + "}}";
+            }
           }
         });
         return stringResults;

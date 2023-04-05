@@ -2,6 +2,10 @@
 
 Bugs fixed, what's new, and more! :)
 
+## 2.5.2
+
+- Corrects an issue when formatting ignored regions containing tag pairs
+
 ## 2.5.1
 
 - Improves formatting of interpolated variables
