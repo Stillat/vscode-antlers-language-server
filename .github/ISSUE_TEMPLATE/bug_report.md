@@ -14,7 +14,6 @@ A clear and concise description of what the bug is.
 Which Antlers Toolbox products does this bug apply to?
 
 - [ ] Antlers Toolbox for VS Code
-- [ ] Antlers Toolbox for VS Code Formatter
 - [ ] Formatter CLI
 - [ ] Antlers Prettier Plugin
 - [ ] Antlers Syntax Highlighting (external systems - not VS Code)
