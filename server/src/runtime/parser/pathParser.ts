@@ -71,7 +71,7 @@ export class PathParser {
             content = content.substr(1);
         }
 
-        if (content.startsWith(DocumentParser.Punctuation_Caret)) {
+        if (content.startsWith(DocumentParser.Punctuation_Percent)) {
             isStrictTagReference = true;
             content = content.substr(1);
         } else {

@@ -2,6 +2,11 @@
 
 Bugs fixed, what's new, and more! :)
 
+## 2.5.3
+
+- Improves static analysis of Query Builder modifier detection
+- Improves formatting of tags using strict-tag syntax
+
 ## 2.5.2
 
 - Corrects an issue when formatting ignored regions containing tag pairs

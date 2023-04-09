@@ -24,6 +24,10 @@ export class NodeBuffer {
             }
         }
 
+        if (node.pathReference?.isStrictTagReference) {
+            this.buffer += '%';
+        }
+
         if (prepend != null && prepend.trim().length > 0) {
             this.buffer += prepend + ' ';
         }

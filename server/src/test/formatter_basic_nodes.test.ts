@@ -765,4 +765,16 @@ nested augmented: {{ nested:augmented:drink }}`;
 {{ responsive style="object-position: '{author:avatar:focus | background_position}'" }}`;
         assert.strictEqual(formatAntlers(input), output);
     });
+
+    test('it respects strict tag references', () => {
+        const input = `{{ %tag:this }}
+{{ /%tag:this }}
+{{ $var }}
+{{ $$var }}`;
+        const out = `{{ %tag:this }}
+{{ /%tag:this }}
+{{ $var }}
+{{ $var }}`;
+        assert.strictEqual(formatAntlers(input), out);
+    });
 });

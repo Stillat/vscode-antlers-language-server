@@ -24426,7 +24426,7 @@ var init_pathParser = __esm({
           isVariableVariable = true;
           content = content.substr(1);
         }
-        if (content.startsWith(DocumentParser.Punctuation_Caret)) {
+        if (content.startsWith(DocumentParser.Punctuation_Percent)) {
           isStrictTagReference = true;
           content = content.substr(1);
         } else {
@@ -37192,6 +37192,7 @@ var init_nodeBuffer = __esm({
         this.closeString = "";
         this.relativeIndentSize = 0;
         this.indentSeed = 0;
+        var _a;
         this.baseIndent = indent;
         if (node.isInterpolationNode) {
           this.buffer = "{";
@@ -37203,6 +37204,9 @@ var init_nodeBuffer = __esm({
           } else {
             this.closeString = " }}";
           }
+        }
+        if ((_a = node.pathReference) == null ? void 0 : _a.isStrictTagReference) {
+          this.buffer += "%";
         }
         if (prepend != null && prepend.trim().length > 0) {
           this.buffer += prepend + " ";
@@ -37344,7 +37348,7 @@ var init_nodePrinter = __esm({
     init_nodeBuffer();
     NodePrinter = class {
       static prettyPrintNode(antlersNode, doc, indent, options, prepend, seedIndent) {
-        var _a, _b, _c, _d, _e, _f, _g;
+        var _a, _b, _c, _d, _e, _f, _g, _h;
         const lexerNodes = antlersNode.getTrueRuntimeNodes();
         let nodeStatements = 0, nodeOperators = 0;
         if (lexerNodes.length > 0) {
@@ -37588,6 +37592,11 @@ var init_nodePrinter = __esm({
                 nodeBuffer.appendS("not");
               } else {
                 nodeBuffer.append("!");
+              }
+            } else if (node instanceof ModulusOperator) {
+              if (i == 0 && ((_h = antlersNode.pathReference) == null ? void 0 : _h.isStrictTagReference)) {
+              } else {
+                nodeBuffer.appendS(node.rawContent());
               }
             } else {
               nodeBuffer.appendS(node.rawContent());

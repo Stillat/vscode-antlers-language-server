@@ -7,3 +7,4 @@ analyzer/vendor
 analyzer.phar
 analyzer/.idea
 .DS_Store
+*.vsix

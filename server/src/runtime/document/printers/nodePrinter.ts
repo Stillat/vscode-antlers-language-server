@@ -1,5 +1,5 @@
 import { replaceAllInString } from '../../../utils/strings';
-import { AbstractNode, AdditionOperator, AntlersNode, ArgSeparator, DivisionOperator, InlineBranchSeparator, InlineTernarySeparator, LeftAssignmentOperator, LogicalNegationOperator, LogicGroupBegin, LogicGroupEnd, ModifierNameNode, ModifierSeparator, ModifierValueNode, ModifierValueSeparator, MultiplicationOperator, NumberNode, ScopeAssignmentOperator, StatementSeparatorNode, StringValueNode, SubtractionOperator, TupleListStart, VariableNode } from '../../nodes/abstractNode';
+import { AbstractNode, AdditionOperator, AntlersNode, ArgSeparator, DivisionOperator, InlineBranchSeparator, InlineTernarySeparator, LeftAssignmentOperator, LogicalNegationOperator, LogicGroupBegin, LogicGroupEnd, ModifierNameNode, ModifierSeparator, ModifierValueNode, ModifierValueSeparator, ModulusOperator, MultiplicationOperator, NumberNode, ScopeAssignmentOperator, StatementSeparatorNode, StringValueNode, SubtractionOperator, TupleListStart, VariableNode } from '../../nodes/abstractNode';
 import { LanguageParser } from '../../parser/languageParser';
 import { NodeHelpers } from '../../utilities/nodeHelpers';
 import { AntlersDocument } from '../antlersDocument';
@@ -301,6 +301,12 @@ export class NodePrinter {
                         nodeBuffer.appendS('not');
                     } else {
                         nodeBuffer.append('!');
+                    }
+                } else if (node instanceof ModulusOperator) {
+                    if (i == 0 && antlersNode.pathReference?.isStrictTagReference) {
+                        // Ignore for now.
+                    } else {
+                        nodeBuffer.appendS(node.rawContent());
                     }
                 } else {
                     nodeBuffer.appendS(node.rawContent());

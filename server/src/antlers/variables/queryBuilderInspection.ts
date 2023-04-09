@@ -9,7 +9,8 @@ const internalBuilderTypes:string[] = [
 
 const ignoredModifierNames:string[] = [
     'as', 'on_each_side', 'order_by', 'sort',
-    'query_scope', 'filter', 'reverse'
+    'query_scope', 'filter', 'reverse', 'paginate',
+    'limit', 'offset', 'page_name'
 ];
 
 export class QueryBuilderInspection {
