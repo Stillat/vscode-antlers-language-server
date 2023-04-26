@@ -301,8 +301,10 @@ export class ScopeEngine {
             // This assumes people close their scope tags.
             if (currentNode.getTagName() == 'scope' && currentNode.hasMethodPart()) {
                 // Take a snapshot of the current scope.
-                const snapshot = activeScopes[activeScopes.length - 2].copy();
-                currentScope.addScopeList(currentNode.getMethodNameValue(), snapshot);
+                if (activeScopes.length > 2) {
+                    const snapshot = activeScopes[activeScopes.length - 2].copy();
+                    currentScope.addScopeList(currentNode.getMethodNameValue(), snapshot);
+                }
             }
 
             if (currentScope.containsPath(currentNode.runtimeName())) {
