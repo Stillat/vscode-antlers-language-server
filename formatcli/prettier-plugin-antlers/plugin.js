@@ -1,32 +1,34 @@
+"use strict";
 var __create = Object.create;
 var __defProp = Object.defineProperty;
 var __getOwnPropDesc = Object.getOwnPropertyDescriptor;
 var __getOwnPropNames = Object.getOwnPropertyNames;
 var __getProtoOf = Object.getPrototypeOf;
 var __hasOwnProp = Object.prototype.hasOwnProperty;
-var __markAsModule = (target) => __defProp(target, "__esModule", { value: true });
 var __esm = (fn, res) => function __init() {
   return fn && (res = (0, fn[__getOwnPropNames(fn)[0]])(fn = 0)), res;
 };
 var __commonJS = (cb, mod) => function __require() {
   return mod || (0, cb[__getOwnPropNames(cb)[0]])((mod = { exports: {} }).exports, mod), mod.exports;
 };
-var __reExport = (target, module2, copyDefault, desc) => {
-  if (module2 && typeof module2 === "object" || typeof module2 === "function") {
-    for (let key of __getOwnPropNames(module2))
-      if (!__hasOwnProp.call(target, key) && (copyDefault || key !== "default"))
-        __defProp(target, key, { get: () => module2[key], enumerable: !(desc = __getOwnPropDesc(module2, key)) || desc.enumerable });
+var __copyProps = (to, from, except, desc) => {
+  if (from && typeof from === "object" || typeof from === "function") {
+    for (let key of __getOwnPropNames(from))
+      if (!__hasOwnProp.call(to, key) && key !== except)
+        __defProp(to, key, { get: () => from[key], enumerable: !(desc = __getOwnPropDesc(from, key)) || desc.enumerable });
   }
-  return target;
+  return to;
 };
-var __toESM = (module2, isNodeMode) => {
-  return __reExport(__markAsModule(__defProp(module2 != null ? __create(__getProtoOf(module2)) : {}, "default", !isNodeMode && module2 && module2.__esModule ? { get: () => module2.default, enumerable: true } : { value: module2, enumerable: true })), module2);
-};
+var __toESM = (mod, isNodeMode, target) => (target = mod != null ? __create(__getProtoOf(mod)) : {}, __copyProps(
+  isNodeMode || !mod || !mod.__esModule ? __defProp(target, "default", { value: mod, enumerable: true }) : target,
+  mod
+));
 
 // server/src/projects/projectManager.ts
 var ProjectManager, projectManager_default;
 var init_projectManager = __esm({
   "server/src/projects/projectManager.ts"() {
+    "use strict";
     ProjectManager = class {
       constructor() {
         this.currentStructure = null;
@@ -88,6 +90,7 @@ var init_projectManager = __esm({
 var DocumentDetailsManager;
 var init_documentDetailsManager = __esm({
   "server/src/idehelper/documentDetailsManager.ts"() {
+    "use strict";
     DocumentDetailsManager = class {
       static registerDetails(documentUri, details) {
         this.documentDetails.set(documentUri, details);
@@ -110,13 +113,19 @@ function parseIdeHelper(documentUri, symbol) {
   for (let i = 0; i < commentLines.length; i++) {
     const thisLine = commentLines[i];
     if (thisLine.startsWith(EntryPrefix)) {
-      collectionNames = collectionNames.concat(thisLine.slice(EntryPrefix.length).split(",").map((f) => f.trim()));
+      collectionNames = collectionNames.concat(
+        thisLine.slice(EntryPrefix.length).split(",").map((f) => f.trim())
+      );
       isParsingDescription = false;
     } else if (thisLine.startsWith(CollectionPrefix)) {
-      collectionNames = collectionNames.concat(thisLine.slice(CollectionPrefix.length).split(",").map((f) => f.trim()));
+      collectionNames = collectionNames.concat(
+        thisLine.slice(CollectionPrefix.length).split(",").map((f) => f.trim())
+      );
       isParsingDescription = false;
     } else if (thisLine.startsWith(BlueprintPrefix)) {
-      blueprintNames = blueprintNames.concat(thisLine.slice(BlueprintPrefix.length).split(",").map((f) => f.trim()));
+      blueprintNames = blueprintNames.concat(
+        thisLine.slice(BlueprintPrefix.length).split(",").map((f) => f.trim())
+      );
       isParsingDescription = false;
     } else if (thisLine.startsWith(DocumentName)) {
       documentName = thisLine.slice(DocumentName.length).trim();
@@ -243,6 +252,7 @@ function parseIdeHelper(documentUri, symbol) {
 var EmptyEnvironmentHelper, DocumentName, DocumentDescription, DocDescriptionShort, EntryPrefix, CollectionPrefix, BlueprintPrefix, VariablePrefix, SetPrefix, ParamPrefix, RequiredParamPrefix, ParamFromViewDataDirective, FormatterPrefix;
 var init_parser = __esm({
   "server/src/idehelper/parser.ts"() {
+    "use strict";
     init_projectManager();
     init_documentDetailsManager();
     EmptyEnvironmentHelper = {
@@ -289,6 +299,7 @@ function getFieldRuntimeType(fieldType) {
 var stringTypes, arrayTypes, numberTypes, booleanTypes;
 var init_blueprintTypes = __esm({
   "server/src/projects/blueprints/blueprintTypes.ts"() {
+    "use strict";
     stringTypes = [
       "markdown",
       "text",
@@ -345,6 +356,7 @@ var init_blueprintTypes = __esm({
 var ReferenceManager, referenceManager_default;
 var init_referenceManager = __esm({
   "server/src/references/referenceManager.ts"() {
+    "use strict";
     ReferenceManager = class {
       constructor() {
         this.partialReferences = /* @__PURE__ */ new Map();
@@ -419,6 +431,7 @@ var init_referenceManager = __esm({
 var Position;
 var init_position = __esm({
   "server/src/runtime/nodes/position.ts"() {
+    "use strict";
     Position = class {
       constructor() {
         this.index = -1;
@@ -472,6 +485,7 @@ var init_position = __esm({
 var _DocumentRange, DocumentRange;
 var init_documentRange = __esm({
   "server/src/runtime/document/documentRange.ts"() {
+    "use strict";
     _DocumentRange = class {
       constructor() {
         this.start = null;
@@ -494,6 +508,7 @@ function augmentGroupByScope(node, scope) {
 }
 var init_augmentGroupByScope = __esm({
   "server/src/antlers/modifiers/scopeAugmentation/augmentGroupByScope.ts"() {
+    "use strict";
   }
 });
 
@@ -505,6 +520,7 @@ function augmentSplitScope(node, scope) {
 }
 var init_augmentSplitScope = __esm({
   "server/src/antlers/modifiers/scopeAugmentation/augmentSplitScope.ts"() {
+    "use strict";
   }
 });
 
@@ -512,6 +528,7 @@ var init_augmentSplitScope = __esm({
 var arrayModifiers;
 var init_arrayModifiers = __esm({
   "server/src/antlers/modifiers/arrayModifiers.ts"() {
+    "use strict";
     init_augmentGroupByScope();
     init_augmentSplitScope();
     arrayModifiers = [
@@ -974,6 +991,7 @@ var init_arrayModifiers = __esm({
 var assetModifiers;
 var init_assetModifiers = __esm({
   "server/src/antlers/modifiers/assetModifiers.ts"() {
+    "use strict";
     assetModifiers = [
       {
         name: "background_position",
@@ -1016,6 +1034,7 @@ var init_assetModifiers = __esm({
 var conditionalModifiers;
 var init_conditionalModifiers = __esm({
   "server/src/antlers/modifiers/conditionalModifiers.ts"() {
+    "use strict";
     conditionalModifiers = [
       {
         name: "contains_all",
@@ -1344,6 +1363,7 @@ var init_conditionalModifiers = __esm({
 var dateModifiers;
 var init_dateModifiers = __esm({
   "server/src/antlers/modifiers/dateModifiers.ts"() {
+    "use strict";
     dateModifiers = [
       {
         name: "days_ago",
@@ -1583,6 +1603,7 @@ See [PHP: DateTimeInterface::format](https://www.php.net/manual/en/datetime.form
 var markupModifiers;
 var init_markupModifiers = __esm({
   "server/src/antlers/modifiers/markupModifiers.ts"() {
+    "use strict";
     markupModifiers = [
       {
         name: "chunk",
@@ -1776,6 +1797,7 @@ var init_markupModifiers = __esm({
 var mathModifiers;
 var init_mathModifiers = __esm({
   "server/src/antlers/modifiers/mathModifiers.ts"() {
+    "use strict";
     mathModifiers = [
       {
         name: "add",
@@ -1970,6 +1992,7 @@ var init_mathModifiers = __esm({
 var specialModifiers;
 var init_specialModifiers = __esm({
   "server/src/antlers/modifiers/specialModifiers.ts"() {
+    "use strict";
     specialModifiers = [
       {
         name: "partial",
@@ -2038,6 +2061,7 @@ var init_specialModifiers = __esm({
 var stringModifiers;
 var init_stringModifiers = __esm({
   "server/src/antlers/modifiers/stringModifiers.ts"() {
+    "use strict";
     stringModifiers = [
       {
         name: "ascii",
@@ -2847,6 +2871,7 @@ var init_stringModifiers = __esm({
 var utilityModifiers;
 var init_utilityModifiers = __esm({
   "server/src/antlers/modifiers/utilityModifiers.ts"() {
+    "use strict";
     utilityModifiers = [
       {
         name: "console_log",
@@ -2968,6 +2993,7 @@ var init_utilityModifiers = __esm({
 var ModifierManager, modifierManager_default;
 var init_modifierManager = __esm({
   "server/src/antlers/modifierManager.ts"() {
+    "use strict";
     init_blueprintTypes();
     init_arrayModifiers();
     init_assetModifiers();
@@ -3133,6 +3159,7 @@ var init_modifierManager = __esm({
 var NodeVirtualModifiers;
 var init_nodeVirtualModifiers = __esm({
   "server/src/runtime/nodes/antlersVirtualStructures/nodeVirtualModifiers.ts"() {
+    "use strict";
     init_modifierManager();
     init_abstractNode();
     NodeVirtualModifiers = class {
@@ -3304,6 +3331,7 @@ function filterStructuralAntlersNodes(sourceNodes) {
 }
 var init_nodeFilters = __esm({
   "server/src/runtime/document/scanners/nodeFilters.ts"() {
+    "use strict";
     init_abstractNode();
   }
 });
@@ -3315,6 +3343,7 @@ function is_numeric(char) {
 var whitespace;
 var init_isNumeric = __esm({
   "server/src/runtime/utilities/isNumeric.ts"() {
+    "use strict";
     whitespace = [
       " ",
       "\n",
@@ -3346,6 +3375,7 @@ var init_isNumeric = __esm({
 var StringUtilities;
 var init_stringUtilities = __esm({
   "server/src/runtime/utilities/stringUtilities.ts"() {
+    "use strict";
     init_isNumeric();
     StringUtilities = class {
       static boolLabel(value) {
@@ -3410,6 +3440,7 @@ var init_stringUtilities = __esm({
 var NodeVirtualHierarchy;
 var init_nodeVirtualHierarchy = __esm({
   "server/src/runtime/nodes/antlersVirtualStructures/nodeVirtualHierarchy.ts"() {
+    "use strict";
     NodeVirtualHierarchy = class {
       constructor(node) {
         this.node = node;
@@ -3768,6 +3799,7 @@ var require_md5 = __commonJS({
 var import_ts_md5, AntlersError;
 var init_antlersError = __esm({
   "server/src/runtime/errors/antlersError.ts"() {
+    "use strict";
     import_ts_md5 = __toESM(require_md5());
     AntlersError = class {
       constructor() {
@@ -3807,6 +3839,7 @@ var init_antlersError = __esm({
 var AntlersErrorCodes;
 var init_antlersErrorCodes = __esm({
   "server/src/runtime/errors/antlersErrorCodes.ts"() {
+    "use strict";
     AntlersErrorCodes = class {
     };
     AntlersErrorCodes.TYPE_EXPECTING_OPERAND = "ANTLR_001";
@@ -3977,6 +4010,7 @@ var init_antlersErrorCodes = __esm({
 var NodeHelpers;
 var init_nodeHelpers = __esm({
   "server/src/runtime/utilities/nodeHelpers.ts"() {
+    "use strict";
     init_abstractNode();
     init_stringUtilities();
     NodeHelpers = class {
@@ -4037,6 +4071,7 @@ var init_nodeHelpers = __esm({
 var _ConditionPairAnalyzer, ConditionPairAnalyzer;
 var init_conditionPairAnalyzer = __esm({
   "server/src/runtime/analyzers/conditionPairAnalyzer.ts"() {
+    "use strict";
     init_antlersError();
     init_antlersErrorCodes();
     init_abstractNode();
@@ -4162,7 +4197,11 @@ var init_conditionPairAnalyzer = __esm({
                 if (curNode.isInterpolationNode) {
                   baseMessage += " Tag pairs are not supported within Antlers tags.";
                 }
-                curNode.pushError(AntlersError.makeSyntaxError(AntlersErrorCodes.TYPE_PARSE_UNPAIRED_CONDITIONAL, curNode, baseMessage));
+                curNode.pushError(AntlersError.makeSyntaxError(
+                  AntlersErrorCodes.TYPE_PARSE_UNPAIRED_CONDITIONAL,
+                  curNode,
+                  baseMessage
+                ));
                 curNode._conditionParserAbandonPairing = true;
               }
               if (curNode.isClosedBy == null && _ConditionPairAnalyzer.requiresClose(curNode)) {
@@ -4170,7 +4209,11 @@ var init_conditionPairAnalyzer = __esm({
                 if (curNode.isInterpolationNode) {
                   baseMessage += " Tag pairs are not supported within Antlers tags.";
                 }
-                curNode.pushError(AntlersError.makeSyntaxError(AntlersErrorCodes.TYPE_PARSE_UNCLOSED_CONDITIONAL, curNode, baseMessage));
+                curNode.pushError(AntlersError.makeSyntaxError(
+                  AntlersErrorCodes.TYPE_PARSE_UNCLOSED_CONDITIONAL,
+                  curNode,
+                  baseMessage
+                ));
                 curNode._conditionParserAbandonPairing = true;
               }
             }
@@ -4191,11 +4234,19 @@ var init_conditionPairAnalyzer = __esm({
           if (node instanceof AntlersNode && _ConditionPairAnalyzer.isConditionalStructure(node)) {
             const name = (_b = (_a = node.name) == null ? void 0 : _a.name) != null ? _b : "";
             if ((name == "elseif" || name == "else") && node.isOpenedBy == null) {
-              node.pushError(AntlersError.makeSyntaxError(AntlersErrorCodes.TYPE_PARSE_UNPAIRED_CONDITIONAL, node, 'Unpaired "' + NodeHelpers.getTrueName(node) + '" control structure.'));
+              node.pushError(AntlersError.makeSyntaxError(
+                AntlersErrorCodes.TYPE_PARSE_UNPAIRED_CONDITIONAL,
+                node,
+                'Unpaired "' + NodeHelpers.getTrueName(node) + '" control structure.'
+              ));
               return;
             }
             if (node.isClosedBy == null && _ConditionPairAnalyzer.requiresClose(node)) {
-              node.pushError(AntlersError.makeSyntaxError(AntlersErrorCodes.TYPE_PARSE_UNCLOSED_CONDITIONAL, node, "Unclosed " + NodeHelpers.getTrueName(node) + " control structure."));
+              node.pushError(AntlersError.makeSyntaxError(
+                AntlersErrorCodes.TYPE_PARSE_UNCLOSED_CONDITIONAL,
+                node,
+                "Unclosed " + NodeHelpers.getTrueName(node) + " control structure."
+              ));
               return;
             }
           }
@@ -4226,6 +4277,7 @@ function trimRight(value, charList) {
 }
 var init_strings = __esm({
   "server/src/utils/strings.ts"() {
+    "use strict";
   }
 });
 
@@ -4235,6 +4287,7 @@ function getId() {
 }
 var init_simpleIds = __esm({
   "server/src/utils/simpleIds.ts"() {
+    "use strict";
   }
 });
 
@@ -4257,6 +4310,7 @@ function cleanNodes(nodes) {
 var FragmentNode, FragmentParameterNode, AbstractNode5, ExecutionBranch, ConditionNode, AntlersNode, ParserFailNode, AntlersParserFailNode, RecursiveNode, PhpExecutionNode, CommentParserFailNode, PhpParserFailNode, EscapedContentNode, ParameterNode2, ModifierChainNode, ModifierNode, ValueDirectionNode, ModifierParameterNode, FalseConstant, NullConstant, TrueConstant, AdditionOperator, DivisionOperator, ExponentiationOperator, FactorialOperator, ModulusOperator, MultiplicationOperator, SubtractionOperator, AdditionAssignmentOperator, DivisionAssignmentOperator, LeftAssignmentOperator, ModulusAssignmentOperator, MultiplicationAssignmentOperator, SubtractionAssignmentOperator, EqualCompOperator, GreaterThanCompOperator, GreaterThanEqualCompOperator, LessThanCompOperator, LessThanEqualCompOperator, NotEqualCompOperator, NotStrictEqualCompOperator, SpaceshipCompOperator, StrictEqualCompOperator, ConditionalVariableFallbackOperator, LanguageOperatorConstruct, StatementSeparatorNode, DirectionGroup, InlineBranchSeparator, ModifierSeparator, NullCoalescenceGroup, ModifierValueSeparator, InlineTernarySeparator, LogicalAndOperator, LogicalNegationOperator, LogicalOrOperator, LogicalXorOperator, NullCoalesceOperator, ScopeAssignmentOperator, StringConcatenationOperator, LogicGroupEnd, LogicGroupBegin, ListValueNode, LogicGroup, SwitchCase, SwitchGroup, ConditionalFallbackGroup, ArrayNode, TernaryCondition, ArgSeparator, SemanticGroup, ScopedLogicGroup, AliasedScopeLogicGroup, ArgumentGroup, TupleListStart, TupleList, LibraryInvocationConstruct, LiteralNode, MethodInvocationNode, ModifierNameNode, ModifierValueNode, NamedArgumentNode, NameValueNode, NumberNode, StringValueNode, VariableNode, AccessorNode, PathNode, VariableReference, StaticTracedAssignment;
 var init_abstractNode = __esm({
   "server/src/runtime/nodes/abstractNode.ts"() {
+    "use strict";
     init_position();
     init_documentRange();
     init_nodeVirtualModifiers();
@@ -4477,9 +4531,15 @@ var init_abstractNode = __esm({
           if (this.isClosedBy.startPosition == null || this.isClosedBy.endPosition == null) {
             return "";
           }
-          return this.parser.getText(this.startPosition.index, this.isClosedBy.endPosition.index + 1);
+          return this.parser.getText(
+            this.startPosition.index,
+            this.isClosedBy.endPosition.index + 1
+          );
         }
-        return this.parser.getText(this.startPosition.index, this.endPosition.index + 1);
+        return this.parser.getText(
+          this.startPosition.index,
+          this.endPosition.index + 1
+        );
       }
       getNodeDocumentText() {
         if (this.startPosition == null || this.endPosition == null || this.parser == null) {
@@ -4739,7 +4799,9 @@ var init_abstractNode = __esm({
               if (this.name != null) {
                 if (this.name.name == "if" || this.name.name == "elseif" || this.name.name == "unless" || this.name.name == "elseunless") {
                   contentToAnalyze = " " + contentToAnalyze.trimLeft();
-                  this.cachedContent = contentToAnalyze.substr(this.name.compound.length + 1);
+                  this.cachedContent = contentToAnalyze.substr(
+                    this.name.compound.length + 1
+                  );
                 } else {
                   this.cachedContent = contentToAnalyze;
                 }
@@ -4769,11 +4831,16 @@ var init_abstractNode = __esm({
         if (this.parser == null) {
           return null;
         }
-        return this.parser.positionFromOffset(((_b = (_a = this.contentOffset) == null ? void 0 : _a.offset) != null ? _b : 0) + offset, index);
+        return this.parser.positionFromOffset(
+          ((_b = (_a = this.contentOffset) == null ? void 0 : _a.offset) != null ? _b : 0) + offset,
+          index
+        );
       }
       getInterpolationNode(varName) {
         if (this.processedInterpolationRegions.has(varName)) {
-          const refRegion = this.processedInterpolationRegions.get(varName);
+          const refRegion = this.processedInterpolationRegions.get(
+            varName
+          );
           if (refRegion.length > 0 && refRegion[0] instanceof AntlersNode) {
             return refRegion[0];
           }
@@ -4802,7 +4869,11 @@ var init_abstractNode = __esm({
             relativeIndex += 6;
           }
         }
-        const resolvedOffset = this.parser.positionFromOffset(relativeIndex, relativeIndex, true);
+        const resolvedOffset = this.parser.positionFromOffset(
+          relativeIndex,
+          relativeIndex,
+          true
+        );
         return resolvedOffset;
       }
       relativeOffset(offset, index = null) {
@@ -4818,7 +4889,11 @@ var init_abstractNode = __esm({
           return position;
         }
         const relativeIndex = offset + this.rawStart.length + ((_b = (_a = this.startPosition) == null ? void 0 : _a.index) != null ? _b : 0);
-        const resolvedOffset = this.parser.positionFromOffset(relativeIndex, relativeIndex, true);
+        const resolvedOffset = this.parser.positionFromOffset(
+          relativeIndex,
+          relativeIndex,
+          true
+        );
         return resolvedOffset;
       }
       isPaired() {
@@ -12499,6 +12574,7 @@ function makeTagParameterSuggestions(request, parameters) {
 var import_vscode_languageserver_types;
 var init_attributeSuggestions = __esm({
   "server/src/suggestions/attributeSuggestions.ts"() {
+    "use strict";
     import_vscode_languageserver_types = __toESM(require_main2());
   }
 });
@@ -12552,6 +12628,7 @@ function formatSuggestion(field) {
 var import_vscode_languageserver_types2;
 var init_fieldFormatter = __esm({
   "server/src/suggestions/fieldFormatter.ts"() {
+    "use strict";
     import_vscode_languageserver_types2 = __toESM(require_main2());
   }
 });
@@ -12582,6 +12659,7 @@ function makeTagDoc(title, description, docLink) {
 }
 var init_utils = __esm({
   "server/src/documentation/utils.ts"() {
+    "use strict";
   }
 });
 
@@ -12595,6 +12673,7 @@ function suggestAlternativeCollectionParams(unknown) {
 }
 var init_alternateParamSuggestions = __esm({
   "server/src/antlers/tags/core/collection/alternateParamSuggestions.ts"() {
+    "use strict";
   }
 });
 
@@ -12621,6 +12700,7 @@ function variablesToBlueprintFields(variables) {
 }
 var init_fields = __esm({
   "server/src/projects/blueprints/fields.ts"() {
+    "use strict";
   }
 });
 
@@ -12636,6 +12716,7 @@ function makeLoopVariables(symbol) {
 }
 var init_loopVariables = __esm({
   "server/src/antlers/variables/loopVariables.ts"() {
+    "use strict";
   }
 });
 
@@ -12647,7 +12728,12 @@ function checkSymbolForScopeAndAlias(node, scope, fields) {
   const aliasParam = node.findParameter("as"), scopeParam = node.findParameter("scope");
   fields = fields.concat(variablesToBlueprintFields(makeLoopVariables(node)));
   if (aliasParam != null && scopeParam != null) {
-    scope.introduceScopedAliasScope(node, scopeParam.value, aliasParam.value, fields);
+    scope.introduceScopedAliasScope(
+      node,
+      scopeParam.value,
+      aliasParam.value,
+      fields
+    );
   } else if (aliasParam != null) {
     scope.introduceAliasScope(node, aliasParam.value, fields);
   } else if (scopeParam != null) {
@@ -12658,6 +12744,7 @@ function checkSymbolForScopeAndAlias(node, scope, fields) {
 }
 var init_listFactory = __esm({
   "server/src/antlers/scope/factories/listFactory.ts"() {
+    "use strict";
     init_fields();
     init_loopVariables();
   }
@@ -12672,6 +12759,7 @@ function makeCollectionVariables(node) {
 }
 var init_collectionVariables = __esm({
   "server/src/antlers/variables/collectionVariables.ts"() {
+    "use strict";
   }
 });
 
@@ -12679,6 +12767,7 @@ var init_collectionVariables = __esm({
 var collectionParameters, CollectionSourceParams, CollectionRestrictionParams, EntryStatuses;
 var init_parameters = __esm({
   "server/src/antlers/tags/core/collection/parameters.ts"() {
+    "use strict";
     collectionParameters = [
       {
         isRequired: false,
@@ -12951,6 +13040,7 @@ function makeQueryScopeSuggestions(project) {
 var import_vscode_languageserver_types3;
 var init_utils2 = __esm({
   "server/src/antlers/tags/core/collection/utils.ts"() {
+    "use strict";
     import_vscode_languageserver_types3 = __toESM(require_main2());
     init_parameters();
   }
@@ -12977,6 +13067,7 @@ function augmentCollectionScope(node, scope) {
 }
 var init_augmentCollectionScope = __esm({
   "server/src/antlers/tags/core/collection/augmentCollectionScope.ts"() {
+    "use strict";
     init_listFactory();
     init_collectionVariables();
     init_utils2();
@@ -12987,6 +13078,7 @@ var init_augmentCollectionScope = __esm({
 var StringConditionItems;
 var init_stringConditions = __esm({
   "server/src/suggestions/defaults/stringConditions.ts"() {
+    "use strict";
     StringConditionItems = [
       { name: "is", description: "Tests if a field is equal to a value" },
       { name: "equals", description: "Tests if a field is equal to a value" },
@@ -13048,6 +13140,7 @@ function getConditionCompletionItems(request) {
 var import_vscode_languageserver_types4;
 var init_conditionItems = __esm({
   "server/src/suggestions/defaults/conditionItems.ts"() {
+    "use strict";
     import_vscode_languageserver_types4 = __toESM(require_main2());
     init_stringConditions();
   }
@@ -13057,6 +13150,7 @@ var init_conditionItems = __esm({
 var UnclosedTagManager;
 var init_unclosedTagManager = __esm({
   "server/src/antlers/unclosedTagManager.ts"() {
+    "use strict";
     UnclosedTagManager = class {
       static clear(documentUri) {
         this.unclosedNodes.delete(documentUri);
@@ -13112,6 +13206,7 @@ function makeContentVariables(symbol) {
 }
 var init_contentVariables = __esm({
   "server/src/antlers/variables/contentVariables.ts"() {
+    "use strict";
   }
 });
 
@@ -13119,6 +13214,7 @@ var init_contentVariables = __esm({
 var import_vscode_languageserver, DocumentPropertySuggestions;
 var init_documentPropertySuggestions = __esm({
   "server/src/suggestions/comments/documentPropertySuggestions.ts"() {
+    "use strict";
     import_vscode_languageserver = __toESM(require_main4());
     DocumentPropertySuggestions = [
       { label: "name", kind: import_vscode_languageserver.CompletionItemKind.Property },
@@ -13141,6 +13237,7 @@ var init_documentPropertySuggestions = __esm({
 var import_vscode_languageserver_types5, LanguageConstructs;
 var init_languageConstructs = __esm({
   "server/src/suggestions/defaults/languageConstructs.ts"() {
+    "use strict";
     import_vscode_languageserver_types5 = __toESM(require_main2());
     LanguageConstructs = [
       { label: "if", kind: import_vscode_languageserver_types5.CompletionItemKind.Keyword },
@@ -13154,6 +13251,7 @@ var init_languageConstructs = __esm({
 var import_vscode_languageserver2, import_vscode_languageserver_types6;
 var init_genericTypesSuggestions = __esm({
   "server/src/suggestions/genericTypesSuggestions.ts"() {
+    "use strict";
     import_vscode_languageserver2 = __toESM(require_main4());
     import_vscode_languageserver_types6 = __toESM(require_main2());
     init_modifierManager();
@@ -13164,6 +13262,7 @@ var init_genericTypesSuggestions = __esm({
 var import_vscode_languageserver_types7, BooleanCompletionItems;
 var init_booleanItems = __esm({
   "server/src/suggestions/defaults/booleanItems.ts"() {
+    "use strict";
     import_vscode_languageserver_types7 = __toESM(require_main2());
     BooleanCompletionItems = [];
     BooleanCompletionItems.push({ label: "true", kind: import_vscode_languageserver_types7.CompletionItemKind.Keyword });
@@ -13174,6 +13273,7 @@ var init_booleanItems = __esm({
 // server/src/suggestions/parameterSuggestionProvider.ts
 var init_parameterSuggestionProvider = __esm({
   "server/src/suggestions/parameterSuggestionProvider.ts"() {
+    "use strict";
     init_booleanItems();
   }
 });
@@ -13187,6 +13287,7 @@ function makeArrayVariables(symbol) {
 }
 var init_arrayVariables = __esm({
   "server/src/antlers/variables/arrayVariables.ts"() {
+    "use strict";
   }
 });
 
@@ -13194,6 +13295,7 @@ var init_arrayVariables = __esm({
 var ArrayFieldType, arrayFieldType_default;
 var init_arrayFieldType = __esm({
   "server/src/antlers/fieldtypes/core/arrayFieldType.ts"() {
+    "use strict";
     init_arrayVariables();
     init_loopVariables();
     ArrayFieldType = {
@@ -13248,6 +13350,7 @@ function makeAssetVariables(symbol) {
 }
 var init_assetVariables = __esm({
   "server/src/antlers/variables/assetVariables.ts"() {
+    "use strict";
   }
 });
 
@@ -13255,6 +13358,7 @@ var init_assetVariables = __esm({
 var AssetsFieldType, assetsFieldType_default;
 var init_assetsFieldType = __esm({
   "server/src/antlers/fieldtypes/core/assetsFieldType.ts"() {
+    "use strict";
     init_arrayVariables();
     init_assetVariables();
     AssetsFieldType = {
@@ -13272,6 +13376,7 @@ var init_assetsFieldType = __esm({
 var BardFieldType, bardFieldType_default;
 var init_bardFieldType = __esm({
   "server/src/antlers/fieldtypes/core/bardFieldType.ts"() {
+    "use strict";
     BardFieldType = {
       name: "bard",
       augmentScope: (symbol, scope) => {
@@ -13290,6 +13395,7 @@ var init_bardFieldType = __esm({
 var FormMultipleFieldtype, formMultiple_default;
 var init_formMultiple = __esm({
   "server/src/antlers/fieldtypes/core/formMultiple.ts"() {
+    "use strict";
     init_arrayVariables();
     init_loopVariables();
     FormMultipleFieldtype = {
@@ -13307,6 +13413,7 @@ var init_formMultiple = __esm({
 var ListFieldtype, listFieldType_default;
 var init_listFieldType = __esm({
   "server/src/antlers/fieldtypes/core/listFieldType.ts"() {
+    "use strict";
     init_arrayVariables();
     init_loopVariables();
     ListFieldtype = {
@@ -13328,6 +13435,7 @@ function makeReplicatorVariables(symbol) {
 }
 var init_replicatorVariables = __esm({
   "server/src/antlers/variables/replicatorVariables.ts"() {
+    "use strict";
   }
 });
 
@@ -13335,6 +13443,7 @@ var init_replicatorVariables = __esm({
 var ReplicatorFieldtype, replicatorFieldType_default;
 var init_replicatorFieldType = __esm({
   "server/src/antlers/fieldtypes/core/replicatorFieldType.ts"() {
+    "use strict";
     init_loopVariables();
     init_replicatorVariables();
     ReplicatorFieldtype = {
@@ -13356,6 +13465,7 @@ var init_replicatorFieldType = __esm({
 var SelectMultipleFieldtype, selectMultiple_default;
 var init_selectMultiple = __esm({
   "server/src/antlers/fieldtypes/core/selectMultiple.ts"() {
+    "use strict";
     init_arrayVariables();
     init_loopVariables();
     SelectMultipleFieldtype = {
@@ -13373,6 +13483,7 @@ var init_selectMultiple = __esm({
 var SitesMultiple, sitesMultiple_default;
 var init_sitesMultiple = __esm({
   "server/src/antlers/fieldtypes/core/sitesMultiple.ts"() {
+    "use strict";
     init_arrayVariables();
     init_loopVariables();
     SitesMultiple = {
@@ -13390,6 +13501,7 @@ var init_sitesMultiple = __esm({
 var StructuresMultipleFieldtype, structuresMultiple_default;
 var init_structuresMultiple = __esm({
   "server/src/antlers/fieldtypes/core/structuresMultiple.ts"() {
+    "use strict";
     init_arrayVariables();
     init_loopVariables();
     StructuresMultipleFieldtype = {
@@ -13407,6 +13519,7 @@ var init_structuresMultiple = __esm({
 var TableFieldtype, table_default;
 var init_table = __esm({
   "server/src/antlers/fieldtypes/core/table.ts"() {
+    "use strict";
     TableFieldtype = {
       name: "table",
       augmentScope: (symbol, scope) => {
@@ -13421,6 +13534,7 @@ var init_table = __esm({
 var TagsFieldtype, tagsFieldType_default;
 var init_tagsFieldType = __esm({
   "server/src/antlers/fieldtypes/core/tagsFieldType.ts"() {
+    "use strict";
     init_arrayVariables();
     init_loopVariables();
     TagsFieldtype = {
@@ -13444,6 +13558,7 @@ function makeTermVariables(symbol) {
 }
 var init_termVariables = __esm({
   "server/src/antlers/variables/termVariables.ts"() {
+    "use strict";
     init_contentVariables();
   }
 });
@@ -13452,6 +13567,7 @@ var init_termVariables = __esm({
 var TaxonomiesMultipleFieldtype, taxonomiesMultiple_default;
 var init_taxonomiesMultiple = __esm({
   "server/src/antlers/fieldtypes/core/taxonomiesMultiple.ts"() {
+    "use strict";
     init_arrayVariables();
     init_loopVariables();
     init_termVariables();
@@ -13471,6 +13587,7 @@ var init_taxonomiesMultiple = __esm({
 var TermsMultipleFieldtype, termsMultiple_default;
 var init_termsMultiple = __esm({
   "server/src/antlers/fieldtypes/core/termsMultiple.ts"() {
+    "use strict";
     init_arrayVariables();
     init_loopVariables();
     init_termVariables();
@@ -13490,6 +13607,7 @@ var init_termsMultiple = __esm({
 var UserGroupsMultipleFieldtype, userGroupsMultiple_default;
 var init_userGroupsMultiple = __esm({
   "server/src/antlers/fieldtypes/core/userGroupsMultiple.ts"() {
+    "use strict";
     init_arrayVariables();
     init_loopVariables();
     UserGroupsMultipleFieldtype = {
@@ -13507,6 +13625,7 @@ var init_userGroupsMultiple = __esm({
 var UserRolesMultipleFieldtype, userRolesMultiple_default;
 var init_userRolesMultiple = __esm({
   "server/src/antlers/fieldtypes/core/userRolesMultiple.ts"() {
+    "use strict";
     init_arrayVariables();
     init_loopVariables();
     UserRolesMultipleFieldtype = {
@@ -13524,6 +13643,7 @@ var init_userRolesMultiple = __esm({
 var UsersMultipleFieldtype, usersMultiple_default;
 var init_usersMultiple = __esm({
   "server/src/antlers/fieldtypes/core/usersMultiple.ts"() {
+    "use strict";
     init_arrayVariables();
     init_loopVariables();
     UsersMultipleFieldtype = {
@@ -13542,6 +13662,7 @@ var init_usersMultiple = __esm({
 var YamlFieldtype, yamlFieldType_default;
 var init_yamlFieldType = __esm({
   "server/src/antlers/fieldtypes/core/yamlFieldType.ts"() {
+    "use strict";
     init_arrayVariables();
     init_loopVariables();
     YamlFieldtype = {
@@ -13559,6 +13680,7 @@ var init_yamlFieldType = __esm({
 var CoreFieldtypes, coreFieldtypes_default;
 var init_coreFieldtypes = __esm({
   "server/src/antlers/fieldtypes/core/coreFieldtypes.ts"() {
+    "use strict";
     init_arrayFieldType();
     init_assetsFieldType();
     init_bardFieldType();
@@ -13603,6 +13725,7 @@ var init_coreFieldtypes = __esm({
 var FieldtypeManager, fieldtypeManager_default;
 var init_fieldtypeManager = __esm({
   "server/src/antlers/fieldtypes/fieldtypeManager.ts"() {
+    "use strict";
     init_coreFieldtypes();
     FieldtypeManager = class {
       constructor() {
@@ -13638,6 +13761,7 @@ var init_fieldtypeManager = __esm({
 // server/src/suggestions/scopeVariableSuggestionsManager.ts
 var init_scopeVariableSuggestionsManager = __esm({
   "server/src/suggestions/scopeVariableSuggestionsManager.ts"() {
+    "use strict";
     init_fieldtypeManager();
   }
 });
@@ -13722,6 +13846,7 @@ function convertScopeToCompletionList(params, scope) {
 var import_vscode_languageserver_protocol;
 var init_suggestionManager = __esm({
   "server/src/suggestions/suggestionManager.ts"() {
+    "use strict";
     import_vscode_languageserver_protocol = __toESM(require_main3());
     init_modifierManager();
     init_tagManagerInstance();
@@ -13762,6 +13887,7 @@ function tagToCompletionItem(tag) {
 var import_vscode_languageserver3;
 var init_documentedLabel = __esm({
   "server/src/antlers/documentedLabel.ts"() {
+    "use strict";
     import_vscode_languageserver3 = __toESM(require_main4());
   }
 });
@@ -13784,8 +13910,17 @@ function makeHtmlParam(name, description, mdnReference) {
 var HtmlClassParameter, HtmlStyleParameter;
 var init_parameters2 = __esm({
   "server/src/antlers/htmlCompat/parameters.ts"() {
-    HtmlClassParameter = makeHtmlParam("class", "A space-separated list of the classes of the element.", "https://developer.mozilla.org/en-US/docs/Web/HTML/Global_attributes/class");
-    HtmlStyleParameter = makeHtmlParam("style", "Contains CSS styling declarations to be applied to the element. Note that it is recommended for styles to be defined in a separate file or files.", "https://developer.mozilla.org/en-US/docs/Web/HTML/Global_attributes/style");
+    "use strict";
+    HtmlClassParameter = makeHtmlParam(
+      "class",
+      "A space-separated list of the classes of the element.",
+      "https://developer.mozilla.org/en-US/docs/Web/HTML/Global_attributes/class"
+    );
+    HtmlStyleParameter = makeHtmlParam(
+      "style",
+      "Contains CSS styling declarations to be applied to the element. Note that it is recommended for styles to be defined in a separate file or files.",
+      "https://developer.mozilla.org/en-US/docs/Web/HTML/Global_attributes/style"
+    );
   }
 });
 
@@ -13844,6 +13979,7 @@ function nonExclusiveResult(items) {
 var import_vscode_languageserver_types8, EmptyCompletionResult;
 var init_tagManager = __esm({
   "server/src/antlers/tagManager.ts"() {
+    "use strict";
     import_vscode_languageserver_types8 = __toESM(require_main2());
     init_parameters2();
     EmptyCompletionResult = {
@@ -13882,6 +14018,7 @@ function copyTagDefinition(tag) {
 }
 var init_alias = __esm({
   "server/src/antlers/tags/alias.ts"() {
+    "use strict";
   }
 });
 
@@ -13901,6 +14038,7 @@ function resolveTypedTree(document) {
 }
 var init_tags = __esm({
   "server/src/antlers/tags.ts"() {
+    "use strict";
     init_abstractNode();
   }
 });
@@ -13981,6 +14119,7 @@ function resolveCollectionScope(symbol, project) {
 var BuiltInCollectionMethods;
 var init_resolvesCollectionScope = __esm({
   "server/src/antlers/tags/core/collection/resolvesCollectionScope.ts"() {
+    "use strict";
     init_tags();
     init_parameters();
     BuiltInCollectionMethods = ["count", "next", "previous"];
@@ -14003,6 +14142,7 @@ function resolveConditionalParmaters(symbol, paramName) {
 }
 var init_resolvesConditionalParameters = __esm({
   "server/src/antlers/tags/core/collection/resolvesConditionalParameters.ts"() {
+    "use strict";
     init_strings();
     init_tagManager();
   }
@@ -14059,6 +14199,7 @@ function resolveCollectionParameterCompletiontems(parameter, params) {
 var collectionParamNames, singleCollectionTagActivators, singleCollectionParamNames;
 var init_resolvesParameterSuggestions = __esm({
   "server/src/antlers/tags/core/collection/resolvesParameterSuggestions.ts"() {
+    "use strict";
     init_conditionItems();
     init_suggestionManager();
     init_tagManager();
@@ -14082,6 +14223,7 @@ var init_resolvesParameterSuggestions = __esm({
 var CollectionPrevious, previous_default;
 var init_previous = __esm({
   "server/src/antlers/tags/core/collection/previous.ts"() {
+    "use strict";
     init_utils();
     init_alternateParamSuggestions();
     init_augmentCollectionScope();
@@ -14128,10 +14270,15 @@ var init_previous = __esm({
       resovleParameterCompletionItems: resolveCollectionParameterCompletiontems,
       resolveCompletionItems: resolveCollectionCompletions,
       resolveDocumentation: (params) => {
-        return makeTagDocWithCodeSample("collection:previous Tag", "The `collection:previous` tag is used to show the entries that appear before the current entry, based on some entry order (publish date, alphabetical, or manual).", `{{# Retrieve the previous two entries, based on dates in ascending order. #}}
+        return makeTagDocWithCodeSample(
+          "collection:previous Tag",
+          "The `collection:previous` tag is used to show the entries that appear before the current entry, based on some entry order (publish date, alphabetical, or manual).",
+          `{{# Retrieve the previous two entries, based on dates in ascending order. #}}
 {{ collection:previous in="articles" limit="2" sort="date:asc" }}
 
-{{ /collection:previous }}`, "https://statamic.dev/tags/collection-previous");
+{{ /collection:previous }}`,
+          "https://statamic.dev/tags/collection-previous"
+        );
       }
     };
     previous_default = CollectionPrevious;
@@ -14142,6 +14289,7 @@ var init_previous = __esm({
 var CollectionOlder, CollectionNewer;
 var init_ageDirectional = __esm({
   "server/src/antlers/tags/core/collection/ageDirectional.ts"() {
+    "use strict";
     init_alias();
     init_previous();
     CollectionOlder = createDefinitionAlias(previous_default, "collection:older");
@@ -14153,6 +14301,7 @@ var init_ageDirectional = __esm({
 var CollectionCount, count_default;
 var init_count = __esm({
   "server/src/antlers/tags/core/collection/count.ts"() {
+    "use strict";
     init_utils();
     init_parameters();
     init_resolvesCollectionScope();
@@ -14181,8 +14330,13 @@ var init_count = __esm({
       resolveSpecialType: resolveCollectionScope,
       resovleParameterCompletionItems: resolveCollectionParameterCompletiontems,
       resolveDocumentation: (params) => {
-        return makeTagDocWithCodeSample("collection:count Tag", "The `collection:count` tag returns the total number of entries in the specified collection(s). The collection count tag accepts the same parameters as the collection tag, allowing developers to count entries that meet specific conditions.", `Total entry count: {{ collection:count in="collection-name" }}
-Draft count: {{ collection:count in="collection-name" status:in="draft" }}`, "https://statamic.dev/tags/collection-count");
+        return makeTagDocWithCodeSample(
+          "collection:count Tag",
+          "The `collection:count` tag returns the total number of entries in the specified collection(s). The collection count tag accepts the same parameters as the collection tag, allowing developers to count entries that meet specific conditions.",
+          `Total entry count: {{ collection:count in="collection-name" }}
+Draft count: {{ collection:count in="collection-name" status:in="draft" }}`,
+          "https://statamic.dev/tags/collection-count"
+        );
       }
     };
     count_default = CollectionCount;
@@ -14193,6 +14347,7 @@ Draft count: {{ collection:count in="collection-name" status:in="draft" }}`, "ht
 var CollectionNext, next_default;
 var init_next = __esm({
   "server/src/antlers/tags/core/collection/next.ts"() {
+    "use strict";
     init_utils();
     init_alternateParamSuggestions();
     init_augmentCollectionScope();
@@ -14239,10 +14394,15 @@ var init_next = __esm({
       resovleParameterCompletionItems: resolveCollectionParameterCompletiontems,
       resolveCompletionItems: resolveCollectionCompletions,
       resolveDocumentation: (params) => {
-        return makeTagDocWithCodeSample("collection:next Tag", "The `collection:next` tag is used to show the entries that will appear after the current entry, based on some entry order (publish date, alphabetical, or manual).", `{{# Retrieve the next two entries, based on dates in ascending order. #}}
+        return makeTagDocWithCodeSample(
+          "collection:next Tag",
+          "The `collection:next` tag is used to show the entries that will appear after the current entry, based on some entry order (publish date, alphabetical, or manual).",
+          `{{# Retrieve the next two entries, based on dates in ascending order. #}}
 {{ collection:next in="articles" limit="2" sort="date:asc" }}
 
-{{ /collection:next }}`, "https://statamic.dev/tags/collection-next");
+{{ /collection:next }}`,
+          "https://statamic.dev/tags/collection-next"
+        );
       }
     };
     next_default = CollectionNext;
@@ -14316,6 +14476,7 @@ function resolveCollectionCompletions(params) {
 var import_vscode_languageserver4;
 var init_resolveCollectionCompletions = __esm({
   "server/src/antlers/tags/core/collection/resolveCollectionCompletions.ts"() {
+    "use strict";
     import_vscode_languageserver4 = __toESM(require_main4());
     init_conditionItems();
     init_suggestionManager();
@@ -14333,6 +14494,7 @@ var init_resolveCollectionCompletions = __esm({
 var Collection, collection_default;
 var init_collection = __esm({
   "server/src/antlers/tags/core/collection/collection.ts"() {
+    "use strict";
     init_utils();
     init_alternateParamSuggestions();
     init_augmentCollectionScope();
@@ -14357,13 +14519,18 @@ var init_collection = __esm({
       resovleParameterCompletionItems: resolveCollectionParameterCompletiontems,
       resolveCompletionItems: resolveCollectionCompletions,
       resolveDocumentation: (params) => {
-        return makeTagDocWithCodeSample("collection Tag", "The `collection` tag provides access to entry data such as blog posts, products, etc.", `{{ collection:articles as="posts" }}
+        return makeTagDocWithCodeSample(
+          "collection Tag",
+          "The `collection` tag provides access to entry data such as blog posts, products, etc.",
+          `{{ collection:articles as="posts" }}
 
 	{{ posts }}
 		{{ title }}
 	{{ /posts }}
 
-{{ /collection:articles }}`, "https://statamic.dev/tags/collection");
+{{ /collection:articles }}`,
+          "https://statamic.dev/tags/collection"
+        );
       }
     };
     collection_default = Collection;
@@ -14374,6 +14541,7 @@ var init_collection = __esm({
 var Cache, cache_default;
 var init_cache = __esm({
   "server/src/antlers/tags/core/cache.ts"() {
+    "use strict";
     init_utils();
     init_tagManager();
     Cache = {
@@ -14440,9 +14608,14 @@ var init_cache = __esm({
         };
       },
       resolveDocumentation: (params) => {
-        return makeTagDocWithCodeSample("cache Tag", "The `cache` tag can be used to save the results of an expensive template operation. The duration of the cache can be configured.", `{{ cache for="10 minutes" }}
+        return makeTagDocWithCodeSample(
+          "cache Tag",
+          "The `cache` tag can be used to save the results of an expensive template operation. The duration of the cache can be configured.",
+          `{{ cache for="10 minutes" }}
     {{# Template code that won't be re-rendered for at least 10 minutes. #}}
-{{ /cache }}`, "https://statamic.dev/tags/cache");
+{{ /cache }}`,
+          "https://statamic.dev/tags/cache"
+        );
       }
     };
     cache_default = Cache;
@@ -14453,6 +14626,7 @@ var init_cache = __esm({
 var Dump, dump_default;
 var init_dump = __esm({
   "server/src/antlers/tags/core/dump.ts"() {
+    "use strict";
     init_utils();
     init_suggestionManager();
     init_tagManager();
@@ -14472,10 +14646,15 @@ var init_dump = __esm({
         return EmptyCompletionResult;
       },
       resolveDocumentation: (params) => {
-        return makeTagDocWithCodeSample("dump Tag", "The `dump` tag is a useful tag for debugging, and will display the raw data available at the point the tag is rendered.", `{{ collection:articles }}
+        return makeTagDocWithCodeSample(
+          "dump Tag",
+          "The `dump` tag is a useful tag for debugging, and will display the raw data available at the point the tag is rendered.",
+          `{{ collection:articles }}
 	{{# View all data available, for each entry. #}}
     {{ dump }}
-{{ /collection:articles }}`, "https://statamic.dev/tags/dump");
+{{ /collection:articles }}`,
+          "https://statamic.dev/tags/dump"
+        );
       }
     };
     dump_default = Dump;
@@ -14486,6 +14665,7 @@ var init_dump = __esm({
 var Error404, error404_default;
 var init_error404 = __esm({
   "server/src/antlers/tags/core/error404.ts"() {
+    "use strict";
     init_utils();
     Error404 = {
       tagName: "404",
@@ -14497,10 +14677,15 @@ var init_error404 = __esm({
       introducedIn: null,
       parameters: [],
       resolveDocumentation: (params) => {
-        return makeTagDocWithCodeSample("404 (Not Found) Tag", "The `404` (Not Found) tag will trigger a 404 status code, and display the 404 template to the site visitor.", `{{ unless logged_in }}
+        return makeTagDocWithCodeSample(
+          "404 (Not Found) Tag",
+          "The `404` (Not Found) tag will trigger a 404 status code, and display the 404 template to the site visitor.",
+          `{{ unless logged_in }}
 	{{# Display the 404 Not Found page. #}}
 	{{ 404 }}
-{{ /unless }}`, "https://statamic.dev/tags/404");
+{{ /unless }}`,
+          "https://statamic.dev/tags/404"
+        );
       }
     };
     error404_default = Error404;
@@ -14511,6 +14696,7 @@ var init_error404 = __esm({
 var Link, link_default;
 var init_link = __esm({
   "server/src/antlers/tags/core/link.ts"() {
+    "use strict";
     init_utils();
     Link = {
       tagName: "link",
@@ -14563,7 +14749,11 @@ var init_link = __esm({
         }
       ],
       resolveDocumentation: (params) => {
-        return makeTagDoc("link Tag", "The `link` tag accepts relative URLs or entry IDs and generates fully-qualified URLs to the desired content.", "https://statamic.dev/tags/link");
+        return makeTagDoc(
+          "link Tag",
+          "The `link` tag accepts relative URLs or entry IDs and generates fully-qualified URLs to the desired content.",
+          "https://statamic.dev/tags/link"
+        );
       }
     };
     link_default = Link;
@@ -14574,6 +14764,7 @@ var init_link = __esm({
 var Loop, RangeTag;
 var init_loop = __esm({
   "server/src/antlers/tags/core/loop.ts"() {
+    "use strict";
     init_utils();
     Loop = {
       tagName: "loop",
@@ -14626,7 +14817,11 @@ var init_loop = __esm({
         }
       ],
       resolveDocumentation: (params) => {
-        return makeTagDoc("loop Tag", "The `loop` tag is used to create an array of items between two values, and then iterate the created array. Alternatively, a max value can be set using the `times` parameter to loop that number of times.", "https://statamic.dev/tags/loop");
+        return makeTagDoc(
+          "loop Tag",
+          "The `loop` tag is used to create an array of items between two values, and then iterate the created array. Alternatively, a max value can be set using the `times` parameter to loop that number of times.",
+          "https://statamic.dev/tags/loop"
+        );
       }
     };
     RangeTag = {
@@ -14680,7 +14875,11 @@ var init_loop = __esm({
         }
       ],
       resolveDocumentation: (params) => {
-        return makeTagDoc("range Tag", "The `range` tag is used to create an array of items between two values, and then iterate the created array. Alternatively, a max value can be set using the `times` parameter to loop that number of times.", "https://statamic.dev/tags/loop");
+        return makeTagDoc(
+          "range Tag",
+          "The `range` tag is used to create an array of items between two values, and then iterate the created array. Alternatively, a max value can be set using the `times` parameter to loop that number of times.",
+          "https://statamic.dev/tags/loop"
+        );
       }
     };
   }
@@ -14690,6 +14889,7 @@ var init_loop = __esm({
 var DocumentManager, documentManager_default;
 var init_documentManager = __esm({
   "server/src/runtime/document/documentManager.ts"() {
+    "use strict";
     init_projectManager();
     init_antlersDocument();
     DocumentManager = class {
@@ -14768,6 +14968,7 @@ var init_documentManager = __esm({
 var sessionDocuments;
 var init_documents = __esm({
   "server/src/languageService/documents.ts"() {
+    "use strict";
     init_documentManager();
     sessionDocuments = new documentManager_default();
   }
@@ -14782,6 +14983,7 @@ function returnDynamicParameter(node, paramName) {
 }
 var init_dynamicParameterResolver = __esm({
   "server/src/antlers/tags/dynamicParameterResolver.ts"() {
+    "use strict";
     init_tagManager();
   }
 });
@@ -14790,6 +14992,7 @@ var init_dynamicParameterResolver = __esm({
 var PartialParameters;
 var init_partialParameters = __esm({
   "server/src/antlers/tags/core/partials/partialParameters.ts"() {
+    "use strict";
     PartialParameters = [
       {
         isRequired: false,
@@ -14835,7 +15038,9 @@ function resolvePartialParameterCompletions(parameter, params) {
         if ((_a = projectManager_default.instance) == null ? void 0 : _a.hasStructure()) {
           const projectView = projectManager_default.instance.getStructure().findRelativeView(nodeMethodName);
           if (projectView != null && projectView.varReferenceNames.has(parameter.name)) {
-            const viewDataRef = projectView.varReferenceNames.get(parameter.name);
+            const viewDataRef = projectView.varReferenceNames.get(
+              parameter.name
+            );
             if (projectView.document != null) {
               if (projectView.document.hasFrontMatter()) {
                 const frontMatterScope = projectView.document.getFrontMatterScope();
@@ -14856,7 +15061,9 @@ function resolvePartialParameterCompletions(parameter, params) {
     const partials = params.project.getViews(), completionItems = [];
     partials.forEach((view) => {
       if (DocumentDetailsManager.hasDetails(view.documentUri)) {
-        const partialDetails = DocumentDetailsManager.documentDetails.get(view.documentUri);
+        const partialDetails = DocumentDetailsManager.documentDetails.get(
+          view.documentUri
+        );
         completionItems.push({
           label: partialDetails.documentName + "(" + view.relativeDisplayName + ")",
           insertText: view.relativeDisplayName,
@@ -14881,6 +15088,7 @@ function resolvePartialParameterCompletions(parameter, params) {
 var import_vscode_languageserver5;
 var init_resolvePartialParameterCompletions = __esm({
   "server/src/antlers/tags/core/partials/resolvePartialParameterCompletions.ts"() {
+    "use strict";
     import_vscode_languageserver5 = __toESM(require_main4());
     init_documentDetailsManager();
     init_projectManager();
@@ -14892,6 +15100,7 @@ var init_resolvePartialParameterCompletions = __esm({
 var PartialExists, partialExists_default;
 var init_partialExists = __esm({
   "server/src/antlers/tags/core/partials/partialExists.ts"() {
+    "use strict";
     init_utils();
     init_partialParameters();
     init_resolvePartialParameterCompletions();
@@ -14906,7 +15115,11 @@ var init_partialExists = __esm({
       introducedIn: "3.2.7",
       resovleParameterCompletionItems: resolvePartialParameterCompletions,
       resolveDocumentation: (params) => {
-        return makeTagDoc("partial:exists Tag", "The `partial:exists` can be used within conditional statements to test if a partial exists.", "https://statamic.dev/tags/partial-exists");
+        return makeTagDoc(
+          "partial:exists Tag",
+          "The `partial:exists` can be used within conditional statements to test if a partial exists.",
+          "https://statamic.dev/tags/partial-exists"
+        );
       }
     };
     partialExists_default = PartialExists;
@@ -14917,6 +15130,7 @@ var init_partialExists = __esm({
 var PartialIfExists, partialIfExists_default;
 var init_partialIfExists = __esm({
   "server/src/antlers/tags/core/partials/partialIfExists.ts"() {
+    "use strict";
     init_utils();
     init_partialParameters();
     init_resolvePartialParameterCompletions();
@@ -14931,7 +15145,11 @@ var init_partialIfExists = __esm({
       introducedIn: "3.2.7",
       resovleParameterCompletionItems: resolvePartialParameterCompletions,
       resolveDocumentation: (params) => {
-        return makeTagDoc("partial:if_exists Tag", "The `partial:if_exists` can be used to output the contents of a partial if it exists.", "https://statamic.dev/tags/partial-if-exists");
+        return makeTagDoc(
+          "partial:if_exists Tag",
+          "The `partial:if_exists` can be used to output the contents of a partial if it exists.",
+          "https://statamic.dev/tags/partial-if-exists"
+        );
       }
     };
     partialIfExists_default = PartialIfExists;
@@ -14956,6 +15174,7 @@ function getViewName(node) {
 }
 var init_partialUtilities = __esm({
   "server/src/antlers/tags/core/partials/partialUtilities.ts"() {
+    "use strict";
   }
 });
 
@@ -14985,6 +15204,7 @@ function getVariableNames(symbols) {
 var import_vscode_languageserver6, PartialCompletionItems, Partial, partial_default;
 var init_partial = __esm({
   "server/src/antlers/tags/core/partials/partial.ts"() {
+    "use strict";
     import_vscode_languageserver6 = __toESM(require_main4());
     init_documentDetailsManager();
     init_documents();
@@ -15065,7 +15285,9 @@ Includes another view into the current template.
             const viewRef = params.project.findRelativeView(viewName);
             if (viewRef != null) {
               if (sessionDocuments.hasDocument(viewRef.documentUri)) {
-                const docInstance = sessionDocuments.getDocument(viewRef.documentUri);
+                const docInstance = sessionDocuments.getDocument(
+                  viewRef.documentUri
+                );
                 if (docInstance != null) {
                   const symbols = docInstance.getAllAntlersNodes(), variableNames = getVariableNames(symbols), addedNames = [];
                   if (viewRef.varReferenceNames != null) {
@@ -15147,6 +15369,7 @@ Includes another view into the current template.
 var IncrementReset, incrementReset_default;
 var init_incrementReset = __esm({
   "server/src/antlers/tags/core/incrementReset.ts"() {
+    "use strict";
     init_utils();
     IncrementReset = {
       tagName: "increment:reset",
@@ -15179,12 +15402,17 @@ var init_incrementReset = __esm({
         }
       ],
       resolveDocumentation: (params) => {
-        return makeTagDocWithCodeSample("increment:reset Tag", "The `increment:reset` tag can be used to reset the value of an incrementing counter.", `{{ array_variable }}
+        return makeTagDocWithCodeSample(
+          "increment:reset Tag",
+          "The `increment:reset` tag can be used to reset the value of an incrementing counter.",
+          `{{ array_variable }}
     {{ increment:counter_name }}
 {{ /array_variable }}
 
 {{ increment:reset counter="counter_name" }}
-`, null);
+`,
+          null
+        );
       }
     };
     incrementReset_default = IncrementReset;
@@ -15195,6 +15423,7 @@ var init_incrementReset = __esm({
 var IncrementCompletionItems, Increment, increment_default;
 var init_increment = __esm({
   "server/src/antlers/tags/core/increment.ts"() {
+    "use strict";
     init_utils();
     init_documentedLabel();
     init_tagManager();
@@ -15239,7 +15468,11 @@ var init_increment = __esm({
         return EmptyCompletionResult;
       },
       resolveDocumentation: (params) => {
-        return makeTagDoc("increment Tag", "The `increment` tag can be used to increment a value each time the tag is encountered.", "https://statamic.dev/tags/increment");
+        return makeTagDoc(
+          "increment Tag",
+          "The `increment` tag can be used to increment a value each time the tag is encountered.",
+          "https://statamic.dev/tags/increment"
+        );
       }
     };
     increment_default = Increment;
@@ -15250,6 +15483,7 @@ var init_increment = __esm({
 var YieldContext, Yields, Yield;
 var init_yield = __esm({
   "server/src/antlers/tags/core/sections/yield.ts"() {
+    "use strict";
     init_utils();
     YieldContext = class {
       constructor(node) {
@@ -15290,7 +15524,11 @@ var init_yield = __esm({
         };
       },
       resolveDocumentation: (params) => {
-        return makeTagDoc("yield Tag", "The `yield` tag may be used to push rendered content to named regions within a template's structure.", "https://statamic.dev/tags/yield");
+        return makeTagDoc(
+          "yield Tag",
+          "The `yield` tag may be used to push rendered content to named regions within a template's structure.",
+          "https://statamic.dev/tags/yield"
+        );
       }
     };
   }
@@ -15300,6 +15538,7 @@ var init_yield = __esm({
 var NativePermissions;
 var init_nativePermissions = __esm({
   "server/src/antlers/permissions/nativePermissions.ts"() {
+    "use strict";
     NativePermissions = [
       { handle: "access cp" },
       { handle: "configure collections" },
@@ -15322,6 +15561,7 @@ var init_nativePermissions = __esm({
 var PermissionsManager, permissionManager_default;
 var init_permissionManager = __esm({
   "server/src/antlers/permissions/permissionManager.ts"() {
+    "use strict";
     init_nativePermissions();
     PermissionsManager = class {
       constructor() {
@@ -15487,15 +15727,25 @@ function getPermissionSuggestions(currentValue, params) {
     let candidateItems = [];
     if (currentParts.length <= 2) {
       if (isCollectionTrigger) {
-        candidateItems = candidateItems.concat(params.project.getUniqueCollectionNames());
+        candidateItems = candidateItems.concat(
+          params.project.getUniqueCollectionNames()
+        );
       } else if (isGlobalTrigger) {
-        candidateItems = candidateItems.concat(params.project.getUniqueGlobalsNames());
+        candidateItems = candidateItems.concat(
+          params.project.getUniqueGlobalsNames()
+        );
       } else if (isFormTrigger) {
-        candidateItems = candidateItems.concat(params.project.getUniqueFormNames());
+        candidateItems = candidateItems.concat(
+          params.project.getUniqueFormNames()
+        );
       } else if (isStructureTrigger) {
-        candidateItems = candidateItems.concat(params.project.getUniqueNavigationMenuNames());
+        candidateItems = candidateItems.concat(
+          params.project.getUniqueNavigationMenuNames()
+        );
       } else if (isAssetTrigger) {
-        candidateItems = candidateItems.concat(params.project.getUniqueAssetNames());
+        candidateItems = candidateItems.concat(
+          params.project.getUniqueAssetNames()
+        );
       }
       if (allContextualItems.length > 0) {
         candidateItems = candidateItems.concat(allContextualItems);
@@ -15510,15 +15760,25 @@ function getPermissionSuggestions(currentValue, params) {
     } else {
       let capCandidates = [];
       if (isCollectionTrigger) {
-        capCandidates = capCandidates.concat((_k = (_j = permissionManager_default.instance) == null ? void 0 : _j.getCollectionTriggerCaps()) != null ? _k : []);
+        capCandidates = capCandidates.concat(
+          (_k = (_j = permissionManager_default.instance) == null ? void 0 : _j.getCollectionTriggerCaps()) != null ? _k : []
+        );
       } else if (isGlobalTrigger) {
-        capCandidates = capCandidates.concat((_m = (_l = permissionManager_default.instance) == null ? void 0 : _l.getGlobalTriggerCaps()) != null ? _m : []);
+        capCandidates = capCandidates.concat(
+          (_m = (_l = permissionManager_default.instance) == null ? void 0 : _l.getGlobalTriggerCaps()) != null ? _m : []
+        );
       } else if (isFormTrigger) {
-        capCandidates = capCandidates.concat((_o = (_n = permissionManager_default.instance) == null ? void 0 : _n.getFormTriggerCaps()) != null ? _o : []);
+        capCandidates = capCandidates.concat(
+          (_o = (_n = permissionManager_default.instance) == null ? void 0 : _n.getFormTriggerCaps()) != null ? _o : []
+        );
       } else if (isStructureTrigger) {
-        capCandidates = capCandidates.concat((_q = (_p = permissionManager_default.instance) == null ? void 0 : _p.getStructureTriggerCaps()) != null ? _q : []);
+        capCandidates = capCandidates.concat(
+          (_q = (_p = permissionManager_default.instance) == null ? void 0 : _p.getStructureTriggerCaps()) != null ? _q : []
+        );
       } else if (isAssetTrigger) {
-        capCandidates = capCandidates.concat((_s = (_r = permissionManager_default.instance) == null ? void 0 : _r.getAssetTriggerCaps()) != null ? _s : []);
+        capCandidates = capCandidates.concat(
+          (_s = (_r = permissionManager_default.instance) == null ? void 0 : _r.getAssetTriggerCaps()) != null ? _s : []
+        );
       }
       capCandidates = [...new Set(capCandidates)];
       for (let i = 0; i < capCandidates.length; i++) {
@@ -15534,6 +15794,7 @@ function getPermissionSuggestions(currentValue, params) {
 var import_vscode_languageserver_types9;
 var init_permissionSuggestions = __esm({
   "server/src/suggestions/permissionSuggestions.ts"() {
+    "use strict";
     import_vscode_languageserver_types9 = __toESM(require_main2());
     init_permissionManager();
   }
@@ -15550,6 +15811,7 @@ function resolveUserParameterCompletionItems(parameter, params) {
 }
 var init_parameterCompletions = __esm({
   "server/src/antlers/tags/core/user/parameterCompletions.ts"() {
+    "use strict";
     init_permissionSuggestions();
     init_suggestionManager();
     init_tagManager();
@@ -15560,6 +15822,7 @@ var init_parameterCompletions = __esm({
 var UserCan, userCan_default;
 var init_userCan = __esm({
   "server/src/antlers/tags/core/userCan.ts"() {
+    "use strict";
     init_utils();
     init_parameterCompletions();
     UserCan = {
@@ -15584,7 +15847,11 @@ var init_userCan = __esm({
         }
       ],
       resolveDocumentation: (params) => {
-        return makeTagDoc("user:can Tag", "The `user:can` tag is used to check if the currently authenticated user has a specific set of permissions. When used as a tag pair, the tag contents will only be rendered if the user has the specified permissions.", "https://statamic.dev/tags/user-can");
+        return makeTagDoc(
+          "user:can Tag",
+          "The `user:can` tag is used to check if the currently authenticated user has a specific set of permissions. When used as a tag pair, the tag contents will only be rendered if the user has the specified permissions.",
+          "https://statamic.dev/tags/user-can"
+        );
       }
     };
     userCan_default = UserCan;
@@ -15595,6 +15862,7 @@ var init_userCan = __esm({
 var UserLogout, userLogout_default;
 var init_userLogout = __esm({
   "server/src/antlers/tags/core/userLogout.ts"() {
+    "use strict";
     init_utils();
     UserLogout = {
       tagName: "user:logout",
@@ -15615,7 +15883,11 @@ var init_userLogout = __esm({
         expectsTypes: ["string"]
       }],
       resolveDocumentation: (params) => {
-        return makeTagDoc("user:logout Tag", "The `user:logout` tag will sign out the currently authenticated user. An optional `redirect` parameter may be used to redirect the visitor to a different page after being logged out.", "https://statamic.dev/tags/user-logout");
+        return makeTagDoc(
+          "user:logout Tag",
+          "The `user:logout` tag will sign out the currently authenticated user. An optional `redirect` parameter may be used to redirect the visitor to a different page after being logged out.",
+          "https://statamic.dev/tags/user-logout"
+        );
       }
     };
     userLogout_default = UserLogout;
@@ -15626,6 +15898,7 @@ var init_userLogout = __esm({
 var UserLogoutUrl, userLogoutUrl_default;
 var init_userLogoutUrl = __esm({
   "server/src/antlers/tags/core/userLogoutUrl.ts"() {
+    "use strict";
     init_utils();
     UserLogoutUrl = {
       tagName: "user:logout_url",
@@ -15646,7 +15919,12 @@ var init_userLogoutUrl = __esm({
         expectsTypes: ["string"]
       }],
       resolveDocumentation: (params) => {
-        return makeTagDocWithCodeSample("user:logout_url", "The `user:logout_url` tag can be used to retrieve the URL that will sign the current user out.", `<a href="{{ user:logout_url }}">Log out</a>`, "https://statamic.dev/tags/user-logout_url");
+        return makeTagDocWithCodeSample(
+          "user:logout_url",
+          "The `user:logout_url` tag can be used to retrieve the URL that will sign the current user out.",
+          `<a href="{{ user:logout_url }}">Log out</a>`,
+          "https://statamic.dev/tags/user-logout_url"
+        );
       }
     };
     userLogoutUrl_default = UserLogoutUrl;
@@ -15657,6 +15935,7 @@ var init_userLogoutUrl = __esm({
 var Switch, Rotate;
 var init_switch = __esm({
   "server/src/antlers/tags/core/switch.ts"() {
+    "use strict";
     init_utils();
     Switch = {
       tagName: "switch",
@@ -15686,7 +15965,11 @@ var init_switch = __esm({
         expectsTypes: ["string"]
       }],
       resolveDocumentation: (params) => {
-        return makeTagDoc("switch Tag", "The `switch` tag can be used to alternate between a set of values each time the tag is evaluated.", "https://statamic.dev/tags/switch");
+        return makeTagDoc(
+          "switch Tag",
+          "The `switch` tag can be used to alternate between a set of values each time the tag is evaluated.",
+          "https://statamic.dev/tags/switch"
+        );
       }
     };
     Rotate = {
@@ -15717,7 +16000,11 @@ var init_switch = __esm({
         expectsTypes: ["string"]
       }],
       resolveDocumentation: (params) => {
-        return makeTagDoc("rotate Tag", "The `rotate` tag can be used to alternate between a set of values each time the tag is evaluated.", "https://statamic.dev/tags/switch");
+        return makeTagDoc(
+          "rotate Tag",
+          "The `rotate` tag can be used to alternate between a set of values each time the tag is evaluated.",
+          "https://statamic.dev/tags/switch"
+        );
       }
     };
   }
@@ -15727,6 +16014,7 @@ var init_switch = __esm({
 var OAuth, oauth_default;
 var init_oauth = __esm({
   "server/src/antlers/tags/core/oauth.ts"() {
+    "use strict";
     init_utils();
     init_tagManager();
     OAuth = {
@@ -15763,7 +16051,12 @@ var init_oauth = __esm({
         return null;
       },
       resolveDocumentation: (params) => {
-        return makeTagDocWithCodeSample("oauth Tag", "The `oauth` tag can be used to generate login URls for various third-party services.", `<a href="{{ oauth provider="github" }}">Sign In with Github</a>`, "https://statamic.dev/tags/oauth");
+        return makeTagDocWithCodeSample(
+          "oauth Tag",
+          "The `oauth` tag can be used to generate login URls for various third-party services.",
+          `<a href="{{ oauth provider="github" }}">Sign In with Github</a>`,
+          "https://statamic.dev/tags/oauth"
+        );
       }
     };
     oauth_default = OAuth;
@@ -15774,6 +16067,7 @@ var init_oauth = __esm({
 var SessionDump, sessionDump_default;
 var init_sessionDump = __esm({
   "server/src/antlers/tags/core/sessionDump.ts"() {
+    "use strict";
     init_utils();
     SessionDump = {
       tagName: "session:dump",
@@ -15785,7 +16079,11 @@ var init_sessionDump = __esm({
       parameters: [],
       introducedIn: null,
       resolveDocumentation: (params) => {
-        return makeTagDoc("session:dump Tag", "The `session:dump` tag will display the contents of the user's session to the browser. This tag behaves similarly to the `dd` helper functions, but returns just the session data.", "https://statamic.dev/tags/session-dump");
+        return makeTagDoc(
+          "session:dump Tag",
+          "The `session:dump` tag will display the contents of the user's session to the browser. This tag behaves similarly to the `dd` helper functions, but returns just the session data.",
+          "https://statamic.dev/tags/session-dump"
+        );
       }
     };
     sessionDump_default = SessionDump;
@@ -15796,6 +16094,7 @@ var init_sessionDump = __esm({
 var SessionVariableContext;
 var init_sessionContext = __esm({
   "server/src/antlers/tags/core/contexts/sessionContext.ts"() {
+    "use strict";
     SessionVariableContext = class {
       constructor(node) {
         this.node = node;
@@ -15808,6 +16107,7 @@ var init_sessionContext = __esm({
 var SessionSet, sessionSet_default;
 var init_sessionSet = __esm({
   "server/src/antlers/tags/core/sessionSet.ts"() {
+    "use strict";
     init_utils();
     init_dynamicParameterResolver();
     init_sessionContext();
@@ -15829,7 +16129,11 @@ var init_sessionSet = __esm({
         };
       },
       resolveDocumentation: (params) => {
-        return makeTagDoc("session:set Tag", "The `session:set` tag is used to add new data to the user's session.", "https://statamic.dev/tags/session-set");
+        return makeTagDoc(
+          "session:set Tag",
+          "The `session:set` tag is used to add new data to the user's session.",
+          "https://statamic.dev/tags/session-set"
+        );
       }
     };
     sessionSet_default = SessionSet;
@@ -15840,6 +16144,7 @@ var init_sessionSet = __esm({
 var SessionVariableManager, sessionVariableManager_default;
 var init_sessionVariableManager = __esm({
   "server/src/references/sessionVariableManager.ts"() {
+    "use strict";
     SessionVariableManager = class {
       constructor() {
         this.knownVariables = /* @__PURE__ */ new Map();
@@ -15862,13 +16167,15 @@ var init_sessionVariableManager = __esm({
       }
       getKnownSessionVariableNames() {
         const variableNames = [];
-        this.knownVariables.forEach((mapping) => {
-          mapping.forEach((val, name) => {
-            if (variableNames.includes(name) == false) {
-              variableNames.push(name);
-            }
-          });
-        });
+        this.knownVariables.forEach(
+          (mapping) => {
+            mapping.forEach((val, name) => {
+              if (variableNames.includes(name) == false) {
+                variableNames.push(name);
+              }
+            });
+          }
+        );
         return variableNames;
       }
     };
@@ -15894,6 +16201,7 @@ function getUniqueParameterArrayValuesSuggestions(paramAttribute, allValues) {
 var import_vscode_languageserver_types10;
 var init_uniqueParameterArraySuggestions = __esm({
   "server/src/suggestions/uniqueParameterArraySuggestions.ts"() {
+    "use strict";
     import_vscode_languageserver_types10 = __toESM(require_main2());
     init_tagManager();
   }
@@ -15903,6 +16211,7 @@ var init_uniqueParameterArraySuggestions = __esm({
 var SessionForget, sessionForget_default;
 var init_sessionForget = __esm({
   "server/src/antlers/tags/core/sessionForget.ts"() {
+    "use strict";
     init_utils();
     init_sessionVariableManager();
     init_uniqueParameterArraySuggestions();
@@ -15937,7 +16246,11 @@ var init_sessionForget = __esm({
         return null;
       },
       resolveDocumentation: (params) => {
-        return makeTagDoc("session:forget Tag", "The `session:forget` tag is used to remove variables from the user's session.", "https://statamic.dev/tags/session-forget");
+        return makeTagDoc(
+          "session:forget Tag",
+          "The `session:forget` tag is used to remove variables from the user's session.",
+          "https://statamic.dev/tags/session-forget"
+        );
       }
     };
     sessionForget_default = SessionForget;
@@ -15948,6 +16261,7 @@ var init_sessionForget = __esm({
 var SessionFlush, sessionFlush_default;
 var init_sessionFlush = __esm({
   "server/src/antlers/tags/core/sessionFlush.ts"() {
+    "use strict";
     init_utils();
     SessionFlush = {
       tagName: "session:flush",
@@ -15959,7 +16273,11 @@ var init_sessionFlush = __esm({
       parameters: [],
       introducedIn: null,
       resolveDocumentation: (params) => {
-        return makeTagDoc("session:flush Tag", "The `session:flush` tag will clear all values from the visitor's session. If the visitor is currently signed in they will also be signed out.", "https://statamic.dev/tags/session-flush");
+        return makeTagDoc(
+          "session:flush Tag",
+          "The `session:flush` tag will clear all values from the visitor's session. If the visitor is currently signed in they will also be signed out.",
+          "https://statamic.dev/tags/session-flush"
+        );
       }
     };
     sessionFlush_default = SessionFlush;
@@ -15970,6 +16288,7 @@ var init_sessionFlush = __esm({
 var SessionFlash, sessionFlash_default;
 var init_sessionFlash = __esm({
   "server/src/antlers/tags/core/sessionFlash.ts"() {
+    "use strict";
     init_utils();
     init_dynamicParameterResolver();
     init_sessionContext();
@@ -15991,7 +16310,11 @@ var init_sessionFlash = __esm({
         };
       },
       resolveDocumentation: (params) => {
-        return makeTagDoc("session:flash Tag", "The `session:flash` tag can be used to add a value to the user's session. Flashed values only persist for a single request, and are then removed.", "https://statamic.dev/tags/session-flash");
+        return makeTagDoc(
+          "session:flash Tag",
+          "The `session:flash` tag can be used to add a value to the user's session. Flashed values only persist for a single request, and are then removed.",
+          "https://statamic.dev/tags/session-flash"
+        );
       }
     };
     sessionFlash_default = SessionFlash;
@@ -16002,6 +16325,7 @@ var init_sessionFlash = __esm({
 var MarkdownIndent, markdownIndent_default;
 var init_markdownIndent = __esm({
   "server/src/antlers/tags/core/markdownIndent.ts"() {
+    "use strict";
     init_utils();
     MarkdownIndent = {
       tagName: "markdown:indent",
@@ -16013,7 +16337,11 @@ var init_markdownIndent = __esm({
       introducedIn: null,
       parameters: [],
       resolveDocumentation: (params) => {
-        return makeTagDoc("markdown:indent Tag", "The `markdown:indent` tag is similar to the markdown tag, but will ignore leading whitepsace while rendering the tag's content as markdown.", "https://statamic.dev/tags/markdown-indent");
+        return makeTagDoc(
+          "markdown:indent Tag",
+          "The `markdown:indent` tag is similar to the markdown tag, but will ignore leading whitepsace while rendering the tag's content as markdown.",
+          "https://statamic.dev/tags/markdown-indent"
+        );
       }
     };
     markdownIndent_default = MarkdownIndent;
@@ -16024,6 +16352,7 @@ var init_markdownIndent = __esm({
 var MarkdownCompletionItems, Markdown, markdown_default;
 var init_markdown = __esm({
   "server/src/antlers/tags/core/markdown.ts"() {
+    "use strict";
     init_utils();
     init_documentedLabel();
     init_tagManager();
@@ -16047,7 +16376,11 @@ var init_markdown = __esm({
         return EmptyCompletionResult;
       },
       resolveDocumentation: (params) => {
-        return makeTagDoc("markdown Tag", "The `markdown` tag can be used to render the tags contents as markdown.", "https://statamic.dev/tags/markdown");
+        return makeTagDoc(
+          "markdown Tag",
+          "The `markdown` tag can be used to render the tags contents as markdown.",
+          "https://statamic.dev/tags/markdown"
+        );
       }
     };
     markdown_default = Markdown;
@@ -16088,6 +16421,7 @@ function createSuggestionsFromDotStrings(currentValue, values) {
 var import_vscode_languageserver7;
 var init_dotStringCompletions = __esm({
   "server/src/suggestions/project/dotStringCompletions.ts"() {
+    "use strict";
     import_vscode_languageserver7 = __toESM(require_main4());
   }
 });
@@ -16098,6 +16432,7 @@ function getRouteCompletions(currentValue, project) {
 }
 var init_routeCompletions = __esm({
   "server/src/suggestions/project/routeCompletions.ts"() {
+    "use strict";
     init_dotStringCompletions();
   }
 });
@@ -16106,6 +16441,7 @@ var init_routeCompletions = __esm({
 var Route, route_default;
 var init_route = __esm({
   "server/src/antlers/tags/core/route.ts"() {
+    "use strict";
     init_utils();
     init_routeCompletions();
     init_suggestionManager();
@@ -16129,7 +16465,11 @@ var init_route = __esm({
         return EmptyCompletionResult;
       },
       resolveDocumentation: (params) => {
-        return makeTagDoc("route Tag", "The `route` tag can be used to generate a full URL [to a named route](https://laravel.com/docs/8.x/routing#named-routes), including any defined route parameters.", "https://statamic.dev/tags/route");
+        return makeTagDoc(
+          "route Tag",
+          "The `route` tag can be used to generate a full URL [to a named route](https://laravel.com/docs/8.x/routing#named-routes), including any defined route parameters.",
+          "https://statamic.dev/tags/route"
+        );
       }
     };
     route_default = Route;
@@ -16140,6 +16480,7 @@ var init_route = __esm({
 var import_vscode_languageserver_types11, RedirectStatusCodes;
 var init_httpStatusCodes = __esm({
   "server/src/suggestions/defaults/httpStatusCodes.ts"() {
+    "use strict";
     import_vscode_languageserver_types11 = __toESM(require_main2());
     RedirectStatusCodes = [
       { label: "301 Permanent", insertText: "301", kind: import_vscode_languageserver_types11.CompletionItemKind.EnumMember },
@@ -16153,6 +16494,7 @@ var init_httpStatusCodes = __esm({
 var Redirect, redirect_default;
 var init_redirect = __esm({
   "server/src/antlers/tags/core/redirect.ts"() {
+    "use strict";
     init_utils();
     init_httpStatusCodes();
     init_tagManager();
@@ -16190,7 +16532,11 @@ var init_redirect = __esm({
         return EmptyCompletionResult;
       },
       resolveDocumentation: (params) => {
-        return makeTagDoc("redirect Tag", "The `redirect` tag can be used to redirect the site visitor to a URL or named route. An optional HTTP status code can also be specified on the response using the `response` parameter.", "https://statamic.dev/tags/redirect");
+        return makeTagDoc(
+          "redirect Tag",
+          "The `redirect` tag can be used to redirect the site visitor to a URL or named route. An optional HTTP status code can also be specified on the response using the `response` parameter.",
+          "https://statamic.dev/tags/redirect"
+        );
       }
     };
     redirect_default = Redirect;
@@ -16201,6 +16547,7 @@ var init_redirect = __esm({
 var SectionManager, sectionManager_default;
 var init_sectionManager = __esm({
   "server/src/references/sectionManager.ts"() {
+    "use strict";
     SectionManager = class {
       constructor() {
         this.knownSections = /* @__PURE__ */ new Map();
@@ -16242,6 +16589,7 @@ var init_sectionManager = __esm({
 var import_vscode_languageserver_types12, Section, section_default;
 var init_section = __esm({
   "server/src/antlers/tags/core/sections/section.ts"() {
+    "use strict";
     import_vscode_languageserver_types12 = __toESM(require_main2());
     init_utils();
     init_sectionManager();
@@ -16270,7 +16618,11 @@ var init_section = __esm({
         return EmptyCompletionResult;
       },
       resolveDocumentation: (params) => {
-        return makeTagDoc("section Tag", "The `section` tag is used to push content to a named region defined by the `yield` tag.", "https://statamic.dev/tags/section");
+        return makeTagDoc(
+          "section Tag",
+          "The `section` tag is used to push content to a named region defined by the `yield` tag.",
+          "https://statamic.dev/tags/section"
+        );
       }
     };
     section_default = Section;
@@ -16281,6 +16633,7 @@ var init_section = __esm({
 var Obfuscate, obfuscate_default;
 var init_obfuscate = __esm({
   "server/src/antlers/tags/core/obfuscate.ts"() {
+    "use strict";
     init_utils();
     Obfuscate = {
       tagName: "obfuscate",
@@ -16292,7 +16645,11 @@ var init_obfuscate = __esm({
       introducedIn: null,
       parameters: [],
       resolveDocumentation: (params) => {
-        return makeTagDoc("obfuscate Tag", "The `obfuscate` tag converts the tags's content into a format that is difficult for bots to read, but can easily be viewed by users within their browser.", "https://statamic.dev/tags/obfuscate");
+        return makeTagDoc(
+          "obfuscate Tag",
+          "The `obfuscate` tag converts the tags's content into a format that is difficult for bots to read, but can easily be viewed by users within their browser.",
+          "https://statamic.dev/tags/obfuscate"
+        );
       }
     };
     obfuscate_default = Obfuscate;
@@ -16303,6 +16660,7 @@ var init_obfuscate = __esm({
 var Parent, parent_default;
 var init_parent = __esm({
   "server/src/antlers/tags/core/parent.ts"() {
+    "use strict";
     init_utils();
     Parent = {
       tagName: "parent",
@@ -16314,7 +16672,11 @@ var init_parent = __esm({
       introducedIn: null,
       parameters: [],
       resolveDocumentation: (params) => {
-        return makeTagDoc("parent Tag", "The `parent` tag provides access to data from the current page's parent (the URL one level above the current page).", "https://statamic.dev/tags/parent");
+        return makeTagDoc(
+          "parent Tag",
+          "The `parent` tag provides access to data from the current page's parent (the URL one level above the current page).",
+          "https://statamic.dev/tags/parent"
+        );
       }
     };
     parent_default = Parent;
@@ -16327,6 +16689,7 @@ function getTranslationSuggestions(currentValue, project) {
 }
 var init_translationCompletions = __esm({
   "server/src/suggestions/project/translationCompletions.ts"() {
+    "use strict";
     init_dotStringCompletions();
   }
 });
@@ -16335,6 +16698,7 @@ var init_translationCompletions = __esm({
 var TranslateTriggerTagNames, Translate, TransTag, TransChoiceTag;
 var init_translate = __esm({
   "server/src/antlers/tags/core/translate.ts"() {
+    "use strict";
     init_utils();
     init_translationCompletions();
     init_suggestionManager();
@@ -16393,7 +16757,10 @@ var init_translate = __esm({
           if (((_a = params.context) == null ? void 0 : _a.parameterContext) != null && params.context.parameterContext.parameter != null) {
             curValue = params.context.parameterContext.parameter.value;
           }
-          return exclusiveResult(getTranslationSuggestions(curValue, params.project));
+          return exclusiveResult(getTranslationSuggestions(
+            curValue,
+            params.project
+          ));
         }
         return EmptyCompletionResult;
       },
@@ -16406,13 +16773,21 @@ var init_translate = __esm({
         return EmptyCompletionResult;
       },
       resolveDocumentation: (params) => {
-        return makeTagDoc("trans Tag", "The `trans` tag can be used to retrieve a string for the current locale's language file.", "https://statamic.dev/tags/trans");
+        return makeTagDoc(
+          "trans Tag",
+          "The `trans` tag can be used to retrieve a string for the current locale's language file.",
+          "https://statamic.dev/tags/trans"
+        );
       }
     };
     TransTag = createDefinitionAlias(Translate, "trans");
     TransChoiceTag = createDefinitionAlias(Translate, "trans_choice");
     TransChoiceTag.resolveDocumentation = (params) => {
-      return makeTagDoc("trans_choice Tag", "The `trans_choice` tag can be used to retrieve a pluralized string for the current locale's language file.", "https://statamic.dev/tags/trans#pluralization");
+      return makeTagDoc(
+        "trans_choice Tag",
+        "The `trans_choice` tag can be used to retrieve a pluralized string for the current locale's language file.",
+        "https://statamic.dev/tags/trans#pluralization"
+      );
     };
   }
 });
@@ -16421,6 +16796,7 @@ var init_translate = __esm({
 var SVGTag, svg_default;
 var init_svg = __esm({
   "server/src/antlers/tags/core/svg.ts"() {
+    "use strict";
     init_utils();
     init_dynamicParameterResolver();
     SVGTag = {
@@ -16445,7 +16821,11 @@ var init_svg = __esm({
       ],
       resolveDynamicParameter: returnDynamicParameter,
       resolveDocumentation: (params) => {
-        return makeTagDoc("svg Tag", "The `svg` tag can be used to render inline SVGs, as well as set attributes on the rendered `<svg>` element.", "https://statamic.dev/tags/svg");
+        return makeTagDoc(
+          "svg Tag",
+          "The `svg` tag can be used to render inline SVGs, as well as set attributes on the rendered `<svg>` element.",
+          "https://statamic.dev/tags/svg"
+        );
       }
     };
     svg_default = SVGTag;
@@ -16456,6 +16836,7 @@ var init_svg = __esm({
 var Asset, asset_default;
 var init_asset = __esm({
   "server/src/antlers/tags/core/asset.ts"() {
+    "use strict";
     init_utils();
     init_assetVariables();
     Asset = {
@@ -16483,9 +16864,14 @@ var init_asset = __esm({
         return scope;
       },
       resolveDocumentation: (params) => {
-        return makeTagDocWithCodeSample("asset Tag", "The `asset` tag can be used to retrive Assets by supplying a URL.", `{{ asset url="/url/for/asset.png" }}
+        return makeTagDocWithCodeSample(
+          "asset Tag",
+          "The `asset` tag can be used to retrive Assets by supplying a URL.",
+          `{{ asset url="/url/for/asset.png" }}
     <img src="{{ url }}" alt="{{ alt }}" />
-{{ /asset }}`, "https://statamic.dev/tags/asset");
+{{ /asset }}`,
+          "https://statamic.dev/tags/asset"
+        );
       }
     };
     asset_default = Asset;
@@ -16503,6 +16889,7 @@ function getAllAssetCompletions(project) {
 var import_vscode_languageserver_types13;
 var init_assetCompletions = __esm({
   "server/src/suggestions/project/assetCompletions.ts"() {
+    "use strict";
     import_vscode_languageserver_types13 = __toESM(require_main2());
   }
 });
@@ -16511,6 +16898,7 @@ var init_assetCompletions = __esm({
 var AssetContainerParameters, Assets, assets_default;
 var init_assets = __esm({
   "server/src/antlers/tags/core/assets.ts"() {
+    "use strict";
     init_utils();
     init_assetCompletions();
     init_tagManager();
@@ -16605,10 +16993,15 @@ var init_assets = __esm({
         return EmptyCompletionResult;
       },
       resolveDocumentation: (params) => {
-        return makeTagDocWithCodeSample("assets Tag", "The `assets` tag can be used to retrieve multiple Assets from an Asset container.", `{{ assets container="container-name" }}
+        return makeTagDocWithCodeSample(
+          "assets Tag",
+          "The `assets` tag can be used to retrieve multiple Assets from an Asset container.",
+          `{{ assets container="container-name" }}
     {{# Loop over all assets in the container. #}}
 	<img src="{{ url }}" alt="{{ alt }}" />
-{{ /assets }}`, "https://statamic.dev/tags/assets");
+{{ /assets }}`,
+          "https://statamic.dev/tags/assets"
+        );
       }
     };
     assets_default = Assets;
@@ -16619,6 +17012,7 @@ var init_assets = __esm({
 var GetContent, getContent_default;
 var init_getContent = __esm({
   "server/src/antlers/tags/core/getContent.ts"() {
+    "use strict";
     init_utils();
     init_tagManager();
     GetContent = {
@@ -16658,8 +17052,13 @@ var init_getContent = __esm({
         return null;
       },
       resolveDocumentation: (params) => {
-        return makeTagDocWithCodeSample("get_content Tag", "The `get_content` tag can be used to retrieve content from other entries. This tag accepts the ID of another entry, and will return access to all data for that entry.", `{{ get_content from="the-entry-id" }}
-{{ /get_content }}`, "https://statamic.dev/tags/get_content");
+        return makeTagDocWithCodeSample(
+          "get_content Tag",
+          "The `get_content` tag can be used to retrieve content from other entries. This tag accepts the ID of another entry, and will return access to all data for that entry.",
+          `{{ get_content from="the-entry-id" }}
+{{ /get_content }}`,
+          "https://statamic.dev/tags/get_content"
+        );
       }
     };
     getContent_default = GetContent;
@@ -16688,6 +17087,7 @@ function makeFileVariables(symbol) {
 }
 var init_fileVariables = __esm({
   "server/src/antlers/variables/fileVariables.ts"() {
+    "use strict";
   }
 });
 
@@ -16695,6 +17095,7 @@ var init_fileVariables = __esm({
 var GetFiles, getFiles_default;
 var init_getFiles = __esm({
   "server/src/antlers/tags/core/getFiles.ts"() {
+    "use strict";
     init_utils();
     init_fileVariables();
     GetFiles = {
@@ -16822,7 +17223,11 @@ var init_getFiles = __esm({
         return scope;
       },
       resolveDocumentation: (params) => {
-        return makeTagDoc("get_files Tag", "The `get_files` tag can be used to display information about files on the site's local filesystem.", "https://statamic.dev/tags/get_files");
+        return makeTagDoc(
+          "get_files Tag",
+          "The `get_files` tag can be used to display information about files on the site's local filesystem.",
+          "https://statamic.dev/tags/get_files"
+        );
       }
     };
     getFiles_default = GetFiles;
@@ -16839,6 +17244,7 @@ function makeGlideVariables(node) {
 }
 var init_glideVariables = __esm({
   "server/src/antlers/variables/glideVariables.ts"() {
+    "use strict";
   }
 });
 
@@ -16857,6 +17263,7 @@ function parameterError(message, symbol, parameter) {
 var import_vscode_languageserver_types14;
 var init_utils3 = __esm({
   "server/src/diagnostics/utils.ts"() {
+    "use strict";
     import_vscode_languageserver_types14 = __toESM(require_main2());
   }
 });
@@ -16877,6 +17284,7 @@ function resolveGlideParameterCompletions(parameter, params) {
 var GlideFilters, GlideFormats, GlideOrients, GlideParameters;
 var init_glideParameters = __esm({
   "server/src/antlers/tags/core/glideParameters.ts"() {
+    "use strict";
     init_utils3();
     init_tagManager();
     GlideFilters = ["greyscale", "sepia"];
@@ -17028,7 +17436,13 @@ var init_glideParameters = __esm({
             return issues;
           }
           if (intVal < 1 || intVal > 8) {
-            issues.push(parameterError("dpr must be an integer between 1 and 8.", node, parameter));
+            issues.push(
+              parameterError(
+                "dpr must be an integer between 1 and 8.",
+                node,
+                parameter
+              )
+            );
           }
           return issues;
         }
@@ -17048,7 +17462,13 @@ var init_glideParameters = __esm({
             return issues;
           }
           if (parameter.value.trim().length > 0 && !GlideFormats.includes(parameter.value)) {
-            issues.push(parameterError("Format must be one of: " + GlideFormats.join(","), node, parameter));
+            issues.push(
+              parameterError(
+                "Format must be one of: " + GlideFormats.join(","),
+                node,
+                parameter
+              )
+            );
           }
           return issues;
         }
@@ -17078,7 +17498,13 @@ var init_glideParameters = __esm({
             return issues;
           }
           if (intVal < 0 || intVal > 100) {
-            issues.push(parameterError("blur must be a value between 0 and 100.", node, parameter));
+            issues.push(
+              parameterError(
+                "blur must be a value between 0 and 100.",
+                node,
+                parameter
+              )
+            );
           }
           return issues;
         }
@@ -17098,7 +17524,13 @@ var init_glideParameters = __esm({
             return issues;
           }
           if (intVal < -100 || intVal > 100) {
-            issues.push(parameterError("brightness must be a value between -100 and 100.", node, parameter));
+            issues.push(
+              parameterError(
+                "brightness must be a value between -100 and 100.",
+                node,
+                parameter
+              )
+            );
           }
           return issues;
         }
@@ -17118,7 +17550,13 @@ var init_glideParameters = __esm({
             return issues;
           }
           if (intVal < -100 || intVal > 100) {
-            issues.push(parameterError("contrast must be a value between -100 and 100.", node, parameter));
+            issues.push(
+              parameterError(
+                "contrast must be a value between -100 and 100.",
+                node,
+                parameter
+              )
+            );
           }
           return issues;
         }
@@ -17138,7 +17576,13 @@ var init_glideParameters = __esm({
             return issues;
           }
           if (floatVal < 0.1 || floatVal > 9.99) {
-            issues.push(parameterError("gamma must be a value between 0.1 and 9.99.", node, parameter));
+            issues.push(
+              parameterError(
+                "gamma must be a value between 0.1 and 9.99.",
+                node,
+                parameter
+              )
+            );
           }
           return issues;
         }
@@ -17158,7 +17602,13 @@ var init_glideParameters = __esm({
             return issues;
           }
           if (intVal < 0 || intVal > 100) {
-            issues.push(parameterError("sharpen must be a value between 0 and 100.", node, parameter));
+            issues.push(
+              parameterError(
+                "sharpen must be a value between 0 and 100.",
+                node,
+                parameter
+              )
+            );
           }
           return issues;
         }
@@ -17178,7 +17628,13 @@ var init_glideParameters = __esm({
             return issues;
           }
           if (intVal < 0 || intVal > 100) {
-            issues.push(parameterError("pixelate must be a value between 0 and 100.", node, parameter));
+            issues.push(
+              parameterError(
+                "pixelate must be a value between 0 and 100.",
+                node,
+                parameter
+              )
+            );
           }
           return issues;
         }
@@ -17198,7 +17654,13 @@ var init_glideParameters = __esm({
             return issues;
           }
           if (parameter.value.trim().length > 0 && !GlideFilters.includes(parameter.value)) {
-            issues.push(parameterError("Filter must be one of: " + GlideFilters.join(","), node, parameter));
+            issues.push(
+              parameterError(
+                "Filter must be one of: " + GlideFilters.join(","),
+                node,
+                parameter
+              )
+            );
           }
           return issues;
         }
@@ -17221,6 +17683,7 @@ var init_glideParameters = __esm({
 var GlideBatch, glideBatch_default;
 var init_glideBatch = __esm({
   "server/src/antlers/tags/core/glideBatch.ts"() {
+    "use strict";
     init_utils();
     init_glideVariables();
     init_glideParameters();
@@ -17239,7 +17702,11 @@ var init_glideBatch = __esm({
       },
       resovleParameterCompletionItems: resolveGlideParameterCompletions,
       resolveDocumentation: (params) => {
-        return makeTagDoc("glide:batch Tag", "The `glide:batch` tag is similar to the glide tag, but can be used to apply image manipulations to multiple images within a piece of content.", "https://statamic.dev/tags/glide-batch");
+        return makeTagDoc(
+          "glide:batch Tag",
+          "The `glide:batch` tag is similar to the glide tag, but can be used to apply image manipulations to multiple images within a piece of content.",
+          "https://statamic.dev/tags/glide-batch"
+        );
       }
     };
     glideBatch_default = GlideBatch;
@@ -17250,6 +17717,7 @@ var init_glideBatch = __esm({
 var GlideDataUrl, glideDataUrl_default;
 var init_glideDataUrl = __esm({
   "server/src/antlers/tags/core/glideDataUrl.ts"() {
+    "use strict";
     init_utils();
     init_glideParameters();
     GlideDataUrl = {
@@ -17263,7 +17731,11 @@ var init_glideDataUrl = __esm({
       introducedIn: null,
       resovleParameterCompletionItems: resolveGlideParameterCompletions,
       resolveDocumentation: (params) => {
-        return makeTagDoc("glide:data_url Tag", "The `glide:data_url` tag returns manipulated image datas as a data URI.", null);
+        return makeTagDoc(
+          "glide:data_url Tag",
+          "The `glide:data_url` tag returns manipulated image datas as a data URI.",
+          null
+        );
       }
     };
     glideDataUrl_default = GlideDataUrl;
@@ -17274,6 +17746,7 @@ var init_glideDataUrl = __esm({
 var GlideCompletionItems, Glide, glide_default;
 var init_glide = __esm({
   "server/src/antlers/tags/core/glide.ts"() {
+    "use strict";
     init_utils();
     init_documentedLabel();
     init_tagManager();
@@ -17306,7 +17779,11 @@ var init_glide = __esm({
         return EmptyCompletionResult;
       },
       resolveDocumentation: (params) => {
-        return makeTagDoc("glide Tag", "The `glide` tag is used to manipulate images on the fly. Image manipulations may include resizing, cropping, or adjusting sharpness and constrast, amongst many others.", "https://statamic.dev/tags/glide");
+        return makeTagDoc(
+          "glide Tag",
+          "The `glide` tag is used to manipulate images on the fly. Image manipulations may include resizing, cropping, or adjusting sharpness and constrast, amongst many others.",
+          "https://statamic.dev/tags/glide"
+        );
       }
     };
     glide_default = Glide;
@@ -17317,6 +17794,7 @@ var init_glide = __esm({
 var IterateTag, ForeachTag;
 var init_iterate = __esm({
   "server/src/antlers/tags/core/iterate.ts"() {
+    "use strict";
     init_utils();
     IterateTag = {
       tagName: "iterate",
@@ -17349,7 +17827,11 @@ var init_iterate = __esm({
         }
       ],
       resolveDocumentation: (params) => {
-        return makeTagDoc("iterate Tag", "The `iterate` tag can be used to iterate over arbitrary arrays.", "https://statamic.dev/tags/foreach");
+        return makeTagDoc(
+          "iterate Tag",
+          "The `iterate` tag can be used to iterate over arbitrary arrays.",
+          "https://statamic.dev/tags/foreach"
+        );
       }
     };
     ForeachTag = {
@@ -17383,7 +17865,11 @@ var init_iterate = __esm({
         }
       ],
       resolveDocumentation: (params) => {
-        return makeTagDoc("foreach Tag", "The `foreach` tag can be used to iterate over arbitrary arrays.", "https://statamic.dev/tags/foreach");
+        return makeTagDoc(
+          "foreach Tag",
+          "The `foreach` tag can be used to iterate over arbitrary arrays.",
+          "https://statamic.dev/tags/foreach"
+        );
       }
     };
   }
@@ -17398,6 +17884,7 @@ function makeLocaleVariables(node) {
 }
 var init_localeVariables = __esm({
   "server/src/antlers/variables/localeVariables.ts"() {
+    "use strict";
   }
 });
 
@@ -17405,6 +17892,7 @@ var init_localeVariables = __esm({
 var LocaleParameters;
 var init_localeParameters = __esm({
   "server/src/antlers/tags/core/localeParameters.ts"() {
+    "use strict";
     LocaleParameters = [
       {
         isRequired: false,
@@ -17474,6 +17962,7 @@ var init_localeParameters = __esm({
 var LocalesCount, localeCount_default;
 var init_localeCount = __esm({
   "server/src/antlers/tags/core/localeCount.ts"() {
+    "use strict";
     init_utils();
     init_localeParameters();
     LocalesCount = {
@@ -17486,7 +17975,11 @@ var init_localeCount = __esm({
       parameters: LocaleParameters,
       introducedIn: "3.0.36",
       resolveDocumentation: (params) => {
-        return makeTagDoc("locales:count Tag", "The `locales:count` tag can be used to count the number of locales the current content is available in.", "https://statamic.dev/tags/locales-count");
+        return makeTagDoc(
+          "locales:count Tag",
+          "The `locales:count` tag can be used to count the number of locales the current content is available in.",
+          "https://statamic.dev/tags/locales-count"
+        );
       }
     };
     localeCount_default = LocalesCount;
@@ -17497,6 +17990,7 @@ var init_localeCount = __esm({
 var LocalesCompletionItems, Locales, locales_default;
 var init_locales = __esm({
   "server/src/antlers/tags/core/locales.ts"() {
+    "use strict";
     init_utils();
     init_documentedLabel();
     init_tagManager();
@@ -17548,7 +18042,11 @@ var init_locales = __esm({
         return scope;
       },
       resolveDocumentation: (params) => {
-        return makeTagDoc("locales Tag", "The `locales` tag can be used to access all the locales the current content is available in.", "https://statamic.dev/tags/locales");
+        return makeTagDoc(
+          "locales Tag",
+          "The `locales` tag can be used to access all the locales the current content is available in.",
+          "https://statamic.dev/tags/locales"
+        );
       },
       resolveCompletionItems: (params) => {
         if (params.isPastTagPart == false && (params.leftWord == "locale" || params.leftWord == "/locale") && params.leftChar == ":") {
@@ -17565,6 +18063,7 @@ var init_locales = __esm({
 var Mix, mix_default;
 var init_mix = __esm({
   "server/src/antlers/tags/core/mix.ts"() {
+    "use strict";
     init_utils();
     Mix = {
       tagName: "mix",
@@ -17597,7 +18096,11 @@ var init_mix = __esm({
         }
       ],
       resolveDocumentation: (params) => {
-        return makeTagDoc("mix Tag", "The `mix` tag is used to return the path of CSS and JavaScript files versioned with [Laravel Mix](https://laravel.com/docs/8.x/mix).", "https://statamic.dev/tags/mix");
+        return makeTagDoc(
+          "mix Tag",
+          "The `mix` tag is used to return the path of CSS and JavaScript files versioned with [Laravel Mix](https://laravel.com/docs/8.x/mix).",
+          "https://statamic.dev/tags/mix"
+        );
       }
     };
     mix_default = Mix;
@@ -17648,6 +18151,7 @@ function makeUserRolesSuggestions(existingValues, project) {
 var import_vscode_languageserver_types15;
 var init_permissionUtils = __esm({
   "server/src/antlers/tags/core/user/permissionUtils.ts"() {
+    "use strict";
     import_vscode_languageserver_types15 = __toESM(require_main2());
   }
 });
@@ -17656,6 +18160,7 @@ var init_permissionUtils = __esm({
 var UserIn, userIn_default;
 var init_userIn = __esm({
   "server/src/antlers/tags/core/userIn.ts"() {
+    "use strict";
     init_utils();
     init_tagManager();
     init_permissionUtils();
@@ -17689,7 +18194,11 @@ var init_userIn = __esm({
         return null;
       },
       resolveDocumentation: (params) => {
-        return makeTagDoc("user:in Tag", "The `user:in` tag can be used to check if the currently authenticated user belongs to one or more user groups. When used as a tag pair, the tag contents will only be rendered if the user belongs to the specified groups.", "https://statamic.dev/tags/user-in");
+        return makeTagDoc(
+          "user:in Tag",
+          "The `user:in` tag can be used to check if the currently authenticated user belongs to one or more user groups. When used as a tag pair, the tag contents will only be rendered if the user belongs to the specified groups.",
+          "https://statamic.dev/tags/user-in"
+        );
       }
     };
     userIn_default = UserIn;
@@ -17700,6 +18209,7 @@ var init_userIn = __esm({
 var UserNotIn, userNotIn_default;
 var init_userNotIn = __esm({
   "server/src/antlers/tags/core/userNotIn.ts"() {
+    "use strict";
     init_utils();
     init_tagManager();
     init_permissionUtils();
@@ -17733,7 +18243,11 @@ var init_userNotIn = __esm({
         return null;
       },
       resolveDocumentation: (params) => {
-        return makeTagDoc("user:not_in Tag", "The `user:not_in` tag can be used to check if the currently authenticated user does not belong to one or more user groups. When used as a tag pair, the tag contents will be rendered if the user does not belong to the specified groups.", "https://statamic.dev/tags/user-in#not-in");
+        return makeTagDoc(
+          "user:not_in Tag",
+          "The `user:not_in` tag can be used to check if the currently authenticated user does not belong to one or more user groups. When used as a tag pair, the tag contents will be rendered if the user does not belong to the specified groups.",
+          "https://statamic.dev/tags/user-in#not-in"
+        );
       }
     };
     userNotIn_default = UserNotIn;
@@ -17744,6 +18258,7 @@ var init_userNotIn = __esm({
 var UserIs, userIs_default;
 var init_userIs = __esm({
   "server/src/antlers/tags/core/userIs.ts"() {
+    "use strict";
     init_utils();
     init_tagManager();
     init_permissionUtils();
@@ -17777,7 +18292,11 @@ var init_userIs = __esm({
         return null;
       },
       resolveDocumentation: (params) => {
-        return makeTagDoc("user:is Tag", "The `user:is` tag can be used to check whether the currently authenticated user has one or more roles.", "https://statamic.dev/tags/user-is");
+        return makeTagDoc(
+          "user:is Tag",
+          "The `user:is` tag can be used to check whether the currently authenticated user has one or more roles.",
+          "https://statamic.dev/tags/user-is"
+        );
       }
     };
     userIs_default = UserIs;
@@ -17788,6 +18307,7 @@ var init_userIs = __esm({
 var UserIsnt, userIsnt_default;
 var init_userIsnt = __esm({
   "server/src/antlers/tags/core/userIsnt.ts"() {
+    "use strict";
     init_utils();
     init_tagManager();
     init_permissionUtils();
@@ -17821,7 +18341,11 @@ var init_userIsnt = __esm({
         return null;
       },
       resolveDocumentation: (params) => {
-        return makeTagDoc("user:isnt Tag", "The `user:isnt` tag can be used to check whether the currently authenticated user does not have one or more roles.", "https://statamic.dev/tags/user-is#isnt");
+        return makeTagDoc(
+          "user:isnt Tag",
+          "The `user:isnt` tag can be used to check whether the currently authenticated user does not have one or more roles.",
+          "https://statamic.dev/tags/user-is#isnt"
+        );
       }
     };
     userIsnt_default = UserIsnt;
@@ -17832,6 +18356,7 @@ var init_userIsnt = __esm({
 var In, in_default;
 var init_in = __esm({
   "server/src/antlers/tags/core/in.ts"() {
+    "use strict";
     init_utils();
     init_tagManager();
     init_permissionUtils();
@@ -17871,7 +18396,11 @@ var init_in = __esm({
         return EmptyCompletionResult;
       },
       resolveDocumentation: (params) => {
-        return makeTagDoc("in Tag", "The `in` tag can be used to check if the authenticated user belongs to one or more groups. This tag operates similarly to the `user:in` tag.", "https://statamic.dev/tags/user-in");
+        return makeTagDoc(
+          "in Tag",
+          "The `in` tag can be used to check if the authenticated user belongs to one or more groups. This tag operates similarly to the `user:in` tag.",
+          "https://statamic.dev/tags/user-in"
+        );
       }
     };
     in_default = In;
@@ -17882,6 +18411,7 @@ var init_in = __esm({
 var NotFound, notFound_default;
 var init_notFound = __esm({
   "server/src/antlers/tags/core/notFound.ts"() {
+    "use strict";
     init_utils();
     NotFound = {
       tagName: "not_found",
@@ -17893,10 +18423,15 @@ var init_notFound = __esm({
       parameters: [],
       introducedIn: null,
       resolveDocumentation: (params) => {
-        return makeTagDocWithCodeSample("404 (Not Found) Tag", "The `not_found` tag will trigger a 404 status code, and display the 404 template to the site visitor.", `{{ unless logged_in }}
+        return makeTagDocWithCodeSample(
+          "404 (Not Found) Tag",
+          "The `not_found` tag will trigger a 404 status code, and display the 404 template to the site visitor.",
+          `{{ unless logged_in }}
 	{{# Display the 404 Not Found page. #}}
 	{{ not_found }}
-{{ /unless }}`, "https://statamic.dev/tags/404");
+{{ /unless }}`,
+          "https://statamic.dev/tags/404"
+        );
       }
     };
     notFound_default = NotFound;
@@ -17907,6 +18442,7 @@ var init_notFound = __esm({
 var Is, is_default;
 var init_is = __esm({
   "server/src/antlers/tags/core/is.ts"() {
+    "use strict";
     init_utils();
     init_tagManager();
     init_permissionUtils();
@@ -17946,7 +18482,11 @@ var init_is = __esm({
         return EmptyCompletionResult;
       },
       resolveDocumentation: (params) => {
-        return makeTagDoc("is Tag", "The `is` tag can be used to check whether the currently authenticated user has one or more roles. This tag behaves the same as the `user:is` tag.", "https://statamic.dev/tags/user-is");
+        return makeTagDoc(
+          "is Tag",
+          "The `is` tag can be used to check whether the currently authenticated user has one or more roles. This tag behaves the same as the `user:is` tag.",
+          "https://statamic.dev/tags/user-is"
+        );
       }
     };
     is_default = Is;
@@ -17957,6 +18497,7 @@ var init_is = __esm({
 var Widont, widont_default;
 var init_widont = __esm({
   "server/src/antlers/tags/core/widont.ts"() {
+    "use strict";
     init_utils();
     Widont = {
       tagName: "widont",
@@ -17968,9 +18509,14 @@ var init_widont = __esm({
       introducedIn: null,
       parameters: [],
       resolveDocumentation: (params) => {
-        return makeTagDocWithCodeSample("widont Tag", "The `widont` tag is similar to the [widont modifier](https://statamic.dev/modifiers/widont), and will attempt to prevent lines with a single word from appearing within the tags rendered output.", `{{ widont }}
+        return makeTagDocWithCodeSample(
+          "widont Tag",
+          "The `widont` tag is similar to the [widont modifier](https://statamic.dev/modifiers/widont), and will attempt to prevent lines with a single word from appearing within the tags rendered output.",
+          `{{ widont }}
     {{ content }}
-{{ /widont }}`, null);
+{{ /widont }}`,
+          null
+        );
       }
     };
     widont_default = Widont;
@@ -17981,6 +18527,7 @@ var init_widont = __esm({
 var UserProfileParameters;
 var init_userProfileParameters = __esm({
   "server/src/antlers/tags/core/userProfileParameters.ts"() {
+    "use strict";
     UserProfileParameters = [
       {
         isRequired: false,
@@ -18030,6 +18577,7 @@ var init_userProfileParameters = __esm({
 var UserProfile, userProfile_default;
 var init_userProfile = __esm({
   "server/src/antlers/tags/core/userProfile.ts"() {
+    "use strict";
     init_utils();
     init_fieldFormatter();
     init_tagManager();
@@ -18049,12 +18597,18 @@ var init_userProfile = __esm({
       },
       resovleParameterCompletionItems: (parameter, params) => {
         if (parameter.name == "field") {
-          return exclusiveResult(formatSuggestionList(params.project.getUserFields()));
+          return exclusiveResult(
+            formatSuggestionList(params.project.getUserFields())
+          );
         }
         return EmptyCompletionResult;
       },
       resolveDocumentation: (params) => {
-        return makeTagDoc("user:profile Tag", "The `user:profile` tag provides access to the currently logged in user information, or for a specific user when using the `id`, `email`, or `field` parameter.", null);
+        return makeTagDoc(
+          "user:profile Tag",
+          "The `user:profile` tag provides access to the currently logged in user information, or for a specific user when using the `id`, `email`, or `field` parameter.",
+          null
+        );
       }
     };
     userProfile_default = UserProfile;
@@ -18065,6 +18619,7 @@ var init_userProfile = __esm({
 var DdTag, DddTag;
 var init_dd = __esm({
   "server/src/antlers/tags/core/dd.ts"() {
+    "use strict";
     init_utils();
     DdTag = {
       tagName: "dd",
@@ -18076,13 +18631,18 @@ var init_dd = __esm({
       introducedIn: null,
       parameters: [],
       resolveDocumentation: (params) => {
-        return makeTagDocWithCodeSample("dd Tag", "The `dd` tag is a useful tag for debugging, and will display the raw data available at the point the tag is rendered. This tag will stop the template from rendering after it is encountered.  If Ignition is available, this tag will use the [ddd](https://flareapp.io/blog/1-introducing-ddd-a-new-global-helper-for-laravel) method.", `{{ collection:articles }}
+        return makeTagDocWithCodeSample(
+          "dd Tag",
+          "The `dd` tag is a useful tag for debugging, and will display the raw data available at the point the tag is rendered. This tag will stop the template from rendering after it is encountered.  If Ignition is available, this tag will use the [ddd](https://flareapp.io/blog/1-introducing-ddd-a-new-global-helper-for-laravel) method.",
+          `{{ collection:articles }}
 	{{#
 		View all data available, for the first
 		entry that renders the dd tag.
 	#}}
     {{ dd }}
-{{ /collection:articles }}`, null);
+{{ /collection:articles }}`,
+          null
+        );
       }
     };
     DddTag = {
@@ -18095,13 +18655,18 @@ var init_dd = __esm({
       introducedIn: null,
       parameters: [],
       resolveDocumentation: (params) => {
-        return makeTagDocWithCodeSample("ddd Tag", "The `ddd` tag is a useful tag for debugging, and will display the raw data available at the point the tag is rendered. This tag will stop the template from rendering after it is encountered.  If Ignition is available, this tag will use the [ddd](https://flareapp.io/blog/1-introducing-ddd-a-new-global-helper-for-laravel) method.", `{{ collection:articles }}
+        return makeTagDocWithCodeSample(
+          "ddd Tag",
+          "The `ddd` tag is a useful tag for debugging, and will display the raw data available at the point the tag is rendered. This tag will stop the template from rendering after it is encountered.  If Ignition is available, this tag will use the [ddd](https://flareapp.io/blog/1-introducing-ddd-a-new-global-helper-for-laravel) method.",
+          `{{ collection:articles }}
 	{{#
 		View all data available, for the first
 		entry that renders the ddd tag.
 	#}}
     {{ ddd }}
-{{ /collection:articles }}`, null);
+{{ /collection:articles }}`,
+          null
+        );
       }
     };
   }
@@ -18111,6 +18676,7 @@ var init_dd = __esm({
 var PathTag, path_default;
 var init_path = __esm({
   "server/src/antlers/tags/core/path.ts"() {
+    "use strict";
     init_utils();
     PathTag = {
       tagName: "path",
@@ -18143,7 +18709,11 @@ var init_path = __esm({
         }
       ],
       resolveDocumentation: (params) => {
-        return makeTagDoc("path Tag", "The `path` tag can be used to generate URLs from relative URLs, or an entry ID.", null);
+        return makeTagDoc(
+          "path Tag",
+          "The `path` tag can be used to generate URLs from relative URLs, or an entry ID.",
+          null
+        );
       }
     };
     path_default = PathTag;
@@ -18154,6 +18724,7 @@ var init_path = __esm({
 var UserCant, userCant_default;
 var init_userCant = __esm({
   "server/src/antlers/tags/core/userCant.ts"() {
+    "use strict";
     init_utils();
     init_parameterCompletions();
     UserCant = {
@@ -18178,7 +18749,11 @@ var init_userCant = __esm({
         }
       ],
       resolveDocumentation: (params) => {
-        return makeTagDoc("user:cant Tag", "The `user:cant` tag is used to check if the currently authenticated user does not have a specific set of permissions. When used as a tag pair, the tag contents will only be rendered if the user does not have the specified permissions.", "https://statamic.dev/tags/user-can#cant");
+        return makeTagDoc(
+          "user:cant Tag",
+          "The `user:cant` tag is used to check if the currently authenticated user does not have a specific set of permissions. When used as a tag pair, the tag contents will only be rendered if the user does not have the specified permissions.",
+          "https://statamic.dev/tags/user-can#cant"
+        );
       }
     };
     userCant_default = UserCant;
@@ -18189,6 +18764,7 @@ var init_userCant = __esm({
 var QueryTag, queryTag_default;
 var init_queryTag = __esm({
   "server/src/antlers/tags/core/queryTag.ts"() {
+    "use strict";
     QueryTag = {
       tagName: "query",
       hideFromCompletions: false,
@@ -18218,6 +18794,7 @@ var init_queryTag = __esm({
 var ThemePathParameters;
 var init_themeParameters = __esm({
   "server/src/antlers/tags/core/theme/themeParameters.ts"() {
+    "use strict";
     ThemePathParameters = [
       {
         isRequired: true,
@@ -18277,6 +18854,7 @@ var init_themeParameters = __esm({
 var import_vscode_languageserver_types16, ThemeTagCompletionItems, Theme, theme_default;
 var init_theme = __esm({
   "server/src/antlers/tags/core/theme/theme.ts"() {
+    "use strict";
     import_vscode_languageserver_types16 = __toESM(require_main2());
     init_tagManager();
     init_themeParameters();
@@ -18312,6 +18890,7 @@ var init_theme = __esm({
 var ThemePath, ThemeAsset;
 var init_themePath = __esm({
   "server/src/antlers/tags/core/theme/themePath.ts"() {
+    "use strict";
     init_utils();
     init_alias();
     init_themeParameters();
@@ -18325,7 +18904,11 @@ var init_themePath = __esm({
       introducedIn: null,
       parameters: ThemePathParameters,
       resolveDocumentation: (params) => {
-        return makeTagDoc("theme:path Tag", "The `theme:path` tag may be used to generate URLs for public assets. This tag may also optionally add the current locale, generate relative URLs, or add cache busting URL parameters to the end of the generated URL.", null);
+        return makeTagDoc(
+          "theme:path Tag",
+          "The `theme:path` tag may be used to generate URLs for public assets. This tag may also optionally add the current locale, generate relative URLs, or add cache busting URL parameters to the end of the generated URL.",
+          null
+        );
       }
     };
     ThemeAsset = createDefinitionAlias(ThemePath, "theme:asset");
@@ -18336,6 +18919,7 @@ var init_themePath = __esm({
 var ThemeCss, themeCss_default;
 var init_themeCss = __esm({
   "server/src/antlers/tags/core/theme/themeCss.ts"() {
+    "use strict";
     init_utils();
     init_themeParameters();
     ThemeCss = {
@@ -18360,7 +18944,11 @@ var init_themeCss = __esm({
         }
       ],
       resolveDocumentation: (params) => {
-        return makeTagDoc("theme:css Tag", "The `theme:css` tag may be used to generate a CSS path relative to a public `css/` directory for any arbitrary file path. This tag may also optionally create the HTML `link` tag.", null);
+        return makeTagDoc(
+          "theme:css Tag",
+          "The `theme:css` tag may be used to generate a CSS path relative to a public `css/` directory for any arbitrary file path. This tag may also optionally create the HTML `link` tag.",
+          null
+        );
       }
     };
     themeCss_default = ThemeCss;
@@ -18371,6 +18959,7 @@ var init_themeCss = __esm({
 var ThemeImg, themeImg_default;
 var init_themeImg = __esm({
   "server/src/antlers/tags/core/theme/themeImg.ts"() {
+    "use strict";
     init_utils();
     init_themeParameters();
     ThemeImg = {
@@ -18405,7 +18994,11 @@ var init_themeImg = __esm({
         }
       ],
       resolveDocumentation: (params) => {
-        return makeTagDoc("theme:img Tag", "The `theme:img` tag may be used to generate an image path relative to a public `img/` directory for any arbitrary file path. This tag may also optionally create the HTML `img` tag.", null);
+        return makeTagDoc(
+          "theme:img Tag",
+          "The `theme:img` tag may be used to generate an image path relative to a public `img/` directory for any arbitrary file path. This tag may also optionally create the HTML `img` tag.",
+          null
+        );
       }
     };
     themeImg_default = ThemeImg;
@@ -18416,6 +19009,7 @@ var init_themeImg = __esm({
 var ThemeJavaScript, themeJs_default;
 var init_themeJs = __esm({
   "server/src/antlers/tags/core/theme/themeJs.ts"() {
+    "use strict";
     init_utils();
     init_themeParameters();
     ThemeJavaScript = {
@@ -18440,7 +19034,11 @@ var init_themeJs = __esm({
         }
       ],
       resolveDocumentation: (params) => {
-        return makeTagDoc("theme:js Tag", "The `theme:js` tag may be used to generate a JavaScript path relative to a public `js/` directory for any arbitrary file path. This tag may also optionally create the HTML `script` tag.", null);
+        return makeTagDoc(
+          "theme:js Tag",
+          "The `theme:js` tag may be used to generate a JavaScript path relative to a public `js/` directory for any arbitrary file path. This tag may also optionally create the HTML `script` tag.",
+          null
+        );
       }
     };
     themeJs_default = ThemeJavaScript;
@@ -18451,6 +19049,7 @@ var init_themeJs = __esm({
 var ThemeOutput, themeOutput_default;
 var init_themeOutput = __esm({
   "server/src/antlers/tags/core/theme/themeOutput.ts"() {
+    "use strict";
     init_utils();
     ThemeOutput = {
       tagName: "theme:output",
@@ -18506,7 +19105,11 @@ var init_themeOutput = __esm({
         return scope;
       },
       resolveDocumentation: (params) => {
-        return makeTagDoc("theme:output Tag", "The `theme:output` tag may be used to output the contents of any arbitrary file, relative to the site's `resources/` directory.", null);
+        return makeTagDoc(
+          "theme:output Tag",
+          "The `theme:output` tag may be used to output the contents of any arbitrary file, relative to the site's `resources/` directory.",
+          null
+        );
       }
     };
     themeOutput_default = ThemeOutput;
@@ -18517,6 +19120,7 @@ var init_themeOutput = __esm({
 var ScopeTag, scopeTag_default;
 var init_scopeTag = __esm({
   "server/src/antlers/tags/core/scopeTag.ts"() {
+    "use strict";
     init_utils();
     ScopeTag = {
       tagName: "scope",
@@ -18528,10 +19132,15 @@ var init_scopeTag = __esm({
       introducedIn: null,
       parameters: [],
       resolveDocumentation: (params) => {
-        return makeTagDocWithCodeSample("scope Tag", "The `scope` tag creates a copy of all available variables, and saves them to a new  *array* variable defined by the tag's method part.", `{{ scope:scope_name }}
+        return makeTagDocWithCodeSample(
+          "scope Tag",
+          "The `scope` tag creates a copy of all available variables, and saves them to a new  *array* variable defined by the tag's method part.",
+          `{{ scope:scope_name }}
     {{ scope_name:title }}
 {{ /scope:scope_name }}
-`, null);
+`,
+          null
+        );
       }
     };
     scopeTag_default = ScopeTag;
@@ -18542,6 +19151,7 @@ var init_scopeTag = __esm({
 var If, if_default;
 var init_if = __esm({
   "server/src/antlers/tags/core/conditions/if.ts"() {
+    "use strict";
     init_utils();
     init_dynamicParameterResolver();
     If = {
@@ -18555,7 +19165,11 @@ var init_if = __esm({
       parameters: [],
       resolveDynamicParameter: returnDynamicParameter,
       resolveDocumentation: (params) => {
-        return makeTagDoc("if Conditional Control Structure", "The contents of the `if` tag will be rendered when it's expression evaluates to `true`.", "https://statamic.dev/antlers#conditions");
+        return makeTagDoc(
+          "if Conditional Control Structure",
+          "The contents of the `if` tag will be rendered when it's expression evaluates to `true`.",
+          "https://statamic.dev/antlers#conditions"
+        );
       }
     };
     if_default = If;
@@ -18566,6 +19180,7 @@ var init_if = __esm({
 var ElseIf, elseIf_default;
 var init_elseIf = __esm({
   "server/src/antlers/tags/core/conditions/elseIf.ts"() {
+    "use strict";
     init_utils();
     init_dynamicParameterResolver();
     ElseIf = {
@@ -18579,7 +19194,11 @@ var init_elseIf = __esm({
       parameters: [],
       resolveDynamicParameter: returnDynamicParameter,
       resolveDocumentation: (params) => {
-        return makeTagDoc("elseif Conditional Control Structure", "The contents of the `elseif` tag will be rendered when it's expression evaluates to `true`.", "https://statamic.dev/antlers#conditions");
+        return makeTagDoc(
+          "elseif Conditional Control Structure",
+          "The contents of the `elseif` tag will be rendered when it's expression evaluates to `true`.",
+          "https://statamic.dev/antlers#conditions"
+        );
       }
     };
     elseIf_default = ElseIf;
@@ -18590,6 +19209,7 @@ var init_elseIf = __esm({
 var Else, else_default;
 var init_else = __esm({
   "server/src/antlers/tags/core/conditions/else.ts"() {
+    "use strict";
     init_utils();
     Else = {
       tagName: "else",
@@ -18601,7 +19221,11 @@ var init_else = __esm({
       introducedIn: null,
       parameters: [],
       resolveDocumentation: (params) => {
-        return makeTagDoc("else Conditional Control Structure", "The contents of the `else` control structure will be evaluated when all previous conditional branch conditions were not met.", "https://statamic.dev/antlers#conditions");
+        return makeTagDoc(
+          "else Conditional Control Structure",
+          "The contents of the `else` control structure will be evaluated when all previous conditional branch conditions were not met.",
+          "https://statamic.dev/antlers#conditions"
+        );
       }
     };
     else_default = Else;
@@ -18612,6 +19236,7 @@ var init_else = __esm({
 var SessionHas, sessionHas_default;
 var init_sessionHas = __esm({
   "server/src/antlers/tags/core/sessionHas.ts"() {
+    "use strict";
     init_utils();
     init_dynamicParameterResolver();
     SessionHas = {
@@ -18625,7 +19250,11 @@ var init_sessionHas = __esm({
       introducedIn: "3.1.28",
       resolveDynamicParameter: returnDynamicParameter,
       resolveDocumentation: (params) => {
-        return makeTagDoc("session:has Tag", "The `session:has` tag can be used to determine of the user's session contains a specific variable.", "https://statamic.dev/tags/session-has");
+        return makeTagDoc(
+          "session:has Tag",
+          "The `session:has` tag can be used to determine of the user's session contains a specific variable.",
+          "https://statamic.dev/tags/session-has"
+        );
       }
     };
     sessionHas_default = SessionHas;
@@ -18636,6 +19265,7 @@ var init_sessionHas = __esm({
 var import_vscode_languageserver_types17, SessionTagCompletionItems, SessionTag, session_default;
 var init_session = __esm({
   "server/src/antlers/tags/core/session.ts"() {
+    "use strict";
     import_vscode_languageserver_types17 = __toESM(require_main2());
     init_sessionVariableManager();
     init_documentedLabel();
@@ -18718,6 +19348,7 @@ var init_session = __esm({
 var UserForgotPasswordForm, MemberForgotPasswordForm;
 var init_userForgotPasswordForm = __esm({
   "server/src/antlers/tags/core/userForgotPasswordForm.ts"() {
+    "use strict";
     init_utils();
     init_alias();
     init_dynamicParameterResolver();
@@ -18769,12 +19400,23 @@ var init_userForgotPasswordForm = __esm({
         return scope;
       },
       resolveDocumentation: (params) => {
-        return makeTagDoc("user:forgot_password_form Tag", 'The `user:forgot_password_form` tag is used to quickly create a "forgot password" form for site users.', "https://statamic.dev/tags/user-forgot_password_form");
+        return makeTagDoc(
+          "user:forgot_password_form Tag",
+          'The `user:forgot_password_form` tag is used to quickly create a "forgot password" form for site users.',
+          "https://statamic.dev/tags/user-forgot_password_form"
+        );
       }
     };
-    MemberForgotPasswordForm = createDefinitionAlias(UserForgotPasswordForm, "member:forgot_password_form");
+    MemberForgotPasswordForm = createDefinitionAlias(
+      UserForgotPasswordForm,
+      "member:forgot_password_form"
+    );
     MemberForgotPasswordForm.resolveDocumentation = (params) => {
-      return makeTagDoc("member:forgot_password_form Tag", 'The `member:forgot_password_form` tag is used to quickly create a "forgot password" form for site users.', "https://statamic.dev/tags/user-forgot_password_form");
+      return makeTagDoc(
+        "member:forgot_password_form Tag",
+        'The `member:forgot_password_form` tag is used to quickly create a "forgot password" form for site users.',
+        "https://statamic.dev/tags/user-forgot_password_form"
+      );
     };
   }
 });
@@ -18793,6 +19435,7 @@ function makeFieldsVariables(node) {
 }
 var init_fieldsVariables = __esm({
   "server/src/antlers/variables/forms/fieldsVariables.ts"() {
+    "use strict";
   }
 });
 
@@ -18805,6 +19448,7 @@ function makeStandardFormVariables(node) {
 }
 var init_standardFormVariables = __esm({
   "server/src/antlers/variables/forms/standardFormVariables.ts"() {
+    "use strict";
   }
 });
 
@@ -18819,6 +19463,7 @@ function makePasswordFormVariables(symbol) {
 var UserPasswordForm, userPasswordForm_default;
 var init_userPasswordForm = __esm({
   "server/src/antlers/tags/core/userPasswordForm.ts"() {
+    "use strict";
     init_fieldsVariables();
     init_standardFormVariables();
     UserPasswordForm = {
@@ -18879,6 +19524,7 @@ var init_userPasswordForm = __esm({
 var UserPasswordReset, MemberPasswordReset;
 var init_userPasswordReset = __esm({
   "server/src/antlers/tags/core/userPasswordReset.ts"() {
+    "use strict";
     init_utils();
     init_alias();
     init_dynamicParameterResolver();
@@ -18930,12 +19576,23 @@ var init_userPasswordReset = __esm({
         return scope;
       },
       resolveDocumentation: (params) => {
-        return makeTagDoc("user:reset_password_form Tag", "The `user:reset_password_form` tag is used to quickly create password reset forms. Forms created with this tag should be displayed after a user has received and clicked a password reset email link.", "https://statamic.dev/tags/user-reset_password_form");
+        return makeTagDoc(
+          "user:reset_password_form Tag",
+          "The `user:reset_password_form` tag is used to quickly create password reset forms. Forms created with this tag should be displayed after a user has received and clicked a password reset email link.",
+          "https://statamic.dev/tags/user-reset_password_form"
+        );
       }
     };
-    MemberPasswordReset = createDefinitionAlias(UserPasswordReset, "member:reset_password_form");
+    MemberPasswordReset = createDefinitionAlias(
+      UserPasswordReset,
+      "member:reset_password_form"
+    );
     MemberPasswordReset.resolveDocumentation = (params) => {
-      return makeTagDoc("member:reset_password_form Tag", "The `member:reset_password_form` tag is used to quickly create password reset forms. Forms created with this tag should be displayed after a user has received and clicked a password reset email link.", "https://statamic.dev/tags/user-reset_password_form");
+      return makeTagDoc(
+        "member:reset_password_form Tag",
+        "The `member:reset_password_form` tag is used to quickly create password reset forms. Forms created with this tag should be displayed after a user has received and clicked a password reset email link.",
+        "https://statamic.dev/tags/user-reset_password_form"
+      );
     };
   }
 });
@@ -18973,6 +19630,7 @@ function blueprintFieldsToScopeVariables(symbol, blueprintFields) {
 }
 var init_scopeUtilities = __esm({
   "server/src/antlers/scope/scopeUtilities.ts"() {
+    "use strict";
   }
 });
 
@@ -18980,6 +19638,7 @@ var init_scopeUtilities = __esm({
 var UserProfileForm, userProfileForm_default;
 var init_userProfileForm = __esm({
   "server/src/antlers/tags/core/userProfileForm.ts"() {
+    "use strict";
     init_scopeUtilities();
     init_fieldsVariables();
     init_standardFormVariables();
@@ -19041,6 +19700,7 @@ var init_userProfileForm = __esm({
 var UserRegister, MemberRegister;
 var init_userRegister = __esm({
   "server/src/antlers/tags/core/userRegister.ts"() {
+    "use strict";
     init_utils();
     init_scopeUtilities();
     init_fieldsVariables();
@@ -19102,12 +19762,20 @@ var init_userRegister = __esm({
         return scope;
       },
       resolveDocumentation: (params) => {
-        return makeTagDoc("user:register_form  Form Tag", "The `user:register_form` tag can be used to build out public registration forms for new users.", "https://statamic.dev/tags/user-register_form");
+        return makeTagDoc(
+          "user:register_form  Form Tag",
+          "The `user:register_form` tag can be used to build out public registration forms for new users.",
+          "https://statamic.dev/tags/user-register_form"
+        );
       }
     };
     MemberRegister = createDefinitionAlias(UserRegister, "member:register_form");
     MemberRegister.resolveDocumentation = (params) => {
-      return makeTagDoc("member:register_form Tag", "The `member:register_form` tag can be used to build out public registration forms for new users.", "https://statamic.dev/tags/user-register_form");
+      return makeTagDoc(
+        "member:register_form Tag",
+        "The `member:register_form` tag can be used to build out public registration forms for new users.",
+        "https://statamic.dev/tags/user-register_form"
+      );
     };
   }
 });
@@ -19116,6 +19784,7 @@ var init_userRegister = __esm({
 var UserTagCompletionItems, User, user_default;
 var init_user = __esm({
   "server/src/antlers/tags/core/user.ts"() {
+    "use strict";
     init_utils();
     init_fieldFormatter();
     init_documentedLabel();
@@ -19161,7 +19830,9 @@ var init_user = __esm({
       resovleParameterCompletionItems: (parameter, params) => {
         if (params.isPastTagPart == false && params.currentNode != null && params.currentNode.methodIsEmptyOrMatches("profile")) {
           if (parameter.name == "field") {
-            return exclusiveResult(formatSuggestionList(params.project.getUserFields()));
+            return exclusiveResult(
+              formatSuggestionList(params.project.getUserFields())
+            );
           }
         }
         return EmptyCompletionResult;
@@ -19179,7 +19850,11 @@ var init_user = __esm({
         return EmptyCompletionResult;
       },
       resolveDocumentation: (params) => {
-        return makeTagDoc("user Tag", "The `user` tag provides access to the currently logged in user information, or for a specific user when using the `id`, `email`, or `field` parameter.", null);
+        return makeTagDoc(
+          "user Tag",
+          "The `user` tag provides access to the currently logged in user information, or for a specific user when using the `id`, `email`, or `field` parameter.",
+          null
+        );
       }
     };
     user_default = User;
@@ -19190,6 +19865,7 @@ var init_user = __esm({
 var MemberTag, MemberIs, MemberIsnt, MemberProfile, MemberCan, MemberLogout, MemberLogoutUrl, MemberIn, MemberNotIn;
 var init_memberUserAliases = __esm({
   "server/src/antlers/tags/core/memberUserAliases.ts"() {
+    "use strict";
     init_utils();
     init_alias();
     init_user();
@@ -19212,31 +19888,68 @@ var init_memberUserAliases = __esm({
     MemberNotIn = createDefinitionAlias(userNotIn_default, "member:not_in");
     MemberTag.hideFromCompletions = true;
     MemberTag.resolveDocumentation = (params) => {
-      return makeTagDoc("member Tag", "The `member` tag provides access to the currently logged in user information, or for a specific user when using the `id`, `email`, or `field` parameter", null);
+      return makeTagDoc(
+        "member Tag",
+        "The `member` tag provides access to the currently logged in user information, or for a specific user when using the `id`, `email`, or `field` parameter",
+        null
+      );
     };
     MemberIs.resolveDocumentation = (params) => {
-      return makeTagDoc("member:is Tag", "The `member:is` tag can be used to check whether the currently authenticated user has one or more roles.", "https://statamic.dev/tags/user-is");
+      return makeTagDoc(
+        "member:is Tag",
+        "The `member:is` tag can be used to check whether the currently authenticated user has one or more roles.",
+        "https://statamic.dev/tags/user-is"
+      );
     };
     MemberIsnt.resolveDocumentation = (params) => {
-      return makeTagDoc("member:isnt Tag", "The `member:isnt` tag can be used to check whether the currently authenticated user does not have one or more roles.", "https://statamic.dev/tags/user-is#isnt");
+      return makeTagDoc(
+        "member:isnt Tag",
+        "The `member:isnt` tag can be used to check whether the currently authenticated user does not have one or more roles.",
+        "https://statamic.dev/tags/user-is#isnt"
+      );
     };
     MemberProfile.resolveDocumentation = (params) => {
-      return makeTagDoc("member:profile Tag", "The `member:profile` tag provides access to the currently logged in user information, or for a specific user when using the `id`, `email`, or `field` parameter", null);
+      return makeTagDoc(
+        "member:profile Tag",
+        "The `member:profile` tag provides access to the currently logged in user information, or for a specific user when using the `id`, `email`, or `field` parameter",
+        null
+      );
     };
     MemberCan.resolveDocumentation = (params) => {
-      return makeTagDoc("member:can Tag", "The `member:can` tag is used to check if the currently authenticated user has a specific set of permissions. When used as a tag pair, the tag contents will only be rendered if the user has the specified permissions.", "https://statamic.dev/tags/user-can");
+      return makeTagDoc(
+        "member:can Tag",
+        "The `member:can` tag is used to check if the currently authenticated user has a specific set of permissions. When used as a tag pair, the tag contents will only be rendered if the user has the specified permissions.",
+        "https://statamic.dev/tags/user-can"
+      );
     };
     MemberLogout.resolveDocumentation = (params) => {
-      return makeTagDoc("member:logout Tag", "The `member:logout` tag will sign out the currently authenticated user. An optional `redirect` parameter may be used to redirect the visitor to a different page after being logged out.", "https://statamic.dev/tags/user-logout");
+      return makeTagDoc(
+        "member:logout Tag",
+        "The `member:logout` tag will sign out the currently authenticated user. An optional `redirect` parameter may be used to redirect the visitor to a different page after being logged out.",
+        "https://statamic.dev/tags/user-logout"
+      );
     };
     MemberLogoutUrl.resolveDocumentation = (params) => {
-      return makeTagDocWithCodeSample("member:logout_url", "The `member:logout_url` tag can be used to retrieve the URL that will sign the current user out.", `<a href="{{ member:logout_url }}">Log out</a>`, "https://statamic.dev/tags/user-logout_url");
+      return makeTagDocWithCodeSample(
+        "member:logout_url",
+        "The `member:logout_url` tag can be used to retrieve the URL that will sign the current user out.",
+        `<a href="{{ member:logout_url }}">Log out</a>`,
+        "https://statamic.dev/tags/user-logout_url"
+      );
     };
     MemberIn.resolveDocumentation = (params) => {
-      return makeTagDoc("member:in Tag", "The `member:in` tag can be used to check if the currently authenticated user belongs to one or more user groups. When used as a tag pair, the tag contents will only be rendered if the user belongs to the specified groups.", "https://statamic.dev/tags/user-in");
+      return makeTagDoc(
+        "member:in Tag",
+        "The `member:in` tag can be used to check if the currently authenticated user belongs to one or more user groups. When used as a tag pair, the tag contents will only be rendered if the user belongs to the specified groups.",
+        "https://statamic.dev/tags/user-in"
+      );
     };
     MemberNotIn.resolveDocumentation = (params) => {
-      return makeTagDoc("member:not_in Tag", "The `member:not_in` tag can be used to check if the currently authenticated user does not belong to one or more user groups. When used as a tag pair, the tag contents will be rendered if the user does not belong to the specified groups.", "https://statamic.dev/tags/user-in#not-in");
+      return makeTagDoc(
+        "member:not_in Tag",
+        "The `member:not_in` tag can be used to check if the currently authenticated user does not belong to one or more user groups. When used as a tag pair, the tag contents will be rendered if the user does not belong to the specified groups.",
+        "https://statamic.dev/tags/user-in#not-in"
+      );
     };
   }
 });
@@ -19250,6 +19963,7 @@ function makeRoutableVariables(node) {
 }
 var init_routeableVariables = __esm({
   "server/src/antlers/variables/routeableVariables.ts"() {
+    "use strict";
   }
 });
 
@@ -19283,6 +19997,7 @@ function resolveTaxonomyParameterCompletions(parameter, params) {
 var SourceTaxonomyParams, ExcludeTaxonomyParams, AllSourceParams;
 var init_resolveTaxonomyParameterCompletions = __esm({
   "server/src/antlers/tags/core/taxonomies/resolveTaxonomyParameterCompletions.ts"() {
+    "use strict";
     init_conditionItems();
     init_suggestionManager();
     init_tagManager();
@@ -19340,6 +20055,7 @@ function makeTaxonomyNameSuggestions(existingValues, project) {
 var import_vscode_languageserver_types18;
 var init_utils4 = __esm({
   "server/src/antlers/tags/core/taxonomies/utils.ts"() {
+    "use strict";
     import_vscode_languageserver_types18 = __toESM(require_main2());
     init_resolveTaxonomyParameterCompletions();
   }
@@ -19397,18 +20113,30 @@ function augmentTaxonomyScope(node, scope) {
   if (typeof collectionParam !== "undefined" && collectionParam !== null) {
     const collectionNames = collectionParam.getArrayValue();
     if (collectionNames.length > 0) {
-      const collectionFields = scope.statamicProject.getBlueprintFields(collectionNames), aliasScope = scope.introduceScopedAliasScope(node, "entries", "entries", collectionFields);
+      const collectionFields = scope.statamicProject.getBlueprintFields(collectionNames), aliasScope = scope.introduceScopedAliasScope(
+        node,
+        "entries",
+        "entries",
+        collectionFields
+      );
       aliasScope.addVariables(makeContentVariables(node));
     } else {
-      scope.addVariableArray("entries", makeRoutableVariables(node).concat(makeContentVariables(node)));
+      scope.addVariableArray(
+        "entries",
+        makeRoutableVariables(node).concat(makeContentVariables(node))
+      );
     }
   } else {
-    scope.addVariableArray("entries", makeRoutableVariables(node).concat(makeContentVariables(node)));
+    scope.addVariableArray(
+      "entries",
+      makeRoutableVariables(node).concat(makeContentVariables(node))
+    );
   }
   return scope;
 }
 var init_augmentTaxonomiesScope = __esm({
   "server/src/antlers/tags/core/taxonomies/augmentTaxonomiesScope.ts"() {
+    "use strict";
     init_contentVariables();
     init_routeableVariables();
     init_utils4();
@@ -19419,6 +20147,7 @@ var init_augmentTaxonomiesScope = __esm({
 var TaxonomyParameters, parameters_default;
 var init_parameters3 = __esm({
   "server/src/antlers/tags/core/taxonomies/parameters.ts"() {
+    "use strict";
     TaxonomyParameters = [
       {
         name: "from",
@@ -19528,6 +20257,7 @@ function resolveTaxonomyCompletions(params) {
 var import_vscode_languageserver_types19;
 var init_resolveCompletionItems = __esm({
   "server/src/antlers/tags/core/taxonomies/resolveCompletionItems.ts"() {
+    "use strict";
     import_vscode_languageserver_types19 = __toESM(require_main2());
     init_conditionItems();
     init_suggestionManager();
@@ -19540,6 +20270,7 @@ var init_resolveCompletionItems = __esm({
 var TaxonomyTag, taxonomy_default;
 var init_taxonomy = __esm({
   "server/src/antlers/tags/core/taxonomies/taxonomy.ts"() {
+    "use strict";
     init_utils();
     init_dynamicParameterResolver();
     init_augmentTaxonomiesScope();
@@ -19560,7 +20291,11 @@ var init_taxonomy = __esm({
       resovleParameterCompletionItems: resolveTaxonomyParameterCompletions,
       augmentScope: augmentTaxonomyScope,
       resolveDocumentation: (params) => {
-        return makeTagDoc("taxonomy Tag", "The `taxonomy` tag may be used to retrieve taxonomy entries. The taxonomy tag can also be used to access entries associated with any given taxonomy term.", "https://statamic.dev/tags/taxonomy");
+        return makeTagDoc(
+          "taxonomy Tag",
+          "The `taxonomy` tag may be used to retrieve taxonomy entries. The taxonomy tag can also be used to access entries associated with any given taxonomy term.",
+          "https://statamic.dev/tags/taxonomy"
+        );
       }
     };
     taxonomy_default = TaxonomyTag;
@@ -19693,7 +20428,9 @@ function augmentNavScope(node, scope) {
     scope.addBlueprintFields(node, blueprintFields);
     scope.expandScopedAliasScope(node, "page", "page", blueprintFields);
   } else {
-    const blueprintFields = variablesToBlueprintFields(makeRoutableVariables(node));
+    const blueprintFields = variablesToBlueprintFields(
+      makeRoutableVariables(node)
+    );
     scope.addBlueprintFields(node, blueprintFields);
     scope.expandScopedAliasScope(node, "page", "page", blueprintFields);
   }
@@ -19701,6 +20438,7 @@ function augmentNavScope(node, scope) {
 }
 var init_augmentScope = __esm({
   "server/src/antlers/tags/core/nav/augmentScope.ts"() {
+    "use strict";
     init_fields();
     init_routeableVariables();
   }
@@ -19710,6 +20448,7 @@ var init_augmentScope = __esm({
 var NavBreadcrumbs, breadcrumbs_default;
 var init_breadcrumbs = __esm({
   "server/src/antlers/tags/core/nav/breadcrumbs.ts"() {
+    "use strict";
     init_utils();
     init_routeableVariables();
     NavBreadcrumbs = {
@@ -19766,7 +20505,11 @@ var init_breadcrumbs = __esm({
         return scope;
       },
       resolveDocumentation: (params) => {
-        return makeTagDoc("nav:breadcrumbs Tag", "The `nav:breadcrumbs` tag can be used to retrieve the URLs of all pages that make up the current URL back to the site's home page.", "https://statamic.dev/tags/nav-breadcrumbs");
+        return makeTagDoc(
+          "nav:breadcrumbs Tag",
+          "The `nav:breadcrumbs` tag can be used to retrieve the URLs of all pages that make up the current URL back to the site's home page.",
+          "https://statamic.dev/tags/nav-breadcrumbs"
+        );
       }
     };
     breadcrumbs_default = NavBreadcrumbs;
@@ -19787,6 +20530,7 @@ function resolveNavParameterCompletions(parameter, params) {
 }
 var init_parameterCompletions2 = __esm({
   "server/src/antlers/tags/core/nav/parameterCompletions.ts"() {
+    "use strict";
     init_tagManager();
   }
 });
@@ -19795,6 +20539,7 @@ var init_parameterCompletions2 = __esm({
 var NavParameters, parameters_default2;
 var init_parameters4 = __esm({
   "server/src/antlers/tags/core/nav/parameters.ts"() {
+    "use strict";
     NavParameters = [
       {
         isRequired: false,
@@ -19855,6 +20600,7 @@ var init_parameters4 = __esm({
 var import_vscode_languageserver_types20, StructureTag, NavTag;
 var init_nav = __esm({
   "server/src/antlers/tags/core/nav/nav.ts"() {
+    "use strict";
     import_vscode_languageserver_types20 = __toESM(require_main2());
     init_utils();
     init_fieldFormatter();
@@ -19905,7 +20651,11 @@ var init_nav = __esm({
         return EmptyCompletionResult;
       },
       resolveDocumentation: (params) => {
-        return makeTagDoc("nav Tag", "The `nav` tag can be used to iterate structured collections or navigation menus.", "https://statamic.dev/tags/nav");
+        return makeTagDoc(
+          "nav Tag",
+          "The `nav` tag can be used to iterate structured collections or navigation menus.",
+          "https://statamic.dev/tags/nav"
+        );
       }
     };
     NavTag = createDefinitionAlias(StructureTag, "nav");
@@ -19916,6 +20666,7 @@ var init_nav = __esm({
 var FormHandleParam, formHandleParam_default;
 var init_formHandleParam = __esm({
   "server/src/antlers/tags/core/form/formHandleParam.ts"() {
+    "use strict";
     FormHandleParam = {
       name: "in",
       description: "The form to use",
@@ -19934,6 +20685,7 @@ var init_formHandleParam = __esm({
 var import_vscode_languageserver_types21, FormHttpVerbCompletions, httpVerbItems_default;
 var init_httpVerbItems = __esm({
   "server/src/suggestions/defaults/httpVerbItems.ts"() {
+    "use strict";
     import_vscode_languageserver_types21 = __toESM(require_main2());
     FormHttpVerbCompletions = [
       { label: "GET", kind: import_vscode_languageserver_types21.CompletionItemKind.EnumMember },
@@ -19959,6 +20711,7 @@ function resolveFormParameterCompletions(parameter, params) {
 var HandleParams;
 var init_parameterCompletions3 = __esm({
   "server/src/antlers/tags/core/form/parameterCompletions.ts"() {
+    "use strict";
     init_booleanItems();
     init_httpVerbItems();
     init_tagManager();
@@ -19988,6 +20741,7 @@ function resolveFormSetReference(context, project) {
 }
 var init_resolveFormSetReference = __esm({
   "server/src/antlers/tags/core/form/resolveFormSetReference.ts"() {
+    "use strict";
   }
 });
 
@@ -20014,6 +20768,7 @@ function getFormHandle(node) {
 var IgnoreFormTagParts;
 var init_utils5 = __esm({
   "server/src/antlers/tags/core/form/utils.ts"() {
+    "use strict";
     init_parameterCompletions3();
     IgnoreFormTagParts = [
       "set",
@@ -20030,6 +20785,7 @@ var init_utils5 = __esm({
 var FormCreate, formCreate_default;
 var init_formCreate = __esm({
   "server/src/antlers/tags/core/form/formCreate.ts"() {
+    "use strict";
     init_utils();
     init_scopeUtilities();
     init_fieldsVariables();
@@ -20116,7 +20872,11 @@ var init_formCreate = __esm({
         return scope;
       },
       resolveDocumentation: (params) => {
-        return makeTagDoc("form:create Tag", "The `form:create` tag can be used to access form data, generate field HTML markup, and handle form validation errors.", "https://statamic.dev/tags/form-create");
+        return makeTagDoc(
+          "form:create Tag",
+          "The `form:create` tag can be used to access form data, generate field HTML markup, and handle form validation errors.",
+          "https://statamic.dev/tags/form-create"
+        );
       }
     };
     formCreate_default = FormCreate;
@@ -20127,6 +20887,7 @@ var init_formCreate = __esm({
 var FormErrors, formErrors_default;
 var init_formErrors = __esm({
   "server/src/antlers/tags/core/form/formErrors.ts"() {
+    "use strict";
     init_utils();
     init_tagManager();
     init_formHandleParam();
@@ -20151,7 +20912,11 @@ var init_formErrors = __esm({
         return null;
       },
       resolveDocumentation: (params) => {
-        return makeTagDoc("form:errors Tag", "The `form:errors` tag can be used to retrieve validation errors after a user has submitted a form.", "https://statamic.dev/tags/form-errors");
+        return makeTagDoc(
+          "form:errors Tag",
+          "The `form:errors` tag can be used to retrieve validation errors after a user has submitted a form.",
+          "https://statamic.dev/tags/form-errors"
+        );
       }
     };
     formErrors_default = FormErrors;
@@ -20162,6 +20927,7 @@ var init_formErrors = __esm({
 var FormSetTag, formSet_default;
 var init_formSet = __esm({
   "server/src/antlers/tags/core/form/formSet.ts"() {
+    "use strict";
     init_utils();
     init_parameterCompletions3();
     FormSetTag = {
@@ -20186,7 +20952,11 @@ var init_formSet = __esm({
       ],
       resovleParameterCompletionItems: resolveFormParameterCompletions,
       resolveDocumentation: (params) => {
-        return makeTagDoc("form:set Tag", "The `form:set` tag can be used to set the form handle on all nested form tags.", "https://statamic.dev/tags/form-set");
+        return makeTagDoc(
+          "form:set Tag",
+          "The `form:set` tag can be used to set the form handle on all nested form tags.",
+          "https://statamic.dev/tags/form-set"
+        );
       }
     };
     formSet_default = FormSetTag;
@@ -20197,6 +20967,7 @@ var init_formSet = __esm({
 var FormSubmission, formSubmission_default;
 var init_formSubmission = __esm({
   "server/src/antlers/tags/core/form/formSubmission.ts"() {
+    "use strict";
     init_utils();
     init_tagManager();
     init_formHandleParam();
@@ -20228,7 +20999,11 @@ var init_formSubmission = __esm({
         return scope;
       },
       resolveDocumentation: (params) => {
-        return makeTagDoc("form:submission Tag", "The `form:submission` tag can be used to access the form submission submitted by the current user.", "https://statamic.dev/tags/form-submission");
+        return makeTagDoc(
+          "form:submission Tag",
+          "The `form:submission` tag can be used to access the form submission submitted by the current user.",
+          "https://statamic.dev/tags/form-submission"
+        );
       }
     };
     formSubmission_default = FormSubmission;
@@ -20239,6 +21014,7 @@ var init_formSubmission = __esm({
 var FormSubmissions, formSubmissions_default;
 var init_formSubmissions = __esm({
   "server/src/antlers/tags/core/form/formSubmissions.ts"() {
+    "use strict";
     init_utils();
     init_tagManager();
     init_formHandleParam();
@@ -20294,7 +21070,11 @@ var init_formSubmissions = __esm({
         return scope;
       },
       resolveDocumentation: (params) => {
-        return makeTagDoc("form:submissions Tag", "The `form:submissions` tag can be used to fetch previously saved submissions for a form.", "https://statamic.dev/tags/form-submissions");
+        return makeTagDoc(
+          "form:submissions Tag",
+          "The `form:submissions` tag can be used to fetch previously saved submissions for a form.",
+          "https://statamic.dev/tags/form-submissions"
+        );
       }
     };
     formSubmissions_default = FormSubmissions;
@@ -20305,6 +21085,7 @@ var init_formSubmissions = __esm({
 var FormSuccess, formSuccess_default;
 var init_formSuccess = __esm({
   "server/src/antlers/tags/core/form/formSuccess.ts"() {
+    "use strict";
     init_utils();
     init_tagManager();
     init_formHandleParam();
@@ -20329,7 +21110,11 @@ var init_formSuccess = __esm({
         return null;
       },
       resolveDocumentation: (params) => {
-        return makeTagDoc("form:success Tag", "The `form:success` tag can be used to check if a form submission was successful or not.", "https://statamic.dev/tags/form-success");
+        return makeTagDoc(
+          "form:success Tag",
+          "The `form:success` tag can be used to check if a form submission was successful or not.",
+          "https://statamic.dev/tags/form-success"
+        );
       }
     };
     formSuccess_default = FormSuccess;
@@ -20340,6 +21125,7 @@ var init_formSuccess = __esm({
 var import_vscode_languageserver_types22, FormCompletions, FormTag, form_default;
 var init_form = __esm({
   "server/src/antlers/tags/core/form/form.ts"() {
+    "use strict";
     import_vscode_languageserver_types22 = __toESM(require_main2());
     init_documentedLabel();
     init_tagManager();
@@ -20473,6 +21259,7 @@ function makeDefaultSearchResultVariables(node) {
 var SearchResultsTag, SearchCompletionItems, BaseSearchTag;
 var init_search = __esm({
   "server/src/antlers/tags/core/search.ts"() {
+    "use strict";
     init_utils();
     init_documentedLabel();
     init_tagManager();
@@ -20581,14 +21368,21 @@ var init_search = __esm({
         ]);
         const asParam = node.findParameter("as");
         if (asParam != null && asParam.value.trim().length > 0) {
-          scope.addVariableArray(asParam.value, makeDefaultSearchResultVariables(node));
+          scope.addVariableArray(
+            asParam.value,
+            makeDefaultSearchResultVariables(node)
+          );
         } else {
           scope.addVariables(makeDefaultSearchResultVariables(node));
         }
         return scope;
       },
       resolveDocumentation: (params) => {
-        return makeTagDoc("search:results Tag", "The `search:results` tag provides access to all data that was returned as a result of a user's search.", "https://statamic.dev/tags/search");
+        return makeTagDoc(
+          "search:results Tag",
+          "The `search:results` tag provides access to all data that was returned as a result of a user's search.",
+          "https://statamic.dev/tags/search"
+        );
       }
     };
     SearchCompletionItems = [
@@ -20623,6 +21417,7 @@ function makeUserLoginFields(node) {
 var UserLoginForm, MemberLoginForm;
 var init_userLoginForm = __esm({
   "server/src/antlers/tags/core/userLoginForm.ts"() {
+    "use strict";
     init_utils();
     init_alias();
     init_dynamicParameterResolver();
@@ -20678,7 +21473,11 @@ var init_userLoginForm = __esm({
         return scope;
       },
       resolveDocumentation: (params) => {
-        return makeTagDoc("user:login_form Tag", "The `user:login_form` tag can be used to quickly create a form that users can use to authenticate with the site.", "https://statamic.dev/tags/user-login_form");
+        return makeTagDoc(
+          "user:login_form Tag",
+          "The `user:login_form` tag can be used to quickly create a form that users can use to authenticate with the site.",
+          "https://statamic.dev/tags/user-login_form"
+        );
       }
     };
     MemberLoginForm = createDefinitionAlias(UserLoginForm, "member:login_form");
@@ -20689,6 +21488,7 @@ var init_userLoginForm = __esm({
 var NoParse, noParse_default;
 var init_noParse = __esm({
   "server/src/antlers/tags/core/noParse.ts"() {
+    "use strict";
     init_utils();
     NoParse = {
       tagName: "noparse",
@@ -20700,7 +21500,11 @@ var init_noParse = __esm({
       parameters: [],
       introducedIn: null,
       resolveDocumentation: (params) => {
-        return makeTagDoc("noparse Tag", "The `noparse` tag is used prevent blocks of Antlers code from being parsed, removing the need to escape individual Antlers code regions.", "https://statamic.dev/antlers#the-noparse-tag");
+        return makeTagDoc(
+          "noparse Tag",
+          "The `noparse` tag is used prevent blocks of Antlers code from being parsed, removing the need to escape individual Antlers code regions.",
+          "https://statamic.dev/antlers#the-noparse-tag"
+        );
       }
     };
     noParse_default = NoParse;
@@ -20711,6 +21515,7 @@ var init_noParse = __esm({
 var Unless, unless_default;
 var init_unless = __esm({
   "server/src/antlers/tags/core/conditions/unless.ts"() {
+    "use strict";
     init_utils();
     init_dynamicParameterResolver();
     Unless = {
@@ -20724,7 +21529,11 @@ var init_unless = __esm({
       parameters: [],
       resolveDynamicParameter: returnDynamicParameter,
       resolveDocumentation: (docs) => {
-        return makeTagDoc("unless Conditional Control Structure", "The `unless` control structure operates the same as an `if` statement, but has it's logic inverted.", "https://statamic.dev/antlers#conditions");
+        return makeTagDoc(
+          "unless Conditional Control Structure",
+          "The `unless` control structure operates the same as an `if` statement, but has it's logic inverted.",
+          "https://statamic.dev/antlers#conditions"
+        );
       }
     };
     unless_default = Unless;
@@ -20735,6 +21544,7 @@ var init_unless = __esm({
 var ElseUnless, elseUnless_default;
 var init_elseUnless = __esm({
   "server/src/antlers/tags/core/conditions/elseUnless.ts"() {
+    "use strict";
     init_utils();
     init_dynamicParameterResolver();
     ElseUnless = {
@@ -20748,7 +21558,11 @@ var init_elseUnless = __esm({
       parameters: [],
       resolveDynamicParameter: returnDynamicParameter,
       resolveDocumentation: (docs) => {
-        return makeTagDoc("elseunless Conditional Control Structure", "The `elseunless` control structure operates the same as an `elseif` statement, but has it's logic inverted.", "https://statamic.dev/antlers#conditions");
+        return makeTagDoc(
+          "elseunless Conditional Control Structure",
+          "The `elseunless` control structure operates the same as an `elseif` statement, but has it's logic inverted.",
+          "https://statamic.dev/antlers#conditions"
+        );
       }
     };
     elseUnless_default = ElseUnless;
@@ -20759,6 +21573,7 @@ var init_elseUnless = __esm({
 var import_vscode_languageserver8, InstalledTag;
 var init_installed = __esm({
   "server/src/antlers/tags/core/installed.ts"() {
+    "use strict";
     import_vscode_languageserver8 = __toESM(require_main4());
     init_utils();
     init_tagManager();
@@ -20785,11 +21600,16 @@ var init_installed = __esm({
         return EmptyCompletionResult;
       },
       resolveDocumentation: (params) => {
-        return makeTagDocWithCodeSample("installed Tag", "The `installed` tag is used to check if the site has a specific Composer package available.", `{{ if {installed:composer/package-name} }}
+        return makeTagDocWithCodeSample(
+          "installed Tag",
+          "The `installed` tag is used to check if the site has a specific Composer package available.",
+          `{{ if {installed:composer/package-name} }}
     {{# Package is availabl.e #}}
 {{ else }}
     {{# Something else. #}}
-{{ /if }}`, "https://statamic.dev/tags/installed");
+{{ /if }}`,
+          "https://statamic.dev/tags/installed"
+        );
       }
     };
   }
@@ -20799,6 +21619,7 @@ var init_installed = __esm({
 var Relate, relate_default;
 var init_relate = __esm({
   "server/src/antlers/tags/core/relate.ts"() {
+    "use strict";
     Relate = {
       tagName: "relate",
       hideFromCompletions: true,
@@ -20817,6 +21638,7 @@ var init_relate = __esm({
 var GetErrorsParameters;
 var init_getErrorsParameters = __esm({
   "server/src/antlers/tags/core/getErrors/getErrorsParameters.ts"() {
+    "use strict";
     GetErrorsParameters = [
       {
         name: "bag",
@@ -20836,6 +21658,7 @@ var init_getErrorsParameters = __esm({
 var GetErrors, getErrors_default;
 var init_getErrors = __esm({
   "server/src/antlers/tags/core/getErrors/getErrors.ts"() {
+    "use strict";
     init_utils();
     init_getErrorsParameters();
     GetErrors = {
@@ -20915,7 +21738,11 @@ var init_getErrors = __esm({
         return scope;
       },
       resolveDocumentation: (params) => {
-        return makeTagDoc("get_errors Tag", "The `get_errors` tag can be used to retrieve form validation errors.", "https://statamic.dev/tags/get_errors");
+        return makeTagDoc(
+          "get_errors Tag",
+          "The `get_errors` tag can be used to retrieve form validation errors.",
+          "https://statamic.dev/tags/get_errors"
+        );
       }
     };
     getErrors_default = GetErrors;
@@ -20926,6 +21753,7 @@ var init_getErrors = __esm({
 var GetAllErrors, getAllErrors_default;
 var init_getAllErrors = __esm({
   "server/src/antlers/tags/core/getErrors/getAllErrors.ts"() {
+    "use strict";
     init_utils();
     init_getErrorsParameters();
     GetAllErrors = {
@@ -20963,7 +21791,11 @@ var init_getAllErrors = __esm({
         return scope;
       },
       resolveDocumentation: (params) => {
-        return makeTagDoc("get_errors:all Tag", "The `get_errors:all` tag can be used to retrieve all form validation errors.", "https://statamic.dev/tags/get_errors#list-all-validation-errors");
+        return makeTagDoc(
+          "get_errors:all Tag",
+          "The `get_errors:all` tag can be used to retrieve all form validation errors.",
+          "https://statamic.dev/tags/get_errors#list-all-validation-errors"
+        );
       }
     };
     getAllErrors_default = GetAllErrors;
@@ -20974,6 +21806,7 @@ var init_getAllErrors = __esm({
 var GetError, getError_default;
 var init_getError = __esm({
   "server/src/antlers/tags/core/getErrors/getError.ts"() {
+    "use strict";
     init_utils();
     init_getErrorsParameters();
     GetError = {
@@ -21009,7 +21842,11 @@ var init_getError = __esm({
         return scope;
       },
       resolveDocumentation: (params) => {
-        return makeTagDoc("get_error Tag", "The `get_error` tag can be used to retrieve the first error message for a specific field.", "https://statamic.dev/tags/get_errors#get-the-first-error-for-a-specific-field");
+        return makeTagDoc(
+          "get_error Tag",
+          "The `get_error` tag can be used to retrieve the first error message for a specific field.",
+          "https://statamic.dev/tags/get_errors#get-the-first-error-for-a-specific-field"
+        );
       }
     };
     getError_default = GetError;
@@ -21020,6 +21857,7 @@ var init_getError = __esm({
 var SetTag, set_default;
 var init_set = __esm({
   "server/src/antlers/tags/core/set.ts"() {
+    "use strict";
     SetTag = {
       tagName: "set",
       hideFromCompletions: true,
@@ -21038,6 +21876,7 @@ var init_set = __esm({
 var import_vscode_languageserver9, MountUrlTag, mountUrl_default;
 var init_mountUrl = __esm({
   "server/src/antlers/tags/core/mountUrl.ts"() {
+    "use strict";
     import_vscode_languageserver9 = __toESM(require_main4());
     init_utils();
     init_tagManager();
@@ -21063,7 +21902,11 @@ var init_mountUrl = __esm({
         }
       ],
       resolveDocumentation: (params) => {
-        return makeTagDoc("mount Tag", "The `mount` tag can be used to retrieve the mount URL for a given collection.", null);
+        return makeTagDoc(
+          "mount Tag",
+          "The `mount` tag can be used to retrieve the mount URL for a given collection.",
+          null
+        );
       },
       resovleParameterCompletionItems: (parameter, params) => {
         var _a, _b, _c, _d;
@@ -21101,6 +21944,7 @@ var init_mountUrl = __esm({
 var Vite, vite_default;
 var init_vite = __esm({
   "server/src/antlers/tags/core/vite.ts"() {
+    "use strict";
     init_utils();
     Vite = {
       tagName: "vite",
@@ -21123,7 +21967,12 @@ var init_vite = __esm({
         }
       ],
       resolveDocumentation: (params) => {
-        return makeTagDocWithCodeSample("vite Tag", "Generates Vite tags for an entrypoint.", `{{ vite src="entry/point" }}`, null);
+        return makeTagDocWithCodeSample(
+          "vite Tag",
+          "Generates Vite tags for an entrypoint.",
+          `{{ vite src="entry/point" }}`,
+          null
+        );
       }
     };
     vite_default = Vite;
@@ -21134,6 +21983,7 @@ var init_vite = __esm({
 var NoCache, nocache_default;
 var init_nocache = __esm({
   "server/src/antlers/tags/core/nocache.ts"() {
+    "use strict";
     init_utils();
     NoCache = {
       tagName: "nocache",
@@ -21145,9 +21995,14 @@ var init_nocache = __esm({
       parameters: [],
       introducedIn: null,
       resolveDocumentation: (params) => {
-        return makeTagDocWithCodeSample("nocache Tag", "The `nocache` tag is used to mark regions of a template. These regions will continue to update even when using caching strategies such as the full or half-measure cache.", `{{ nocache }} 
+        return makeTagDocWithCodeSample(
+          "nocache Tag",
+          "The `nocache` tag is used to mark regions of a template. These regions will continue to update even when using caching strategies such as the full or half-measure cache.",
+          `{{ nocache }} 
     <!-- This content will remain dynamic. -->
-{{ /nocache }}`, "https://statamic.dev/tags/nocache");
+{{ /nocache }}`,
+          "https://statamic.dev/tags/nocache"
+        );
       }
     };
     nocache_default = NoCache;
@@ -21164,6 +22019,7 @@ function makeUserPermissionsVariables(node) {
 }
 var init_userPermissionsVariables = __esm({
   "server/src/antlers/variables/userPermissionsVariables.ts"() {
+    "use strict";
   }
 });
 
@@ -21171,6 +22027,7 @@ var init_userPermissionsVariables = __esm({
 var UserRoles, userRoles_default;
 var init_userRoles = __esm({
   "server/src/antlers/tags/core/userRoles.ts"() {
+    "use strict";
     init_utils();
     init_userPermissionsVariables();
     UserRoles = {
@@ -21201,7 +22058,11 @@ var init_userRoles = __esm({
         return scope;
       },
       resolveDocumentation: (params) => {
-        return makeTagDoc("user_roles Tag", "The `user_roles` tag can be used to return information about a site's user roles.", null);
+        return makeTagDoc(
+          "user_roles Tag",
+          "The `user_roles` tag can be used to return information about a site's user roles.",
+          null
+        );
       }
     };
     userRoles_default = UserRoles;
@@ -21212,6 +22073,7 @@ var init_userRoles = __esm({
 var UserGroups, userGroups_default;
 var init_userGroups = __esm({
   "server/src/antlers/tags/core/userGroups.ts"() {
+    "use strict";
     init_utils();
     init_userPermissionsVariables();
     UserGroups = {
@@ -21242,7 +22104,11 @@ var init_userGroups = __esm({
         return scope;
       },
       resolveDocumentation: (params) => {
-        return makeTagDoc("user_groups Tag", "The `user_groups` tag can be used to return information about a site's user groups.", null);
+        return makeTagDoc(
+          "user_groups Tag",
+          "The `user_groups` tag can be used to return information about a site's user groups.",
+          null
+        );
       }
     };
     userGroups_default = UserGroups;
@@ -21253,6 +22119,7 @@ var init_userGroups = __esm({
 var CookieForget, cookieForget_default;
 var init_cookieForget = __esm({
   "server/src/antlers/tags/core/cookie/cookieForget.ts"() {
+    "use strict";
     CookieForget = {
       tagName: "cookie:forget",
       allowsArbitraryParameters: false,
@@ -21282,6 +22149,7 @@ var init_cookieForget = __esm({
 var CookieHas, cookieHas_default;
 var init_cookieHas = __esm({
   "server/src/antlers/tags/core/cookie/cookieHas.ts"() {
+    "use strict";
     CookieHas = {
       tagName: "cookie:has",
       allowsArbitraryParameters: false,
@@ -21311,6 +22179,7 @@ var init_cookieHas = __esm({
 var CookieSet, cookieSet_default;
 var init_cookieSet = __esm({
   "server/src/antlers/tags/core/cookie/cookieSet.ts"() {
+    "use strict";
     CookieSet = {
       tagName: "cookie:set",
       allowsArbitraryParameters: true,
@@ -21340,6 +22209,7 @@ var init_cookieSet = __esm({
 var CookieValue, cookieValue_default;
 var init_cookieValue = __esm({
   "server/src/antlers/tags/core/cookie/cookieValue.ts"() {
+    "use strict";
     CookieValue = {
       tagName: "cookie:value",
       allowsArbitraryParameters: false,
@@ -21369,6 +22239,7 @@ var init_cookieValue = __esm({
 var CookieCompletions, CookieTag, cookie_default;
 var init_cookie = __esm({
   "server/src/antlers/tags/core/cookie/cookie.ts"() {
+    "use strict";
     init_documentedLabel();
     init_tagManager();
     init_cookieForget();
@@ -21405,6 +22276,7 @@ var init_cookie = __esm({
 var coreTags;
 var init_coreTags = __esm({
   "server/src/antlers/tags/coreTags.ts"() {
+    "use strict";
     init_collection();
     init_cache();
     init_dump();
@@ -21655,6 +22527,7 @@ var init_coreTags = __esm({
 var import_vscode_languageserver10, TagManager, tagManagerInstance_default;
 var init_tagManagerInstance = __esm({
   "server/src/antlers/tagManagerInstance.ts"() {
+    "use strict";
     import_vscode_languageserver10 = __toESM(require_main4());
     init_projectManager();
     init_attributeSuggestions();
@@ -21772,7 +22645,9 @@ var init_tagManagerInstance = __esm({
         }
         if (params.currentNode != null) {
           if (this.isKnownTag(params.currentNode.runtimeName())) {
-            const tagReference = this.findTag(params.currentNode.runtimeName());
+            const tagReference = this.findTag(
+              params.currentNode.runtimeName()
+            );
             if (typeof tagReference === "undefined") {
               return {
                 isExclusive: false,
@@ -21792,7 +22667,9 @@ var init_tagManagerInstance = __esm({
               resolvedParams = resolvedParams.concat(result.items);
             }
             if (params.isPastTagPart == false) {
-              const tagMethodNames = this.getPossibleTagMethods(tagReference.tagName);
+              const tagMethodNames = this.getPossibleTagMethods(
+                tagReference.tagName
+              );
               for (let i = 0; i < tagMethodNames.length; i++) {
                 resolvedParams.push({
                   label: tagMethodNames[i],
@@ -21802,7 +22679,9 @@ var init_tagManagerInstance = __esm({
             }
             if (runDefaultAnalysis) {
               if (params.isCaretInTag == true && tagReference.parameters.length > 0) {
-                resolvedParams = resolvedParams.concat(makeTagParameterSuggestions(params, tagReference.parameters));
+                resolvedParams = resolvedParams.concat(
+                  makeTagParameterSuggestions(params, tagReference.parameters)
+                );
                 if (tagReference.tagName == "partial") {
                   if (lastScopeItem == null ? void 0 : lastScopeItem.hasMethodPart()) {
                     const lastMethodName = lastScopeItem.getMethodNameValue();
@@ -21810,7 +22689,12 @@ var init_tagManagerInstance = __esm({
                       if ((_a = projectManager_default.instance) == null ? void 0 : _a.hasStructure()) {
                         const projectView = projectManager_default.instance.getStructure().findPartial(lastMethodName);
                         if (projectView != null && projectView.injectsParameters.length > 0) {
-                          resolvedParams = resolvedParams.concat(makeTagParameterSuggestions(params, projectView.injectsParameters));
+                          resolvedParams = resolvedParams.concat(
+                            makeTagParameterSuggestions(
+                              params,
+                              projectView.injectsParameters
+                            )
+                          );
                         }
                       }
                     }
@@ -21822,7 +22706,9 @@ var init_tagManagerInstance = __esm({
                   const thisRuntimeType = params.nodesInScope[i].runtimeType;
                   if (thisRuntimeType != null && thisRuntimeType.assumedType == "structure_ref" && thisRuntimeType.supplementedFields != null) {
                     for (let j = 0; j < thisRuntimeType.supplementedFields.length; j++) {
-                      resolvedParams.push(formatSuggestion(thisRuntimeType.supplementedFields[j]));
+                      resolvedParams.push(
+                        formatSuggestion(thisRuntimeType.supplementedFields[j])
+                      );
                     }
                   }
                 }
@@ -21938,6 +22824,7 @@ var init_tagManagerInstance = __esm({
 var _Scope, Scope;
 var init_scope = __esm({
   "server/src/antlers/scope/scope.ts"() {
+    "use strict";
     init_scopeUtilities();
     init_simpleIds();
     _Scope = class {
@@ -22357,6 +23244,7 @@ function getSystemVariables() {
 }
 var init_systemVariables = __esm({
   "server/src/antlers/variables/systemVariables.ts"() {
+    "use strict";
     init_scope();
   }
 });
@@ -22453,6 +23341,7 @@ function checkNodeForPagination(node, scope) {
 }
 var init_paginationFactory = __esm({
   "server/src/antlers/scope/factories/paginationFactory.ts"() {
+    "use strict";
   }
 });
 
@@ -22460,6 +23349,7 @@ var init_paginationFactory = __esm({
 var InjectionManager, injections_default;
 var init_injections = __esm({
   "server/src/antlers/scope/injections.ts"() {
+    "use strict";
     init_strings();
     init_scope();
     InjectionManager = class {
@@ -22489,7 +23379,9 @@ var init_injections = __esm({
               if (!this.fileInjections.has(projectPartial.documentUri)) {
                 this.fileInjections.set(projectPartial.documentUri, /* @__PURE__ */ new Map());
               }
-              const partialFiles = this.fileInjections.get(projectPartial.documentUri);
+              const partialFiles = this.fileInjections.get(
+                projectPartial.documentUri
+              );
               partialFiles.set(fileName, newNodes);
             }
           }
@@ -22519,7 +23411,9 @@ var init_injections = __esm({
                 } else if (thisParam.isVariableReference) {
                   if (node.currentScope != null) {
                     if (node.currentScope.hasListInHistory(thisParam.value)) {
-                      const injectList = node.currentScope.findNestedScope(thisParam.value);
+                      const injectList = node.currentScope.findNestedScope(
+                        thisParam.value
+                      );
                       if (injectList != null) {
                         const adjustedName = trimLeft(thisParam.name, ":"), nestedInjection = injectList.copy();
                         nestedInjection.name = adjustedName;
@@ -22547,6 +23441,7 @@ var init_injections = __esm({
 var IgnoreArrayContextualData, ChecksForFieldReferences, ScopeEngine;
 var init_engine = __esm({
   "server/src/antlers/scope/engine.ts"() {
+    "use strict";
     init_parser();
     init_blueprintTypes();
     init_referenceManager();
@@ -22775,8 +23670,10 @@ var init_engine = __esm({
             activeScopes.push(currentScope);
           }
           if (currentNode.getTagName() == "scope" && currentNode.hasMethodPart()) {
-            const snapshot = activeScopes[activeScopes.length - 2].copy();
-            currentScope.addScopeList(currentNode.getMethodNameValue(), snapshot);
+            if (activeScopes.length > 2) {
+              const snapshot = activeScopes[activeScopes.length - 2].copy();
+              currentScope.addScopeList(currentNode.getMethodNameValue(), snapshot);
+            }
           }
           if (currentScope.containsPath(currentNode.runtimeName())) {
             currentScopeParts.push(currentNode.id());
@@ -22949,6 +23846,7 @@ var init_engine = __esm({
 var GlobalRuntimeState;
 var init_globalRuntimeState = __esm({
   "server/src/runtime/runtime/globalRuntimeState.ts"() {
+    "use strict";
     GlobalRuntimeState = class {
     };
     GlobalRuntimeState.globalTagEnterStack = [];
@@ -22960,6 +23858,7 @@ var init_globalRuntimeState = __esm({
 var TagIdentifier;
 var init_tagIdentifier = __esm({
   "server/src/runtime/nodes/tagIdentifier.ts"() {
+    "use strict";
     TagIdentifier = class {
       constructor() {
         this.name = "";
@@ -23008,6 +23907,7 @@ var init_tagIdentifier = __esm({
 var _EnvironmentDetails, EnvironmentDetails;
 var init_environmentDetails = __esm({
   "server/src/runtime/runtime/environmentDetails.ts"() {
+    "use strict";
     init_modifierManager();
     init_tagManagerInstance();
     _EnvironmentDetails = class {
@@ -23017,7 +23917,9 @@ var init_environmentDetails = __esm({
       }
       getModifierNames() {
         var _a, _b;
-        return this.modifierNames.concat((_b = (_a = modifierManager_default.instance) == null ? void 0 : _a.getModifierNames()) != null ? _b : []);
+        return this.modifierNames.concat(
+          (_b = (_a = modifierManager_default.instance) == null ? void 0 : _a.getModifierNames()) != null ? _b : []
+        );
       }
       getTagNames() {
         var _a, _b;
@@ -23063,6 +23965,7 @@ var init_environmentDetails = __esm({
 var _NodeTypeAnalyzer, NodeTypeAnalyzer, nodeTypeAnalyzer_default;
 var init_nodeTypeAnalyzer = __esm({
   "server/src/runtime/analyzers/nodeTypeAnalyzer.ts"() {
+    "use strict";
     init_abstractNode();
     init_environmentDetails();
     _NodeTypeAnalyzer = class {
@@ -23085,10 +23988,14 @@ var init_nodeTypeAnalyzer = __esm({
           return;
         }
         if (_NodeTypeAnalyzer.environmentDetails != null && node.name != null) {
-          node.isTagNode = _NodeTypeAnalyzer.environmentDetails.isTag(node.name.name);
+          node.isTagNode = _NodeTypeAnalyzer.environmentDetails.isTag(
+            node.name.name
+          );
         }
         if (node.name != null) {
-          node.isConditionNode = EnvironmentDetails.alwaysLikeTag.includes(node.name.name);
+          node.isConditionNode = EnvironmentDetails.alwaysLikeTag.includes(
+            node.name.name
+          );
         }
       }
       static analyzeParametersForModifiers(node) {
@@ -23112,6 +24019,7 @@ var init_nodeTypeAnalyzer = __esm({
 var TagIdentifierAnalyzer;
 var init_tagIdentifierAnalyzer = __esm({
   "server/src/runtime/analyzers/tagIdentifierAnalyzer.ts"() {
+    "use strict";
     init_tagIdentifier();
     TagIdentifierAnalyzer = class {
       static getIdentifier(input) {
@@ -23146,6 +24054,7 @@ var init_tagIdentifierAnalyzer = __esm({
 var _TypeLabeler, TypeLabeler;
 var init_typeLabeler = __esm({
   "server/src/runtime/errors/typeLabeler.ts"() {
+    "use strict";
     init_abstractNode();
     _TypeLabeler = class {
       static getPrettyTypeName(token) {
@@ -23365,6 +24274,7 @@ var init_typeLabeler = __esm({
 var LanguageKeywords;
 var init_languageKeywords = __esm({
   "server/src/runtime/parser/languageKeywords.ts"() {
+    "use strict";
     LanguageKeywords = class {
       static isLanguageLogicalKeyword(value) {
         if (value == this.LogicalAnd || value == this.LogicalNot || value == this.LogicalOr || value == this.LogicalXor) {
@@ -23389,6 +24299,7 @@ var init_languageKeywords = __esm({
 var AntlersLexer;
 var init_antlersLexer = __esm({
   "server/src/runtime/lexer/antlersLexer.ts"() {
+    "use strict";
     init_antlersError();
     init_antlersErrorCodes();
     init_typeLabeler();
@@ -23519,7 +24430,11 @@ var init_antlersLexer = __esm({
       }
       guardAgainstNeighboringTypesInModifier(current) {
         if (this.lastNode instanceof ModifierValueNode) {
-          this.pushError(AntlersError.makeSyntaxError(AntlersErrorCodes.TYPE_MODIFIER_INCORRECT_VALUE_POSITION, this.lastNode, "Incorrect type [" + TypeLabeler.getPrettyTypeName(current) + "] near [" + TypeLabeler.getPrettyTypeName(this.lastNode) + "]"));
+          this.pushError(AntlersError.makeSyntaxError(
+            AntlersErrorCodes.TYPE_MODIFIER_INCORRECT_VALUE_POSITION,
+            this.lastNode,
+            "Incorrect type [" + TypeLabeler.getPrettyTypeName(current) + "] near [" + TypeLabeler.getPrettyTypeName(this.lastNode) + "]"
+          ));
         }
         return false;
       }
@@ -23549,7 +24464,11 @@ var init_antlersLexer = __esm({
           if (this.isParsingString == false) {
             if (this.cur == DocumentParser.String_Terminator_DoubleQuote || this.cur == DocumentParser.String_Terminator_SingleQuote) {
               if (this.prev == DocumentParser.String_EscapeCharacter) {
-                this.pushError(AntlersError.makeSyntaxError(AntlersErrorCodes.TYPE_ILLEGAL_STRING_ESCAPE_SEQUENCE, node, "Illegal string escape sequence outside string parsing."));
+                this.pushError(AntlersError.makeSyntaxError(
+                  AntlersErrorCodes.TYPE_ILLEGAL_STRING_ESCAPE_SEQUENCE,
+                  node,
+                  "Illegal string escape sequence outside string parsing."
+                ));
                 continue;
               }
               this.rawContent = [];
@@ -24371,6 +25290,7 @@ var init_antlersLexer = __esm({
 var _PathParser, PathParser;
 var init_pathParser = __esm({
   "server/src/runtime/parser/pathParser.ts"() {
+    "use strict";
     init_antlersError();
     init_antlersErrorCodes();
     init_abstractNode();
@@ -24502,7 +25422,11 @@ var init_pathParser = __esm({
             } else {
               if (this.prev != null && this.prev != DocumentParser.LeftBracket) {
                 if (StringUtilities.ctypeAlpha(this.prev) || StringUtilities.ctypeDigit(this.prev)) {
-                  this.antlersErrors.push(AntlersError.makeSyntaxError(AntlersErrorCodes.PATH_STRING_NOT_INSIDE_ARRAY_ACCESSOR, null, "Unexpected string start while parsing variable path. String literals must be within array accessors."));
+                  this.antlersErrors.push(AntlersError.makeSyntaxError(
+                    AntlersErrorCodes.PATH_STRING_NOT_INSIDE_ARRAY_ACCESSOR,
+                    null,
+                    "Unexpected string start while parsing variable path. String literals must be within array accessors."
+                  ));
                 }
               }
               this.isParsingString = true;
@@ -24546,7 +25470,11 @@ var init_pathParser = __esm({
               currentChars = [];
             }
             if (this.next == null || StringUtilities.ctypeSpace(this.next)) {
-              this.antlersErrors.push(AntlersError.makeSyntaxError(AntlersErrorCodes.TYPE_ILLEGAL_VARPATH_SPACE_RIGHT, null, "Unexpected end of input or whitespace while parsing variable accessor path."));
+              this.antlersErrors.push(AntlersError.makeSyntaxError(
+                AntlersErrorCodes.TYPE_ILLEGAL_VARPATH_SPACE_RIGHT,
+                null,
+                "Unexpected end of input or whitespace while parsing variable accessor path."
+              ));
               continue;
             }
             const results = this.locateEndOfAccessor();
@@ -24556,7 +25484,11 @@ var init_pathParser = __esm({
             this.mergeErrors(parser.getAntlersErrors());
             isParsingAccessor = true;
             if (this.currentIndex == -1) {
-              this.antlersErrors.push(AntlersError.makeSyntaxError(AntlersErrorCodes.PARSER_CANNOT_PARSE_PATH_RECURSIVE, null, "Cannot parse variable path."));
+              this.antlersErrors.push(AntlersError.makeSyntaxError(
+                AntlersErrorCodes.PARSER_CANNOT_PARSE_PATH_RECURSIVE,
+                null,
+                "Cannot parse variable path."
+              ));
               isParsingAccessor = false;
               break;
             }
@@ -24581,14 +25513,26 @@ var init_pathParser = __esm({
             if (this.next == null || StringUtilities.ctypeSpace(this.next)) {
               if (this.cur == _PathParser.ColonSeparator) {
                 if (currentChars.length == 0) {
-                  this.antlersErrors.push(AntlersError.makeSyntaxError(AntlersErrorCodes.TYPE_UNEXPECTED_BRANCH_SEPARATOR, null, "Unexpected [T_BRANCH_SEPARATOR] while parsing input text."));
+                  this.antlersErrors.push(AntlersError.makeSyntaxError(
+                    AntlersErrorCodes.TYPE_UNEXPECTED_BRANCH_SEPARATOR,
+                    null,
+                    "Unexpected [T_BRANCH_SEPARATOR] while parsing input text."
+                  ));
                   continue;
                 }
-                this.antlersErrors.push(AntlersError.makeSyntaxError(AntlersErrorCodes.TYPE_ILLEGAL_VARPATH_RIGHT, null, 'Variable paths cannot end with the ":" character.'));
+                this.antlersErrors.push(AntlersError.makeSyntaxError(
+                  AntlersErrorCodes.TYPE_ILLEGAL_VARPATH_RIGHT,
+                  null,
+                  'Variable paths cannot end with the ":" character.'
+                ));
                 continue;
               }
               if (this.cur == _PathParser.LeftBracket) {
-                this.antlersErrors.push(AntlersError.makeSyntaxError(AntlersErrorCodes.TYPE_ILLEGAL_VARPATH_SUBPATH_START, null, "Illegal variable sub-path start."));
+                this.antlersErrors.push(AntlersError.makeSyntaxError(
+                  AntlersErrorCodes.TYPE_ILLEGAL_VARPATH_SUBPATH_START,
+                  null,
+                  "Illegal variable sub-path start."
+                ));
                 continue;
               }
             }
@@ -24686,10 +25630,18 @@ var init_pathParser = __esm({
             nestedChars.push(cur);
           }
           if (isParsingString == false && StringUtilities.ctypeSpace(next)) {
-            this.antlersErrors.push(AntlersError.makeSyntaxError(AntlersErrorCodes.TYPE_UNEXPECTED_EOI_VARPATH_ACCESSOR, null, "Unexpected end of input or whitespace while parsing inner variable accessor path."));
+            this.antlersErrors.push(AntlersError.makeSyntaxError(
+              AntlersErrorCodes.TYPE_UNEXPECTED_EOI_VARPATH_ACCESSOR,
+              null,
+              "Unexpected end of input or whitespace while parsing inner variable accessor path."
+            ));
           }
           if (next == null) {
-            this.antlersErrors.push(AntlersError.makeSyntaxError(AntlersErrorCodes.TYPE_UNEXPECTED_EOI_VARPATH_ACCESSOR, null, "Unexpected end of input or whitespace while parsing inner variable accessor path."));
+            this.antlersErrors.push(AntlersError.makeSyntaxError(
+              AntlersErrorCodes.TYPE_UNEXPECTED_EOI_VARPATH_ACCESSOR,
+              null,
+              "Unexpected end of input or whitespace while parsing inner variable accessor path."
+            ));
           }
         }
         return {
@@ -24710,6 +25662,7 @@ var init_pathParser = __esm({
 var AntlersNodeParser;
 var init_antlersNodeParser = __esm({
   "server/src/runtime/parser/antlersNodeParser.ts"() {
+    "use strict";
     init_conditionPairAnalyzer();
     init_nodeTypeAnalyzer();
     init_tagIdentifierAnalyzer();
@@ -24950,7 +25903,11 @@ var init_antlersNodeParser = __esm({
         }
       }
       pushConditionWithoutExpression(node) {
-        this.pushError(AntlersError.makeSyntaxError(AntlersErrorCodes.TYPE_PARSE_EMPTY_CONDITIONAL, node, "Condition structure lacks comparison expression."));
+        this.pushError(AntlersError.makeSyntaxError(
+          AntlersErrorCodes.TYPE_PARSE_EMPTY_CONDITIONAL,
+          node,
+          "Condition structure lacks comparison expression."
+        ));
       }
       getParameters(node) {
         var _a, _b, _c, _d, _e, _f, _g, _h, _i;
@@ -24997,7 +25954,11 @@ var init_antlersNodeParser = __esm({
               }
             }
             if (i + 1 >= charCount) {
-              this.pushError(AntlersError.makeSyntaxError(AntlersErrorCodes.TYPE_UNEXPECTED_END_OF_INPUT, node, "Unexpected end of input"));
+              this.pushError(AntlersError.makeSyntaxError(
+                AntlersErrorCodes.TYPE_UNEXPECTED_END_OF_INPUT,
+                node,
+                "Unexpected end of input"
+              ));
               continue;
             }
             let peek = null;
@@ -25100,7 +26061,11 @@ var init_antlersNodeParser = __esm({
             }
             parameterNode.startPosition = (_b = node.relativePositionFromOffset(startAt, nameStart)) != null ? _b : null;
             if (i + 1 > charCount) {
-              this.pushError(AntlersError.makeSyntaxError(AntlersErrorCodes.TYPE_UNEXPECTED_EOI_WHILE_PARSING_NODE_PARAMETER, node, "Unexpected end of input while parsing parameter content."));
+              this.pushError(AntlersError.makeSyntaxError(
+                AntlersErrorCodes.TYPE_UNEXPECTED_EOI_WHILE_PARSING_NODE_PARAMETER,
+                node,
+                "Unexpected end of input while parsing parameter content."
+              ));
               parameterNode.parent = node;
               parameters.push(parameterNode);
               name = "";
@@ -25157,7 +26122,11 @@ var init_antlersNodeParser = __esm({
               nodeToUse = fakeNode;
             }
           }
-          this.pushError(AntlersError.makeSyntaxError(AntlersErrorCodes.TYPE_UNEXPECTED_END_OF_INPUT, nodeToUse, "Unexpected string literal while parsing parameters."));
+          this.pushError(AntlersError.makeSyntaxError(
+            AntlersErrorCodes.TYPE_UNEXPECTED_END_OF_INPUT,
+            nodeToUse,
+            "Unexpected string literal while parsing parameters."
+          ));
         }
         return parameters;
       }
@@ -25174,6 +26143,7 @@ function getStartPosition(nodes) {
 }
 var init_helpers = __esm({
   "server/src/runtime/nodes/helpers.ts"() {
+    "use strict";
   }
 });
 
@@ -25181,6 +26151,7 @@ var init_helpers = __esm({
 var import_md5, NoParseManager;
 var init_noParseManager = __esm({
   "server/src/runtime/runtime/noParseManager.ts"() {
+    "use strict";
     import_md5 = __toESM(require_md5());
     NoParseManager = class {
       static regions() {
@@ -25206,6 +26177,7 @@ function intersect(a, b) {
 }
 var init_arrayHelpers = __esm({
   "server/src/runtime/utilities/arrayHelpers.ts"() {
+    "use strict";
   }
 });
 
@@ -25213,6 +26185,7 @@ var init_arrayHelpers = __esm({
 var _TagPairAnalyzer, TagPairAnalyzer;
 var init_tagPairAnalyzer = __esm({
   "server/src/runtime/analyzers/tagPairAnalyzer.ts"() {
+    "use strict";
     init_antlersDocument();
     init_antlersError();
     init_antlersErrorCodes();
@@ -25477,7 +26450,10 @@ var init_tagPairAnalyzer = __esm({
             var _a2, _b2, _c2, _d2;
             if ((node instanceof AntlersNode || node instanceof AntlersParserFailNode) && node.isClosedBy != null) {
               if (this.document != null) {
-                const content = this.document.getText(((_b2 = (_a2 = node.endPosition) == null ? void 0 : _a2.index) != null ? _b2 : 0) + 1, (_d2 = (_c2 = node.isClosedBy.startPosition) == null ? void 0 : _c2.index) != null ? _d2 : 0);
+                const content = this.document.getText(
+                  ((_b2 = (_a2 = node.endPosition) == null ? void 0 : _a2.index) != null ? _b2 : 0) + 1,
+                  (_d2 = (_c2 = node.isClosedBy.startPosition) == null ? void 0 : _c2.index) != null ? _d2 : 0
+                );
                 node.runtimeContent = content;
               }
             }
@@ -25487,12 +26463,19 @@ var init_tagPairAnalyzer = __esm({
             nestedNodeKeyMap.set(refId, 1);
             if ((node instanceof AntlersNode || node instanceof AntlersParserFailNode) && node.isComment == false && ((_b = node.name) == null ? void 0 : _b.name) == "noparse" && node instanceof EscapedContentNode == false && node.isClosingTag == false) {
               if (node.isClosedBy == null) {
-                node.pushError(AntlersError.makeSyntaxError(AntlersErrorCodes.TYPE_NO_PARSE_UNASSOCIATED, node, "Encountered noparse region without a closing tag. All noparse regions must be closed."));
+                node.pushError(AntlersError.makeSyntaxError(
+                  AntlersErrorCodes.TYPE_NO_PARSE_UNASSOCIATED,
+                  node,
+                  "Encountered noparse region without a closing tag. All noparse regions must be closed."
+                ));
                 continue;
               }
               let content = node.content;
               if (this.document != null) {
-                content = this.document.getText(((_d = (_c = node.endPosition) == null ? void 0 : _c.index) != null ? _d : 0) + 1, (_g = (_f = (_e = node.isClosedBy) == null ? void 0 : _e.startPosition) == null ? void 0 : _f.index) != null ? _g : 0);
+                content = this.document.getText(
+                  ((_d = (_c = node.endPosition) == null ? void 0 : _c.index) != null ? _d : 0) + 1,
+                  (_g = (_f = (_e = node.isClosedBy) == null ? void 0 : _e.startPosition) == null ? void 0 : _f.index) != null ? _g : 0
+                );
               }
               const noParseNode = new EscapedContentNode(), nodeParser = node.getParser();
               if (nodeParser != null) {
@@ -25675,6 +26658,7 @@ var init_tagPairAnalyzer = __esm({
 var RecursiveParentAnalyzer;
 var init_recursiveParentAnalyzer = __esm({
   "server/src/runtime/analyzers/recursiveParentAnalyzer.ts"() {
+    "use strict";
     init_antlersError();
     init_antlersErrorCodes();
     init_abstractNode();
@@ -25687,7 +26671,11 @@ var init_recursiveParentAnalyzer = __esm({
           if (node instanceof RecursiveNode) {
             const recursiveContent = "*recursive " + ((_a = node.name) == null ? void 0 : _a.name);
             if (i - 1 < 0) {
-              node.pushError(AntlersError.makeSyntaxError(AntlersErrorCodes.TYPE_RECURSIVE_NODE_INVALID_POSITION, node, "Unpaired recursive node. All recursive nodes must have a parent node introducing them."));
+              node.pushError(AntlersError.makeSyntaxError(
+                AntlersErrorCodes.TYPE_RECURSIVE_NODE_INVALID_POSITION,
+                node,
+                "Unpaired recursive node. All recursive nodes must have a parent node introducing them."
+              ));
               continue;
             }
             let lastNode = null;
@@ -25745,6 +26733,7 @@ var init_recursiveParentAnalyzer = __esm({
 var LineRetriever;
 var init_lineRetriever = __esm({
   "server/src/runtime/errors/lineRetriever.ts"() {
+    "use strict";
     init_abstractNode();
     LineRetriever = class {
       static getNearText(node) {
@@ -25792,6 +26781,7 @@ var init_lineRetriever = __esm({
 var LibraryManager;
 var init_libraryManager = __esm({
   "server/src/runtime/runtime/libraries/libraryManager.ts"() {
+    "use strict";
     LibraryManager = class {
     };
     LibraryManager.deferredCoreLibraries = [
@@ -25819,6 +26809,7 @@ var init_libraryManager = __esm({
 var LanguageOperatorRegistry;
 var init_languageOperatorRegistry = __esm({
   "server/src/runtime/runtime/sandbox/languageOperatorRegistry.ts"() {
+    "use strict";
     LanguageOperatorRegistry = class {
     };
     LanguageOperatorRegistry.ARR_PLUCK = "pluck";
@@ -25859,6 +26850,7 @@ var init_languageOperatorRegistry = __esm({
 var LanguageParser;
 var init_languageParser = __esm({
   "server/src/runtime/parser/languageParser.ts"() {
+    "use strict";
     init_antlersError();
     init_antlersErrorCodes();
     init_lineRetriever();
@@ -25995,12 +26987,20 @@ var init_languageParser = __esm({
           const thisToken = tokens[i];
           if (LanguageParser.isOperatorType(thisToken)) {
             if (i + 1 >= tokenCount) {
-              thisToken.pushError(AntlersError.makeSyntaxError(AntlersErrorCodes.TYPE_UNEXPECTED_OPERATOR, thisToken, "Unexpected operator while parsing input text."));
+              thisToken.pushError(AntlersError.makeSyntaxError(
+                AntlersErrorCodes.TYPE_UNEXPECTED_OPERATOR,
+                thisToken,
+                "Unexpected operator while parsing input text."
+              ));
               return;
             }
             const peek = tokens[i + 1];
             if (LanguageParser.isOperatorType(peek)) {
-              peek.pushError(AntlersError.makeSyntaxError(AntlersErrorCodes.TYPE_OPERATOR_INVALID_ON_RIGHT, peek, "Unexpected operator while parsing input text."));
+              peek.pushError(AntlersError.makeSyntaxError(
+                AntlersErrorCodes.TYPE_OPERATOR_INVALID_ON_RIGHT,
+                peek,
+                "Unexpected operator while parsing input text."
+              ));
               continue;
             }
           }
@@ -26081,7 +27081,11 @@ var init_languageParser = __esm({
       validateNoDanglingLogicGroupEnds(tokens) {
         tokens.forEach((token) => {
           if (token instanceof LogicGroupEnd) {
-            token.pushError(AntlersError.makeSyntaxError(AntlersErrorCodes.TYPE_LOGIC_GROUP_NO_START, token, "Unexpected [T_LOGIC_END] while parsing input text."));
+            token.pushError(AntlersError.makeSyntaxError(
+              AntlersErrorCodes.TYPE_LOGIC_GROUP_NO_START,
+              token,
+              "Unexpected [T_LOGIC_END] while parsing input text."
+            ));
           }
         });
       }
@@ -26121,7 +27125,11 @@ var init_languageParser = __esm({
           const node = tokens[i], newNodeCount = newNodes.length;
           if (node instanceof InlineBranchSeparator) {
             if (newNodeCount == 0) {
-              node.pushError(AntlersError.makeSyntaxError(AntlersErrorCodes.TYPE_UNEXPECTED_BRANCH_SEPARATOR_FOR_VARCOMBINE, node, "Unexpected [T_BRANCH_SEPARATOR] while parsing input text."));
+              node.pushError(AntlersError.makeSyntaxError(
+                AntlersErrorCodes.TYPE_UNEXPECTED_BRANCH_SEPARATOR_FOR_VARCOMBINE,
+                node,
+                "Unexpected [T_BRANCH_SEPARATOR] while parsing input text."
+              ));
               continue;
             }
             if (i + 1 > tokenCount) {
@@ -26130,7 +27138,11 @@ var init_languageParser = __esm({
                 const lastNode = tokens[i - 1];
                 lastNodeText = LineRetriever.getNearText(lastNode);
               }
-              node.pushError(AntlersError.makeSyntaxError(AntlersErrorCodes.TYPE_UNEXPECTED_EOI_PARSING_BRANCH_GROUP, node, 'Unexpected end of input while parsing input text near "' + lastNodeText + LineRetriever.getNearText(node) + '".'));
+              node.pushError(AntlersError.makeSyntaxError(
+                AntlersErrorCodes.TYPE_UNEXPECTED_EOI_PARSING_BRANCH_GROUP,
+                node,
+                'Unexpected end of input while parsing input text near "' + lastNodeText + LineRetriever.getNearText(node) + '".'
+              ));
               continue;
             }
             const left = newNodes[newNodeCount - 1];
@@ -26262,7 +27274,11 @@ var init_languageParser = __esm({
           if (token instanceof LogicalNegationOperator) {
             const negationCount = this.countTypeRight(tokens, i, LogicalNegationOperator);
             if (negatedGroupedTokens.length == 0 && tokens.length == negationCount) {
-              token.pushError(AntlersError.makeSyntaxError(AntlersErrorCodes.TYPE_UNEXPECTED_LOGIC_NEGATION_OPERATOR, token, "Unexpected [T_LOGIC_INVERSE] while parsing input text."));
+              token.pushError(AntlersError.makeSyntaxError(
+                AntlersErrorCodes.TYPE_UNEXPECTED_LOGIC_NEGATION_OPERATOR,
+                token,
+                "Unexpected [T_LOGIC_INVERSE] while parsing input text."
+              ));
               continue;
             }
             if (i > 0 && negatedGroupedTokens.length > 0) {
@@ -26270,7 +27286,11 @@ var init_languageParser = __esm({
               if (prev instanceof NumberNode || prev instanceof LogicGroupEnd || prev instanceof LogicGroup) {
                 if (prev instanceof LogicGroup) {
                   if (prev.start instanceof LogicalNegationOperator) {
-                    prev.start.pushError(AntlersError.makeSyntaxError(AntlersErrorCodes.TYPE_FACTORIAL_MATERIALIZED_BOOL_DETECTED, prev.start, "[T_AOP_FACTORIAL] operand will always materialize boolean type."));
+                    prev.start.pushError(AntlersError.makeSyntaxError(
+                      AntlersErrorCodes.TYPE_FACTORIAL_MATERIALIZED_BOOL_DETECTED,
+                      prev.start,
+                      "[T_AOP_FACTORIAL] operand will always materialize boolean type."
+                    ));
                     continue;
                   }
                 }
@@ -26295,7 +27315,11 @@ var init_languageParser = __esm({
             if (peek instanceof LogicGroupBegin) {
               const targetSliceOffset = i + negationCount + 1;
               if (targetSliceOffset >= tokenCount) {
-                peek.pushError(AntlersError.makeSyntaxError(AntlersErrorCodes.TYPE_UNEXPECTED_EOI_WHILE_PARSING_LOGIC_GROUP_NEGATION_OFFSET, peek, "Unexpected end of input while parsing input text."));
+                peek.pushError(AntlersError.makeSyntaxError(
+                  AntlersErrorCodes.TYPE_UNEXPECTED_EOI_WHILE_PARSING_LOGIC_GROUP_NEGATION_OFFSET,
+                  peek,
+                  "Unexpected end of input while parsing input text."
+                ));
                 continue;
               }
               const groupResults = this.findLogicalGroupEnd(tokens[i + negationCount], tokens.slice(targetSliceOffset));
@@ -26327,7 +27351,11 @@ var init_languageParser = __esm({
           const token = negatedGroupedTokens[i];
           if (token instanceof LogicGroupBegin) {
             if (i + 1 >= negatedTokenCount) {
-              token.pushError(AntlersError.makeSyntaxError(AntlersErrorCodes.TYPE_UNEXPECTED_EOI_WHILE_PARSING_LOGIC_GROUP_END_DUE_TO_NEGATION, token, "Unexpected end of input while parsing input text."));
+              token.pushError(AntlersError.makeSyntaxError(
+                AntlersErrorCodes.TYPE_UNEXPECTED_EOI_WHILE_PARSING_LOGIC_GROUP_END_DUE_TO_NEGATION,
+                token,
+                "Unexpected end of input while parsing input text."
+              ));
               continue;
             }
             const group = this.findLogicalGroupEnd(token, negatedGroupedTokens.slice(i + 1));
@@ -26338,12 +27366,20 @@ var init_languageParser = __esm({
           } else {
             if (token instanceof FactorialOperator) {
               if (groupedTokens.length == 0) {
-                token.pushError(AntlersError.makeSyntaxError(AntlersErrorCodes.TYPE_UNEXPECTED_FACTORIAL_WHILE_CREATING_GROUPS, token, "Unexpected [T_AOP_FACTORIAL] while parsing input text."));
+                token.pushError(AntlersError.makeSyntaxError(
+                  AntlersErrorCodes.TYPE_UNEXPECTED_FACTORIAL_WHILE_CREATING_GROUPS,
+                  token,
+                  "Unexpected [T_AOP_FACTORIAL] while parsing input text."
+                ));
                 continue;
               }
               let prev = groupedTokens[groupedTokens.length - 1];
               if (prev instanceof LogicGroup == false && prev instanceof NumberNode == false) {
-                token.pushError(AntlersError.makeSyntaxError(AntlersErrorCodes.TYPE_UNEXPECTED_FACTORIAL_OPERAND, token, "Unexpected left operand encountered for [T_AOP_FACTORIAL] while parsing input text."));
+                token.pushError(AntlersError.makeSyntaxError(
+                  AntlersErrorCodes.TYPE_UNEXPECTED_FACTORIAL_OPERAND,
+                  token,
+                  "Unexpected left operand encountered for [T_AOP_FACTORIAL] while parsing input text."
+                ));
                 continue;
               }
               prev = groupedTokens.pop();
@@ -26366,7 +27402,11 @@ var init_languageParser = __esm({
         for (let i = 0; i < nodeCount; i++) {
           const thisNode = nodes[i];
           if (this.isOperand(thisNode) == false) {
-            thisNode.pushError(AntlersError.makeSyntaxError(AntlersErrorCodes.TYPE_UNEXPECTED_TOKEN_WHILE_PARSING_METHOD, thisNode, "Unexpected [" + TypeLabeler.getPrettyTypeName(thisNode) + "] while parsing argument group."));
+            thisNode.pushError(AntlersError.makeSyntaxError(
+              AntlersErrorCodes.TYPE_UNEXPECTED_TOKEN_WHILE_PARSING_METHOD,
+              thisNode,
+              "Unexpected [" + TypeLabeler.getPrettyTypeName(thisNode) + "] while parsing argument group."
+            ));
             continue;
           }
           let next = null;
@@ -26379,7 +27419,11 @@ var init_languageParser = __esm({
             continue;
           } else if (next instanceof InlineBranchSeparator) {
             if (i + 2 >= nodeCount) {
-              thisNode.pushError(AntlersError.makeSyntaxError(AntlersErrorCodes.TYPE_ARG_UNEXPECTED_NAMED_ARGUMENT, thisNode, "Unexpected end of input while parsing named argument."));
+              thisNode.pushError(AntlersError.makeSyntaxError(
+                AntlersErrorCodes.TYPE_ARG_UNEXPECTED_NAMED_ARGUMENT,
+                thisNode,
+                "Unexpected end of input while parsing named argument."
+              ));
               continue;
             }
             const valueNode = nodes[i + 2];
@@ -26390,7 +27434,11 @@ var init_languageParser = __esm({
             namedArgument.name = thisNode;
             namedArgument.value = valueNode;
             if (thisNode instanceof VariableNode == false) {
-              thisNode.pushError(AntlersError.makeSyntaxError(AntlersErrorCodes.TYPE_INVALID_NAMED_ARG_IDENTIFIER, thisNode, "Invalid type [" + TypeLabeler.getPrettyTypeName(thisNode) + "] supplied for named argument name."));
+              thisNode.pushError(AntlersError.makeSyntaxError(
+                AntlersErrorCodes.TYPE_INVALID_NAMED_ARG_IDENTIFIER,
+                thisNode,
+                "Invalid type [" + TypeLabeler.getPrettyTypeName(thisNode) + "] supplied for named argument name."
+              ));
             }
             argGroup.hasNamedArguments = true;
             argGroup.numberOfNamedArguments += 1;
@@ -26409,7 +27457,11 @@ var init_languageParser = __esm({
             remainderMustBeNamed = true;
           } else {
             if (remainderMustBeNamed) {
-              arg.pushError(AntlersError.makeSyntaxError(AntlersErrorCodes.TYPE_UNEXPECTED_UNNAMED_METHOD_ARGUMENT, arg, "Unnamed arguments are not allowed to appear after a named argument."));
+              arg.pushError(AntlersError.makeSyntaxError(
+                AntlersErrorCodes.TYPE_UNEXPECTED_UNNAMED_METHOD_ARGUMENT,
+                arg,
+                "Unnamed arguments are not allowed to appear after a named argument."
+              ));
             }
           }
         });
@@ -26547,12 +27599,20 @@ var init_languageParser = __esm({
           } else if (thisNode instanceof VariableNode && prevNode instanceof MethodInvocationNode) {
             this.cleanVariableForMethodInvocation(thisNode);
             if (i + 1 > nodeCount) {
-              thisNode.pushError(AntlersError.makeSyntaxError(AntlersErrorCodes.TYPE_METHOD_CALL_MISSING_ARG_GROUP, thisNode, "Unexpected end of input while parsing method call."));
+              thisNode.pushError(AntlersError.makeSyntaxError(
+                AntlersErrorCodes.TYPE_METHOD_CALL_MISSING_ARG_GROUP,
+                thisNode,
+                "Unexpected end of input while parsing method call."
+              ));
               continue;
             }
             const argGroupT = tokens[i + 1];
             if (argGroupT instanceof LogicGroup == false) {
-              thisNode.pushError(AntlersError.makeSyntaxError(AntlersErrorCodes.TYPE_INVALID_METHOD_CALL_ARG_GROUP, thisNode, "Unexpected [" + TypeLabeler.getPrettyTypeName(argGroupT) + "] while parsing [T_METHOD_CALL]; expecting [T_ARG_GROUP]."));
+              thisNode.pushError(AntlersError.makeSyntaxError(
+                AntlersErrorCodes.TYPE_INVALID_METHOD_CALL_ARG_GROUP,
+                thisNode,
+                "Unexpected [" + TypeLabeler.getPrettyTypeName(argGroupT) + "] while parsing [T_METHOD_CALL]; expecting [T_ARG_GROUP]."
+              ));
               continue;
             }
             const argGroup = argGroupT;
@@ -26576,17 +27636,29 @@ var init_languageParser = __esm({
             continue;
           } else if (thisNode instanceof InlineBranchSeparator && prevNode instanceof MethodInvocationNode) {
             if (i + 1 > nodeCount) {
-              thisNode.pushError(AntlersError.makeSyntaxError(AntlersErrorCodes.TYPE_METHOD_CALL_MISSING_METHOD, thisNode, "Unexpected end of input while parsing method call."));
+              thisNode.pushError(AntlersError.makeSyntaxError(
+                AntlersErrorCodes.TYPE_METHOD_CALL_MISSING_METHOD,
+                thisNode,
+                "Unexpected end of input while parsing method call."
+              ));
               continue;
             }
             const next2 = tokens[i + 1];
             if (i + 2 > nodeCount) {
-              thisNode.pushError(AntlersError.makeSyntaxError(AntlersErrorCodes.TYPE_METHOD_CALL_MISSING_ARG_GROUP, thisNode, "Unexpected end of input while parsing method call."));
+              thisNode.pushError(AntlersError.makeSyntaxError(
+                AntlersErrorCodes.TYPE_METHOD_CALL_MISSING_ARG_GROUP,
+                thisNode,
+                "Unexpected end of input while parsing method call."
+              ));
               continue;
             }
             const argGroupT = tokens[i + 2];
             if (argGroupT instanceof LogicGroup == false) {
-              thisNode.pushError(AntlersError.makeSyntaxError(AntlersErrorCodes.TYPE_INVALID_METHOD_CALL_ARG_GROUP, thisNode, "Unexpected [" + TypeLabeler.getPrettyTypeName(argGroupT) + "] while parsing [T_METHOD_CALL]; expecting [T_ARG_GROUP]."));
+              thisNode.pushError(AntlersError.makeSyntaxError(
+                AntlersErrorCodes.TYPE_INVALID_METHOD_CALL_ARG_GROUP,
+                thisNode,
+                "Unexpected [" + TypeLabeler.getPrettyTypeName(argGroupT) + "] while parsing [T_METHOD_CALL]; expecting [T_ARG_GROUP]."
+              ));
               continue;
             }
             const argGroup = argGroupT;
@@ -26610,17 +27682,29 @@ var init_languageParser = __esm({
             continue;
           } else if (thisNode instanceof MethodInvocationNode) {
             if (i + 1 > nodeCount) {
-              thisNode.pushError(AntlersError.makeSyntaxError(AntlersErrorCodes.TYPE_METHOD_CALL_MISSING_METHOD, thisNode, "Unexpected end of input while parsing method call."));
+              thisNode.pushError(AntlersError.makeSyntaxError(
+                AntlersErrorCodes.TYPE_METHOD_CALL_MISSING_METHOD,
+                thisNode,
+                "Unexpected end of input while parsing method call."
+              ));
               continue;
             }
             const methodNode = tokens[i + 1];
             if (i + 2 > nodeCount) {
-              thisNode.pushError(AntlersError.makeSyntaxError(AntlersErrorCodes.TYPE_INVALID_METHOD_CALL_ARG_GROUP, thisNode, "Unexpected end of input while parsing method call."));
+              thisNode.pushError(AntlersError.makeSyntaxError(
+                AntlersErrorCodes.TYPE_INVALID_METHOD_CALL_ARG_GROUP,
+                thisNode,
+                "Unexpected end of input while parsing method call."
+              ));
               continue;
             }
             const nextT = tokens[i + 2];
             if (nextT instanceof LogicGroup == false) {
-              thisNode.pushError(AntlersError.makeSyntaxError(AntlersErrorCodes.TYPE_INVALID_METHOD_CALL_ARG_GROUP, thisNode, "Unexpected [" + TypeLabeler.getPrettyTypeName(nextT) + "] while parsing [T_METHOD_CALL]; expecting [T_ARG_GROUP]."));
+              thisNode.pushError(AntlersError.makeSyntaxError(
+                AntlersErrorCodes.TYPE_INVALID_METHOD_CALL_ARG_GROUP,
+                thisNode,
+                "Unexpected [" + TypeLabeler.getPrettyTypeName(nextT) + "] while parsing [T_METHOD_CALL]; expecting [T_ARG_GROUP]."
+              ));
               continue;
             }
             const next2 = nextT;
@@ -26679,12 +27763,20 @@ var init_languageParser = __esm({
           if (thisToken instanceof TupleListStart) {
             thisToken.isListGroupMember = true;
             if (i + 1 >= tokenCount) {
-              thisToken.pushError(AntlersError.makeSyntaxError(AntlersErrorCodes.TYPE_UNEXPECTED_EOI_PARSING_TUPLE_LIST, thisToken, "Unexpected end of input while parsing tuple list."));
+              thisToken.pushError(AntlersError.makeSyntaxError(
+                AntlersErrorCodes.TYPE_UNEXPECTED_EOI_PARSING_TUPLE_LIST,
+                thisToken,
+                "Unexpected end of input while parsing tuple list."
+              ));
               continue;
             }
             const peekT = tokens[i + 1];
             if (peekT instanceof LogicGroup == false) {
-              peekT.pushError(AntlersError.makeSyntaxError(AntlersErrorCodes.TYPE_UNEXPECTED_TYPE_FOR_TUPLE_LIST, peekT, "Unexpected [" + TypeLabeler.getPrettyTypeName(peekT) + "] while parsing tuple list."));
+              peekT.pushError(AntlersError.makeSyntaxError(
+                AntlersErrorCodes.TYPE_UNEXPECTED_TYPE_FOR_TUPLE_LIST,
+                peekT,
+                "Unexpected [" + TypeLabeler.getPrettyTypeName(peekT) + "] while parsing tuple list."
+              ));
               continue;
             }
             const peek = peekT;
@@ -26692,7 +27784,11 @@ var init_languageParser = __esm({
             this.retriggerNonVirtualGroupMembers.push([peek]);
             const listNodeLength = peek.nodes.length;
             if (listNodeLength == 0) {
-              peek.pushError(AntlersError.makeSyntaxError(AntlersErrorCodes.TYPE_MISSING_BODY_TUPLE_LIST, peek, "Missing tuple list body while parsing tuple list."));
+              peek.pushError(AntlersError.makeSyntaxError(
+                AntlersErrorCodes.TYPE_MISSING_BODY_TUPLE_LIST,
+                peek,
+                "Missing tuple list body while parsing tuple list."
+              ));
               continue;
             }
             const nameGroup = peek.nodes.shift();
@@ -26716,7 +27812,11 @@ var init_languageParser = __esm({
                   }
                 }
                 if (breakFromVarRef || subNodeT instanceof VariableNode == false) {
-                  peek.pushError(AntlersError.makeSyntaxError(AntlersErrorCodes.TYPE_INVALID_TUPLE_LIST_NAME_TYPE, peek, "Invalid [" + TypeLabeler.getPrettyTypeName(subNodeT) + "] name type found while parsing tuple list."));
+                  peek.pushError(AntlersError.makeSyntaxError(
+                    AntlersErrorCodes.TYPE_INVALID_TUPLE_LIST_NAME_TYPE,
+                    peek,
+                    "Invalid [" + TypeLabeler.getPrettyTypeName(subNodeT) + "] name type found while parsing tuple list."
+                  ));
                   continue;
                 }
                 const subNode = subNodeT;
@@ -26725,7 +27825,11 @@ var init_languageParser = __esm({
             }
             const listValueLength = listNames.length;
             if (listValueLength == 0) {
-              peek.pushError(AntlersError.makeSyntaxError(AntlersErrorCodes.TYPE_INVALID_MANIFESTED_NAME_GROUP, peek, "Invalid Name expression produced an invalid name group while parsing tuple list."));
+              peek.pushError(AntlersError.makeSyntaxError(
+                AntlersErrorCodes.TYPE_INVALID_MANIFESTED_NAME_GROUP,
+                peek,
+                "Invalid Name expression produced an invalid name group while parsing tuple list."
+              ));
               continue;
             }
             const arrayNode = new ArrayNode();
@@ -26734,7 +27838,11 @@ var init_languageParser = __esm({
             arrayNode.endPosition = thisToken.endPosition;
             peek.nodes.forEach((valueNodeCandidateT) => {
               if (valueNodeCandidateT instanceof SemanticGroup == false) {
-                valueNodeCandidateT.pushError(AntlersError.makeSyntaxError(AntlersErrorCodes.TYPE_INVALID_TUPLE_LIST_VALUE_TYPE_GROUP, valueNodeCandidateT, "Invalid [" + TypeLabeler.getPrettyTypeName(valueNodeCandidateT) + "] name type found while parsing tuple list value expression."));
+                valueNodeCandidateT.pushError(AntlersError.makeSyntaxError(
+                  AntlersErrorCodes.TYPE_INVALID_TUPLE_LIST_VALUE_TYPE_GROUP,
+                  valueNodeCandidateT,
+                  "Invalid [" + TypeLabeler.getPrettyTypeName(valueNodeCandidateT) + "] name type found while parsing tuple list value expression."
+                ));
                 return;
               }
               const valueNodeCandidate = valueNodeCandidateT;
@@ -26749,7 +27857,11 @@ var init_languageParser = __esm({
                 }
                 if (valueToken instanceof ArgSeparator == false) {
                   if (this.isOperand(valueToken) == false) {
-                    valueToken.pushError(AntlersError.makeSyntaxError(AntlersErrorCodes.TYPE_INVALID_TUPLE_LIST_VALUE_TYPE, valueToken, "Unexpected [" + TypeLabeler.getPrettyTypeName(valueToken) + "]  while parsing tuple list value."));
+                    valueToken.pushError(AntlersError.makeSyntaxError(
+                      AntlersErrorCodes.TYPE_INVALID_TUPLE_LIST_VALUE_TYPE,
+                      valueToken,
+                      "Unexpected [" + TypeLabeler.getPrettyTypeName(valueToken) + "]  while parsing tuple list value."
+                    ));
                     continue;
                   }
                   valueCandidates.push(valueToken);
@@ -26797,10 +27909,18 @@ var init_languageParser = __esm({
               orderNode.name = nodes[i - 1];
               orderNode.directionNode = thisNode;
               if (this.isOperand(orderNode.name) == false) {
-                orderNode.name.pushError(AntlersError.makeSyntaxError(AntlersErrorCodes.TYPE_INVALID_ORDER_BY_NAME_VALUE, orderNode.name, "Invalid value or expression supplied for order by name."));
+                orderNode.name.pushError(AntlersError.makeSyntaxError(
+                  AntlersErrorCodes.TYPE_INVALID_ORDER_BY_NAME_VALUE,
+                  orderNode.name,
+                  "Invalid value or expression supplied for order by name."
+                ));
               }
               if (this.isOperand(orderNode.directionNode) == false) {
-                orderNode.directionNode.pushError(AntlersError.makeSyntaxError(AntlersErrorCodes.TYPE_INVALID_ORDER_BY_SORT_VALUE, orderNode.directionNode, "Invalid value or expression supplied for order by direction."));
+                orderNode.directionNode.pushError(AntlersError.makeSyntaxError(
+                  AntlersErrorCodes.TYPE_INVALID_ORDER_BY_SORT_VALUE,
+                  orderNode.directionNode,
+                  "Invalid value or expression supplied for order by direction."
+                ));
               }
               orderNode.startPosition = orderNode.name.startPosition;
               orderNode.endPosition = orderNode.directionNode.endPosition;
@@ -26844,11 +27964,19 @@ var init_languageParser = __esm({
               libraryInvocationConstruct.methodName = methodName;
               libraryInvocationConstruct.originalAbstractNode = token;
               if (i + 1 >= tokenCount) {
-                token.pushError(AntlersError.makeSyntaxError(AntlersErrorCodes.TYPE_UNEXPECTED_EOI_WHILE_PARSING_ARG_GROUP, token, "Unexpected end of input while parsing argument group."));
+                token.pushError(AntlersError.makeSyntaxError(
+                  AntlersErrorCodes.TYPE_UNEXPECTED_EOI_WHILE_PARSING_ARG_GROUP,
+                  token,
+                  "Unexpected end of input while parsing argument group."
+                ));
                 continue;
               }
               if (tokens[i + 1] instanceof LogicGroup == false) {
-                token.pushError(AntlersError.makeSyntaxError(AntlersErrorCodes.TYPE_EXPECTING_ARGUMENT_GROUP, token, "Unexpected token while parsing method call. Expecting [T_ARG_SEPARATOR] got [" + TypeLabeler.getPrettyTypeName(token) + "]."));
+                token.pushError(AntlersError.makeSyntaxError(
+                  AntlersErrorCodes.TYPE_EXPECTING_ARGUMENT_GROUP,
+                  token,
+                  "Unexpected token while parsing method call. Expecting [T_ARG_SEPARATOR] got [" + TypeLabeler.getPrettyTypeName(token) + "]."
+                ));
                 continue;
               }
               const logicGroup = tokens[i + 1];
@@ -26869,12 +27997,20 @@ var init_languageParser = __esm({
               continue;
             } else if (token.content == LanguageOperatorRegistry.ARR_ORDERBY) {
               if (i + 1 >= tokenCount) {
-                token.pushError(AntlersError.makeSyntaxError(AntlersErrorCodes.TYPE_UNEXPECTED_EOI_PARSING_ORDER_GROUP, token, "Unexpected end of input while parsing order group."));
+                token.pushError(AntlersError.makeSyntaxError(
+                  AntlersErrorCodes.TYPE_UNEXPECTED_EOI_PARSING_ORDER_GROUP,
+                  token,
+                  "Unexpected end of input while parsing order group."
+                ));
                 continue;
               }
               const nextTokenT = tokens[i + 1];
               if (nextTokenT instanceof LogicGroup == false) {
-                nextTokenT.pushError(AntlersError.makeSyntaxError(AntlersErrorCodes.TYPE_EXPECTING_ORDER_GROUP_FOR_ORDER_BY_OPERAND, nextTokenT, "Unexpected [" + TypeLabeler.getPrettyTypeName(nextTokenT) + "] while parsing order group."));
+                nextTokenT.pushError(AntlersError.makeSyntaxError(
+                  AntlersErrorCodes.TYPE_EXPECTING_ORDER_GROUP_FOR_ORDER_BY_OPERAND,
+                  nextTokenT,
+                  "Unexpected [" + TypeLabeler.getPrettyTypeName(nextTokenT) + "] while parsing order group."
+                ));
                 continue;
               }
               const nextToken = nextTokenT;
@@ -26885,7 +28021,11 @@ var init_languageParser = __esm({
               }
               const orderClauses = this.makeOrderGroup(subNodes);
               if (orderClauses.length == 0) {
-                token.pushError(AntlersError.makeSyntaxError(AntlersErrorCodes.TYPE_UNEXPECTED_EMPTY_DIRECTION_GROUP, token, "Unexpected empty [T_DIRECTION_GROUP]. Must have at least one order clause, and each property must have a direction specified."));
+                token.pushError(AntlersError.makeSyntaxError(
+                  AntlersErrorCodes.TYPE_UNEXPECTED_EMPTY_DIRECTION_GROUP,
+                  token,
+                  "Unexpected empty [T_DIRECTION_GROUP]. Must have at least one order clause, and each property must have a direction specified."
+                ));
               }
               const orderGroup = new DirectionGroup();
               orderGroup.orderClauses = orderClauses;
@@ -26904,16 +28044,28 @@ var init_languageParser = __esm({
               continue;
             } else if (token.content == LanguageOperatorRegistry.ARR_GROUPBY) {
               if (i + 1 >= tokenCount) {
-                token.pushError(AntlersError.makeSyntaxError(AntlersErrorCodes.TYPE_UNEXPECTED_EOI_WHILE_PARSING_GROUP_BY, token, "Unexpected end of input while parsing group by clause."));
+                token.pushError(AntlersError.makeSyntaxError(
+                  AntlersErrorCodes.TYPE_UNEXPECTED_EOI_WHILE_PARSING_GROUP_BY,
+                  token,
+                  "Unexpected end of input while parsing group by clause."
+                ));
                 continue;
               }
               const nextTokenT = tokens[i + 1];
               if (nextTokenT instanceof AliasedScopeLogicGroup || nextTokenT instanceof ScopedLogicGroup) {
-                nextTokenT.pushError(AntlersError.makeSyntaxError(AntlersErrorCodes.TYPE_GROUP_BY_SCOPED_GROUP_MUST_BE_ENCLOSED, nextTokenT, "Type [" + TypeLabeler.getPrettyTypeName(nextTokenT) + "] must be enclosed with parenthesis to be used with groupby."));
+                nextTokenT.pushError(AntlersError.makeSyntaxError(
+                  AntlersErrorCodes.TYPE_GROUP_BY_SCOPED_GROUP_MUST_BE_ENCLOSED,
+                  nextTokenT,
+                  "Type [" + TypeLabeler.getPrettyTypeName(nextTokenT) + "] must be enclosed with parenthesis to be used with groupby."
+                ));
                 continue;
               }
               if (nextTokenT instanceof LogicGroup == false) {
-                nextTokenT.pushError(AntlersError.makeSyntaxError(AntlersErrorCodes.TYPE_UNEXPECTED_TOKEN_FOR_GROUP_BY, nextTokenT, "Unexpected [" + TypeLabeler.getPrettyTypeName(nextTokenT) + "] while parsing group by."));
+                nextTokenT.pushError(AntlersError.makeSyntaxError(
+                  AntlersErrorCodes.TYPE_UNEXPECTED_TOKEN_FOR_GROUP_BY,
+                  nextTokenT,
+                  "Unexpected [" + TypeLabeler.getPrettyTypeName(nextTokenT) + "] while parsing group by."
+                ));
                 continue;
               }
               const nextToken = nextTokenT;
@@ -26934,7 +28086,11 @@ var init_languageParser = __esm({
                     i += 3;
                     continue;
                   } else {
-                    peekTwo.pushError(AntlersError.makeSyntaxError(AntlersErrorCodes.TYPE_UNEXPECTED_GROUP_BY_AS_ALIAS_TYPE, peekTwo, "Expecting [T_STRING] for group by collection alias; got [" + TypeLabeler.getPrettyTypeName(peekTwo) + "]."));
+                    peekTwo.pushError(AntlersError.makeSyntaxError(
+                      AntlersErrorCodes.TYPE_UNEXPECTED_GROUP_BY_AS_ALIAS_TYPE,
+                      peekTwo,
+                      "Expecting [T_STRING] for group by collection alias; got [" + TypeLabeler.getPrettyTypeName(peekTwo) + "]."
+                    ));
                   }
                 }
               }
@@ -26942,40 +28098,68 @@ var init_languageParser = __esm({
               continue;
             } else if (token.content == LanguageOperatorRegistry.STRUCT_SWITCH) {
               if (i + 1 >= tokenCount) {
-                token.pushError(AntlersError.makeSyntaxError(AntlersErrorCodes.TYPE_UNEXPECTED_EOI_WHILE_PARSING_SWITCH_GROUP, token, "Unexpected end of input while parsing [T_SWITCH_GROUP]."));
+                token.pushError(AntlersError.makeSyntaxError(
+                  AntlersErrorCodes.TYPE_UNEXPECTED_EOI_WHILE_PARSING_SWITCH_GROUP,
+                  token,
+                  "Unexpected end of input while parsing [T_SWITCH_GROUP]."
+                ));
                 continue;
               }
               const nextT = tokens[i + 1];
               if (nextT instanceof ScopedLogicGroup == false) {
-                nextT.pushError(AntlersError.makeSyntaxError(AntlersErrorCodes.TYPE_UNEXPECTED_TOKEN_FOR_SWITCH_GROUP, nextT, "Unexpected [" + TypeLabeler.getPrettyTypeName(nextT) + "] while parsing [T_SWITCH_GROUP]."));
+                nextT.pushError(AntlersError.makeSyntaxError(
+                  AntlersErrorCodes.TYPE_UNEXPECTED_TOKEN_FOR_SWITCH_GROUP,
+                  nextT,
+                  "Unexpected [" + TypeLabeler.getPrettyTypeName(nextT) + "] while parsing [T_SWITCH_GROUP]."
+                ));
                 continue;
               }
               const next = nextT;
               this.markAllNonVirtualAsSwitch([nextT]);
               if (next.scope == null || next.scope instanceof LogicGroup == false) {
-                next.pushError(AntlersError.makeSyntaxError(AntlersErrorCodes.TYPE_UNEXPECTED_SWITCH_START_VALUE, next, "Unexpected input while parsing [T_SWITCH_GROUP]."));
+                next.pushError(AntlersError.makeSyntaxError(
+                  AntlersErrorCodes.TYPE_UNEXPECTED_SWITCH_START_VALUE,
+                  next,
+                  "Unexpected input while parsing [T_SWITCH_GROUP]."
+                ));
                 continue;
               }
               const tSwitchScope = next.scope;
               if (tSwitchScope.nodes.length == 0 || tSwitchScope.nodes[0] instanceof SemanticGroup == false) {
-                next.pushError(AntlersError.makeSyntaxError(AntlersErrorCodes.TYPE_UNEXPECTED_SWITCH_START_VALUE_NO_VALUE, next, "Unexpected input while parsing [T_SWITCH_GROUP]."));
+                next.pushError(AntlersError.makeSyntaxError(
+                  AntlersErrorCodes.TYPE_UNEXPECTED_SWITCH_START_VALUE_NO_VALUE,
+                  next,
+                  "Unexpected input while parsing [T_SWITCH_GROUP]."
+                ));
                 continue;
               }
               const wrapperSemanticGroup = tSwitchScope.nodes[0];
               this.markAllNonVirtualAsSwitch([tSwitchScope]);
               if (wrapperSemanticGroup.nodes.length == 0 || wrapperSemanticGroup.nodes[0] instanceof LogicGroup == false) {
-                token.pushError(AntlersError.makeSyntaxError(AntlersErrorCodes.TYPE_UNEXPECTED_SWITCH_START_VALUE_NO_VALUE, token, "Unexpected input while parsing [T_SWITCH_GROUP]."));
+                token.pushError(AntlersError.makeSyntaxError(
+                  AntlersErrorCodes.TYPE_UNEXPECTED_SWITCH_START_VALUE_NO_VALUE,
+                  token,
+                  "Unexpected input while parsing [T_SWITCH_GROUP]."
+                ));
                 continue;
               }
               this.markAllNonVirtualAsSwitch([token]);
               this.markAllNonVirtualAsSwitch(wrapperSemanticGroup.nodes);
               const firstCondition = wrapperSemanticGroup.nodes;
               if (next.nodes.length == 0) {
-                token.pushError(AntlersError.makeSyntaxError(AntlersErrorCodes.TYPE_UNEXPECTED_SWITCH_START_VALUE_NO_VALUE, token, "Unexpected input while parsing [T_SWITCH_GROUP]."));
+                token.pushError(AntlersError.makeSyntaxError(
+                  AntlersErrorCodes.TYPE_UNEXPECTED_SWITCH_START_VALUE_NO_VALUE,
+                  token,
+                  "Unexpected input while parsing [T_SWITCH_GROUP]."
+                ));
               }
               const expressionNodeT = tSwitchScope.nodes[0];
               if (expressionNodeT instanceof SemanticGroup == false) {
-                token.pushError(AntlersError.makeSyntaxError(AntlersErrorCodes.TYPE_UNEXPECTED_SWITCH_START_VALUE_NO_VALUE, token, "Unexpected input while parsing [T_SWITCH_GROUP]."));
+                token.pushError(AntlersError.makeSyntaxError(
+                  AntlersErrorCodes.TYPE_UNEXPECTED_SWITCH_START_VALUE_NO_VALUE,
+                  token,
+                  "Unexpected input while parsing [T_SWITCH_GROUP]."
+                ));
                 continue;
               }
               const expressionNode = tSwitchScope.nodes[0];
@@ -27000,7 +28184,11 @@ var init_languageParser = __esm({
               const subTokenCount = subTokens.length;
               if (subTokenCount > 0) {
                 if (subTokens[0] instanceof LogicGroup == false) {
-                  token.pushError(AntlersError.makeSyntaxError(AntlersErrorCodes.TYPE_PARSER_INVALID_SWITCH_TOKEN, token, "Invalid [" + TypeLabeler.getPrettyTypeName(subTokens[0]) + "] while parsing case statement."));
+                  token.pushError(AntlersError.makeSyntaxError(
+                    AntlersErrorCodes.TYPE_PARSER_INVALID_SWITCH_TOKEN,
+                    token,
+                    "Invalid [" + TypeLabeler.getPrettyTypeName(subTokens[0]) + "] while parsing case statement."
+                  ));
                   continue;
                 }
                 for (let c = 0; c < subTokenCount; c++) {
@@ -27029,7 +28217,11 @@ var init_languageParser = __esm({
                     switchGroup.cases.push(newCase);
                     if (c + 3 < subTokenCount) {
                       if (subTokens[c + 3] instanceof ArgSeparator == false) {
-                        subTokens[c + 3].pushError(AntlersError.makeSyntaxError(AntlersErrorCodes.TYPE_PARSER_INVALID_SWITCH_TOKEN, subTokens[c + 3], "Invalid [" + TypeLabeler.getPrettyTypeName(subTokens[c + 3]) + "] while parsing case statement; expecting [T_ARG_SEPARATOR]."));
+                        subTokens[c + 3].pushError(AntlersError.makeSyntaxError(
+                          AntlersErrorCodes.TYPE_PARSER_INVALID_SWITCH_TOKEN,
+                          subTokens[c + 3],
+                          "Invalid [" + TypeLabeler.getPrettyTypeName(subTokens[c + 3]) + "] while parsing case statement; expecting [T_ARG_SEPARATOR]."
+                        ));
                         continue;
                       }
                     }
@@ -27046,12 +28238,20 @@ var init_languageParser = __esm({
               continue;
             } else if (token.content == LanguageOperatorRegistry.ARR_MAKE) {
               if (i + 1 >= tokenCount) {
-                token.pushError(AntlersError.makeSyntaxError(AntlersErrorCodes.TYPE_ARR_MAKE_MISSING_TARGET, token, "Missing target variable for arr operator."));
+                token.pushError(AntlersError.makeSyntaxError(
+                  AntlersErrorCodes.TYPE_ARR_MAKE_MISSING_TARGET,
+                  token,
+                  "Missing target variable for arr operator."
+                ));
                 continue;
               }
               const nextTokenT = tokens[i + 1];
               if (nextTokenT instanceof LogicGroup == false) {
-                nextTokenT.pushError(AntlersError.makeSyntaxError(AntlersErrorCodes.TYPE_ARR_MAKE_UNEXPECTED_TYPE, nextTokenT, "Unexpected [" + TypeLabeler.getPrettyTypeName(nextTokenT) + "] while parsing array."));
+                nextTokenT.pushError(AntlersError.makeSyntaxError(
+                  AntlersErrorCodes.TYPE_ARR_MAKE_UNEXPECTED_TYPE,
+                  nextTokenT,
+                  "Unexpected [" + TypeLabeler.getPrettyTypeName(nextTokenT) + "] while parsing array."
+                ));
                 continue;
               }
               const isNextScopedLogicGroup = nextTokenT instanceof ScopedLogicGroup;
@@ -27096,16 +28296,28 @@ var init_languageParser = __esm({
         for (let i = 0; i < nodeCount; i++) {
           const thisNode = nodes[i];
           if (thisNode instanceof ArgSeparator) {
-            thisNode.pushError(AntlersError.makeSyntaxError(AntlersErrorCodes.TYPE_ARR_UNEXPECT_ARG_SEPARATOR, thisNode, "Unexpected [T_ARG_SEPARATOR] while parsing array."));
+            thisNode.pushError(AntlersError.makeSyntaxError(
+              AntlersErrorCodes.TYPE_ARR_UNEXPECT_ARG_SEPARATOR,
+              thisNode,
+              "Unexpected [T_ARG_SEPARATOR] while parsing array."
+            ));
             continue;
           }
           if (thisNode instanceof ScopeAssignmentOperator) {
             if (i == 0) {
-              thisNode.pushError(AntlersError.makeSyntaxError(AntlersErrorCodes.TYPE_ARR_KEY_PAIR_MISSING_KEY, thisNode, "Missing key for key/value pair while parsing array."));
+              thisNode.pushError(AntlersError.makeSyntaxError(
+                AntlersErrorCodes.TYPE_ARR_KEY_PAIR_MISSING_KEY,
+                thisNode,
+                "Missing key for key/value pair while parsing array."
+              ));
               continue;
             } else {
               if (nodes[i - 1] instanceof ArgSeparator) {
-                thisNode.pushError(AntlersError.makeSyntaxError(AntlersErrorCodes.TYPE_ARR_KEY_PAIR_MISSING_KEY, thisNode, "Missing key for key/value pair while parsing array."));
+                thisNode.pushError(AntlersError.makeSyntaxError(
+                  AntlersErrorCodes.TYPE_ARR_KEY_PAIR_MISSING_KEY,
+                  thisNode,
+                  "Missing key for key/value pair while parsing array."
+                ));
                 continue;
               }
             }
@@ -27116,13 +28328,21 @@ var init_languageParser = __esm({
           }
           if (next instanceof ScopeAssignmentOperator) {
             if (i + 2 >= nodeCount) {
-              next.pushError(AntlersError.makeSyntaxError(AntlersErrorCodes.TYPE_ARR_MAKE_MISSING_ARR_KEY_PAIR_VALUE, next, "Missing key/pair value while parsing array."));
+              next.pushError(AntlersError.makeSyntaxError(
+                AntlersErrorCodes.TYPE_ARR_MAKE_MISSING_ARR_KEY_PAIR_VALUE,
+                next,
+                "Missing key/pair value while parsing array."
+              ));
               continue;
             }
             const keyValue = nodes[i + 2];
             const namedValueNode = new NameValueNode();
             if (this.isValidArrayKeyNode(thisNode) == false) {
-              thisNode.pushError(AntlersError.makeSyntaxError(AntlersErrorCodes.TYPE_ARR_KEY_PAIR_INVALID_KEY_TYPE, thisNode, "Invalid [" + TypeLabeler.getPrettyTypeName(thisNode) + "] type for key/value key."));
+              thisNode.pushError(AntlersError.makeSyntaxError(
+                AntlersErrorCodes.TYPE_ARR_KEY_PAIR_INVALID_KEY_TYPE,
+                thisNode,
+                "Invalid [" + TypeLabeler.getPrettyTypeName(thisNode) + "] type for key/value key."
+              ));
               continue;
             }
             namedValueNode.name = thisNode;
@@ -27160,7 +28380,11 @@ var init_languageParser = __esm({
           if (node instanceof ModifierSeparator) {
             const newNodeCount = newNodes.length;
             if (newNodeCount == 0) {
-              node.pushError(AntlersError.makeSyntaxError(AntlersErrorCodes.TYPE_UNEXPECTED_MODIFIER_SEPARATOR, node, "Unexpected [T_MODIFIER_SEPARATOR] while parsing input text."));
+              node.pushError(AntlersError.makeSyntaxError(
+                AntlersErrorCodes.TYPE_UNEXPECTED_MODIFIER_SEPARATOR,
+                node,
+                "Unexpected [T_MODIFIER_SEPARATOR] while parsing input text."
+              ));
               continue;
             }
             this.isRealModifierSeparator.set(node, true);
@@ -27171,7 +28395,11 @@ var init_languageParser = __esm({
               this.createdModifierChains.push(applyModifiersToNode.modifierChain);
             }
             if (i + 1 >= tokenCount) {
-              node.pushError(AntlersError.makeSyntaxError(AntlersErrorCodes.TYPE_UNEXPECTED_EOI_WHILE_PARSING_MODIFIER_DETAILS, node, "Unexpected end of input while preparing to gather modifier details."));
+              node.pushError(AntlersError.makeSyntaxError(
+                AntlersErrorCodes.TYPE_UNEXPECTED_EOI_WHILE_PARSING_MODIFIER_DETAILS,
+                node,
+                "Unexpected end of input while preparing to gather modifier details."
+              ));
               continue;
             }
             const results = this.scanToEndOfModifier(tokens.slice(i + 1));
@@ -27194,11 +28422,19 @@ var init_languageParser = __esm({
               }
             }
             if (resultCount == 0) {
-              node.pushError(AntlersError.makeSyntaxError(AntlersErrorCodes.TYPE_UNSET_MODIFIER_DETAILS, node, "Invalid or missing modifier details."));
+              node.pushError(AntlersError.makeSyntaxError(
+                AntlersErrorCodes.TYPE_UNSET_MODIFIER_DETAILS,
+                node,
+                "Invalid or missing modifier details."
+              ));
               continue;
             }
             if (results[0] instanceof ModifierNameNode == false) {
-              node.pushError(AntlersError.makeSyntaxError(AntlersErrorCodes.TYPE_MODIFIER_NAME_NOT_START_OF_DETAILS, node, "Invalid [" + TypeLabeler.getPrettyTypeName(results[0]) + "]; expecting [T_MODIFIER_NAME]"));
+              node.pushError(AntlersError.makeSyntaxError(
+                AntlersErrorCodes.TYPE_MODIFIER_NAME_NOT_START_OF_DETAILS,
+                node,
+                "Invalid [" + TypeLabeler.getPrettyTypeName(results[0]) + "]; expecting [T_MODIFIER_NAME]"
+              ));
               continue;
             }
             const modifier = this.createModifier(results);
@@ -27222,7 +28458,11 @@ var init_languageParser = __esm({
           if (node instanceof NullCoalesceOperator) {
             const left = newTokens.pop();
             if (i + 1 >= tokenCount) {
-              node.pushError(AntlersError.makeSyntaxError(AntlersErrorCodes.TYPE_UNEXPECTED_EOI_WHILE_PARSING_NULL_COALESCENCE_GROUP, node, "Unexpected end of input while parsing input text."));
+              node.pushError(AntlersError.makeSyntaxError(
+                AntlersErrorCodes.TYPE_UNEXPECTED_EOI_WHILE_PARSING_NULL_COALESCENCE_GROUP,
+                node,
+                "Unexpected end of input while parsing input text."
+              ));
               continue;
             }
             const right = tokens[i + 1];
@@ -27246,12 +28486,20 @@ var init_languageParser = __esm({
       }
       assertOperandRight(tokens, i) {
         if (i + 1 > tokens.length - 1) {
-          tokens[i].pushError(AntlersError.makeSyntaxError(AntlersErrorCodes.TYPE_UNEXPECTED_END_OF_INPUT, tokens[i], "Unexpected end of input; expecting operand for operator " + TypeLabeler.getPrettyTypeName(tokens[i]) + ' near "' + LineRetriever.getNearText(tokens[i]) + '".'));
+          tokens[i].pushError(AntlersError.makeSyntaxError(
+            AntlersErrorCodes.TYPE_UNEXPECTED_END_OF_INPUT,
+            tokens[i],
+            "Unexpected end of input; expecting operand for operator " + TypeLabeler.getPrettyTypeName(tokens[i]) + ' near "' + LineRetriever.getNearText(tokens[i]) + '".'
+          ));
           return false;
         }
         const token = tokens[i + 1];
         if (!this.isOperand(token)) {
-          token.pushError(AntlersError.makeSyntaxError(AntlersErrorCodes.TYPE_EXPECTING_OPERAND, tokens[i], "Expecting operand, found " + TypeLabeler.getPrettyTypeName(token) + ' near "' + LineRetriever.getNearText(tokens[i]) + '".'));
+          token.pushError(AntlersError.makeSyntaxError(
+            AntlersErrorCodes.TYPE_EXPECTING_OPERAND,
+            tokens[i],
+            "Expecting operand, found " + TypeLabeler.getPrettyTypeName(token) + ' near "' + LineRetriever.getNearText(tokens[i]) + '".'
+          ));
           return false;
         }
         return true;
@@ -27333,7 +28581,11 @@ var init_languageParser = __esm({
               }
             }
             if (separator.found == false) {
-              node.pushError(AntlersError.makeSyntaxError(AntlersErrorCodes.TYPE_TERNARY_EXPECTING_BRANCH_SEPARATOR, node, "Unexpected end of input; expecting [T_BRANCH_SEPARATOR]."));
+              node.pushError(AntlersError.makeSyntaxError(
+                AntlersErrorCodes.TYPE_TERNARY_EXPECTING_BRANCH_SEPARATOR,
+                node,
+                "Unexpected end of input; expecting [T_BRANCH_SEPARATOR]."
+              ));
               continue;
             }
             const result = this.collectUntil(newTokens);
@@ -27341,18 +28593,30 @@ var init_languageParser = __esm({
             const condition = result.collectedTokens[0];
             const targetTokenIndex = (_b = separator.foundAt) != null ? _b : 0;
             if (targetTokenIndex >= tokenCount) {
-              node.pushError(AntlersError.makeSyntaxError(AntlersErrorCodes.TYPE_UNEXPECTED_EOI_WHILE_PARSING_TERNARY_GROUP, node, "Unexpected end of input while parsing ternary group."));
+              node.pushError(AntlersError.makeSyntaxError(
+                AntlersErrorCodes.TYPE_UNEXPECTED_EOI_WHILE_PARSING_TERNARY_GROUP,
+                node,
+                "Unexpected end of input while parsing ternary group."
+              ));
               continue;
             }
             const truthBranch = tokens.slice(i + 1, targetTokenIndex);
             if (truthBranch.length > 1 || truthBranch.length == 0) {
-              node.pushError(AntlersError.makeSyntaxError(AntlersErrorCodes.TYPE_TERNARY_UNEXPECTED_EXPRESSION_LENGTH, node, "Unexpected number of operations within ternary truth branch."));
+              node.pushError(AntlersError.makeSyntaxError(
+                AntlersErrorCodes.TYPE_TERNARY_UNEXPECTED_EXPRESSION_LENGTH,
+                node,
+                "Unexpected number of operations within ternary truth branch."
+              ));
               continue;
             }
             const truthBranchNodes = truthBranch[0];
             const falseBranchStart = ((_c = separator.foundAt) != null ? _c : 0) + 1;
             if (falseBranchStart >= tokenCount) {
-              node.pushError(AntlersError.makeSyntaxError(AntlersErrorCodes.TYPE_UNEXPECTED_EOI_WHILE_PARSING_TERNARY_GROUP_FALSE_BRANCH, node, "Unexpected end of input while parsing ternary false execution branch."));
+              node.pushError(AntlersError.makeSyntaxError(
+                AntlersErrorCodes.TYPE_UNEXPECTED_EOI_WHILE_PARSING_TERNARY_GROUP_FALSE_BRANCH,
+                node,
+                "Unexpected end of input while parsing ternary false execution branch."
+              ));
               continue;
             }
             const falseBranch = tokens[falseBranchStart];
@@ -27382,7 +28646,11 @@ var init_languageParser = __esm({
               continue;
             }
             if (i + 1 >= nodeCount) {
-              node.pushError(AntlersError.makeSyntaxError(AntlersErrorCodes.TYPE_UNEXPECTED_EOI_WHILE_REDUCING_NEGATION_OPERATORS, node, "Unexpected end of input while parsing input text."));
+              node.pushError(AntlersError.makeSyntaxError(
+                AntlersErrorCodes.TYPE_UNEXPECTED_EOI_WHILE_REDUCING_NEGATION_OPERATORS,
+                node,
+                "Unexpected end of input while parsing input text."
+              ));
               continue;
             }
             const right = nodes[i + 1];
@@ -27430,7 +28698,11 @@ var init_languageParser = __esm({
               continue;
             }
             if (i + 1 >= nodeCount) {
-              node.pushError(AntlersError.makeSyntaxError(AntlersErrorCodes.TYPE_UNEXPECTED_EOI_WHILE_REDUCING_NEGATION_OPERATORS, node, "Unexpected end of input while parsing input text."));
+              node.pushError(AntlersError.makeSyntaxError(
+                AntlersErrorCodes.TYPE_UNEXPECTED_EOI_WHILE_REDUCING_NEGATION_OPERATORS,
+                node,
+                "Unexpected end of input while parsing input text."
+              ));
               continue;
             }
             const right = nodes[i + 1];
@@ -27545,7 +28817,11 @@ var init_languageParser = __esm({
           modifier.methodStyleArguments = tArgGroup;
           if (tokens.length > 1) {
             for (let i = 1; i < tokenCount; i++) {
-              tokens[i].pushError(AntlersError.makeSyntaxError(AntlersErrorCodes.TYPE_MODIFIER_UNEXPECTED_TOKEN_METHOD_SYNTAX, tokens[i], "Unexpected [" + TypeLabeler.getPrettyTypeName(tokens[i]) + "] while parsing modifier argument group. Expecting [T_MODIFIER_SEPARATOR] or end of current expression."));
+              tokens[i].pushError(AntlersError.makeSyntaxError(
+                AntlersErrorCodes.TYPE_MODIFIER_UNEXPECTED_TOKEN_METHOD_SYNTAX,
+                tokens[i],
+                "Unexpected [" + TypeLabeler.getPrettyTypeName(tokens[i]) + "] while parsing modifier argument group. Expecting [T_MODIFIER_SEPARATOR] or end of current expression."
+              ));
             }
           }
           return modifier;
@@ -27553,7 +28829,11 @@ var init_languageParser = __esm({
         for (let i = 0; i < tokenCount; i++) {
           if (tokens[i] instanceof ModifierValueSeparator || tokens[i] instanceof InlineBranchSeparator) {
             if (i + 1 >= tokenCount) {
-              tokens[i].pushError(AntlersError.makeSyntaxError(AntlersErrorCodes.TYPE_MODIFIER_UNEXPECTED_END_OF_VALUE_LIST, tokens[i], "Unexpected end of modifier value list while parsing modifier."));
+              tokens[i].pushError(AntlersError.makeSyntaxError(
+                AntlersErrorCodes.TYPE_MODIFIER_UNEXPECTED_END_OF_VALUE_LIST,
+                tokens[i],
+                "Unexpected end of modifier value list while parsing modifier."
+              ));
               return tokens;
             }
             const next = tokens[i + 1];
@@ -27590,7 +28870,11 @@ var init_languageParser = __esm({
               i += 1;
               continue;
             } else {
-              next.pushError(AntlersError.makeSyntaxError(AntlersErrorCodes.TYPE_MODIFIER_UNEXPECTED_VALUE, next, "Unexpected [" + TypeLabeler.getPrettyTypeName(next) + "] while parsing modifier value."));
+              next.pushError(AntlersError.makeSyntaxError(
+                AntlersErrorCodes.TYPE_MODIFIER_UNEXPECTED_VALUE,
+                next,
+                "Unexpected [" + TypeLabeler.getPrettyTypeName(next) + "] while parsing modifier value."
+              ));
               return tokens;
             }
           }
@@ -27613,7 +28897,11 @@ var init_languageParser = __esm({
           if (subToken instanceof ModifierValueSeparator) {
             const subTokenCount = subTokens.length;
             if (subTokenCount == 0) {
-              subToken.pushError(AntlersError.makeSyntaxError(AntlersErrorCodes.TYPE_UNEXPECTED_EOI_WHILE_PARSING_MODIFIER_VALUE, subToken, "Unexpected end of input while parsing modifier value."));
+              subToken.pushError(AntlersError.makeSyntaxError(
+                AntlersErrorCodes.TYPE_UNEXPECTED_EOI_WHILE_PARSING_MODIFIER_VALUE,
+                subToken,
+                "Unexpected end of input while parsing modifier value."
+              ));
               continue;
             }
             this.isRealModifierSeparator.set(subToken, true);
@@ -27708,7 +28996,11 @@ var init_languageParser = __esm({
             break;
           } else if (node instanceof LogicGroupBegin) {
             if (i + 1 >= nodeCount) {
-              node.pushError(AntlersError.makeSyntaxError(AntlersErrorCodes.TYPE_UNEXPECTED_EOI_WHILE_PARSING_LOGIC_GROUP_END, node, "Unexpected end of input while parsing input text."));
+              node.pushError(AntlersError.makeSyntaxError(
+                AntlersErrorCodes.TYPE_UNEXPECTED_EOI_WHILE_PARSING_LOGIC_GROUP_END,
+                node,
+                "Unexpected end of input while parsing input text."
+              ));
               return {
                 found: false,
                 logicalGroup: null,
@@ -27731,7 +29023,11 @@ var init_languageParser = __esm({
           }
         }
         if (end == null) {
-          root.pushError(AntlersError.makeSyntaxError(AntlersErrorCodes.TYPE_LOGIC_GROUP_NO_END, root, "Unexpected end of input while parsing logic group."));
+          root.pushError(AntlersError.makeSyntaxError(
+            AntlersErrorCodes.TYPE_LOGIC_GROUP_NO_END,
+            root,
+            "Unexpected end of input while parsing logic group."
+          ));
           return {
             found: false,
             logicalGroup: null,
@@ -27834,6 +29130,7 @@ var init_languageParser = __esm({
 var WordScanner;
 var init_wordScanner = __esm({
   "server/src/runtime/document/scanners/wordScanner.ts"() {
+    "use strict";
     init_documentParser();
     init_stringUtilities();
     WordScanner = class {
@@ -27929,6 +29226,7 @@ var init_wordScanner = __esm({
 var VirtualHierarchy;
 var init_virtualHierarchy = __esm({
   "server/src/runtime/parser/virtualDocument/virtualHierarchy.ts"() {
+    "use strict";
     init_abstractNode();
     VirtualHierarchy = class {
       constructor(parser) {
@@ -27955,6 +29253,7 @@ var init_virtualHierarchy = __esm({
 var ModifierAnalyzer;
 var init_modifierAnalyzer = __esm({
   "server/src/runtime/analyzers/modifierAnalyzer.ts"() {
+    "use strict";
     init_modifierManager();
     ModifierAnalyzer = class {
       static analyzeModifierNodeParameters(node) {
@@ -28046,6 +29345,7 @@ function isStartOfString(char) {
 }
 var init_isStartOfString = __esm({
   "server/src/runtime/parser/scanners/isStartOfString.ts"() {
+    "use strict";
   }
 });
 
@@ -28063,6 +29363,7 @@ function skipToEndOfLine(iterator, collect) {
 }
 var init_skipToEndOfLine = __esm({
   "server/src/runtime/parser/scanners/skipToEndOfLine.ts"() {
+    "use strict";
     init_documentParser();
   }
 });
@@ -28086,6 +29387,7 @@ function skipToEndOfMultilineComment(iterator, collect) {
 }
 var init_skipToEndOfMultilineComment = __esm({
   "server/src/runtime/parser/scanners/skipToEndOfMultilineComment.ts"() {
+    "use strict";
     init_documentParser();
   }
 });
@@ -28103,6 +29405,7 @@ function skipToEndOfString(iterator) {
 }
 var init_skipToEndOfString = __esm({
   "server/src/runtime/parser/scanners/skipToEndOfString.ts"() {
+    "use strict";
     init_documentParser();
   }
 });
@@ -28111,6 +29414,7 @@ var init_skipToEndOfString = __esm({
 var FragmentsParser;
 var init_fragmentsParser = __esm({
   "server/src/runtime/parser/fragmentsParser.ts"() {
+    "use strict";
     init_abstractNode();
     init_position();
     init_stringUtilities();
@@ -28318,7 +29622,13 @@ var init_fragmentsParser = __esm({
         if (this.currentIndex + 1 < this.inputLen) {
           let doPeek = true;
           if (this.currentIndex == this.charLen - 1) {
-            const nextChunk = StringUtilities.split(StringUtilities.substring(this.content, this.currentChunkOffset + this.chunkSize, this.chunkSize));
+            const nextChunk = StringUtilities.split(
+              StringUtilities.substring(
+                this.content,
+                this.currentChunkOffset + this.chunkSize,
+                this.chunkSize
+              )
+            );
             this.currentChunkOffset += this.chunkSize;
             if (this.currentChunkOffset == this.inputLen) {
               doPeek = false;
@@ -28546,6 +29856,7 @@ var init_fragmentsParser = __esm({
 var FragmentPositionAnalyzer;
 var init_fragmentPositionAnalyzer = __esm({
   "server/src/runtime/analyzers/fragmentPositionAnalyzer.ts"() {
+    "use strict";
     init_abstractNode();
     init_conditionPairAnalyzer();
     FragmentPositionAnalyzer = class {
@@ -28638,6 +29949,7 @@ var init_fragmentPositionAnalyzer = __esm({
 var InlineNodeAnalyzer;
 var init_inlineNodeAnalyzer = __esm({
   "server/src/runtime/analyzers/inlineNodeAnalyzer.ts"() {
+    "use strict";
     init_abstractNode();
     init_stringUtilities();
     InlineNodeAnalyzer = class {
@@ -28716,6 +30028,7 @@ var init_inlineNodeAnalyzer = __esm({
 var import_md52, _DocumentParser, DocumentParser;
 var init_documentParser = __esm({
   "server/src/runtime/parser/documentParser.ts"() {
+    "use strict";
     init_antlersError();
     init_antlersErrorCodes();
     init_abstractNode();
@@ -28854,7 +30167,13 @@ var init_documentParser = __esm({
         if (this.currentIndex + 1 < this.inputLen) {
           let doPeek = true;
           if (this.currentIndex == this.charLen - 1) {
-            const nextChunk = StringUtilities.split(StringUtilities.substring(this.content, this.currentChunkOffset + this.chunkSize, this.chunkSize));
+            const nextChunk = StringUtilities.split(
+              StringUtilities.substring(
+                this.content,
+                this.currentChunkOffset + this.chunkSize,
+                this.chunkSize
+              )
+            );
             this.currentChunkOffset += this.chunkSize;
             if (this.currentChunkOffset == this.inputLen) {
               doPeek = false;
@@ -29063,7 +30382,9 @@ var init_documentParser = __esm({
             if (i == 0 && offset > 0 && !this.isNoParse) {
               const node = new LiteralNode();
               node.withParser(this);
-              node.content = this.prepareLiteralContent(this.content.substr(0, offset));
+              node.content = this.prepareLiteralContent(
+                this.content.substr(0, offset)
+              );
               if (node.content.length > 0) {
                 node.startPosition = this.positionFromOffset(0, 0);
                 node.endPosition = this.positionFromOffset(offset, offset - 1);
@@ -29091,7 +30412,9 @@ var init_documentParser = __esm({
                       }
                     }
                     if (skipIndex == null) {
-                      const nodeContent = this.prepareLiteralContent(this.content.substr(this.lastAntlersNode.endPosition.offset + 1));
+                      const nodeContent = this.prepareLiteralContent(
+                        this.content.substr(this.lastAntlersNode.endPosition.offset + 1)
+                      );
                       if (nodeContent.length > 0 && !this.isNoParse) {
                         const literalNode = new LiteralNode();
                         literalNode.withParser(this);
@@ -29307,7 +30630,11 @@ var init_documentParser = __esm({
             if (node.isInterpolationNode) {
               errorMessage += " Tag pairs are not supported within Antlers tags.";
             }
-            node.pushError(AntlersError.makeSyntaxError(AntlersErrorCodes.TYPE_UNPAIRED_CLOSING_TAG, node, errorMessage));
+            node.pushError(AntlersError.makeSyntaxError(
+              AntlersErrorCodes.TYPE_UNPAIRED_CLOSING_TAG,
+              node,
+              errorMessage
+            ));
           }
         });
         RecursiveParentAnalyzer.associateRecursiveParent(this.nodes);
@@ -29575,14 +30902,24 @@ var init_documentParser = __esm({
       }
       fetch(count) {
         const start = this.currentChunkOffset + this.chunkSize - this.chars.length;
-        return StringUtilities.substring(this.content, start, count);
+        return StringUtilities.substring(
+          this.content,
+          start,
+          count
+        );
       }
       getParsedContent() {
         return this.content;
       }
       peek(count) {
         if (count == this.charLen) {
-          const nextChunk = StringUtilities.split(StringUtilities.substring(this.content, this.currentChunkOffset + this.chunkSize, this.chunkSize));
+          const nextChunk = StringUtilities.split(
+            StringUtilities.substring(
+              this.content,
+              this.currentChunkOffset + this.chunkSize,
+              this.chunkSize
+            )
+          );
           this.currentChunkOffset += this.chunkSize;
           nextChunk.forEach((nextChar) => {
             this.chars.push(nextChar);
@@ -29606,8 +30943,14 @@ var init_documentParser = __esm({
             escapeNode.name = new TagIdentifier();
             escapeNode.name.name = "noparse";
             escapeNode.content = "{{";
-            escapeNode.startPosition = this.positionFromOffset(this.currentIndex + this.seedOffset, this.currentIndex + this.seedOffset);
-            escapeNode.endPosition = this.positionFromOffset(this.currentIndex + this.seedOffset, this.currentIndex + this.seedOffset);
+            escapeNode.startPosition = this.positionFromOffset(
+              this.currentIndex + this.seedOffset,
+              this.currentIndex + this.seedOffset
+            );
+            escapeNode.endPosition = this.positionFromOffset(
+              this.currentIndex + this.seedOffset,
+              this.currentIndex + this.seedOffset
+            );
             this.nodes.push(escapeNode);
             this.currentContent = [];
             this.sourceContent = [];
@@ -29686,8 +31029,12 @@ var init_documentParser = __esm({
                 break;
               }
             }
-            this.currentContent = this.currentContent.concat(_DocumentParser.LeftBrace.repeat(leftBraceCount).split(""));
-            this.sourceContent = this.currentContent.concat(_DocumentParser.LeftBrace.repeat(leftBraceCount).split(""));
+            this.currentContent = this.currentContent.concat(
+              _DocumentParser.LeftBrace.repeat(leftBraceCount).split("")
+            );
+            this.sourceContent = this.currentContent.concat(
+              _DocumentParser.LeftBrace.repeat(leftBraceCount).split("")
+            );
             this.currentIndex += leftBraceCount;
           }
           this.appendContent(this.cur);
@@ -29812,7 +31159,11 @@ var init_documentParser = __esm({
             this.nodes.push(failNode);
             this.lastAntlersNode = failNode;
             this.doesHaveUnclosedStructures = true;
-            this.antlersErrors.push(AntlersError.makeSyntaxError(AntlersErrorCodes.TYPE_INCOMPLETE_PHP_EVALUATION_REGION, failNode, "Unexpected end of input while parsing Antlers PHP region."));
+            this.antlersErrors.push(AntlersError.makeSyntaxError(
+              AntlersErrorCodes.TYPE_INCOMPLETE_PHP_EVALUATION_REGION,
+              failNode,
+              "Unexpected end of input while parsing Antlers PHP region."
+            ));
             break;
           }
         }
@@ -29848,7 +31199,11 @@ var init_documentParser = __esm({
             this.nodes.push(failNode);
             this.lastAntlersNode = failNode;
             this.doesHaveUnclosedStructures = true;
-            this.antlersErrors.push(AntlersError.makeSyntaxError(AntlersErrorCodes.TYPE_INCOMPLETE_ANTELRS_COMMENT_REGION, failNode, "Unexpected end of input while parsing Antlers comment region."));
+            this.antlersErrors.push(AntlersError.makeSyntaxError(
+              AntlersErrorCodes.TYPE_INCOMPLETE_ANTELRS_COMMENT_REGION,
+              failNode,
+              "Unexpected end of input while parsing Antlers comment region."
+            ));
             break;
           }
         }
@@ -29972,7 +31327,11 @@ var init_documentParser = __esm({
             if (this.isScanningInterpolations) {
               message = "Unexpected end of input wihle parsing interpolated Antlers region.";
             }
-            this.antlersErrors.push(AntlersError.makeSyntaxError(AntlersErrorCodes.TYPE_INCOMPLETE_ANTLERS_REGION, failNode, message));
+            this.antlersErrors.push(AntlersError.makeSyntaxError(
+              AntlersErrorCodes.TYPE_INCOMPLETE_ANTLERS_REGION,
+              failNode,
+              message
+            ));
             break;
           }
         }
@@ -29988,15 +31347,25 @@ var init_documentParser = __esm({
         }
         node.content = this.currentContent.join("");
         node.sourceContent = this.sourceContent.join("");
-        node.startPosition = this.positionFromOffset(this.startIndex + this.seedOffset, this.startIndex + this.seedOffset);
+        node.startPosition = this.positionFromOffset(
+          this.startIndex + this.seedOffset,
+          this.startIndex + this.seedOffset
+        );
         if (index + 3 > this.inputLen) {
           node.endPosition = this.positionFromOffset(this.inputLen, this.inputLen - 1);
           this.doesHaveUnclosedStructures = true;
-          this.antlersErrors.push(AntlersError.makeSyntaxError(AntlersErrorCodes.TYPE_UNEXPECTED_EOI_WHILE_MANIFESTING_ANTLERS_NODE, node, "Unexpected end of input while locating end of Antlers region."));
+          this.antlersErrors.push(AntlersError.makeSyntaxError(
+            AntlersErrorCodes.TYPE_UNEXPECTED_EOI_WHILE_MANIFESTING_ANTLERS_NODE,
+            node,
+            "Unexpected end of input while locating end of Antlers region."
+          ));
           return node;
         }
         this.lastAntlersEndIndex = index + 3 + this.seedOffset;
-        node.endPosition = this.positionFromOffset(index + this.seedOffset, index + 3 + this.seedOffset);
+        node.endPosition = this.positionFromOffset(
+          index + this.seedOffset,
+          index + 3 + this.seedOffset
+        );
         return node;
       }
       makeAntlersPhpFailedNode(index) {
@@ -30006,7 +31375,10 @@ var init_documentParser = __esm({
         node._isEndVirtual = true;
         node.content = this.currentContent.join("");
         node.sourceContent = this.sourceContent.join("");
-        node.startPosition = this.positionFromOffset(this.startIndex + this.seedOffset, this.startIndex + this.seedOffset);
+        node.startPosition = this.positionFromOffset(
+          this.startIndex + this.seedOffset,
+          this.startIndex + this.seedOffset
+        );
         const lineContent = this.getLineText(node.startPosition.line), lineIndexEntry = this.getLineIndex(node.startPosition.line);
         if (lineContent != null) {
           const failedContent = lineContent.substr(this._recoveryStartIndex);
@@ -30018,7 +31390,10 @@ var init_documentParser = __esm({
           this.currentIndex = lineIndexEntry.end;
           failedNodeEndIndex = lineIndexEntry.end;
         }
-        node.endPosition = this.positionFromOffset(failedNodeEndIndex, failedNodeEndIndex);
+        node.endPosition = this.positionFromOffset(
+          failedNodeEndIndex,
+          failedNodeEndIndex
+        );
         return node;
       }
       makeAntlersCommentFailedNode(index) {
@@ -30042,7 +31417,10 @@ var init_documentParser = __esm({
         node.withParser(this);
         node.content = this.currentContent.join("");
         node.sourceContent = this.sourceContent.join("");
-        node.startPosition = this.positionFromOffset(this.startIndex + this.seedOffset, this.startIndex + this.seedOffset);
+        node.startPosition = this.positionFromOffset(
+          this.startIndex + this.seedOffset,
+          this.startIndex + this.seedOffset
+        );
         const lineContent = this.getLineText(node.startPosition.line), lineIndexEntry = this.getLineIndex(node.startPosition.line);
         if (lineContent != null) {
           const failedContent = lineContent.substr(this._recoveryStartIndex);
@@ -30054,7 +31432,10 @@ var init_documentParser = __esm({
           this.currentIndex = lineIndexEntry.end;
           failedNodeEndIndex = lineIndexEntry.end;
         }
-        node.endPosition = this.positionFromOffset(failedNodeEndIndex, failedNodeEndIndex);
+        node.endPosition = this.positionFromOffset(
+          failedNodeEndIndex,
+          failedNodeEndIndex
+        );
         node.interpolationRegions = /* @__PURE__ */ new Map();
         this.interpolationRegions.forEach((region, key) => {
           if (node.content.includes(key)) {
@@ -30084,7 +31465,10 @@ var init_documentParser = __esm({
         node.withParser(this);
         node.content = this.currentContent.join("");
         node.sourceContent = this.sourceContent.join("");
-        node.startPosition = this.positionFromOffset(this.startIndex + this.seedOffset, this.startIndex + this.seedOffset);
+        node.startPosition = this.positionFromOffset(
+          this.startIndex + this.seedOffset,
+          this.startIndex + this.seedOffset
+        );
         const lineContent = this.getLineText(node.startPosition.line), lineIndexEntry = this.getLineIndex(node.startPosition.line);
         if (lineContent != null) {
           const failedContent = StringUtilities.trimLeft(this.content.substring(node.startPosition.offset + node.rawStart.length - 1, lineIndexEntry == null ? void 0 : lineIndexEntry.end), "{");
@@ -30096,7 +31480,10 @@ var init_documentParser = __esm({
           this.currentIndex = lineIndexEntry.end;
           failedNodeEndIndex = lineIndexEntry.end;
         }
-        node.endPosition = this.positionFromOffset(failedNodeEndIndex, failedNodeEndIndex);
+        node.endPosition = this.positionFromOffset(
+          failedNodeEndIndex,
+          failedNodeEndIndex
+        );
         node.interpolationRegions = /* @__PURE__ */ new Map();
         this.interpolationRegions.forEach((region, key) => {
           if (node.content.includes(key)) {
@@ -30128,11 +31515,21 @@ var init_documentParser = __esm({
         node.withParser(this);
         node.content = this.currentContent.join("");
         node.sourceContent = this.sourceContent.join("");
-        node.startPosition = this.positionFromOffset(this.startIndex + this.seedOffset, this.startIndex + this.seedOffset);
+        node.startPosition = this.positionFromOffset(
+          this.startIndex + this.seedOffset,
+          this.startIndex + this.seedOffset
+        );
         if (index + 2 > this.inputLen) {
-          node.endPosition = this.positionFromOffset(this.inputLen, this.inputLen - 1);
+          node.endPosition = this.positionFromOffset(
+            this.inputLen,
+            this.inputLen - 1
+          );
           this.doesHaveUnclosedStructures = true;
-          this.antlersErrors.push(AntlersError.makeSyntaxError(AntlersErrorCodes.TYPE_UNEXPECTED_EOI_WHILE_MANIFESTING_ANTLERS_NODE, node, "Unexpected end of input while locating end of Antlers region."));
+          this.antlersErrors.push(AntlersError.makeSyntaxError(
+            AntlersErrorCodes.TYPE_UNEXPECTED_EOI_WHILE_MANIFESTING_ANTLERS_NODE,
+            node,
+            "Unexpected end of input while locating end of Antlers region."
+          ));
           return node;
         }
         if (isComment) {
@@ -30140,7 +31537,10 @@ var init_documentParser = __esm({
         } else {
           this.lastAntlersEndIndex = index + 1 + this.seedOffset;
         }
-        node.endPosition = this.positionFromOffset(this.lastAntlersEndIndex, this.lastAntlersEndIndex);
+        node.endPosition = this.positionFromOffset(
+          this.lastAntlersEndIndex,
+          this.lastAntlersEndIndex
+        );
         node.interpolationRegions = /* @__PURE__ */ new Map();
         this.interpolationRegions.forEach((region, key) => {
           if (node.content.includes(key)) {
@@ -30249,6 +31649,7 @@ var init_documentParser = __esm({
 var NodeQueries;
 var init_nodeQueries = __esm({
   "server/src/runtime/document/scanners/nodeQueries.ts"() {
+    "use strict";
     init_abstractNode();
     init_languageParser();
     NodeQueries = class {
@@ -30396,6 +31797,7 @@ var init_nodeQueries = __esm({
 var FeatureContextResolver;
 var init_featureContextResolver = __esm({
   "server/src/runtime/document/featureContextResolver.ts"() {
+    "use strict";
     init_abstractNode();
     init_nodeQueries();
     FeatureContextResolver = class {
@@ -30428,6 +31830,7 @@ var init_featureContextResolver = __esm({
 var GeneralContext;
 var init_generalContext = __esm({
   "server/src/runtime/document/contexts/generalContext.ts"() {
+    "use strict";
     init_languageParser();
     GeneralContext = class {
       constructor() {
@@ -30454,6 +31857,7 @@ var init_generalContext = __esm({
 var IdentifierContext;
 var init_identifierContext = __esm({
   "server/src/runtime/document/contexts/identifierContext.ts"() {
+    "use strict";
     IdentifierContext = class {
       constructor() {
         this.inTagPart = false;
@@ -30467,6 +31871,7 @@ var init_identifierContext = __esm({
 var ModifierContext;
 var init_modifierContext = __esm({
   "server/src/runtime/document/contexts/modifierContext.ts"() {
+    "use strict";
     init_modifierManager();
     init_abstractNode();
     ModifierContext = class {
@@ -30545,6 +31950,7 @@ var init_modifierContext = __esm({
 var ParameterContext;
 var init_parameterContext = __esm({
   "server/src/runtime/document/contexts/parameterContext.ts"() {
+    "use strict";
     ParameterContext = class {
       constructor() {
         this.parameter = null;
@@ -30569,6 +31975,7 @@ var init_parameterContext = __esm({
 var PositionContext, CursorContext;
 var init_positionContext = __esm({
   "server/src/runtime/document/contexts/positionContext.ts"() {
+    "use strict";
     init_simpleIds();
     PositionContext = class {
       constructor() {
@@ -30614,6 +32021,7 @@ var init_positionContext = __esm({
 var VariableContext;
 var init_variableContext = __esm({
   "server/src/runtime/document/contexts/variableContext.ts"() {
+    "use strict";
     init_strings();
     init_abstractNode();
     VariableContext = class {
@@ -30667,6 +32075,7 @@ var init_variableContext = __esm({
 var ContextResolver;
 var init_contextResolver = __esm({
   "server/src/runtime/document/contexts/contextResolver.ts"() {
+    "use strict";
     init_abstractNode();
     init_featureContextResolver();
     init_generalContext();
@@ -30796,6 +32205,7 @@ var init_contextResolver = __esm({
 var AntlersNodeQueries;
 var init_antlersNodeQueries = __esm({
   "server/src/runtime/document/scanners/antlersNodeQueries.ts"() {
+    "use strict";
     init_tagManagerInstance();
     init_abstractNode();
     AntlersNodeQueries = class {
@@ -30883,6 +32293,7 @@ var init_antlersNodeQueries = __esm({
 var DocumentCursor;
 var init_documentCursor = __esm({
   "server/src/runtime/document/documentCursor.ts"() {
+    "use strict";
     init_nodeQueries();
     init_contextResolver();
     init_antlersNodeQueries();
@@ -30922,13 +32333,22 @@ var init_documentCursor = __esm({
         return NodeQueries.findNodeAtPosition(this.position(line, char), this.doc.getDocumentParser().getNodes());
       }
       getNodeBefore(line, char) {
-        return NodeQueries.findNodeBeforePosition(this.position(line, char), this.doc.getDocumentParser().getNodes());
+        return NodeQueries.findNodeBeforePosition(
+          this.position(line, char),
+          this.doc.getDocumentParser().getNodes()
+        );
       }
       getNodeAfter(line, char) {
-        return NodeQueries.findNodeAfterPosition(this.position(line, char), this.doc.getDocumentParser().getNodes());
+        return NodeQueries.findNodeAfterPosition(
+          this.position(line, char),
+          this.doc.getDocumentParser().getNodes()
+        );
       }
       getNodesBefore(line, char) {
-        return NodeQueries.findNodesBeforePosition(this.position(line, char), this.doc.getDocumentParser().getNodes());
+        return NodeQueries.findNodesBeforePosition(
+          this.position(line, char),
+          this.doc.getDocumentParser().getNodes()
+        );
       }
       getAssignmentsBefore(line, char) {
         const assignments = this.doc.getDocumentParser().getLanguageParser().getRuntimeAssignments(), returnNodes = [], pos = this.position(line, char);
@@ -30953,7 +32373,10 @@ var init_documentCursor = __esm({
         return returnNodes;
       }
       getNodesAfter(line, char) {
-        return NodeQueries.findNodesAfterPosition(this.position(line, char), this.doc.getDocumentParser().getNodes());
+        return NodeQueries.findNodesAfterPosition(
+          this.position(line, char),
+          this.doc.getDocumentParser().getNodes()
+        );
       }
       getIsWithinPairedNode(line, char) {
         const node = this.getNodeBefore(line, char);
@@ -30997,6 +32420,7 @@ var init_documentCursor = __esm({
 var DocumentErrors;
 var init_documentErrors = __esm({
   "server/src/runtime/document/documentErrors.ts"() {
+    "use strict";
     DocumentErrors = class {
       constructor(doc) {
         this.doc = doc;
@@ -36319,7 +37743,7 @@ ${cbNode.commentBefore}` : cb;
         if (comment)
           directiveComments.push(comment);
       }
-      if (prevDoc && !hasDirectives && (doc.version || prevDoc.version || doc.options.version) === "1.1") {
+      if (prevDoc && !hasDirectives && "1.1" === (doc.version || prevDoc.version || doc.options.version)) {
         const copyTagPrefix = ({
           handle,
           prefix
@@ -36715,6 +38139,7 @@ var init_types = __esm({
 var YAML, FrontMatterParser;
 var init_frontMatterParser = __esm({
   "server/src/runtime/document/frontMatter/frontMatterParser.ts"() {
+    "use strict";
     YAML = __toESM(require_yaml());
     init_types();
     init_scope();
@@ -36805,6 +38230,7 @@ var init_frontMatterParser = __esm({
 var NodeScanner;
 var init_nodeScanner = __esm({
   "server/src/runtime/document/scanners/nodeScanner.ts"() {
+    "use strict";
     init_abstractNode();
     init_antlersNodeQueries();
     init_nodeQueries();
@@ -36937,6 +38363,7 @@ var init_nodeScanner = __esm({
 var RangeScanner;
 var init_rangeScanner = __esm({
   "server/src/runtime/document/scanners/rangeScanner.ts"() {
+    "use strict";
     init_abstractNode();
     RangeScanner = class {
       constructor(doc) {
@@ -36972,6 +38399,7 @@ var init_rangeScanner = __esm({
 var CommentPrinter;
 var init_commentPrinter = __esm({
   "server/src/runtime/document/printers/commentPrinter.ts"() {
+    "use strict";
     init_stringUtilities();
     CommentPrinter = class {
       static printCommentLines(comment, tabSize, targetIndent) {
@@ -37040,6 +38468,7 @@ var init_commentPrinter = __esm({
 var IndentLevel;
 var init_indentLevel = __esm({
   "server/src/runtime/document/printers/indentLevel.ts"() {
+    "use strict";
     init_stringUtilities();
     IndentLevel = class {
       static indentRelative(value, targetIndent) {
@@ -37185,6 +38614,7 @@ var init_indentLevel = __esm({
 var NodeBuffer;
 var init_nodeBuffer = __esm({
   "server/src/runtime/document/printers/nodeBuffer.ts"() {
+    "use strict";
     init_strings();
     NodeBuffer = class {
       constructor(node, indent, prepend) {
@@ -37341,6 +38771,7 @@ var init_nodeBuffer = __esm({
 var NodePrinter;
 var init_nodePrinter = __esm({
   "server/src/runtime/document/printers/nodePrinter.ts"() {
+    "use strict";
     init_strings();
     init_abstractNode();
     init_languageParser();
@@ -37384,7 +38815,7 @@ var init_nodePrinter = __esm({
             } else {
               if (!((_b = node.prev) == null ? void 0 : _b.isVirtual) && ((_c = node.prev) == null ? void 0 : _c.isVirtualGroupOperatorResolve) && node.prev.producesVirtualStatementTerminator) {
                 if (node.next != null) {
-                  if (!(node.prev instanceof VariableNode)) {
+                  if (!(node.prev instanceof VariableNode) && !(node.next instanceof InlineTernarySeparator) && !(node instanceof InlineTernarySeparator)) {
                     nodeBuffer.newlineIndent();
                   }
                 }
@@ -37632,6 +39063,7 @@ var init_nodePrinter = __esm({
 var Transformer;
 var init_transformer = __esm({
   "server/src/runtime/document/transformer.ts"() {
+    "use strict";
     init_strings();
     init_conditionPairAnalyzer();
     init_abstractNode();
@@ -38602,6 +40034,7 @@ ${frontMatter}
 var YAML2, YamlDocument;
 var init_yamlDocument = __esm({
   "server/src/runtime/document/yamlDocument.ts"() {
+    "use strict";
     YAML2 = __toESM(require_yaml());
     init_types();
     init_position();
@@ -38796,6 +40229,7 @@ var init_yamlDocument = __esm({
 var AntlersDocument;
 var init_antlersDocument = __esm({
   "server/src/runtime/document/antlersDocument.ts"() {
+    "use strict";
     init_engine();
     init_tagManagerInstance();
     init_tags();
@@ -38905,7 +40339,11 @@ var init_antlersDocument = __esm({
             analysisNodes.forEach((node) => {
               var _a, _b;
               if (this.project != null && ((_a = tagManagerInstance_default.instance) == null ? void 0 : _a.canResolveSpecialTypes(node.getTagName()))) {
-                const specialResults = (_b = tagManagerInstance_default.instance) == null ? void 0 : _b.resolveSpecialType(node.getTagName(), node, this.project);
+                const specialResults = (_b = tagManagerInstance_default.instance) == null ? void 0 : _b.resolveSpecialType(
+                  node.getTagName(),
+                  node,
+                  this.project
+                );
                 if (specialResults.context != null) {
                   node.reference = specialResults.context;
                 }
@@ -38921,7 +40359,9 @@ var init_antlersDocument = __esm({
                     for (let l = 0; l < thisParam.interpolations.length; l++) {
                       const thisInterpolation = thisParam.interpolations[l];
                       if (node.processedInterpolationRegions.has(thisInterpolation)) {
-                        const tInterpolation = node.processedInterpolationRegions.get(thisInterpolation);
+                        const tInterpolation = node.processedInterpolationRegions.get(
+                          thisInterpolation
+                        );
                         tInterpolation.forEach((interpolationNode) => {
                           if (interpolationNode instanceof AntlersNode) {
                             interpolationNode.currentScope = node.currentScope;
@@ -39041,6 +40481,7 @@ var init_antlersDocument = __esm({
 var InterleavedNodeHandler, interleavedNodes_default;
 var init_interleavedNodes = __esm({
   "server/src/diagnostics/handlers/interleavedNodes.ts"() {
+    "use strict";
     init_antlersError();
     init_antlersErrorCodes();
     init_abstractNode();
@@ -39066,8 +40507,16 @@ var init_interleavedNodes = __esm({
           return errors;
         }
         if ((_a = nodeParent.isClosedBy.startPosition) == null ? void 0 : _a.isBefore(node.isClosedBy.endPosition)) {
-          errors.push(AntlersError.makeSyntaxError(AntlersErrorCodes.LINT_INTERLEAVED_TAG_PAIRS, node, "Closing tag cannot appear after parent closing tag."));
-          errors.push(AntlersError.makeSyntaxError(AntlersErrorCodes.LINT_INTERLEAVED_TAG_PAIRS, node.isClosedBy, "Closing tag cannot appear after parent closing tag."));
+          errors.push(AntlersError.makeSyntaxError(
+            AntlersErrorCodes.LINT_INTERLEAVED_TAG_PAIRS,
+            node,
+            "Closing tag cannot appear after parent closing tag."
+          ));
+          errors.push(AntlersError.makeSyntaxError(
+            AntlersErrorCodes.LINT_INTERLEAVED_TAG_PAIRS,
+            node.isClosedBy,
+            "Closing tag cannot appear after parent closing tag."
+          ));
         }
         return errors;
       }
@@ -39080,6 +40529,7 @@ var init_interleavedNodes = __esm({
 var DocumentFormatter;
 var init_documentFormatter = __esm({
   "server/src/formatting/documentFormatter.ts"() {
+    "use strict";
     init_interleavedNodes();
     init_antlersDocument();
     DocumentFormatter = class {
@@ -39151,11 +40601,11 @@ var init_documentFormatter = __esm({
 var require_standalone = __commonJS({
   "server/node_modules/@prettier/plugin-php/standalone.js"(exports, module2) {
     !function(t, e) {
-      typeof exports == "object" && typeof module2 != "undefined" ? e(exports, require("prettier/standalone")) : typeof define == "function" && define.amd ? define(["exports", "prettier/standalone"], e) : e(((t = typeof globalThis != "undefined" ? globalThis : t || self).prettierPlugins = t.prettierPlugins || {}, t.prettierPlugins.php = {}), t.prettier);
+      "object" == typeof exports && "undefined" != typeof module2 ? e(exports, require("prettier/standalone")) : "function" == typeof define && define.amd ? define(["exports", "prettier/standalone"], e) : e(((t = "undefined" != typeof globalThis ? globalThis : t || self).prettierPlugins = t.prettierPlugins || {}, t.prettierPlugins.php = {}), t.prettier);
     }(exports, function(t, e) {
       "use strict";
       function i(t2) {
-        return t2 && typeof t2 == "object" && "default" in t2 ? t2 : { default: t2 };
+        return t2 && "object" == typeof t2 && "default" in t2 ? t2 : { default: t2 };
       }
       var n = i(e), s = { matchST_ATTRIBUTE: function() {
         var t2 = 0, e2 = this.input();
@@ -39167,7 +40617,7 @@ var require_standalone = __commonJS({
         }
         switch (e2) {
           case "]":
-            return t2 === 0 ? this.popState() : t2--, "]";
+            return 0 === t2 ? this.popState() : t2--, "]";
           case "(":
           case ")":
           case ":":
@@ -39182,15 +40632,15 @@ var require_standalone = __commonJS({
           case "'":
             return this.T_CONSTANT_ENCAPSED_STRING();
           case "/":
-            if (this._input[this.offset] === "/")
+            if ("/" === this._input[this.offset])
               return this.T_COMMENT();
-            if (this._input[this.offset] === "*")
+            if ("*" === this._input[this.offset])
               return this.input(), this.T_DOC_COMMENT();
         }
-        if (this.is_LABEL_START() || e2 === "\\") {
+        if (this.is_LABEL_START() || "\\" === e2) {
           for (; this.offset < this.size; ) {
             var i2 = this.input();
-            if (!this.is_LABEL() && i2 !== "\\") {
+            if (!this.is_LABEL() && "\\" !== i2) {
               i2 && this.unput(1);
               break;
             }
@@ -39205,23 +40655,23 @@ var require_standalone = __commonJS({
       var r = { T_COMMENT: function() {
         for (; this.offset < this.size; ) {
           var t2 = this.input();
-          if (t2 === "\n" || t2 === "\r")
+          if ("\n" === t2 || "\r" === t2)
             return this.tok.T_COMMENT;
-          if (t2 === "?" && !this.aspTagMode && this._input[this.offset] === ">")
+          if ("?" === t2 && !this.aspTagMode && ">" === this._input[this.offset])
             return this.unput(1), this.tok.T_COMMENT;
-          if (t2 === "%" && this.aspTagMode && this._input[this.offset] === ">")
+          if ("%" === t2 && this.aspTagMode && ">" === this._input[this.offset])
             return this.unput(1), this.tok.T_COMMENT;
         }
         return this.tok.T_COMMENT;
       }, T_DOC_COMMENT: function() {
         var t2 = this.input(), e2 = this.tok.T_COMMENT;
-        if (t2 === "*") {
-          if (t2 = this.input(), this.is_WHITESPACE() && (e2 = this.tok.T_DOC_COMMENT), t2 === "/")
+        if ("*" === t2) {
+          if (t2 = this.input(), this.is_WHITESPACE() && (e2 = this.tok.T_DOC_COMMENT), "/" === t2)
             return e2;
           this.unput(1);
         }
         for (; this.offset < this.size; )
-          if ((t2 = this.input()) === "*" && this._input[this.offset] === "/") {
+          if ("*" === (t2 = this.input()) && "/" === this._input[this.offset]) {
             this.input();
             break;
           }
@@ -39229,17 +40679,17 @@ var require_standalone = __commonJS({
       } };
       r.T_COMMENT, r.T_DOC_COMMENT;
       var o = { nextINITIAL: function() {
-        return this.conditionStack.length > 1 && this.conditionStack[this.conditionStack.length - 1] === "INITIAL" ? this.popState() : this.begin("ST_IN_SCRIPTING"), this;
+        return this.conditionStack.length > 1 && "INITIAL" === this.conditionStack[this.conditionStack.length - 1] ? this.popState() : this.begin("ST_IN_SCRIPTING"), this;
       }, matchINITIAL: function() {
         for (; this.offset < this.size; ) {
           var t2 = this.input();
-          if (t2 == "<") {
-            if ((t2 = this.ahead(1)) == "?") {
+          if ("<" == t2) {
+            if ("?" == (t2 = this.ahead(1))) {
               if (this.tryMatch("?=")) {
                 this.unput(1).appendToken(this.tok.T_OPEN_TAG_WITH_ECHO, 3).nextINITIAL();
                 break;
               }
-              if (this.tryMatchCaseless("?php") && ((t2 = this._input[this.offset + 4]) === " " || t2 === "	" || t2 === "\n" || t2 === "\r")) {
+              if (this.tryMatchCaseless("?php") && (" " === (t2 = this._input[this.offset + 4]) || "	" === t2 || "\n" === t2 || "\r" === t2)) {
                 this.unput(1).appendToken(this.tok.T_OPEN_TAG, 6).nextINITIAL();
                 break;
               }
@@ -39247,7 +40697,7 @@ var require_standalone = __commonJS({
                 this.unput(1).appendToken(this.tok.T_OPEN_TAG, 2).nextINITIAL();
                 break;
               }
-            } else if (this.asp_tags && t2 == "%") {
+            } else if (this.asp_tags && "%" == t2) {
               if (this.tryMatch("%=")) {
                 this.aspTagMode = true, this.unput(1).appendToken(this.tok.T_OPEN_TAG_WITH_ECHO, 3).nextINITIAL();
                 break;
@@ -39261,53 +40711,53 @@ var require_standalone = __commonJS({
       } };
       o.nextINITIAL, o.matchINITIAL;
       var a = { consume_NUM: function() {
-        var t2 = this.yytext[0], e2 = t2 === ".";
-        if (t2 === "0")
-          if ((t2 = this.input()) === "x" || t2 === "X") {
-            if ((t2 = this.input()) !== "_" && this.is_HEX())
+        var t2 = this.yytext[0], e2 = "." === t2;
+        if ("0" === t2)
+          if ("x" === (t2 = this.input()) || "X" === t2) {
+            if ("_" !== (t2 = this.input()) && this.is_HEX())
               return this.consume_HNUM();
             this.unput(t2 ? 2 : 1);
-          } else if (t2 === "b" || t2 === "B") {
-            if ((t2 = this.input()) !== "_" && t2 === "0" || t2 === "1")
+          } else if ("b" === t2 || "B" === t2) {
+            if ("_" !== (t2 = this.input()) && "0" === t2 || "1" === t2)
               return this.consume_BNUM();
             this.unput(t2 ? 2 : 1);
           } else
             this.is_NUM() || t2 && this.unput(1);
         for (; this.offset < this.size; ) {
           var i2 = t2;
-          if ((t2 = this.input()) === "_") {
-            if (i2 === "_") {
+          if ("_" === (t2 = this.input())) {
+            if ("_" === i2) {
               this.unput(2);
               break;
             }
-            if (i2 === ".") {
+            if ("." === i2) {
               this.unput(1);
               break;
             }
-            if (i2 === "e" || i2 === "E") {
+            if ("e" === i2 || "E" === i2) {
               this.unput(2);
               break;
             }
           } else {
-            if (t2 === ".") {
+            if ("." === t2) {
               if (e2) {
                 this.unput(1);
                 break;
               }
-              if (i2 === "_") {
+              if ("_" === i2) {
                 this.unput(2);
                 break;
               }
               e2 = true;
               continue;
             }
-            if (t2 === "e" || t2 === "E") {
-              if (i2 === "_") {
+            if ("e" === t2 || "E" === t2) {
+              if ("_" === i2) {
                 this.unput(1);
                 break;
               }
               var n2 = 2;
-              if ((t2 = this.input()) !== "+" && t2 !== "-" || (n2 = 3, t2 = this.input()), this.is_NUM_START())
+              if ("+" !== (t2 = this.input()) && "-" !== t2 || (n2 = 3, t2 = this.input()), this.is_NUM_START())
                 return this.consume_LNUM(), this.tok.T_DNUMBER;
               this.unput(t2 ? n2 : n2 - 1);
               break;
@@ -39318,7 +40768,7 @@ var require_standalone = __commonJS({
             break;
           }
         }
-        return e2 ? this.tok.T_DNUMBER : this.yytext.length < 9 || this.yytext.length < 10 || this.yytext.length == 10 && this.yytext < "2147483648" ? this.tok.T_LNUMBER : this.tok.T_DNUMBER;
+        return e2 ? this.tok.T_DNUMBER : this.yytext.length < 9 || this.yytext.length < 10 || 10 == this.yytext.length && this.yytext < "2147483648" ? this.tok.T_LNUMBER : this.tok.T_DNUMBER;
       }, consume_HNUM: function() {
         for (; this.offset < this.size; ) {
           var t2 = this.input();
@@ -39339,7 +40789,7 @@ var require_standalone = __commonJS({
         return this.tok.T_LNUMBER;
       }, consume_BNUM: function() {
         for (var t2; this.offset < this.size; )
-          if ((t2 = this.input()) !== "0" && t2 !== "1" && t2 !== "_") {
+          if ("0" !== (t2 = this.input()) && "1" !== t2 && "_" !== t2) {
             t2 && this.unput(1);
             break;
           }
@@ -39348,8 +40798,8 @@ var require_standalone = __commonJS({
       a.consume_NUM, a.consume_HNUM, a.consume_LNUM, a.consume_BNUM;
       var h = { matchST_LOOKING_FOR_PROPERTY: function() {
         var t2 = this.input();
-        if (t2 === "-") {
-          if ((t2 = this.input()) === ">")
+        if ("-" === t2) {
+          if (">" === (t2 = this.input()))
             return this.tok.T_OBJECT_OPERATOR;
           t2 && this.unput(1);
         } else {
@@ -39362,7 +40812,7 @@ var require_standalone = __commonJS({
       }, matchST_LOOKING_FOR_VARNAME: function() {
         var t2 = this.input();
         if (this.popState(), this.begin("ST_IN_SCRIPTING"), this.is_LABEL_START()) {
-          if (this.consume_LABEL(), (t2 = this.input()) === "[" || t2 === "}")
+          if (this.consume_LABEL(), "[" === (t2 = this.input()) || "}" === t2)
             return this.unput(1), this.tok.T_STRING_VARNAME;
           this.unput(this.yytext.length);
         } else
@@ -39372,18 +40822,18 @@ var require_standalone = __commonJS({
         var t2 = this.input();
         if (this.is_NUM_START())
           return this.consume_NUM(), this.tok.T_NUM_STRING;
-        if (t2 === "]")
+        if ("]" === t2)
           return this.popState(), "]";
-        if (t2 === "$") {
+        if ("$" === t2) {
           if (this.input(), this.is_LABEL_START())
             return this.consume_LABEL(), this.tok.T_VARIABLE;
           throw new Error("Unexpected terminal");
         }
         if (this.is_LABEL_START())
           return this.consume_LABEL(), this.tok.T_STRING;
-        if (this.is_WHITESPACE() || t2 === "\\" || t2 === "'" || t2 === "#")
+        if (this.is_WHITESPACE() || "\\" === t2 || "'" === t2 || "#" === t2)
           return this.tok.T_ENCAPSED_AND_WHITESPACE;
-        if (t2 === "[" || t2 === "{" || t2 === "}" || t2 === '"' || t2 === "`" || this.is_TOKEN())
+        if ("[" === t2 || "{" === t2 || "}" === t2 || '"' === t2 || "`" === t2 || this.is_TOKEN())
           return t2;
         throw new Error("Unexpected terminal");
       } };
@@ -39398,9 +40848,9 @@ var require_standalone = __commonJS({
           case "\r\n":
             return this.T_WHITESPACE();
           case "#":
-            return this._input[this.offset] === "[" ? (this.input(), this.begin("ST_ATTRIBUTE"), this.tok.T_ATTRIBUTE) : this.T_COMMENT();
+            return "[" === this._input[this.offset] ? (this.input(), this.begin("ST_ATTRIBUTE"), this.tok.T_ATTRIBUTE) : this.T_COMMENT();
           case "/":
-            return this._input[this.offset] === "/" ? this.T_COMMENT() : this._input[this.offset] === "*" ? (this.input(), this.T_DOC_COMMENT()) : this.consume_TOKEN();
+            return "/" === this._input[this.offset] ? this.T_COMMENT() : "*" === this._input[this.offset] ? (this.input(), this.T_DOC_COMMENT()) : this.consume_TOKEN();
           case "'":
             return this.T_CONSTANT_ENCAPSED_STRING();
           case '"':
@@ -39411,17 +40861,17 @@ var require_standalone = __commonJS({
             if (!this.aspTagMode && this.tryMatch(">")) {
               this.input();
               var e2 = this._input[this.offset];
-              return e2 !== "\n" && e2 !== "\r" || this.input(), this.conditionStack.length > 1 && this.begin("INITIAL"), this.tok.T_CLOSE_TAG;
+              return "\n" !== e2 && "\r" !== e2 || this.input(), this.conditionStack.length > 1 && this.begin("INITIAL"), this.tok.T_CLOSE_TAG;
             }
             return this.consume_TOKEN();
           case "%":
-            return this.aspTagMode && this._input[this.offset] === ">" ? (this.input(), (t2 = this._input[this.offset]) !== "\n" && t2 !== "\r" || this.input(), this.aspTagMode = false, this.conditionStack.length > 1 && this.begin("INITIAL"), this.tok.T_CLOSE_TAG) : this.consume_TOKEN();
+            return this.aspTagMode && ">" === this._input[this.offset] ? (this.input(), "\n" !== (t2 = this._input[this.offset]) && "\r" !== t2 || this.input(), this.aspTagMode = false, this.conditionStack.length > 1 && this.begin("INITIAL"), this.tok.T_CLOSE_TAG) : this.consume_TOKEN();
           case "{":
             return this.begin("ST_IN_SCRIPTING"), "{";
           case "}":
             return this.conditionStack.length > 2 && this.popState(), "}";
           default:
-            if (t2 === ".") {
+            if ("." === t2) {
               if (t2 = this.input(), this.is_NUM_START())
                 return this.consume_NUM();
               t2 && this.unput(1);
@@ -39437,7 +40887,7 @@ var require_standalone = __commonJS({
       }, T_WHITESPACE: function() {
         for (; this.offset < this.size; ) {
           var t2 = this.input();
-          if (t2 !== " " && t2 !== "	" && t2 !== "\n" && t2 !== "\r") {
+          if (" " !== t2 && "	" !== t2 && "\n" !== t2 && "\r" !== t2) {
             t2 && this.unput(1);
             break;
           }
@@ -39447,60 +40897,60 @@ var require_standalone = __commonJS({
       l.matchST_IN_SCRIPTING, l.T_WHITESPACE;
       var c = ["\n", "\r"], u = ["\n", "\r", ";"], _ = u.concat(["	", " ", ",", "]", ")", "/", "=", "!"]), d = { T_CONSTANT_ENCAPSED_STRING: function() {
         for (var t2; this.offset < this.size; )
-          if ((t2 = this.input()) == "\\")
+          if ("\\" == (t2 = this.input()))
             this.input();
-          else if (t2 == "'")
+          else if ("'" == t2)
             break;
         return this.tok.T_CONSTANT_ENCAPSED_STRING;
       }, is_HEREDOC: function() {
         var t2 = this.offset;
-        if (this._input[this.offset - 1] === "<" && this._input[this.offset] === "<" && this._input[this.offset + 1] === "<") {
+        if ("<" === this._input[this.offset - 1] && "<" === this._input[this.offset] && "<" === this._input[this.offset + 1]) {
           if (this.offset += 3, this.is_TABSPACE())
             for (; this.offset < this.size && (this.offset++, this.is_TABSPACE()); )
               ;
           var e2 = this._input[this.offset - 1];
-          if (e2 === "'" || e2 === '"' ? this.offset++ : e2 = null, this.is_LABEL_START()) {
+          if ("'" === e2 || '"' === e2 ? this.offset++ : e2 = null, this.is_LABEL_START()) {
             for (var i2 = this.offset - 1; this.offset < this.size && (this.offset++, this.is_LABEL()); )
               ;
             var n2 = this._input.substring(i2, this.offset - 1);
             if ((!e2 || e2 === this._input[this.offset - 1]) && (e2 && this.offset++, c.includes(this._input[this.offset - 1])))
-              return this.heredoc_label.label = n2, this.heredoc_label.length = n2.length, this.heredoc_label.finished = false, i2 = this.offset - t2, this.offset = t2, this.consume(i2), e2 === "'" ? this.begin("ST_NOWDOC") : this.begin("ST_HEREDOC"), this.prematch_ENDOFDOC(), this.tok.T_START_HEREDOC;
+              return this.heredoc_label.label = n2, this.heredoc_label.length = n2.length, this.heredoc_label.finished = false, i2 = this.offset - t2, this.offset = t2, this.consume(i2), "'" === e2 ? this.begin("ST_NOWDOC") : this.begin("ST_HEREDOC"), this.prematch_ENDOFDOC(), this.tok.T_START_HEREDOC;
           }
         }
         return this.offset = t2, false;
       }, ST_DOUBLE_QUOTES: function() {
         for (var t2; this.offset < this.size; )
-          if ((t2 = this.input()) == "\\")
+          if ("\\" == (t2 = this.input()))
             this.input();
           else {
-            if (t2 == '"')
+            if ('"' == t2)
               break;
-            if (t2 == "$") {
-              if ((t2 = this.input()) == "{" || this.is_LABEL_START()) {
+            if ("$" == t2) {
+              if ("{" == (t2 = this.input()) || this.is_LABEL_START()) {
                 this.unput(2);
                 break;
               }
               t2 && this.unput(1);
-            } else if (t2 == "{") {
-              if ((t2 = this.input()) == "$") {
+            } else if ("{" == t2) {
+              if ("$" == (t2 = this.input())) {
                 this.unput(2);
                 break;
               }
               t2 && this.unput(1);
             }
           }
-        if (t2 == '"')
+        if ('"' == t2)
           return this.tok.T_CONSTANT_ENCAPSED_STRING;
         var e2 = 1;
-        return this.yytext[0] !== "b" && this.yytext[0] !== "B" || (e2 = 2), this.yytext.length > 2 && this.appendToken(this.tok.T_ENCAPSED_AND_WHITESPACE, this.yytext.length - e2), this.unput(this.yytext.length - e2), this.begin("ST_DOUBLE_QUOTES"), this.yytext;
+        return "b" !== this.yytext[0] && "B" !== this.yytext[0] || (e2 = 2), this.yytext.length > 2 && this.appendToken(this.tok.T_ENCAPSED_AND_WHITESPACE, this.yytext.length - e2), this.unput(this.yytext.length - e2), this.begin("ST_DOUBLE_QUOTES"), this.yytext;
       }, isDOC_MATCH: function(t2, e2) {
         var i2 = this._input[t2 - 2];
         if (!c.includes(i2))
           return false;
         var n2 = false, s2 = false, r2 = 0, o2 = this._input[t2 - 1];
         if (this.version >= 703) {
-          for (; o2 === "	" || o2 === " "; )
-            o2 === " " ? n2 = true : o2 === "	" && (s2 = true), o2 = this._input[t2 + r2], r2++;
+          for (; "	" === o2 || " " === o2; )
+            " " === o2 ? n2 = true : "	" === o2 && (s2 = true), o2 = this._input[t2 + r2], r2++;
           if (t2 += r2, c.includes(this._input[t2 - 1]))
             return false;
         }
@@ -39541,18 +40991,18 @@ var require_standalone = __commonJS({
         if (this.isDOC_MATCH(this.offset, true))
           return this.consume(this.heredoc_label.length - 1), this.popState(), this.tok.T_END_HEREDOC;
         for (; this.offset < this.size; )
-          if (t2 === "\\" && (t2 = this.input(), c.includes(t2) || (t2 = this.input())), c.includes(t2)) {
+          if ("\\" === t2 && (t2 = this.input(), c.includes(t2) || (t2 = this.input())), c.includes(t2)) {
             if (t2 = this.input(), this.isDOC_MATCH(this.offset, true))
               return this.unput(1).popState(), this.appendToken(this.tok.T_END_HEREDOC, this.heredoc_label.length), this.tok.T_ENCAPSED_AND_WHITESPACE;
-          } else if (t2 === "$") {
-            if ((t2 = this.input()) === "{")
+          } else if ("$" === t2) {
+            if ("{" === (t2 = this.input()))
               return this.begin("ST_LOOKING_FOR_VARNAME"), this.yytext.length > 2 ? (this.appendToken(this.tok.T_DOLLAR_OPEN_CURLY_BRACES, 2), this.unput(2), this.tok.T_ENCAPSED_AND_WHITESPACE) : this.tok.T_DOLLAR_OPEN_CURLY_BRACES;
             if (this.is_LABEL_START()) {
               var e2 = this.offset, i2 = this.consume_VARIABLE();
               return this.yytext.length > this.offset - e2 + 2 ? (this.appendToken(i2, this.offset - e2 + 2), this.unput(this.offset - e2 + 2), this.tok.T_ENCAPSED_AND_WHITESPACE) : i2;
             }
-          } else if (t2 === "{") {
-            if ((t2 = this.input()) === "$")
+          } else if ("{" === t2) {
+            if ("$" === (t2 = this.input()))
               return this.begin("ST_IN_SCRIPTING"), this.yytext.length > 2 ? (this.appendToken(this.tok.T_CURLY_OPEN, 1), this.unput(2), this.tok.T_ENCAPSED_AND_WHITESPACE) : (this.unput(1), this.tok.T_CURLY_OPEN);
           } else
             t2 = this.input();
@@ -39560,10 +41010,10 @@ var require_standalone = __commonJS({
       }, consume_VARIABLE: function() {
         this.consume_LABEL();
         var t2 = this.input();
-        if (t2 == "[")
+        if ("[" == t2)
           return this.unput(1), this.begin("ST_VAR_OFFSET"), this.tok.T_VARIABLE;
-        if (t2 === "-") {
-          if (this.input() === ">")
+        if ("-" === t2) {
+          if (">" === this.input())
             return this.input(), this.is_LABEL_START() && this.begin("ST_LOOKING_FOR_PROPERTY"), this.unput(3), this.tok.T_VARIABLE;
           this.unput(2);
         } else
@@ -39571,26 +41021,26 @@ var require_standalone = __commonJS({
         return this.tok.T_VARIABLE;
       }, matchST_BACKQUOTE: function() {
         var t2 = this.input();
-        if (t2 === "$") {
-          if ((t2 = this.input()) === "{")
+        if ("$" === t2) {
+          if ("{" === (t2 = this.input()))
             return this.begin("ST_LOOKING_FOR_VARNAME"), this.tok.T_DOLLAR_OPEN_CURLY_BRACES;
           if (this.is_LABEL_START())
             return this.consume_VARIABLE();
-        } else if (t2 === "{") {
-          if (this._input[this.offset] === "$")
+        } else if ("{" === t2) {
+          if ("$" === this._input[this.offset])
             return this.begin("ST_IN_SCRIPTING"), this.tok.T_CURLY_OPEN;
-        } else if (t2 === "`")
+        } else if ("`" === t2)
           return this.popState(), "`";
         for (; this.offset < this.size; ) {
-          if (t2 === "\\")
+          if ("\\" === t2)
             this.input();
           else {
-            if (t2 === "`") {
+            if ("`" === t2) {
               this.unput(1), this.popState(), this.appendToken("`", 1);
               break;
             }
-            if (t2 === "$") {
-              if ((t2 = this.input()) === "{")
+            if ("$" === t2) {
+              if ("{" === (t2 = this.input()))
                 return this.begin("ST_LOOKING_FOR_VARNAME"), this.yytext.length > 2 ? (this.appendToken(this.tok.T_DOLLAR_OPEN_CURLY_BRACES, 2), this.unput(2), this.tok.T_ENCAPSED_AND_WHITESPACE) : this.tok.T_DOLLAR_OPEN_CURLY_BRACES;
               if (this.is_LABEL_START()) {
                 var e2 = this.offset, i2 = this.consume_VARIABLE();
@@ -39598,8 +41048,8 @@ var require_standalone = __commonJS({
               }
               continue;
             }
-            if (t2 === "{") {
-              if ((t2 = this.input()) === "$")
+            if ("{" === t2) {
+              if ("$" === (t2 = this.input()))
                 return this.begin("ST_IN_SCRIPTING"), this.yytext.length > 2 ? (this.appendToken(this.tok.T_CURLY_OPEN, 1), this.unput(2), this.tok.T_ENCAPSED_AND_WHITESPACE) : (this.unput(1), this.tok.T_CURLY_OPEN);
               continue;
             }
@@ -39609,34 +41059,34 @@ var require_standalone = __commonJS({
         return this.tok.T_ENCAPSED_AND_WHITESPACE;
       }, matchST_DOUBLE_QUOTES: function() {
         var t2 = this.input();
-        if (t2 === "$") {
-          if ((t2 = this.input()) === "{")
+        if ("$" === t2) {
+          if ("{" === (t2 = this.input()))
             return this.begin("ST_LOOKING_FOR_VARNAME"), this.tok.T_DOLLAR_OPEN_CURLY_BRACES;
           if (this.is_LABEL_START())
             return this.consume_VARIABLE();
-        } else if (t2 === "{") {
-          if (this._input[this.offset] === "$")
+        } else if ("{" === t2) {
+          if ("$" === this._input[this.offset])
             return this.begin("ST_IN_SCRIPTING"), this.tok.T_CURLY_OPEN;
-        } else if (t2 === '"')
+        } else if ('"' === t2)
           return this.popState(), '"';
         for (; this.offset < this.size; ) {
-          if (t2 === "\\")
+          if ("\\" === t2)
             this.input();
           else {
-            if (t2 === '"') {
+            if ('"' === t2) {
               this.unput(1), this.popState(), this.appendToken('"', 1);
               break;
             }
-            if (t2 === "$") {
-              if ((t2 = this.input()) === "{")
+            if ("$" === t2) {
+              if ("{" === (t2 = this.input()))
                 return this.begin("ST_LOOKING_FOR_VARNAME"), this.yytext.length > 2 ? (this.appendToken(this.tok.T_DOLLAR_OPEN_CURLY_BRACES, 2), this.unput(2), this.tok.T_ENCAPSED_AND_WHITESPACE) : this.tok.T_DOLLAR_OPEN_CURLY_BRACES;
               if (this.is_LABEL_START()) {
                 var e2 = this.offset, i2 = this.consume_VARIABLE();
                 return this.yytext.length > this.offset - e2 + 2 ? (this.appendToken(i2, this.offset - e2 + 2), this.unput(this.offset - e2 + 2), this.tok.T_ENCAPSED_AND_WHITESPACE) : i2;
               }
               t2 && this.unput(1);
-            } else if (t2 === "{") {
-              if ((t2 = this.input()) === "$")
+            } else if ("{" === t2) {
+              if ("$" === (t2 = this.input()))
                 return this.begin("ST_IN_SCRIPTING"), this.yytext.length > 2 ? (this.appendToken(this.tok.T_CURLY_OPEN, 1), this.unput(2), this.tok.T_ENCAPSED_AND_WHITESPACE) : (this.unput(1), this.tok.T_CURLY_OPEN);
               t2 && this.unput(1);
             }
@@ -39648,14 +41098,14 @@ var require_standalone = __commonJS({
       d.T_CONSTANT_ENCAPSED_STRING, d.is_HEREDOC, d.ST_DOUBLE_QUOTES, d.isDOC_MATCH, d.prematch_ENDOFDOC, d.matchST_NOWDOC, d.matchST_HEREDOC, d.consume_VARIABLE, d.matchST_BACKQUOTE, d.matchST_DOUBLE_QUOTES;
       var p = { T_STRING: function() {
         var t2 = this.yytext.toLowerCase(), e2 = this.keywords[t2];
-        if (typeof e2 != "number") {
-          if (t2 === "yield")
+        if ("number" != typeof e2) {
+          if ("yield" === t2)
             this.version >= 700 && this.tryMatch(" from") ? (this.consume(5), e2 = this.tok.T_YIELD_FROM) : e2 = this.tok.T_YIELD;
-          else if (e2 = this.tok.T_STRING, t2 === "b" || t2 === "B") {
+          else if (e2 = this.tok.T_STRING, "b" === t2 || "B" === t2) {
             var i2 = this.input(1);
-            if (i2 === '"')
+            if ('"' === i2)
               return this.ST_DOUBLE_QUOTES();
-            if (i2 === "'")
+            if ("'" === i2)
               return this.T_CONSTANT_ENCAPSED_STRING();
             i2 && this.unput(1);
           }
@@ -39668,69 +41118,69 @@ var require_standalone = __commonJS({
         return this.offset++, this.is_LABEL_START() ? (this.offset--, this.consume_LABEL(), this.tok.T_VARIABLE) : (this.offset--, "$");
       }, "-": function() {
         var t2 = this._input[this.offset];
-        return t2 === ">" ? (this.begin("ST_LOOKING_FOR_PROPERTY").input(), this.tok.T_OBJECT_OPERATOR) : t2 === "-" ? (this.input(), this.tok.T_DEC) : t2 === "=" ? (this.input(), this.tok.T_MINUS_EQUAL) : "-";
+        return ">" === t2 ? (this.begin("ST_LOOKING_FOR_PROPERTY").input(), this.tok.T_OBJECT_OPERATOR) : "-" === t2 ? (this.input(), this.tok.T_DEC) : "=" === t2 ? (this.input(), this.tok.T_MINUS_EQUAL) : "-";
       }, "\\": function() {
         return this.tok.T_NS_SEPARATOR;
       }, "/": function() {
-        return this._input[this.offset] === "=" ? (this.input(), this.tok.T_DIV_EQUAL) : "/";
+        return "=" === this._input[this.offset] ? (this.input(), this.tok.T_DIV_EQUAL) : "/";
       }, ":": function() {
-        return this._input[this.offset] === ":" ? (this.input(), this.tok.T_DOUBLE_COLON) : ":";
+        return ":" === this._input[this.offset] ? (this.input(), this.tok.T_DOUBLE_COLON) : ":";
       }, "(": function() {
         var t2 = this.offset;
         if (this.input(), this.is_TABSPACE() && this.consume_TABSPACE().input(), this.is_LABEL_START()) {
           var e2 = this.yytext.length;
           this.consume_LABEL();
           var i2 = this.yytext.substring(e2 - 1).toLowerCase(), n2 = this.castKeywords[i2];
-          if (typeof n2 == "number" && (this.input(), this.is_TABSPACE() && this.consume_TABSPACE().input(), this._input[this.offset - 1] === ")"))
+          if ("number" == typeof n2 && (this.input(), this.is_TABSPACE() && this.consume_TABSPACE().input(), ")" === this._input[this.offset - 1]))
             return n2;
         }
         return this.unput(this.offset - t2), "(";
       }, "=": function() {
         var t2 = this._input[this.offset];
-        return t2 === ">" ? (this.input(), this.tok.T_DOUBLE_ARROW) : t2 === "=" ? this._input[this.offset + 1] === "=" ? (this.consume(2), this.tok.T_IS_IDENTICAL) : (this.input(), this.tok.T_IS_EQUAL) : "=";
+        return ">" === t2 ? (this.input(), this.tok.T_DOUBLE_ARROW) : "=" === t2 ? "=" === this._input[this.offset + 1] ? (this.consume(2), this.tok.T_IS_IDENTICAL) : (this.input(), this.tok.T_IS_EQUAL) : "=";
       }, "+": function() {
         var t2 = this._input[this.offset];
-        return t2 === "+" ? (this.input(), this.tok.T_INC) : t2 === "=" ? (this.input(), this.tok.T_PLUS_EQUAL) : "+";
+        return "+" === t2 ? (this.input(), this.tok.T_INC) : "=" === t2 ? (this.input(), this.tok.T_PLUS_EQUAL) : "+";
       }, "!": function() {
-        return this._input[this.offset] === "=" ? this._input[this.offset + 1] === "=" ? (this.consume(2), this.tok.T_IS_NOT_IDENTICAL) : (this.input(), this.tok.T_IS_NOT_EQUAL) : "!";
+        return "=" === this._input[this.offset] ? "=" === this._input[this.offset + 1] ? (this.consume(2), this.tok.T_IS_NOT_IDENTICAL) : (this.input(), this.tok.T_IS_NOT_EQUAL) : "!";
       }, "?": function() {
-        return this.version >= 700 && this._input[this.offset] === "?" ? this.version >= 704 && this._input[this.offset + 1] === "=" ? (this.consume(2), this.tok.T_COALESCE_EQUAL) : (this.input(), this.tok.T_COALESCE) : this.version >= 800 && this._input[this.offset] === "-" && this._input[this.offset + 1] === ">" ? (this.consume(2), this.tok.T_NULLSAFE_OBJECT_OPERATOR) : "?";
+        return this.version >= 700 && "?" === this._input[this.offset] ? this.version >= 704 && "=" === this._input[this.offset + 1] ? (this.consume(2), this.tok.T_COALESCE_EQUAL) : (this.input(), this.tok.T_COALESCE) : this.version >= 800 && "-" === this._input[this.offset] && ">" === this._input[this.offset + 1] ? (this.consume(2), this.tok.T_NULLSAFE_OBJECT_OPERATOR) : "?";
       }, "<": function() {
         var t2 = this._input[this.offset];
-        return t2 === "<" ? (t2 = this._input[this.offset + 1]) === "=" ? (this.consume(2), this.tok.T_SL_EQUAL) : t2 === "<" && this.is_HEREDOC() ? this.tok.T_START_HEREDOC : (this.input(), this.tok.T_SL) : t2 === "=" ? (this.input(), this.version >= 700 && this._input[this.offset] === ">" ? (this.input(), this.tok.T_SPACESHIP) : this.tok.T_IS_SMALLER_OR_EQUAL) : t2 === ">" ? (this.input(), this.tok.T_IS_NOT_EQUAL) : "<";
+        return "<" === t2 ? "=" === (t2 = this._input[this.offset + 1]) ? (this.consume(2), this.tok.T_SL_EQUAL) : "<" === t2 && this.is_HEREDOC() ? this.tok.T_START_HEREDOC : (this.input(), this.tok.T_SL) : "=" === t2 ? (this.input(), this.version >= 700 && ">" === this._input[this.offset] ? (this.input(), this.tok.T_SPACESHIP) : this.tok.T_IS_SMALLER_OR_EQUAL) : ">" === t2 ? (this.input(), this.tok.T_IS_NOT_EQUAL) : "<";
       }, ">": function() {
         var t2 = this._input[this.offset];
-        return t2 === "=" ? (this.input(), this.tok.T_IS_GREATER_OR_EQUAL) : t2 === ">" ? (t2 = this._input[this.offset + 1]) === "=" ? (this.consume(2), this.tok.T_SR_EQUAL) : (this.input(), this.tok.T_SR) : ">";
+        return "=" === t2 ? (this.input(), this.tok.T_IS_GREATER_OR_EQUAL) : ">" === t2 ? "=" === (t2 = this._input[this.offset + 1]) ? (this.consume(2), this.tok.T_SR_EQUAL) : (this.input(), this.tok.T_SR) : ">";
       }, "*": function() {
         var t2 = this._input[this.offset];
-        return t2 === "=" ? (this.input(), this.tok.T_MUL_EQUAL) : t2 === "*" ? (this.input(), this._input[this.offset] === "=" ? (this.input(), this.tok.T_POW_EQUAL) : this.tok.T_POW) : "*";
+        return "=" === t2 ? (this.input(), this.tok.T_MUL_EQUAL) : "*" === t2 ? (this.input(), "=" === this._input[this.offset] ? (this.input(), this.tok.T_POW_EQUAL) : this.tok.T_POW) : "*";
       }, ".": function() {
         var t2 = this._input[this.offset];
-        return t2 === "=" ? (this.input(), this.tok.T_CONCAT_EQUAL) : t2 === "." && this._input[this.offset + 1] === "." ? (this.consume(2), this.tok.T_ELLIPSIS) : ".";
+        return "=" === t2 ? (this.input(), this.tok.T_CONCAT_EQUAL) : "." === t2 && "." === this._input[this.offset + 1] ? (this.consume(2), this.tok.T_ELLIPSIS) : ".";
       }, "%": function() {
-        return this._input[this.offset] === "=" ? (this.input(), this.tok.T_MOD_EQUAL) : "%";
+        return "=" === this._input[this.offset] ? (this.input(), this.tok.T_MOD_EQUAL) : "%";
       }, "&": function() {
         var t2 = this._input[this.offset];
-        return t2 === "=" ? (this.input(), this.tok.T_AND_EQUAL) : t2 === "&" ? (this.input(), this.tok.T_BOOLEAN_AND) : "&";
+        return "=" === t2 ? (this.input(), this.tok.T_AND_EQUAL) : "&" === t2 ? (this.input(), this.tok.T_BOOLEAN_AND) : "&";
       }, "|": function() {
         var t2 = this._input[this.offset];
-        return t2 === "=" ? (this.input(), this.tok.T_OR_EQUAL) : t2 === "|" ? (this.input(), this.tok.T_BOOLEAN_OR) : "|";
+        return "=" === t2 ? (this.input(), this.tok.T_OR_EQUAL) : "|" === t2 ? (this.input(), this.tok.T_BOOLEAN_OR) : "|";
       }, "^": function() {
-        return this._input[this.offset] === "=" ? (this.input(), this.tok.T_XOR_EQUAL) : "^";
+        return "=" === this._input[this.offset] ? (this.input(), this.tok.T_XOR_EQUAL) : "^";
       } } };
       p.T_STRING, p.consume_TOKEN, p.tokenTerminals;
       var f = { is_NUM: function() {
         var t2 = this._input.charCodeAt(this.offset - 1);
-        return t2 > 47 && t2 < 58 || t2 === 95;
+        return t2 > 47 && t2 < 58 || 95 === t2;
       }, is_NUM_START: function() {
         var t2 = this._input.charCodeAt(this.offset - 1);
         return t2 > 47 && t2 < 58;
       }, is_LABEL: function() {
         var t2 = this._input.charCodeAt(this.offset - 1);
-        return t2 > 96 && t2 < 123 || t2 > 64 && t2 < 91 || t2 === 95 || t2 > 47 && t2 < 58 || t2 > 126;
+        return t2 > 96 && t2 < 123 || t2 > 64 && t2 < 91 || 95 === t2 || t2 > 47 && t2 < 58 || t2 > 126;
       }, is_LABEL_START: function() {
         var t2 = this._input.charCodeAt(this.offset - 1);
-        return t2 > 64 && t2 < 91 || (t2 > 96 && t2 < 123 || (t2 === 95 || t2 > 126));
+        return t2 > 64 && t2 < 91 || (t2 > 96 && t2 < 123 || (95 === t2 || t2 > 126));
       }, consume_LABEL: function() {
         for (; this.offset < this.size; ) {
           var t2 = this.input();
@@ -39742,13 +41192,13 @@ var require_standalone = __commonJS({
         return this;
       }, is_TOKEN: function() {
         var t2 = this._input[this.offset - 1];
-        return ";:,.\\[]()|^&+-/*=%!~$<>?@".indexOf(t2) !== -1;
+        return -1 !== ";:,.\\[]()|^&+-/*=%!~$<>?@".indexOf(t2);
       }, is_WHITESPACE: function() {
         var t2 = this._input[this.offset - 1];
-        return t2 === " " || t2 === "	" || t2 === "\n" || t2 === "\r";
+        return " " === t2 || "	" === t2 || "\n" === t2 || "\r" === t2;
       }, is_TABSPACE: function() {
         var t2 = this._input[this.offset - 1];
-        return t2 === " " || t2 === "	";
+        return " " === t2 || "	" === t2;
       }, consume_TABSPACE: function() {
         for (; this.offset < this.size; ) {
           var t2 = this.input();
@@ -39760,7 +41210,7 @@ var require_standalone = __commonJS({
         return this;
       }, is_HEX: function() {
         var t2 = this._input.charCodeAt(this.offset - 1);
-        return t2 > 47 && t2 < 58 || (t2 > 64 && t2 < 71 || (t2 > 96 && t2 < 103 || t2 === 95));
+        return t2 > 47 && t2 < 58 || (t2 > 64 && t2 < 71 || (t2 > 96 && t2 < 103 || 95 === t2));
       } };
       f.is_NUM, f.is_NUM_START, f.is_LABEL, f.is_LABEL_START, f.consume_LABEL, f.is_TOKEN, f.is_WHITESPACE, f.is_TABSPACE, f.consume_TABSPACE, f.is_HEX;
       var T = function(t2) {
@@ -39772,16 +41222,16 @@ var require_standalone = __commonJS({
         } }, this;
       }, T.prototype.input = function() {
         var t2 = this._input[this.offset];
-        return t2 ? (this.yytext += t2, this.offset++, t2 === "\r" && this._input[this.offset] === "\n" && (this.yytext += "\n", this.offset++), t2 === "\n" || t2 === "\r" ? (this.yylloc.last_line = ++this.yylineno, this.yyprevcol = this.yylloc.last_column, this.yylloc.last_column = 0) : this.yylloc.last_column++, t2) : "";
+        return t2 ? (this.yytext += t2, this.offset++, "\r" === t2 && "\n" === this._input[this.offset] && (this.yytext += "\n", this.offset++), "\n" === t2 || "\r" === t2 ? (this.yylloc.last_line = ++this.yylineno, this.yyprevcol = this.yylloc.last_column, this.yylloc.last_column = 0) : this.yylloc.last_column++, t2) : "";
       }, T.prototype.unput = function(t2) {
-        if (t2 === 1)
-          this.offset--, this._input[this.offset] === "\n" && this._input[this.offset - 1] === "\r" && (this.offset--, t2++), this._input[this.offset] === "\r" || this._input[this.offset] === "\n" ? (this.yylloc.last_line--, this.yylineno--, this.yylloc.last_column = this.yyprevcol) : this.yylloc.last_column--, this.yytext = this.yytext.substring(0, this.yytext.length - t2);
+        if (1 === t2)
+          this.offset--, "\n" === this._input[this.offset] && "\r" === this._input[this.offset - 1] && (this.offset--, t2++), "\r" === this._input[this.offset] || "\n" === this._input[this.offset] ? (this.yylloc.last_line--, this.yylineno--, this.yylloc.last_column = this.yyprevcol) : this.yylloc.last_column--, this.yytext = this.yytext.substring(0, this.yytext.length - t2);
         else if (t2 > 0)
           if (this.offset -= t2, t2 < this.yytext.length) {
             this.yytext = this.yytext.substring(0, this.yytext.length - t2), this.yylloc.last_line = this.yylloc.first_line, this.yylloc.last_column = this.yyprevcol = this.yylloc.first_column;
             for (var e2 = 0; e2 < this.yytext.length; e2++) {
               var i2 = this.yytext[e2];
-              i2 === "\r" ? (i2 = this.yytext[++e2], this.yyprevcol = this.yylloc.last_column, this.yylloc.last_line++, this.yylloc.last_column = 0, i2 !== "\n" && (i2 === "\r" ? this.yylloc.last_line++ : this.yylloc.last_column++)) : i2 === "\n" ? (this.yyprevcol = this.yylloc.last_column, this.yylloc.last_line++, this.yylloc.last_column = 0) : this.yylloc.last_column++;
+              "\r" === i2 ? (i2 = this.yytext[++e2], this.yyprevcol = this.yylloc.last_column, this.yylloc.last_line++, this.yylloc.last_column = 0, "\n" !== i2 && ("\r" === i2 ? this.yylloc.last_line++ : this.yylloc.last_column++)) : "\n" === i2 ? (this.yyprevcol = this.yylloc.last_column, this.yylloc.last_line++, this.yylloc.last_column = 0) : this.yylloc.last_column++;
             }
             this.yylineno = this.yylloc.last_line;
           } else
@@ -39793,13 +41243,13 @@ var require_standalone = __commonJS({
         return t2 === this.ahead(t2.length).toLowerCase();
       }, T.prototype.ahead = function(t2) {
         var e2 = this._input.substring(this.offset, this.offset + t2);
-        return e2[e2.length - 1] === "\r" && this._input[this.offset + t2 + 1] === "\n" && (e2 += "\n"), e2;
+        return "\r" === e2[e2.length - 1] && "\n" === this._input[this.offset + t2 + 1] && (e2 += "\n"), e2;
       }, T.prototype.consume = function(t2) {
         for (var e2 = 0; e2 < t2; e2++) {
           var i2 = this._input[this.offset];
           if (!i2)
             break;
-          this.yytext += i2, this.offset++, i2 === "\r" && this._input[this.offset] === "\n" && (this.yytext += "\n", this.offset++, e2++), i2 === "\n" || i2 === "\r" ? (this.yylloc.last_line = ++this.yylineno, this.yyprevcol = this.yylloc.last_column, this.yylloc.last_column = 0) : this.yylloc.last_column++;
+          this.yytext += i2, this.offset++, "\r" === i2 && "\n" === this._input[this.offset] && (this.yytext += "\n", this.offset++, e2++), "\n" === i2 || "\r" === i2 ? (this.yylloc.last_line = ++this.yylineno, this.yyprevcol = this.yylloc.last_column, this.yylloc.last_column = 0) : this.yylloc.last_column++;
         }
         return this;
       }, T.prototype.getState = function() {
@@ -39821,21 +41271,21 @@ var require_standalone = __commonJS({
         }
         return this.yylloc.prev_offset || (this.yylloc.prev_offset = this.yylloc.first_offset, this.yylloc.prev_line = this.yylloc.first_line, this.yylloc.prev_column = this.yylloc.first_column), t2;
       }, T.prototype.begin = function(t2) {
-        if (this.conditionStack.push(t2), this.curCondition = t2, this.stateCb = this["match" + t2], typeof this.stateCb != "function")
+        if (this.conditionStack.push(t2), this.curCondition = t2, this.stateCb = this["match" + t2], "function" != typeof this.stateCb)
           throw new Error('Undefined condition state "' + t2 + '"');
         return this;
       }, T.prototype.popState = function() {
         var t2 = this.conditionStack.length - 1 > 0 ? this.conditionStack.pop() : this.conditionStack[0];
-        if (this.curCondition = this.conditionStack[this.conditionStack.length - 1], this.stateCb = this["match" + this.curCondition], typeof this.stateCb != "function")
+        if (this.curCondition = this.conditionStack[this.conditionStack.length - 1], this.stateCb = this["match" + this.curCondition], "function" != typeof this.stateCb)
           throw new Error('Undefined condition state "' + this.curCondition + '"');
         return t2;
       }, T.prototype.next = function() {
         var t2;
         if (this._input || (this.done = true), this.yylloc.first_offset = this.offset, this.yylloc.first_line = this.yylloc.last_line, this.yylloc.first_column = this.yylloc.last_column, this.yytext = "", this.done)
           return this.yylloc.prev_offset = this.yylloc.first_offset, this.yylloc.prev_line = this.yylloc.first_line, this.yylloc.prev_column = this.yylloc.first_column, this.EOF;
-        if (this.tokens.length > 0 ? (typeof (t2 = this.tokens.shift())[1] == "object" ? this.setState(t2[1]) : this.consume(t2[1]), t2 = t2[0]) : t2 = this.stateCb.apply(this, []), this.offset >= this.size && this.tokens.length === 0 && (this.done = true), this.debug) {
+        if (this.tokens.length > 0 ? ("object" == typeof (t2 = this.tokens.shift())[1] ? this.setState(t2[1]) : this.consume(t2[1]), t2 = t2[0]) : t2 = this.stateCb.apply(this, []), this.offset >= this.size && 0 === this.tokens.length && (this.done = true), this.debug) {
           var e2 = t2;
-          e2 = typeof e2 == "number" ? this.engine.tokens.values[e2] : '"' + e2 + '"';
+          e2 = "number" == typeof e2 ? this.engine.tokens.values[e2] : '"' + e2 + '"';
           var i2 = new Error(e2 + "	from " + this.yylloc.first_line + "," + this.yylloc.first_column + "	 - to " + this.yylloc.last_line + "," + this.yylloc.last_column + '	"' + this.yytext + '"');
           console.error(i2.stack);
         }
@@ -39857,17 +41307,17 @@ var require_standalone = __commonJS({
           return e2.read_array_pair(t2);
         }, ",", true);
       }, read_array_pair: function(t2) {
-        if (!(!t2 && this.token === ")" || t2 && this.token === "]")) {
-          if (this.token === ",")
+        if (!(!t2 && ")" === this.token || t2 && "]" === this.token)) {
+          if ("," === this.token)
             return this.node("noop")();
           var e2 = this.node("entry"), i2 = null, n2 = null, s2 = false, r2 = false;
-          if (this.token === "&")
+          if ("&" === this.token)
             this.next(), s2 = true, n2 = this.read_variable(true, false);
           else if (this.token === this.tok.T_ELLIPSIS && this.version >= 704)
-            this.next(), this.token === "&" && this.error(), r2 = true, n2 = this.read_expr();
+            this.next(), "&" === this.token && this.error(), r2 = true, n2 = this.read_expr();
           else {
             var o2 = this.read_expr();
-            this.token === this.tok.T_DOUBLE_ARROW ? (this.next(), i2 = o2, this.token === "&" ? (this.next(), s2 = true, n2 = this.read_variable(true, false)) : n2 = this.read_expr()) : n2 = o2;
+            this.token === this.tok.T_DOUBLE_ARROW ? (this.next(), i2 = o2, "&" === this.token ? (this.next(), s2 = true, n2 = this.read_variable(true, false)) : n2 = this.read_expr()) : n2 = o2;
           }
           return e2(i2, n2, s2, r2);
         }
@@ -39887,7 +41337,7 @@ var require_standalone = __commonJS({
       }
       function v(t2) {
         for (var e2 = 1; e2 < arguments.length; e2++) {
-          var i2 = arguments[e2] != null ? arguments[e2] : {};
+          var i2 = null != arguments[e2] ? arguments[e2] : {};
           e2 % 2 ? y(Object(i2), true).forEach(function(e3) {
             x(t2, e3, i2[e3]);
           }) : Object.getOwnPropertyDescriptors ? Object.defineProperties(t2, Object.getOwnPropertyDescriptors(i2)) : y(Object(i2)).forEach(function(e3) {
@@ -39901,7 +41351,7 @@ var require_standalone = __commonJS({
           if (Array.isArray(t3))
             return t3;
         }(t2) || function(t3, e3) {
-          if (typeof Symbol == "undefined" || !(Symbol.iterator in Object(t3)))
+          if ("undefined" == typeof Symbol || !(Symbol.iterator in Object(t3)))
             return;
           var i2 = [], n2 = true, s2 = false, r2 = void 0;
           try {
@@ -39911,7 +41361,7 @@ var require_standalone = __commonJS({
             s2 = true, r2 = t4;
           } finally {
             try {
-              n2 || a2.return == null || a2.return();
+              n2 || null == a2.return || a2.return();
             } finally {
               if (s2)
                 throw r2;
@@ -39927,7 +41377,7 @@ var require_standalone = __commonJS({
           if (Array.isArray(t3))
             return C(t3);
         }(t2) || function(t3) {
-          if (typeof Symbol != "undefined" && Symbol.iterator in Object(t3))
+          if ("undefined" != typeof Symbol && Symbol.iterator in Object(t3))
             return Array.from(t3);
         }(t2) || N(t2) || function() {
           throw new TypeError("Invalid attempt to spread non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method.");
@@ -39935,20 +41385,20 @@ var require_standalone = __commonJS({
       }
       function N(t2, e2) {
         if (t2) {
-          if (typeof t2 == "string")
+          if ("string" == typeof t2)
             return C(t2, e2);
           var i2 = Object.prototype.toString.call(t2).slice(8, -1);
-          return i2 === "Object" && t2.constructor && (i2 = t2.constructor.name), i2 === "Map" || i2 === "Set" ? Array.from(i2) : i2 === "Arguments" || /^(?:Ui|I)nt(?:8|16|32)(?:Clamped)?Array$/.test(i2) ? C(t2, e2) : void 0;
+          return "Object" === i2 && t2.constructor && (i2 = t2.constructor.name), "Map" === i2 || "Set" === i2 ? Array.from(i2) : "Arguments" === i2 || /^(?:Ui|I)nt(?:8|16|32)(?:Clamped)?Array$/.test(i2) ? C(t2, e2) : void 0;
         }
       }
       function C(t2, e2) {
-        (e2 == null || e2 > t2.length) && (e2 = t2.length);
+        (null == e2 || e2 > t2.length) && (e2 = t2.length);
         for (var i2 = 0, n2 = new Array(e2); i2 < e2; i2++)
           n2[i2] = t2[i2];
         return n2;
       }
       function S(t2) {
-        if (typeof Symbol == "undefined" || t2[Symbol.iterator] == null) {
+        if ("undefined" == typeof Symbol || null == t2[Symbol.iterator]) {
           if (Array.isArray(t2) || (t2 = N(t2))) {
             var e2 = 0, i2 = function() {
             };
@@ -39970,7 +41420,7 @@ var require_standalone = __commonJS({
           o2 = true, s2 = t3;
         }, f: function() {
           try {
-            r2 || n2.return == null || n2.return();
+            r2 || null == n2.return || n2.return();
           } finally {
             if (o2)
               throw s2;
@@ -39994,7 +41444,7 @@ var require_standalone = __commonJS({
       }, read_class_modifier: function() {
         return this.token === this.tok.T_ABSTRACT ? (this.next(), 1) : this.token === this.tok.T_FINAL ? (this.next(), 2) : 0;
       }, read_class_body: function() {
-        for (var t2 = [], e2 = []; this.token !== this.EOF && this.token !== "}"; )
+        for (var t2 = [], e2 = []; this.token !== this.EOF && "}" !== this.token; )
           if (this.token !== this.tok.T_COMMENT)
             if (this.token !== this.tok.T_DOC_COMMENT)
               if (this.token !== this.tok.T_USE) {
@@ -40003,7 +41453,7 @@ var require_standalone = __commonJS({
                 if (this.token !== this.tok.T_CONST)
                   if (this.token === this.tok.T_VAR && (this.next().expect(this.tok.T_VARIABLE), n2[0] = null, n2[1] = 0), this.token === this.tok.T_FUNCTION)
                     t2.push(this.read_function(false, n2, e2, i2)), e2 = [];
-                  else if (this.token === this.tok.T_VARIABLE || this.version >= 704 && (this.token === "?" || this.token === this.tok.T_CALLABLE || this.token === this.tok.T_ARRAY || this.token === this.tok.T_NS_SEPARATOR || this.token === this.tok.T_STRING || this.token === this.tok.T_NAMESPACE)) {
+                  else if (this.token === this.tok.T_VARIABLE || this.version >= 704 && ("?" === this.token || this.token === this.tok.T_CALLABLE || this.token === this.tok.T_ARRAY || this.token === this.tok.T_NS_SEPARATOR || this.token === this.tok.T_STRING || this.token === this.tok.T_NAMESPACE)) {
                     var s2 = this.read_variable_list(n2, e2);
                     e2 = [], this.expect(";"), this.next(), t2 = t2.concat(s2);
                   } else
@@ -40024,7 +41474,7 @@ var require_standalone = __commonJS({
           var t3 = this.node("property"), i3 = A(this.read_optional_type(), 2), n3 = i3[0], s2 = i3[1];
           this.expect(this.tok.T_VARIABLE);
           var r2 = this.node("identifier"), o2 = this.text().substring(1);
-          return this.next(), r2 = r2(o2), this.token === ";" || this.token === "," ? t3(r2, null, n3, s2, e2 || []) : this.token === "=" ? t3(r2, this.next().read_expr(), n3, s2, e2 || []) : (this.expect([",", ";", "="]), t3(r2, null, n3, s2, e2 || []));
+          return this.next(), r2 = r2(o2), ";" === this.token || "," === this.token ? t3(r2, null, n3, s2, e2 || []) : "=" === this.token ? t3(r2, this.next().read_expr(), n3, s2, e2 || []) : (this.expect([",", ";", "="]), t3(r2, null, n3, s2, e2 || []));
         }, ",");
         return i2(null, n2, t2);
       }, read_constant_list: function(t2, e2) {
@@ -40064,17 +41514,17 @@ var require_standalone = __commonJS({
               case this.tok.T_FINAL:
                 i2 = 2, n2 = 2;
             }
-            t2 && (i2 == 0 && n2 == 2 ? (this.expect([this.tok.T_PUBLIC, this.tok.T_PROTECTED]), n2 = -1) : i2 == 2 && n2 == 1 && (this.error(), n2 = -1)), e2[i2] !== -1 ? this.error() : n2 !== -1 && (e2[i2] = n2);
+            t2 && (0 == i2 && 2 == n2 ? (this.expect([this.tok.T_PUBLIC, this.tok.T_PROTECTED]), n2 = -1) : 2 == i2 && 1 == n2 && (this.error(), n2 = -1)), -1 !== e2[i2] ? this.error() : -1 !== n2 && (e2[i2] = n2);
           } while (this.next().is("T_MEMBER_FLAGS"));
         }
-        return e2[1] == -1 && (e2[1] = 0), e2[2] == -1 && (e2[2] = 0), e2;
+        return -1 == e2[1] && (e2[1] = 0), -1 == e2[2] && (e2[2] = 0), e2;
       }, read_optional_type: function() {
         var t2 = false;
-        this.token === "?" && (t2 = true, this.next());
+        "?" === this.token && (t2 = true, this.next());
         var e2 = this.read_types();
         if (t2 && !e2 && this.raiseError("Expecting a type definition combined with nullable operator"), !t2 && !e2)
           return [false, null];
-        if (this.token === "|") {
+        if ("|" === this.token) {
           e2 = [e2];
           do {
             this.next();
@@ -40084,7 +41534,7 @@ var require_standalone = __commonJS({
               break;
             }
             e2.push(i2);
-          } while (this.token === "|");
+          } while ("|" === this.token);
         }
         return [t2, e2];
       }, read_interface_declaration_statement: function(t2) {
@@ -40097,7 +41547,7 @@ var require_standalone = __commonJS({
         var s2 = this.read_interface_extends_list();
         return this.expect("{"), e2(i2, s2, this.next().read_interface_body(), t2 || []);
       }, read_interface_body: function() {
-        for (var t2 = [], e2 = []; this.token !== this.EOF && this.token !== "}"; )
+        for (var t2 = [], e2 = []; this.token !== this.EOF && "}" !== this.token; )
           if (this.token !== this.tok.T_COMMENT)
             if (this.token !== this.tok.T_DOC_COMMENT) {
               var i2 = this.position();
@@ -40126,10 +41576,10 @@ var require_standalone = __commonJS({
       }, read_trait_use_statement: function() {
         var t2 = this.node("traituse");
         this.expect(this.tok.T_USE) && this.next();
-        for (var e2 = [this.read_namespace_name()], i2 = null; this.token === ","; )
+        for (var e2 = [this.read_namespace_name()], i2 = null; "," === this.token; )
           e2.push(this.next().read_namespace_name());
-        if (this.token === "{") {
-          for (i2 = []; this.next().token !== this.EOF && this.token !== "}"; )
+        if ("{" === this.token) {
+          for (i2 = []; this.next().token !== this.EOF && "}" !== this.token; )
             i2.push(this.read_trait_use_alias()), this.expect(";");
           this.expect("}") && this.next();
         } else
@@ -40159,14 +41609,14 @@ var require_standalone = __commonJS({
             var a2 = this.text();
             this.next(), o2 = o2(a2);
           } else
-            r2 === false && this.expect(this.tok.T_STRING);
+            false === r2 && this.expect(this.tok.T_STRING);
           return e2("traitalias", i2, t2, o2, r2);
         }
         return this.expect([this.tok.T_AS, this.tok.T_INSTEADOF]), e2("traitalias", i2, t2, null, null);
       } };
       b.read_class_declaration_statement, b.read_class_modifiers, b.read_class_modifier, b.read_class_body, b.read_variable_list, b.read_constant_list, b.read_member_flags, b.read_optional_type, b.read_interface_declaration_statement, b.read_interface_body, b.read_trait_declaration_statement, b.read_trait_use_statement, b.read_trait_use_alias;
       var L = { read_comment: function() {
-        var t2 = this.text(), e2 = this.ast.prepare(t2.substring(0, 2) === "/*" ? "commentblock" : "commentline", null, this), i2 = this.lexer.yylloc.first_offset, n2 = this.prev;
+        var t2 = this.text(), e2 = this.ast.prepare("/*" === t2.substring(0, 2) ? "commentblock" : "commentline", null, this), i2 = this.lexer.yylloc.first_offset, n2 = this.prev;
         return this.prev = [this.lexer.yylloc.last_line, this.lexer.yylloc.last_column, this.lexer.offset], this.lex(), (e2 = e2(t2)).offset = i2, this.prev = n2, e2;
       }, read_doc_comment: function() {
         var t2 = this.ast.prepare("commentblock", null, this), e2 = this.lexer.yylloc.first_offset, i2 = this.text(), n2 = this.prev;
@@ -40175,25 +41625,25 @@ var require_standalone = __commonJS({
       L.read_comment, L.read_doc_comment;
       var O = { read_expr: function(t2) {
         var e2 = this.node();
-        if (this.token === "@")
+        if ("@" === this.token)
           return t2 || (t2 = this.next().read_expr()), e2("silent", t2);
-        if (t2 || (t2 = this.read_expr_item()), this.token === "|")
+        if (t2 || (t2 = this.read_expr_item()), "|" === this.token)
           return e2("bin", "|", t2, this.next().read_expr());
-        if (this.token === "&")
+        if ("&" === this.token)
           return e2("bin", "&", t2, this.next().read_expr());
-        if (this.token === "^")
+        if ("^" === this.token)
           return e2("bin", "^", t2, this.next().read_expr());
-        if (this.token === ".")
+        if ("." === this.token)
           return e2("bin", ".", t2, this.next().read_expr());
-        if (this.token === "+")
+        if ("+" === this.token)
           return e2("bin", "+", t2, this.next().read_expr());
-        if (this.token === "-")
+        if ("-" === this.token)
           return e2("bin", "-", t2, this.next().read_expr());
-        if (this.token === "*")
+        if ("*" === this.token)
           return e2("bin", "*", t2, this.next().read_expr());
-        if (this.token === "/")
+        if ("/" === this.token)
           return e2("bin", "/", t2, this.next().read_expr());
-        if (this.token === "%")
+        if ("%" === this.token)
           return e2("bin", "%", t2, this.next().read_expr());
         if (this.token === this.tok.T_POW)
           return e2("bin", "**", t2, this.next().read_expr());
@@ -40219,9 +41669,9 @@ var require_standalone = __commonJS({
           return e2("bin", "==", t2, this.next().read_expr());
         if (this.token === this.tok.T_IS_NOT_EQUAL)
           return e2("bin", "!=", t2, this.next().read_expr());
-        if (this.token === "<")
+        if ("<" === this.token)
           return e2("bin", "<", t2, this.next().read_expr());
-        if (this.token === ">")
+        if (">" === this.token)
           return e2("bin", ">", t2, this.next().read_expr());
         if (this.token === this.tok.T_IS_SMALLER_OR_EQUAL)
           return e2("bin", "<=", t2, this.next().read_expr());
@@ -40229,11 +41679,11 @@ var require_standalone = __commonJS({
           return e2("bin", ">=", t2, this.next().read_expr());
         if (this.token === this.tok.T_SPACESHIP)
           return e2("bin", "<=>", t2, this.next().read_expr());
-        if (this.token === this.tok.T_INSTANCEOF && (t2 = e2("bin", "instanceof", t2, this.next().read_class_name_reference()), this.token !== ";" && this.token !== this.tok.T_INLINE_HTML && this.token !== this.EOF && (t2 = this.read_expr(t2))), this.token === this.tok.T_COALESCE)
+        if (this.token === this.tok.T_INSTANCEOF && (t2 = e2("bin", "instanceof", t2, this.next().read_class_name_reference()), ";" !== this.token && this.token !== this.tok.T_INLINE_HTML && this.token !== this.EOF && (t2 = this.read_expr(t2))), this.token === this.tok.T_COALESCE)
           return e2("bin", "??", t2, this.next().read_expr());
-        if (this.token === "?") {
+        if ("?" === this.token) {
           var i2 = null;
-          return this.next().token !== ":" && (i2 = this.read_expr()), this.expect(":") && this.next(), e2("retif", t2, i2, this.read_expr());
+          return ":" !== this.next().token && (i2 = this.read_expr()), this.expect(":") && this.next(), e2("retif", t2, i2, this.read_expr());
         }
         return e2.destroy(t2), t2;
       }, read_expr_cast: function(t2) {
@@ -40277,20 +41727,20 @@ var require_standalone = __commonJS({
         return this.token !== t2 ? this.read_expr() : null;
       }, read_exit_expr: function() {
         var t2 = null;
-        return this.token === "(" && (this.next(), t2 = this.read_optional_expr(")"), this.expect(")") && this.next()), t2;
+        return "(" === this.token && (this.next(), t2 = this.read_optional_expr(")"), this.expect(")") && this.next()), t2;
       }, read_expr_item: function() {
         var t2, e2, i2 = [];
-        if (this.token === "+")
+        if ("+" === this.token)
           return this.node("unary")("+", this.next().read_expr());
-        if (this.token === "-")
+        if ("-" === this.token)
           return this.node("unary")("-", this.next().read_expr());
-        if (this.token === "!")
+        if ("!" === this.token)
           return this.node("unary")("!", this.next().read_expr());
-        if (this.token === "~")
+        if ("~" === this.token)
           return this.node("unary")("~", this.next().read_expr());
-        if (this.token === "(")
+        if ("(" === this.token)
           return (e2 = this.next().read_expr()).parenthesizedExpression = true, this.expect(")") && this.next(), this.handleDereferencable(e2);
-        if (this.token === "`")
+        if ("`" === this.token)
           return this.read_encapsed_string("`");
         if (this.token === this.tok.T_LIST) {
           var n2 = null, s2 = this.innerList;
@@ -40298,7 +41748,7 @@ var require_standalone = __commonJS({
           var r2 = this.read_array_pair_list(false);
           this.expect(")") && this.next();
           for (var o2 = false, a2 = 0; a2 < r2.length; a2++)
-            if (r2[a2] !== null && r2[a2].kind !== "noop") {
+            if (null !== r2[a2] && "noop" !== r2[a2].kind) {
               o2 = true;
               break;
             }
@@ -40328,7 +41778,7 @@ var require_standalone = __commonJS({
           case this.tok.T_DOUBLE_CAST:
             return this.read_expr_cast("float");
           case this.tok.T_STRING_CAST:
-            return this.read_expr_cast(this.text().indexOf("binary") !== -1 ? "binary" : "string");
+            return this.read_expr_cast(-1 !== this.text().indexOf("binary") ? "binary" : "string");
           case this.tok.T_ARRAY_CAST:
             return this.read_expr_cast("array");
           case this.tok.T_OBJECT_CAST:
@@ -40340,7 +41790,7 @@ var require_standalone = __commonJS({
           case this.tok.T_THROW:
             return this.version < 800 && this.raiseError("PHP 8+ is required to use throw as an expression"), this.node("throw")(this.next().read_expr());
           case this.tok.T_EXIT:
-            var h2 = this.lexer.yytext.toLowerCase() === "die";
+            var h2 = "die" === this.lexer.yytext.toLowerCase();
             return t2 = this.node("exit"), this.next(), t2(this.read_exit_expr(), h2);
           case this.tok.T_PRINT:
             return this.node("print")(this.next().read_expr());
@@ -40360,10 +41810,10 @@ var require_standalone = __commonJS({
         }
         if (this.is("VARIABLE")) {
           t2 = this.node();
-          var _2 = (e2 = this.read_variable(false, false)).kind === "identifier" || e2.kind === "staticlookup" && e2.offset.kind === "identifier";
+          var _2 = "identifier" === (e2 = this.read_variable(false, false)).kind || "staticlookup" === e2.kind && "identifier" === e2.offset.kind;
           switch (this.token) {
             case "=":
-              return _2 && this.error("VARIABLE"), this.next().token == "&" ? this.read_assignref(t2, e2) : t2("assign", e2, this.read_expr(), "=");
+              return _2 && this.error("VARIABLE"), "&" == this.next().token ? this.read_assignref(t2, e2) : t2("assign", e2, this.read_expr(), "=");
             case this.tok.T_PLUS_EQUAL:
               return _2 && this.error("VARIABLE"), t2("assign", e2, this.next().read_expr(), "+=");
             case this.tok.T_MINUS_EQUAL:
@@ -40399,7 +41849,7 @@ var require_standalone = __commonJS({
           }
         } else {
           if (this.is("SCALAR")) {
-            if (t2 = this.node(), (e2 = this.read_scalar()).kind === "array" && e2.shortForm && this.token === "=") {
+            if (t2 = this.node(), "array" === (e2 = this.read_scalar()).kind && e2.shortForm && "=" === this.token) {
               var d2 = this.convertToList(e2);
               return e2.loc && (d2.loc = e2.loc), t2("assign", d2, this.next().read_expr(), "=");
             }
@@ -40410,7 +41860,7 @@ var require_standalone = __commonJS({
         return e2;
       }, convertToList: function(t2) {
         var e2 = this, i2 = t2.items.map(function(t3) {
-          return t3.value && t3.value.kind === "array" && t3.value.shortForm && (t3.value = e2.convertToList(t3.value)), t3;
+          return t3.value && "array" === t3.value.kind && t3.value.shortForm && (t3.value = e2.convertToList(t3.value)), t3;
         }), n2 = this.node("list")(i2, true);
         return t2.loc && (n2.loc = t2.loc), t2.leadingComments && (n2.leadingComments = t2.leadingComments), t2.trailingComments && (n2.trailingComments = t2.trailingComments), n2;
       }, read_assignref: function(t2, e2) {
@@ -40429,7 +41879,7 @@ var require_standalone = __commonJS({
         var r2 = this.read_parameter_list();
         this.expect(")") && this.next();
         var o2 = false, a2 = null;
-        this.token === ":" && (this.next().token === "?" && (o2 = true, this.next()), a2 = this.read_types()), this.expect(this.tok.T_DOUBLE_ARROW) && this.next();
+        ":" === this.token && ("?" === this.next().token && (o2 = true, this.next()), a2 = this.read_types()), this.expect(this.tok.T_DOUBLE_ARROW) && this.next();
         var h2 = n2(r2, s2, this.read_expr(), a2, o2, !!t2);
         return h2.attrGroups = e2, h2;
       }, read_match_expression: function() {
@@ -40443,14 +41893,14 @@ var require_standalone = __commonJS({
           return t2.read_match_arm();
         }, ",", true);
       }, read_match_arm: function() {
-        if (this.token !== "}")
+        if ("}" !== this.token)
           return this.node("matcharm")(this.read_match_arm_conds(), this.read_expr());
       }, read_match_arm_conds: function() {
         var t2 = [];
         if (this.token === this.tok.T_DEFAULT)
           t2 = null, this.next();
         else
-          for (t2.push(this.read_expr()); this.token === ","; ) {
+          for (t2.push(this.read_expr()); "," === this.token; ) {
             if (this.next(), this.token === this.tok.T_DOUBLE_ARROW)
               return this.next(), t2;
             t2.push(this.read_expr());
@@ -40458,14 +41908,14 @@ var require_standalone = __commonJS({
         return this.expect(this.tok.T_DOUBLE_ARROW) && this.next(), t2;
       }, read_attribute() {
         var t2 = this.text(), e2 = [];
-        return this.next(), this.token === "(" && (e2 = this.read_argument_list()), this.node("attribute")(t2, e2);
+        return this.next(), "(" === this.token && (e2 = this.read_argument_list()), this.node("attribute")(t2, e2);
       }, read_attr_list() {
         var t2 = [];
         if (this.token === this.tok.T_ATTRIBUTE)
           do {
             var e2 = this.node("attrgroup")([]);
-            for (this.next(), e2.attrs.push(this.read_attribute()); this.token === ","; )
-              this.next(), this.token !== "]" && e2.attrs.push(this.read_attribute());
+            for (this.next(), e2.attrs.push(this.read_attribute()); "," === this.token; )
+              this.next(), "]" !== this.token && e2.attrs.push(this.read_attribute());
             t2.push(e2), this.expect("]"), this.next();
           } while (this.token === this.tok.T_ATTRIBUTE);
         return t2;
@@ -40475,14 +41925,14 @@ var require_standalone = __commonJS({
         var e2 = [], i2 = this.read_attr_list();
         if (this.token === this.tok.T_CLASS) {
           var n2 = this.node("class");
-          this.next().token === "(" && (e2 = this.read_argument_list());
+          "(" === this.next().token && (e2 = this.read_argument_list());
           var s2 = this.read_extends_from(), r2 = this.read_implements_list(), o2 = null;
           this.expect("{") && (o2 = this.next().read_class_body());
           var a2 = n2(null, s2, r2, o2, [0, 0, 0]);
           return a2.attrGroups = i2, t2(a2, e2);
         }
         var h2 = this.read_new_class_name();
-        return this.token === "(" && (e2 = this.read_argument_list()), t2(h2, e2);
+        return "(" === this.token && (e2 = this.read_argument_list()), t2(h2, e2);
       }, read_new_class_name: function() {
         if (this.token === this.tok.T_NS_SEPARATOR || this.token === this.tok.T_STRING || this.token === this.tok.T_NAMESPACE) {
           var t2 = this.read_namespace_name(true);
@@ -40495,10 +41945,10 @@ var require_standalone = __commonJS({
         for (; this.token !== this.EOF; )
           if (this.token === this.tok.T_OBJECT_OPERATOR || this.token === this.tok.T_DOUBLE_COLON)
             t2 = this.recursive_variable_chain_scan(t2, false, false, true);
-          else if (this.token === this.tok.T_CURLY_OPEN || this.token === "[")
+          else if (this.token === this.tok.T_CURLY_OPEN || "[" === this.token)
             t2 = this.read_dereferencable(t2);
           else {
-            if (this.token !== "(")
+            if ("(" !== this.token)
               return t2;
             t2 = this.node("call")(t2, this.read_argument_list());
           }
@@ -40506,93 +41956,93 @@ var require_standalone = __commonJS({
       } };
       O.read_expr, O.read_expr_cast, O.read_isset_variable, O.read_isset_variables, O.read_internal_functions_in_yacc, O.read_optional_expr, O.read_exit_expr, O.read_expr_item, O.convertToList, O.read_assignref, O.read_inline_function, O.read_match_expression, O.read_match_arms, O.read_match_arm, O.read_match_arm_conds, O.read_attribute, O.read_attr_list, O.read_new_expr, O.read_new_class_name, O.handleDereferencable;
       var I = { is_reference: function() {
-        return this.token == "&" && (this.next(), true);
+        return "&" == this.token && (this.next(), true);
       }, is_variadic: function() {
         return this.token === this.tok.T_ELLIPSIS && (this.next(), true);
       }, read_function: function(t2, e2, i2, n2) {
-        var s2 = this.read_function_declaration(t2 ? 1 : e2 ? 2 : 0, e2 && e2[1] === 1, i2 || [], n2);
-        return e2 && e2[2] == 1 ? (s2.parseFlags(e2), this.expect(";") && this.next()) : (this.expect("{") && (s2.body = this.read_code_block(false), s2.loc && s2.body.loc && (s2.loc.end = s2.body.loc.end)), !t2 && e2 && s2.parseFlags(e2)), s2;
+        var s2 = this.read_function_declaration(t2 ? 1 : e2 ? 2 : 0, e2 && 1 === e2[1], i2 || [], n2);
+        return e2 && 1 == e2[2] ? (s2.parseFlags(e2), this.expect(";") && this.next()) : (this.expect("{") && (s2.body = this.read_code_block(false), s2.loc && s2.body.loc && (s2.loc.end = s2.body.loc.end)), !t2 && e2 && s2.parseFlags(e2)), s2;
       }, read_function_declaration: function(t2, e2, i2, n2) {
         var s2 = this, r2 = "function";
-        t2 === 1 ? r2 = "closure" : t2 === 2 && (r2 = "method");
+        1 === t2 ? r2 = "closure" : 2 === t2 && (r2 = "method");
         var o2 = this.node(r2);
         this.expect(this.tok.T_FUNCTION) && this.next();
         var a2 = this.is_reference(), h2 = false, l2 = [], c2 = null, u2 = false;
-        if (t2 !== 1) {
+        if (1 !== t2) {
           var _2 = this.node("identifier");
-          t2 === 2 ? this.version >= 700 ? this.token === this.tok.T_STRING || this.is("IDENTIFIER") ? (h2 = this.text(), this.next()) : this.version < 704 && this.error("IDENTIFIER") : this.token === this.tok.T_STRING ? (h2 = this.text(), this.next()) : this.error("IDENTIFIER") : this.version >= 700 ? this.token === this.tok.T_STRING ? (h2 = this.text(), this.next()) : this.version >= 704 ? this.expect("(") || this.next() : (this.error(this.tok.T_STRING), this.next()) : (this.expect(this.tok.T_STRING) && (h2 = this.text()), this.next()), h2 = _2(h2);
+          2 === t2 ? this.version >= 700 ? this.token === this.tok.T_STRING || this.is("IDENTIFIER") ? (h2 = this.text(), this.next()) : this.version < 704 && this.error("IDENTIFIER") : this.token === this.tok.T_STRING ? (h2 = this.text(), this.next()) : this.error("IDENTIFIER") : this.version >= 700 ? this.token === this.tok.T_STRING ? (h2 = this.text(), this.next()) : this.version >= 704 ? this.expect("(") || this.next() : (this.error(this.tok.T_STRING), this.next()) : (this.expect(this.tok.T_STRING) && (h2 = this.text()), this.next()), h2 = _2(h2);
         }
         this.expect("(") && this.next();
         var d2 = this.read_parameter_list();
-        this.expect(")") && this.next(), t2 === 1 && (l2 = this.read_lexical_vars()), this.token === ":" && (this.next().token === "?" && (u2 = true, this.next()), c2 = this.read_types());
+        this.expect(")") && this.next(), 1 === t2 && (l2 = this.read_lexical_vars()), ":" === this.token && ("?" === this.next().token && (u2 = true, this.next()), c2 = this.read_types());
         var p2 = function(t3) {
           return t3.attrGroups = i2 || [], n2 && t3.loc && (t3.loc.start = n2, t3.loc.source && (t3.loc.source = s2.lexer._input.substr(t3.loc.start.offset, t3.loc.end.offset - t3.loc.start.offset))), t3;
         };
-        return p2(t2 === 1 ? o2(d2, a2, l2, c2, u2, e2) : o2(h2, d2, a2, c2, u2));
+        return p2(1 === t2 ? o2(d2, a2, l2, c2, u2, e2) : o2(h2, d2, a2, c2, u2));
       }, read_lexical_vars: function() {
         var t2 = [];
         return this.token === this.tok.T_USE && (this.next(), this.expect("(") && this.next(), t2 = this.read_lexical_var_list(), this.expect(")") && this.next()), t2;
       }, read_list_with_dangling_comma: function(t2) {
         for (var e2 = []; this.token != this.EOF; ) {
-          if (e2.push(t2()), this.token != ",") {
-            if (this.token == ")")
+          if (e2.push(t2()), "," != this.token) {
+            if (")" == this.token)
               break;
             this.error([",", ")"]);
             break;
           }
-          if (this.next(), this.version >= 800 && this.token === ")")
+          if (this.next(), this.version >= 800 && ")" === this.token)
             return e2;
         }
         return e2;
       }, read_lexical_var_list: function() {
         return this.read_list_with_dangling_comma(this.read_lexical_var.bind(this));
       }, read_lexical_var: function() {
-        if (this.token === "&")
+        if ("&" === this.token)
           return this.read_byref(this.read_lexical_var.bind(this));
         var t2 = this.node("variable");
         this.expect(this.tok.T_VARIABLE);
         var e2 = this.text().substring(1);
         return this.next(), t2(e2, false);
       }, read_parameter_list: function() {
-        return this.token != ")" ? this.read_list_with_dangling_comma(this.read_parameter.bind(this)) : [];
+        return ")" != this.token ? this.read_list_with_dangling_comma(this.read_parameter.bind(this)) : [];
       }, read_parameter: function() {
         var t2, e2 = this.node("parameter"), i2 = null, n2 = null, s2 = false, r2 = [];
         this.token === this.tok.T_ATTRIBUTE && (r2 = this.read_attr_list());
         var o2 = this.read_promoted();
-        this.token === "?" && (this.next(), s2 = true), t2 = this.read_types(), s2 && !t2 && this.raiseError("Expecting a type definition combined with nullable operator");
+        "?" === this.token && (this.next(), s2 = true), t2 = this.read_types(), s2 && !t2 && this.raiseError("Expecting a type definition combined with nullable operator");
         var a2 = this.is_reference(), h2 = this.is_variadic();
         if (this.expect(this.tok.T_VARIABLE)) {
           i2 = this.node("identifier");
           var l2 = this.text().substring(1);
           this.next(), i2 = i2(l2);
         }
-        this.token == "=" && (n2 = this.next().read_expr());
+        "=" == this.token && (n2 = this.next().read_expr());
         var c2 = e2(i2, t2, n2, a2, h2, s2, o2);
         return r2 && (c2.attrGroups = r2), c2;
       }, read_types() {
         var t2 = [], e2 = this.node("uniontype"), i2 = this.read_type();
         if (!i2)
           return null;
-        for (t2.push(i2); this.token === "|"; )
+        for (t2.push(i2); "|" === this.token; )
           this.next(), i2 = this.read_type(), t2.push(i2);
-        return t2.length === 1 ? t2[0] : e2(t2);
+        return 1 === t2.length ? t2[0] : e2(t2);
       }, read_promoted() {
         return this.token === this.tok.T_PUBLIC ? (this.next(), 1) : this.token === this.tok.T_PROTECTED ? (this.next(), 2) : this.token === this.tok.T_PRIVATE ? (this.next(), 4) : 0;
       }, read_argument_list: function() {
         var t2 = [];
-        return this.expect("(") && this.next(), this.token !== ")" && (t2 = this.read_non_empty_argument_list()), this.expect(")") && this.next(), t2;
+        return this.expect("(") && this.next(), ")" !== this.token && (t2 = this.read_non_empty_argument_list()), this.expect(")") && this.next(), t2;
       }, read_non_empty_argument_list: function() {
         var t2 = false;
         return this.read_function_list(function() {
           var e2 = this.read_argument();
-          return e2 && (t2 && this.raiseError("Unexpected argument after a variadic argument"), e2.kind === "variadic" && (t2 = true)), e2;
+          return e2 && (t2 && this.raiseError("Unexpected argument after a variadic argument"), "variadic" === e2.kind && (t2 = true)), e2;
         }.bind(this), ",");
       }, read_argument: function() {
         if (this.token === this.tok.T_ELLIPSIS)
           return this.node("variadic")(this.next().read_expr());
         if (this.token === this.tok.T_STRING || Object.values(this.lexer.keywords).includes(this.token)) {
           var t2 = this.lexer.getState(), e2 = this.lexer.lex();
-          if (this.lexer.setState(t2), e2 === ":")
+          if (this.lexer.setState(t2), ":" === e2)
             return this.version < 800 && this.raiseError("PHP 8+ is required to use named arguments"), this.node("namedargument")(this.text(), this.next().next().read_expr());
         }
         return this.read_expr();
@@ -40611,7 +42061,7 @@ var require_standalone = __commonJS({
       I.is_reference, I.is_variadic, I.read_function, I.read_function_declaration, I.read_lexical_vars, I.read_list_with_dangling_comma, I.read_lexical_var_list, I.read_lexical_var, I.read_parameter_list, I.read_parameter, I.read_types, I.read_promoted, I.read_argument_list, I.read_non_empty_argument_list, I.read_argument, I.read_type;
       var R = { read_if: function() {
         var t2 = this.node("if"), e2 = this.next().read_if_expr(), i2 = null, n2 = null, s2 = false;
-        if (this.token === ":") {
+        if (":" === this.token) {
           s2 = true, this.next(), i2 = this.node("block");
           for (var r2 = []; this.token !== this.EOF && this.token !== this.tok.T_ENDIF; ) {
             if (this.token === this.tok.T_ELSEIF) {
@@ -40658,7 +42108,7 @@ var require_standalone = __commonJS({
         var t2 = this.node("while");
         this.expect(this.tok.T_WHILE) && this.next();
         var e2, i2 = null, n2 = false;
-        return this.expect("(") && this.next(), e2 = this.read_expr(), this.expect(")") && this.next(), this.token === ":" ? (n2 = true, i2 = this.read_short_form(this.tok.T_ENDWHILE)) : i2 = this.read_statement(), t2(e2, i2, n2);
+        return this.expect("(") && this.next(), e2 = this.read_expr(), this.expect(")") && this.next(), ":" === this.token ? (n2 = true, i2 = this.read_short_form(this.tok.T_ENDWHILE)) : i2 = this.read_statement(), t2(e2, i2, n2);
       }, read_do: function() {
         var t2 = this.node("do");
         this.expect(this.tok.T_DO) && this.next();
@@ -40668,15 +42118,15 @@ var require_standalone = __commonJS({
         var t2 = this.node("for");
         this.expect(this.tok.T_FOR) && this.next();
         var e2 = [], i2 = [], n2 = [], s2 = null, r2 = false;
-        return this.expect("(") && this.next(), this.token !== ";" ? (e2 = this.read_list(this.read_expr, ","), this.expect(";") && this.next()) : this.next(), this.token !== ";" ? (i2 = this.read_list(this.read_expr, ","), this.expect(";") && this.next()) : this.next(), this.token !== ")" ? (n2 = this.read_list(this.read_expr, ","), this.expect(")") && this.next()) : this.next(), this.token === ":" ? (r2 = true, s2 = this.read_short_form(this.tok.T_ENDFOR)) : s2 = this.read_statement(), t2(e2, i2, n2, s2, r2);
+        return this.expect("(") && this.next(), ";" !== this.token ? (e2 = this.read_list(this.read_expr, ","), this.expect(";") && this.next()) : this.next(), ";" !== this.token ? (i2 = this.read_list(this.read_expr, ","), this.expect(";") && this.next()) : this.next(), ")" !== this.token ? (n2 = this.read_list(this.read_expr, ","), this.expect(")") && this.next()) : this.next(), ":" === this.token ? (r2 = true, s2 = this.read_short_form(this.tok.T_ENDFOR)) : s2 = this.read_statement(), t2(e2, i2, n2, s2, r2);
       }, read_foreach: function() {
         var t2 = this.node("foreach");
         this.expect(this.tok.T_FOREACH) && this.next();
         var e2, i2 = null, n2 = null, s2 = null, r2 = false;
-        return this.expect("(") && this.next(), e2 = this.read_expr(), this.expect(this.tok.T_AS) && (this.next(), n2 = this.read_foreach_variable(), this.token === this.tok.T_DOUBLE_ARROW && (i2 = n2, n2 = this.next().read_foreach_variable())), i2 && i2.kind === "list" && this.raiseError("Fatal Error : Cannot use list as key element"), this.expect(")") && this.next(), this.token === ":" ? (r2 = true, s2 = this.read_short_form(this.tok.T_ENDFOREACH)) : s2 = this.read_statement(), t2(e2, i2, n2, s2, r2);
+        return this.expect("(") && this.next(), e2 = this.read_expr(), this.expect(this.tok.T_AS) && (this.next(), n2 = this.read_foreach_variable(), this.token === this.tok.T_DOUBLE_ARROW && (i2 = n2, n2 = this.next().read_foreach_variable())), i2 && "list" === i2.kind && this.raiseError("Fatal Error : Cannot use list as key element"), this.expect(")") && this.next(), ":" === this.token ? (r2 = true, s2 = this.read_short_form(this.tok.T_ENDFOREACH)) : s2 = this.read_statement(), t2(e2, i2, n2, s2, r2);
       }, read_foreach_variable: function() {
-        if (this.token === this.tok.T_LIST || this.token === "[") {
-          var t2 = this.token === "[", e2 = this.node("list");
+        if (this.token === this.tok.T_LIST || "[" === this.token) {
+          var t2 = "[" === this.token, e2 = this.node("list");
           this.next(), !t2 && this.expect("(") && this.next();
           var i2 = this.read_array_pair_list(t2);
           return this.expect(t2 ? "]" : ")") && this.next(), e2(i2, t2);
@@ -40690,15 +42140,15 @@ var require_standalone = __commonJS({
       D.read_start;
       var P = { read_namespace: function() {
         var t2, e2, i2 = this.node("namespace");
-        return this.expect(this.tok.T_NAMESPACE) && this.next(), e2 = this.token == "{" ? { name: [""] } : this.read_namespace_name(), this.currentNamespace = e2, this.token == ";" ? (this.currentNamespace = e2, t2 = this.next().read_top_statements(), this.expect(this.EOF), i2(e2.name, t2, false)) : this.token == "{" ? (this.currentNamespace = e2, t2 = this.next().read_top_statements(), this.expect("}") && this.next(), t2.length === 0 && this.extractDoc && this._docs.length > this._docIndex && t2.push(this.node("noop")()), i2(e2.name, t2, true)) : this.token === "(" ? (e2.resolution = this.ast.reference.RELATIVE_NAME, e2.name = e2.name.substring(1), i2.destroy(), this.node("call")(e2, this.read_argument_list())) : (this.error(["{", ";"]), this.currentNamespace = e2, t2 = this.read_top_statements(), this.expect(this.EOF), i2(e2, t2, false));
+        return this.expect(this.tok.T_NAMESPACE) && this.next(), e2 = "{" == this.token ? { name: [""] } : this.read_namespace_name(), this.currentNamespace = e2, ";" == this.token ? (this.currentNamespace = e2, t2 = this.next().read_top_statements(), this.expect(this.EOF), i2(e2.name, t2, false)) : "{" == this.token ? (this.currentNamespace = e2, t2 = this.next().read_top_statements(), this.expect("}") && this.next(), 0 === t2.length && this.extractDoc && this._docs.length > this._docIndex && t2.push(this.node("noop")()), i2(e2.name, t2, true)) : "(" === this.token ? (e2.resolution = this.ast.reference.RELATIVE_NAME, e2.name = e2.name.substring(1), i2.destroy(), this.node("call")(e2, this.read_argument_list())) : (this.error(["{", ";"]), this.currentNamespace = e2, t2 = this.read_top_statements(), this.expect(this.EOF), i2(e2, t2, false));
       }, read_namespace_name: function(t2) {
         var e2 = this.node(), i2 = false;
         this.token === this.tok.T_NAMESPACE && (this.next().expect(this.tok.T_NS_SEPARATOR) && this.next(), i2 = true);
         var n2 = this.read_list(this.tok.T_STRING, this.tok.T_NS_SEPARATOR, true);
-        if (!i2 && n2.length === 1 && (t2 || this.token !== "(")) {
-          if (n2[0].toLowerCase() === "parent")
+        if (!i2 && 1 === n2.length && (t2 || "(" !== this.token)) {
+          if ("parent" === n2[0].toLowerCase())
             return e2("parentreference", n2[0]);
-          if (n2[0].toLowerCase() === "self")
+          if ("self" === n2[0].toLowerCase())
             return e2("selfreference", n2[0]);
         }
         return e2("name", n2, i2);
@@ -40706,7 +42156,7 @@ var require_standalone = __commonJS({
         var t2 = this.node("usegroup"), e2 = [], i2 = null;
         this.expect(this.tok.T_USE) && this.next();
         var n2 = this.read_use_type();
-        return e2.push(this.read_use_declaration(false)), this.token === "," ? e2 = e2.concat(this.next().read_use_declarations(false)) : this.token === "{" && (i2 = e2[0].name, e2 = this.next().read_use_declarations(n2 === null), this.expect("}") && this.next()), t2 = t2(i2, n2, e2), this.expect(";") && this.next(), t2;
+        return e2.push(this.read_use_declaration(false)), "," === this.token ? e2 = e2.concat(this.next().read_use_declarations(false)) : "{" === this.token && (i2 = e2[0].name, e2 = this.next().read_use_declarations(null === n2), this.expect("}") && this.next()), t2 = t2(i2, n2, e2), this.expect(";") && this.next(), t2;
       }, read_class_name_reference: function() {
         return this.read_variable(true, false);
       }, read_use_declaration: function(t2) {
@@ -40715,7 +42165,7 @@ var require_standalone = __commonJS({
         var n2 = this.read_namespace_name(), s2 = this.read_use_alias();
         return e2(n2.name, s2, i2);
       }, read_use_declarations: function(t2) {
-        for (var e2 = [this.read_use_declaration(t2)]; this.token === ","; ) {
+        for (var e2 = [this.read_use_declaration(t2)]; "," === this.token; ) {
           if (this.next(), t2) {
             if (this.token !== this.tok.T_FUNCTION && this.token !== this.tok.T_CONST && this.token !== this.tok.T_STRING)
               break;
@@ -40737,10 +42187,10 @@ var require_standalone = __commonJS({
       P.read_namespace, P.read_namespace_name, P.read_use_statement, P.read_class_name_reference, P.read_use_declaration, P.read_use_declarations, P.read_use_alias, P.read_use_type;
       var U = { "\\": "\\", $: "$", n: "\n", r: "\r", t: "	", f: String.fromCharCode(12), v: String.fromCharCode(11), e: String.fromCharCode(27) }, B = { resolve_special_chars: function(t2, e2) {
         return e2 ? t2.replace(/\\"/, '"').replace(/\\([\\$nrtfve]|[xX][0-9a-fA-F]{1,2}|[0-7]{1,3}|u{([0-9a-fA-F]+)})/g, function(t3, e3, i2) {
-          return U[e3] ? U[e3] : e3[0] === "x" || e3[0] === "X" ? String.fromCodePoint(parseInt(e3.substr(1), 16)) : e3[0] === "u" ? String.fromCodePoint(parseInt(i2, 16)) : String.fromCodePoint(parseInt(e3, 8));
+          return U[e3] ? U[e3] : "x" === e3[0] || "X" === e3[0] ? String.fromCodePoint(parseInt(e3.substr(1), 16)) : "u" === e3[0] ? String.fromCodePoint(parseInt(i2, 16)) : String.fromCodePoint(parseInt(e3, 8));
         }) : t2.replace(/\\\\/g, "\\").replace(/\\'/g, "'");
       }, remove_heredoc_leading_whitespace_chars: function(t2, e2, i2, n2) {
-        if (e2 === 0)
+        if (0 === e2)
           return t2;
         this.check_heredoc_indentation_level(t2, e2, i2, n2);
         var s2 = i2 ? " " : "	", r2 = new RegExp("\\n".concat(s2, "{").concat(e2, "}"), "g"), o2 = new RegExp("^".concat(s2, "{").concat(e2, "}"));
@@ -40748,20 +42198,20 @@ var require_standalone = __commonJS({
       }, check_heredoc_indentation_level: function(t2, e2, i2, n2) {
         var s2 = t2.length, r2 = 0, o2 = 0, a2 = true, h2 = i2 ? " " : "	", l2 = false;
         if (!n2) {
-          if ((r2 = t2.indexOf("\n")) === -1)
+          if (-1 === (r2 = t2.indexOf("\n")))
             return;
           r2++;
         }
         for (; r2 < s2; )
-          a2 ? t2[r2] === h2 ? o2++ : l2 = true : a2 = false, t2[r2] !== "\n" && l2 && o2 < e2 ? this.raiseError("Invalid body indentation level (expecting an indentation at least ".concat(e2, ")")) : l2 = false, t2[r2] === "\n" && (a2 = true, o2 = 0), r2++;
+          a2 ? t2[r2] === h2 ? o2++ : l2 = true : a2 = false, "\n" !== t2[r2] && l2 && o2 < e2 ? this.raiseError("Invalid body indentation level (expecting an indentation at least ".concat(e2, ")")) : l2 = false, "\n" === t2[r2] && (a2 = true, o2 = 0), r2++;
       }, read_dereferencable_scalar: function() {
         var t2 = null;
         switch (this.token) {
           case this.tok.T_CONSTANT_ENCAPSED_STRING:
             var e2 = this.node("string"), i2 = this.text(), n2 = 0;
-            i2[0] !== "b" && i2[0] !== "B" || (n2 = 1);
-            var s2 = i2[n2] === '"';
-            this.next(), e2 = e2(s2, this.resolve_special_chars(i2.substring(n2 + 1, i2.length - 1), s2), n2 === 1, i2), t2 = this.token === this.tok.T_DOUBLE_COLON ? this.read_static_getter(e2) : e2;
+            "b" !== i2[0] && "B" !== i2[0] || (n2 = 1);
+            var s2 = '"' === i2[n2];
+            this.next(), e2 = e2(s2, this.resolve_special_chars(i2.substring(n2 + 1, i2.length - 1), s2), 1 === n2, i2), t2 = this.token === this.tok.T_DOUBLE_COLON ? this.read_static_getter(e2) : e2;
             break;
           case this.tok.T_ARRAY:
           case "[":
@@ -40778,11 +42228,11 @@ var require_standalone = __commonJS({
             var i2 = this.node("number");
             return t2 = this.text(), this.next(), i2(t2, null);
           case this.tok.T_START_HEREDOC:
-            if (this.lexer.curCondition === "ST_NOWDOC") {
+            if ("ST_NOWDOC" === this.lexer.curCondition) {
               var n2 = this.lexer.yylloc.first_offset;
               e2 = this.node("nowdoc"), t2 = this.next().text(), this.lexer.heredoc_label.indentation > 0 && (t2 = t2.substring(0, t2.length - this.lexer.heredoc_label.indentation));
               var s2 = t2[t2.length - 1];
-              s2 === "\n" ? t2 = t2[t2.length - 2] === "\r" ? t2.substring(0, t2.length - 2) : t2.substring(0, t2.length - 1) : s2 === "\r" && (t2 = t2.substring(0, t2.length - 1)), this.expect(this.tok.T_ENCAPSED_AND_WHITESPACE) && this.next(), this.expect(this.tok.T_END_HEREDOC) && this.next();
+              "\n" === s2 ? t2 = "\r" === t2[t2.length - 2] ? t2.substring(0, t2.length - 2) : t2.substring(0, t2.length - 1) : "\r" === s2 && (t2 = t2.substring(0, t2.length - 1)), this.expect(this.tok.T_ENCAPSED_AND_WHITESPACE) && this.next(), this.expect(this.tok.T_END_HEREDOC) && this.next();
               var r2 = this.lexer._input.substring(n2, this.lexer.yylloc.first_offset);
               return e2 = e2(this.remove_heredoc_leading_whitespace_chars(t2, this.lexer.heredoc_label.indentation, this.lexer.heredoc_label.indentation_uses_spaces, this.lexer.heredoc_label.first_encaps_node), r2, this.lexer.heredoc_label.label);
             }
@@ -40802,7 +42252,7 @@ var require_standalone = __commonJS({
         }
       }, read_dereferencable: function(t2) {
         var e2, i2, n2 = this.node("offsetlookup");
-        return this.token === "[" ? (i2 = this.next().read_expr(), this.expect("]") && this.next(), e2 = n2(t2, i2)) : this.token === this.tok.T_DOLLAR_OPEN_CURLY_BRACES && (e2 = n2(t2, i2 = this.read_encapsed_string_item(false))), e2;
+        return "[" === this.token ? (i2 = this.next().read_expr(), this.expect("]") && this.next(), e2 = n2(t2, i2)) : this.token === this.tok.T_DOLLAR_OPEN_CURLY_BRACES && (e2 = n2(t2, i2 = this.read_encapsed_string_item(false))), e2;
       }, read_encapsed_string_item: function(t2) {
         var e2, i2, n2, s2 = this.node("encapsedpart"), r2 = null, o2 = false, a2 = this.node();
         if (this.token === this.tok.T_ENCAPSED_AND_WHITESPACE) {
@@ -40812,14 +42262,14 @@ var require_standalone = __commonJS({
           if (r2 = "simple", o2 = true, n2 = null, this.next().token === this.tok.T_STRING_VARNAME) {
             n2 = this.node("variable");
             var l2 = this.text();
-            this.next(), this.token === "[" ? (n2 = n2(l2, false), i2 = this.node("offsetlookup"), e2 = this.next().read_expr(), this.expect("]") && this.next(), a2 = i2(n2, e2)) : a2 = n2(l2, false);
+            this.next(), "[" === this.token ? (n2 = n2(l2, false), i2 = this.node("offsetlookup"), e2 = this.next().read_expr(), this.expect("]") && this.next(), a2 = i2(n2, e2)) : a2 = n2(l2, false);
           } else
             a2 = a2("variable", this.read_expr(), false);
           this.expect("}") && this.next();
         } else if (this.token === this.tok.T_CURLY_OPEN)
           r2 = "complex", a2.destroy(), a2 = this.next().read_variable(false, false), this.expect("}") && this.next();
         else if (this.token === this.tok.T_VARIABLE) {
-          if (r2 = "simple", a2.destroy(), a2 = this.read_simple_variable(), this.token === "[" && (i2 = this.node("offsetlookup"), e2 = this.next().read_encaps_var_offset(), this.expect("]") && this.next(), a2 = i2(a2, e2)), this.token === this.tok.T_OBJECT_OPERATOR) {
+          if (r2 = "simple", a2.destroy(), a2 = this.read_simple_variable(), "[" === this.token && (i2 = this.node("offsetlookup"), e2 = this.next().read_encaps_var_offset(), this.expect("]") && this.next(), a2 = i2(a2, e2)), this.token === this.tok.T_OBJECT_OPERATOR) {
             i2 = this.node("propertylookup"), this.next().expect(this.tok.T_STRING);
             var c2 = this.node("identifier");
             n2 = this.text(), this.next(), a2 = i2(a2, c2(n2));
@@ -40831,17 +42281,17 @@ var require_standalone = __commonJS({
         }
         return this.lexer.heredoc_label.first_encaps_node = false, s2(a2, r2, o2);
       }, read_encapsed_string: function(t2) {
-        var e2 = arguments.length > 1 && arguments[1] !== void 0 && arguments[1], i2 = this.lexer.yylloc.first_offset, n2 = this.node("encapsed");
+        var e2 = arguments.length > 1 && void 0 !== arguments[1] && arguments[1], i2 = this.lexer.yylloc.first_offset, n2 = this.node("encapsed");
         this.next();
         var s2 = this.lexer.yylloc.prev_offset - (e2 ? 1 : 0), r2 = [], o2 = null;
-        for (o2 = t2 === "`" ? this.ast.encapsed.TYPE_SHELL : t2 === '"' ? this.ast.encapsed.TYPE_STRING : this.ast.encapsed.TYPE_HEREDOC; this.token !== t2 && this.token !== this.EOF; )
+        for (o2 = "`" === t2 ? this.ast.encapsed.TYPE_SHELL : '"' === t2 ? this.ast.encapsed.TYPE_STRING : this.ast.encapsed.TYPE_HEREDOC; this.token !== t2 && this.token !== this.EOF; )
           r2.push(this.read_encapsed_string_item(true));
-        if (r2.length > 0 && r2[r2.length - 1].kind === "encapsedpart" && r2[r2.length - 1].expression.kind === "string") {
+        if (r2.length > 0 && "encapsedpart" === r2[r2.length - 1].kind && "string" === r2[r2.length - 1].expression.kind) {
           var a2 = r2[r2.length - 1].expression, h2 = a2.value[a2.value.length - 1];
-          h2 === "\n" ? a2.value[a2.value.length - 2] === "\r" ? a2.value = a2.value.substring(0, a2.value.length - 2) : a2.value = a2.value.substring(0, a2.value.length - 1) : h2 === "\r" && (a2.value = a2.value.substring(0, a2.value.length - 1));
+          "\n" === h2 ? "\r" === a2.value[a2.value.length - 2] ? a2.value = a2.value.substring(0, a2.value.length - 2) : a2.value = a2.value.substring(0, a2.value.length - 1) : "\r" === h2 && (a2.value = a2.value.substring(0, a2.value.length - 1));
         }
         this.expect(t2) && this.next();
-        var l2 = this.lexer._input.substring(o2 === "heredoc" ? i2 : s2 - 1, this.lexer.yylloc.first_offset);
+        var l2 = this.lexer._input.substring("heredoc" === o2 ? i2 : s2 - 1, this.lexer.yylloc.first_offset);
         return n2 = n2(r2, l2, o2), t2 === this.tok.T_END_HEREDOC && (n2.label = this.lexer.heredoc_label.label, this.lexer.heredoc_label.finished = true), n2;
       }, get_magic_constant: function() {
         var t2 = this.node("magic"), e2 = this.text();
@@ -40849,7 +42299,7 @@ var require_standalone = __commonJS({
       } };
       B.resolve_special_chars, B.remove_heredoc_leading_whitespace_chars, B.check_heredoc_indentation_level, B.read_dereferencable_scalar, B.read_scalar, B.read_dereferencable, B.read_encapsed_string_item, B.read_encapsed_string, B.get_magic_constant;
       var M = { read_top_statements: function() {
-        for (var t2 = []; this.token !== this.EOF && this.token !== "}"; ) {
+        for (var t2 = []; this.token !== this.EOF && "}" !== this.token; ) {
           var e2 = this.read_top_statement();
           e2 && (Array.isArray(e2) ? t2 = t2.concat(e2) : t2.push(e2));
         }
@@ -40881,7 +42331,7 @@ var require_standalone = __commonJS({
             return this.read_statement();
         }
       }, read_inner_statements: function() {
-        for (var t2 = []; this.token != this.EOF && this.token !== "}"; ) {
+        for (var t2 = []; this.token != this.EOF && "}" !== this.token; ) {
           var e2 = this.read_inner_statement();
           e2 && (Array.isArray(e2) ? t2 = t2.concat(e2) : t2.push(e2));
         }
@@ -40893,12 +42343,12 @@ var require_standalone = __commonJS({
           return this.next(), e2 = e2(i2), this.expect("=") ? t2(e2, this.next().read_expr()) : t2(e2, null);
         }, ",", false);
       }, read_declare_list: function() {
-        for (var t2 = []; this.token != this.EOF && this.token !== ")"; ) {
+        for (var t2 = []; this.token != this.EOF && ")" !== this.token; ) {
           this.expect(this.tok.T_STRING);
           var e2 = this.node("declaredirective"), i2 = this.node("identifier"), n2 = this.text();
           this.next(), i2 = i2(n2);
           var s2 = null;
-          if (this.expect("=") && (s2 = this.next().read_expr()), t2.push(e2(i2, s2)), this.token !== ",")
+          if (this.expect("=") && (s2 = this.next().read_expr()), t2.push(e2(i2, s2)), "," !== this.token)
             break;
           this.next();
         }
@@ -40970,11 +42420,11 @@ var require_standalone = __commonJS({
             var l2 = this.read_variable_declarations();
             return this.expectEndOfStatement(), a2("static", l2);
           case this.tok.T_ECHO:
-            var c2 = this.node("echo"), u2 = this.text(), _2 = u2 === "<?=" || u2 === "<%=", d2 = this.next().read_function_list(this.read_expr, ",");
+            var c2 = this.node("echo"), u2 = this.text(), _2 = "<?=" === u2 || "<%=" === u2, d2 = this.next().read_function_list(this.read_expr, ",");
             return this.expectEndOfStatement(), c2(d2, _2);
           case this.tok.T_INLINE_HTML:
-            var p2 = this.text(), f2 = this.lexer.yylloc.first_offset > 0 ? this.lexer._input[this.lexer.yylloc.first_offset - 1] : null, T2 = f2 === "\r" || f2 === "\n";
-            T2 && f2 === "\n" && this.lexer.yylloc.first_offset > 1 && this.lexer._input[this.lexer.yylloc.first_offset - 2] === "\r" && (f2 = "\r\n");
+            var p2 = this.text(), f2 = this.lexer.yylloc.first_offset > 0 ? this.lexer._input[this.lexer.yylloc.first_offset - 1] : null, T2 = "\r" === f2 || "\n" === f2;
+            T2 && "\n" === f2 && this.lexer.yylloc.first_offset > 1 && "\r" === this.lexer._input[this.lexer.yylloc.first_offset - 2] && (f2 = "\r\n");
             var k2 = this.node("inline");
             return this.next(), k2(p2, T2 ? f2 + p2 : p2);
           case this.tok.T_UNSET:
@@ -40986,14 +42436,14 @@ var require_standalone = __commonJS({
             var x2, y2 = this.node("declare"), v2 = [];
             this.next().expect("(") && this.next();
             var A2 = this.read_declare_list();
-            if (this.expect(")") && this.next(), this.token === ":") {
+            if (this.expect(")") && this.next(), ":" === this.token) {
               for (this.next(); this.token != this.EOF && this.token !== this.tok.T_ENDDECLARE; )
                 v2.push(this.read_top_statement());
-              v2.length === 0 && this.extractDoc && this._docs.length > this._docIndex && v2.push(this.node("noop")()), this.expect(this.tok.T_ENDDECLARE) && this.next(), this.expectEndOfStatement(), x2 = this.ast.declare.MODE_SHORT;
-            } else if (this.token === "{") {
-              for (this.next(); this.token != this.EOF && this.token !== "}"; )
+              0 === v2.length && this.extractDoc && this._docs.length > this._docIndex && v2.push(this.node("noop")()), this.expect(this.tok.T_ENDDECLARE) && this.next(), this.expectEndOfStatement(), x2 = this.ast.declare.MODE_SHORT;
+            } else if ("{" === this.token) {
+              for (this.next(); this.token != this.EOF && "}" !== this.token; )
                 v2.push(this.read_top_statement());
-              v2.length === 0 && this.extractDoc && this._docs.length > this._docIndex && v2.push(this.node("noop")()), this.expect("}") && this.next(), x2 = this.ast.declare.MODE_BLOCK;
+              0 === v2.length && this.extractDoc && this._docs.length > this._docIndex && v2.push(this.node("noop")()), this.expect("}") && this.next(), x2 = this.ast.declare.MODE_BLOCK;
             } else
               this.expect(";") && this.next(), x2 = this.ast.declare.MODE_NONE;
             return y2(A2, v2, x2);
@@ -41006,7 +42456,7 @@ var require_standalone = __commonJS({
             return this.next(), null;
           case this.tok.T_STRING:
             var C2 = this.node(), S2 = [this.token, this.lexer.getState()], b2 = this.text(), L2 = this.node("identifier");
-            if (this.next().token === ":")
+            if (":" === this.next().token)
               return L2 = L2(b2), this.next(), C2("label", L2);
             L2.destroy(), C2.destroy(), this.lexer.tokens.push(S2);
             var O2 = this.node("expressionstatement"), I2 = this.next().read_expr();
@@ -41027,7 +42477,7 @@ var require_standalone = __commonJS({
         var e2 = this.node("block");
         this.expect("{") && this.next();
         var i2 = t2 ? this.read_top_statements() : this.read_inner_statements();
-        return i2.length === 0 && this.extractDoc && this._docs.length > this._docIndex && i2.push(this.node("noop")()), this.expect("}") && this.next(), e2(null, i2);
+        return 0 === i2.length && this.extractDoc && this._docs.length > this._docIndex && i2.push(this.node("noop")()), this.expect("}") && this.next(), e2(null, i2);
       } };
       M.read_top_statements, M.read_top_statement, M.read_inner_statements, M.read_const_list, M.read_declare_list, M.read_inner_statement, M.read_statement, M.read_code_block;
       var F = { read_switch: function() {
@@ -41035,13 +42485,13 @@ var require_standalone = __commonJS({
         this.expect(this.tok.T_SWITCH) && this.next(), this.expect("(") && this.next();
         var e2 = this.read_expr();
         this.expect(")") && this.next();
-        var i2 = this.token === ":";
+        var i2 = ":" === this.token;
         return t2(e2, this.read_switch_case_list(), i2);
       }, read_switch_case_list: function() {
         var t2 = null, e2 = this.node("block"), i2 = [];
-        for (this.token === "{" ? t2 = "}" : this.token === ":" ? t2 = this.tok.T_ENDSWITCH : this.expect(["{", ":"]), this.next(), this.token === ";" && this.next(); this.token !== this.EOF && this.token !== t2; )
+        for ("{" === this.token ? t2 = "}" : ":" === this.token ? t2 = this.tok.T_ENDSWITCH : this.expect(["{", ":"]), this.next(), ";" === this.token && this.next(); this.token !== this.EOF && this.token !== t2; )
           i2.push(this.read_case_list(t2));
-        return i2.length === 0 && this.extractDoc && this._docs.length > this._docIndex && i2.push(this.node("noop")()), this.expect(t2) && this.next(), t2 === this.tok.T_ENDSWITCH && this.expectEndOfStatement(), e2(null, i2);
+        return 0 === i2.length && this.extractDoc && this._docs.length > this._docIndex && i2.push(this.node("noop")()), this.expect(t2) && this.next(), t2 === this.tok.T_ENDSWITCH && this.expectEndOfStatement(), e2(null, i2);
       }, read_case_list: function(t2) {
         var e2 = this.node("case"), i2 = null;
         this.token === this.tok.T_CASE ? i2 = this.next().read_expr() : this.token === this.tok.T_DEFAULT ? this.next() : this.expect([this.tok.T_CASE, this.tok.T_DEFAULT]), this.expect([":", ";"]) && this.next();
@@ -41065,7 +42515,7 @@ var require_standalone = __commonJS({
         var e2 = this.node("block"), i2 = [];
         for (this.expect(":") && this.next(); this.token != this.EOF && this.token !== t2; )
           i2.push(this.read_inner_statement());
-        return i2.length === 0 && this.extractDoc && this._docs.length > this._docIndex && i2.push(this.node("noop")()), this.expect(t2) && this.next(), this.expectEndOfStatement(), e2(null, i2);
+        return 0 === i2.length && this.extractDoc && this._docs.length > this._docIndex && i2.push(this.node("noop")()), this.expect(t2) && this.next(), this.expectEndOfStatement(), e2(null, i2);
       }, read_function_list: function(t2, e2) {
         var i2 = [];
         do {
@@ -41075,13 +42525,13 @@ var require_standalone = __commonJS({
           }
           if (i2.push(t2.apply(this, [])), this.token != e2)
             break;
-          if (this.next().token == ")" && this.version >= 703)
+          if (")" == this.next().token && this.version >= 703)
             break;
         } while (this.token != this.EOF);
         return i2;
       }, read_list: function(t2, e2, i2) {
         var n2 = [];
-        if (this.token == e2 && (i2 && n2.push(typeof t2 == "function" ? this.node("noop")() : null), this.next()), typeof t2 == "function")
+        if (this.token == e2 && (i2 && n2.push("function" == typeof t2 ? this.node("noop")() : null), this.next()), "function" == typeof t2)
           do {
             var s2 = t2.apply(this, []);
             if (s2 && n2.push(s2), this.token != e2)
@@ -41109,7 +42559,7 @@ var require_standalone = __commonJS({
             this.next(), e2 = e2(i2, false);
           } else
             e2 = e2("#ERR", false);
-          return this.token === "=" ? t2(e2, this.next().read_expr()) : e2;
+          return "=" === this.token ? t2(e2, this.next().read_expr()) : e2;
         }, ",");
       }, read_extends_from: function() {
         return this.token === this.tok.T_EXTENDS ? this.next().read_namespace_name() : null;
@@ -41121,16 +42571,16 @@ var require_standalone = __commonJS({
       G.read_short_form, G.read_function_list, G.read_list, G.read_name_list, G.read_byref, G.read_variable_declarations, G.read_extends_from, G.read_interface_extends_list, G.read_implements_list;
       var V = { read_variable: function(t2, e2) {
         var i2;
-        if (this.token === "&")
+        if ("&" === this.token)
           return this.read_byref(this.read_variable.bind(this, t2, e2));
         if (this.is([this.tok.T_VARIABLE, "$"]))
           i2 = this.read_reference_variable(e2);
         else if (this.is([this.tok.T_NS_SEPARATOR, this.tok.T_STRING, this.tok.T_NAMESPACE])) {
           i2 = this.node();
           var n2 = this.read_namespace_name();
-          if (this.token != this.tok.T_DOUBLE_COLON && this.token != "(" && ["parentreference", "selfreference"].indexOf(n2.kind) === -1) {
+          if (this.token != this.tok.T_DOUBLE_COLON && "(" != this.token && -1 === ["parentreference", "selfreference"].indexOf(n2.kind)) {
             var s2 = n2.name.toLowerCase();
-            s2 === "true" ? i2 = n2.destroy(i2("boolean", true, n2.name)) : s2 === "false" ? i2 = n2.destroy(i2("boolean", false, n2.name)) : s2 === "null" ? i2 = n2.destroy(i2("nullkeyword", n2.name)) : (i2.destroy(n2), i2 = n2);
+            "true" === s2 ? i2 = n2.destroy(i2("boolean", true, n2.name)) : "false" === s2 ? i2 = n2.destroy(i2("boolean", false, n2.name)) : "null" === s2 ? i2 = n2.destroy(i2("nullkeyword", n2.name)) : (i2.destroy(n2), i2 = n2);
           } else
             i2.destroy(n2), i2 = n2;
         } else if (this.token === this.tok.T_STATIC) {
@@ -41142,9 +42592,9 @@ var require_standalone = __commonJS({
         return this.token === this.tok.T_DOUBLE_COLON && (i2 = this.read_static_getter(i2, e2)), this.recursive_variable_chain_scan(i2, t2, e2);
       }, read_static_getter: function(t2, e2) {
         var i2, n2, s2 = this.node("staticlookup");
-        return this.next().is([this.tok.T_VARIABLE, "$"]) ? i2 = this.read_reference_variable(e2) : this.token === this.tok.T_STRING || this.token === this.tok.T_CLASS || this.version >= 700 && this.is("IDENTIFIER") ? (i2 = this.node("identifier"), n2 = this.text(), this.next(), i2 = i2(n2)) : this.token === "{" ? (i2 = this.node("literal"), n2 = this.next().read_expr(), this.expect("}") && this.next(), i2 = i2("literal", n2, null), this.expect("(")) : (this.error([this.tok.T_VARIABLE, this.tok.T_STRING]), i2 = this.node("identifier"), n2 = this.text(), this.next(), i2 = i2(n2)), s2(t2, i2);
+        return this.next().is([this.tok.T_VARIABLE, "$"]) ? i2 = this.read_reference_variable(e2) : this.token === this.tok.T_STRING || this.token === this.tok.T_CLASS || this.version >= 700 && this.is("IDENTIFIER") ? (i2 = this.node("identifier"), n2 = this.text(), this.next(), i2 = i2(n2)) : "{" === this.token ? (i2 = this.node("literal"), n2 = this.next().read_expr(), this.expect("}") && this.next(), i2 = i2("literal", n2, null), this.expect("(")) : (this.error([this.tok.T_VARIABLE, this.tok.T_STRING]), i2 = this.node("identifier"), n2 = this.text(), this.next(), i2 = i2(n2)), s2(t2, i2);
       }, read_what: function() {
-        var t2 = arguments.length > 0 && arguments[0] !== void 0 && arguments[0], e2 = null, i2 = null;
+        var t2 = arguments.length > 0 && void 0 !== arguments[0] && arguments[0], e2 = null, i2 = null;
         switch (this.next().token) {
           case this.tok.T_STRING:
             e2 = this.node("identifier"), i2 = this.text(), this.next(), e2 = e2(i2), t2 && this.token === this.tok.T_OBJECT_OPERATOR && this.error();
@@ -41153,7 +42603,7 @@ var require_standalone = __commonJS({
             e2 = this.node("variable"), i2 = this.text().substring(1), this.next(), e2 = e2(i2, false);
             break;
           case "$":
-            e2 = this.node(), this.next().expect(["$", "{", this.tok.T_VARIABLE]), this.token === "{" ? (i2 = this.next().read_expr(), this.expect("}") && this.next(), e2 = e2("variable", i2, true)) : e2 = e2("variable", i2 = this.read_expr(), false);
+            e2 = this.node(), this.next().expect(["$", "{", this.tok.T_VARIABLE]), "{" === this.token ? (i2 = this.next().read_expr(), this.expect("}") && this.next(), e2 = e2("variable", i2, true)) : e2 = e2("variable", i2 = this.read_expr(), false);
             break;
           case "{":
             e2 = this.node("encapsedpart"), i2 = this.next().read_expr(), this.expect("}") && this.next(), e2 = e2(i2, "complex", false);
@@ -41174,15 +42624,15 @@ var require_standalone = __commonJS({
                 break;
               case "[":
               case "{":
-                var r2 = this.token === "[";
+                var r2 = "[" === this.token;
                 if (n2 = this.node("offsetlookup"), this.next(), s2 = false, i2)
                   s2 = this.read_encaps_var_offset(), this.expect(r2 ? "]" : "}") && this.next();
                 else
-                  (r2 ? this.token !== "]" : this.token !== "}") ? (s2 = this.read_expr(), this.expect(r2 ? "]" : "}") && this.next()) : this.next();
+                  (r2 ? "]" !== this.token : "}" !== this.token) ? (s2 = this.read_expr(), this.expect(r2 ? "]" : "}") && this.next()) : this.next();
                 t2 = n2(t2, s2);
                 break;
               case this.tok.T_DOUBLE_COLON:
-                t2.kind === "staticlookup" && t2.offset.kind === "identifier" && this.error(), t2 = (n2 = this.node("staticlookup"))(t2, this.read_what(true));
+                "staticlookup" === t2.kind && "identifier" === t2.offset.kind && this.error(), t2 = (n2 = this.node("staticlookup"))(t2, this.read_what(true));
                 break;
               case this.tok.T_OBJECT_OPERATOR:
                 t2 = (n2 = this.node("propertylookup"))(t2, this.read_what());
@@ -41202,7 +42652,7 @@ var require_standalone = __commonJS({
         } else if (this.token === this.tok.T_NUM_STRING) {
           var i2 = this.text();
           this.next(), t2 = t2("number", i2, null);
-        } else if (this.token === "-") {
+        } else if ("-" === this.token) {
           this.next();
           var n2 = -1 * this.text();
           this.expect(this.tok.T_NUM_STRING) && this.next(), t2 = t2("number", n2, null);
@@ -41218,7 +42668,7 @@ var require_standalone = __commonJS({
       }, read_reference_variable: function(t2) {
         for (var e2, i2 = this.read_simple_variable(); this.token != this.EOF; ) {
           var n2 = this.node();
-          if (this.token != "{" || t2) {
+          if ("{" != this.token || t2) {
             n2.destroy();
             break;
           }
@@ -41230,7 +42680,7 @@ var require_standalone = __commonJS({
         if (this.expect([this.tok.T_VARIABLE, "$"]) && this.token === this.tok.T_VARIABLE)
           t2 = this.text().substring(1), this.next(), e2 = e2(t2, false);
         else
-          switch (this.token === "$" && this.next(), this.token) {
+          switch ("$" === this.token && this.next(), this.token) {
             case "{":
               var i2 = this.next().read_expr();
               this.expect("}") && this.next(), e2 = e2(i2, true);
@@ -41249,7 +42699,7 @@ var require_standalone = __commonJS({
         return e2;
       } };
       function W(t2) {
-        return t2 != "." && t2 != "," && !isNaN(parseFloat(t2)) && isFinite(t2);
+        return "." != t2 && "," != t2 && !isNaN(parseFloat(t2)) && isFinite(t2);
       }
       V.read_variable, V.read_static_getter, V.read_what, V.recursive_variable_chain_scan, V.read_encaps_var_offset, V.read_reference_variable, V.read_simple_variable;
       var Q = function(t2, e2) {
@@ -41266,7 +42716,7 @@ var require_standalone = __commonJS({
         var i2 = this.node("program"), n2 = [];
         for (this.next(); this.token != this.EOF; )
           n2.push(this.read_start());
-        n2.length === 0 && this.extractDoc && this._docs.length > this._docIndex && n2.push(this.node("noop")()), this.prev = [this.lexer.yylloc.last_line, this.lexer.yylloc.last_column, this.lexer.offset];
+        0 === n2.length && this.extractDoc && this._docs.length > this._docIndex && n2.push(this.node("noop")()), this.prev = [this.lexer.yylloc.last_line, this.lexer.yylloc.last_column, this.lexer.offset];
         var s2 = i2(n2, this._errors, this._docs, this._tokens);
         if (this.debug) {
           var r2 = this.ast.checkNodes();
@@ -41292,7 +42742,7 @@ var require_standalone = __commonJS({
           }
           e2 += ", unexpected " + i2;
         }
-        return t2 && !Array.isArray(t2) && ((W(t2) || t2.length === 1) && (n2 = ", expecting " + this.getTokenName(t2)), e2 += n2), this.raiseError(e2, n2, t2, i2);
+        return t2 && !Array.isArray(t2) && ((W(t2) || 1 === t2.length) && (n2 = ", expecting " + this.getTokenName(t2)), e2 += n2), this.raiseError(e2, n2, t2, i2);
       }, Q.prototype.position = function() {
         return new m(this.lexer.yylloc.first_line, this.lexer.yylloc.first_column, this.lexer.yylloc.first_offset);
       }, Q.prototype.node = function(t2) {
@@ -41313,8 +42763,8 @@ var require_standalone = __commonJS({
         }
         return this.ast.prepare(t2, null, this);
       }, Q.prototype.expectEndOfStatement = function(t2) {
-        if (this.token === ";")
-          t2 && this.lexer.yytext === ";" && t2.includeToken(this);
+        if (";" === this.token)
+          t2 && ";" === this.lexer.yytext && t2.includeToken(this);
         else if (this.token !== this.tok.T_INLINE_HTML && this.token !== this.EOF)
           return this.error(";"), false;
         return this.next(), true;
@@ -41334,7 +42784,7 @@ var require_standalone = __commonJS({
         return console.log("Line " + this.lexer.yylloc.first_line + " : " + this.getTokenName(this.token) + ">" + this.lexer.yytext + "< @-->" + t2), this;
       }, Q.prototype.expect = function(t2) {
         if (Array.isArray(t2)) {
-          if (t2.indexOf(this.token) === -1)
+          if (-1 === t2.indexOf(this.token))
             return this.error(t2), false;
         } else if (this.token != t2)
           return this.error(t2), false;
@@ -41342,7 +42792,7 @@ var require_standalone = __commonJS({
       }, Q.prototype.text = function() {
         return this.lexer.yytext;
       }, Q.prototype.next = function() {
-        if (this.token === ";" && this.lexer.yytext !== ";" || (this.prev = [this.lexer.yylloc.last_line, this.lexer.yylloc.last_column, this.lexer.offset]), this.lex(), this.debug && this.showlog(), this.extractDoc)
+        if (";" === this.token && ";" !== this.lexer.yytext || (this.prev = [this.lexer.yylloc.last_line, this.lexer.yylloc.last_column, this.lexer.offset]), this.lex(), this.debug && this.showlog(), this.extractDoc)
           for (; this.token === this.tok.T_COMMENT || this.token === this.tok.T_DOC_COMMENT; )
             this.token === this.tok.T_COMMENT ? this._docs.push(this.read_comment()) : this._docs.push(this.read_doc_comment());
         return this;
@@ -41361,7 +42811,7 @@ var require_standalone = __commonJS({
           this.token = this.lexer.lex() || this.EOF;
         return this;
       }, Q.prototype.is = function(t2) {
-        return Array.isArray(t2) ? t2.indexOf(this.token) !== -1 : this.entries[t2].has(this.token);
+        return Array.isArray(t2) ? -1 !== t2.indexOf(this.token) : this.entries[t2].has(this.token);
       }, [E, b, L, O, I, R, w, D, P, B, M, F, H, G, V].forEach(function(t2) {
         for (var e2 in t2) {
           if (Q.prototype.hasOwnProperty(e2))
@@ -41427,7 +42877,7 @@ var require_standalone = __commonJS({
         ft.apply(this, [t2 || Dt, i2, n2]), this.name = e2;
       });
       Pt.prototype.parseFlags = function(t2) {
-        this.isAbstract = t2[2] === 1, this.isFinal = t2[2] === 2, this.kind !== "class" && (t2[0] === -1 ? this.visibility = "" : t2[0] === null ? this.visibility = null : t2[0] === 0 ? this.visibility = "public" : t2[0] === 1 ? this.visibility = "protected" : t2[0] === 2 && (this.visibility = "private"), this.isStatic = t2[1] === 1);
+        this.isAbstract = 1 === t2[2], this.isFinal = 2 === t2[2], "class" !== this.kind && (-1 === t2[0] ? this.visibility = "" : null === t2[0] ? this.visibility = null : 0 === t2[0] ? this.visibility = "public" : 1 === t2[0] ? this.visibility = "protected" : 2 === t2[0] && (this.visibility = "private"), this.isStatic = 1 === t2[1]);
       };
       var Ut = Pt, Bt = "class", Mt = Ut.extends(Bt, function(t2, e2, i2, n2, s2, r2, o2) {
         Ut.apply(this, [Bt, t2, r2, o2]), this.isAnonymous = !t2, this.extends = e2, this.implements = i2, this.body = n2, this.attrGroups = [], this.parseFlags(s2);
@@ -41437,7 +42887,7 @@ var require_standalone = __commonJS({
         Ht.apply(this, [t2 || Gt, e2, s2, r2]), this.parseFlags(i2), this.attrGroups = n2;
       });
       Vt.prototype.parseFlags = function(t2) {
-        t2[0] === -1 ? this.visibility = "" : t2[0] === null ? this.visibility = null : t2[0] === 0 ? this.visibility = "public" : t2[0] === 1 ? this.visibility = "protected" : t2[0] === 2 && (this.visibility = "private");
+        -1 === t2[0] ? this.visibility = "" : null === t2[0] ? this.visibility = null : 0 === t2[0] ? this.visibility = "public" : 1 === t2[0] ? this.visibility = "protected" : 2 === t2[0] && (this.visibility = "private");
       };
       var Wt = Vt, Qt = "clone", Yt = q.extends(Qt, function(t2, e2, i2) {
         q.apply(this, [Qt, e2, i2]), this.what = t2;
@@ -41522,7 +42972,7 @@ var require_standalone = __commonJS({
       }), ci = "reference", ui = X.extends(ci, function(t2, e2, i2) {
         X.apply(this, [t2 || ci, e2, i2]);
       }), _i = "name", di = ui.extends(_i, function t2(e2, i2, n2, s2) {
-        ui.apply(this, [_i, n2, s2]), i2 ? this.resolution = t2.RELATIVE_NAME : e2.length === 1 ? this.resolution = t2.UNQUALIFIED_NAME : e2[0] ? this.resolution = t2.QUALIFIED_NAME : this.resolution = t2.FULL_QUALIFIED_NAME, this.name = e2.join("\\");
+        ui.apply(this, [_i, n2, s2]), i2 ? this.resolution = t2.RELATIVE_NAME : 1 === e2.length ? this.resolution = t2.UNQUALIFIED_NAME : e2[0] ? this.resolution = t2.QUALIFIED_NAME : this.resolution = t2.FULL_QUALIFIED_NAME, this.name = e2.join("\\");
       });
       di.UNQUALIFIED_NAME = "uqn", di.QUALIFIED_NAME = "qn", di.FULL_QUALIFIED_NAME = "fqn", di.RELATIVE_NAME = "rn";
       var pi = di, fi = "namespace", Ti = kt.extends(fi, function(t2, e2, i2, n2, s2) {
@@ -41563,7 +43013,7 @@ var require_standalone = __commonJS({
         ft.apply(this, [$i, n2, s2]), this.properties = e2, this.parseFlags(i2);
       });
       zi.prototype.parseFlags = function(t2) {
-        t2[0] === -1 ? this.visibility = "" : t2[0] === null ? this.visibility = null : t2[0] === 0 ? this.visibility = "public" : t2[0] === 1 ? this.visibility = "protected" : t2[0] === 2 && (this.visibility = "private"), this.isStatic = t2[1] === 1;
+        -1 === t2[0] ? this.visibility = "" : null === t2[0] ? this.visibility = null : 0 === t2[0] ? this.visibility = "public" : 1 === t2[0] ? this.visibility = "protected" : 2 === t2[0] && (this.visibility = "private"), this.isStatic = 1 === t2[1];
       };
       var Ki = zi, Xi = "retif", Ji = q.extends(Xi, function(t2, e2, i2, n2, s2) {
         q.apply(this, [Xi, n2, s2]), this.test = t2, this.trueExpr = e2, this.falseExpr = i2;
@@ -41590,7 +43040,7 @@ var require_standalone = __commonJS({
       }), En = "trait", xn = Ut.extends(En, function(t2, e2, i2, n2) {
         Ut.apply(this, [En, t2, i2, n2]), this.body = e2;
       }), yn = "traitalias", vn = X.extends(yn, function(t2, e2, i2, n2, s2, r2) {
-        X.apply(this, [yn, s2, r2]), this.trait = t2, this.method = e2, this.as = i2, this.visibility = "", n2 && (n2[0] === 0 ? this.visibility = "public" : n2[0] === 1 ? this.visibility = "protected" : n2[0] === 2 && (this.visibility = "private"));
+        X.apply(this, [yn, s2, r2]), this.trait = t2, this.method = e2, this.as = i2, this.visibility = "", n2 && (0 === n2[0] ? this.visibility = "public" : 1 === n2[0] ? this.visibility = "protected" : 2 === n2[0] && (this.visibility = "private"));
       }), An = "traitprecedence", gn = X.extends(An, function(t2, e2, i2, n2, s2) {
         X.apply(this, [An, n2, s2]), this.trait = t2, this.method = e2, this.instead = i2;
       }), Nn = "traituse", Cn = X.extends(Nn, function(t2, e2, i2, n2) {
@@ -41631,14 +43081,14 @@ var require_standalone = __commonJS({
           qn.precedence[t3] = e2 + 1;
         });
       }), qn.prototype.isRightAssociative = function(t2) {
-        return t2 === "**" || t2 === "??";
+        return "**" === t2 || "??" === t2;
       }, qn.prototype.swapLocations = function(t2, e2, i2, n2) {
         this.withPositions && (t2.loc.start = e2.loc.start, t2.loc.end = i2.loc.end, this.withSource && (t2.loc.source = n2.lexer._input.substring(t2.loc.start.offset, t2.loc.end.offset)));
       }, qn.prototype.resolveLocations = function(t2, e2, i2, n2) {
         this.withPositions && (t2.loc.start.offset > e2.loc.start.offset && (t2.loc.start = e2.loc.start), t2.loc.end.offset < i2.loc.end.offset && (t2.loc.end = i2.loc.end), this.withSource && (t2.loc.source = n2.lexer._input.substring(t2.loc.start.offset, t2.loc.end.offset)));
       }, qn.prototype.resolvePrecedence = function(t2, e2) {
         var i2, n2, s2;
-        return t2.kind === "call" ? this.resolveLocations(t2, t2.what, t2, e2) : t2.kind === "propertylookup" || t2.kind === "staticlookup" || t2.kind === "offsetlookup" && t2.offset ? this.resolveLocations(t2, t2.what, t2.offset, e2) : t2.kind === "bin" ? t2.right && !t2.right.parenthesizedExpression && (t2.right.kind === "bin" ? (n2 = qn.precedence[t2.type], s2 = qn.precedence[t2.right.type], n2 && s2 && s2 <= n2 && (t2.type !== t2.right.type || !this.isRightAssociative(t2.type)) && (i2 = t2.right, t2.right = t2.right.left, this.swapLocations(t2, t2.left, t2.right, e2), i2.left = this.resolvePrecedence(t2, e2), this.swapLocations(i2, i2.left, i2.right, e2), t2 = i2)) : t2.right.kind === "retif" && (n2 = qn.precedence[t2.type], s2 = qn.precedence["?"], n2 && s2 && s2 <= n2 && (i2 = t2.right, t2.right = t2.right.test, this.swapLocations(t2, t2.left, t2.right, e2), i2.test = this.resolvePrecedence(t2, e2), this.swapLocations(i2, i2.test, i2.falseExpr, e2), t2 = i2))) : t2.kind !== "silent" && t2.kind !== "cast" || !t2.expr || t2.expr.parenthesizedExpression ? t2.kind === "unary" ? t2.what && !t2.what.parenthesizedExpression && (t2.what.kind === "bin" ? (i2 = t2.what, t2.what = t2.what.left, this.swapLocations(t2, t2, t2.what, e2), i2.left = this.resolvePrecedence(t2, e2), this.swapLocations(i2, i2.left, i2.right, e2), t2 = i2) : t2.what.kind === "retif" && (i2 = t2.what, t2.what = t2.what.test, this.swapLocations(t2, t2, t2.what, e2), i2.test = this.resolvePrecedence(t2, e2), this.swapLocations(i2, i2.test, i2.falseExpr, e2), t2 = i2)) : t2.kind === "retif" ? t2.falseExpr && t2.falseExpr.kind === "retif" && !t2.falseExpr.parenthesizedExpression && (i2 = t2.falseExpr, t2.falseExpr = i2.test, this.swapLocations(t2, t2.test, t2.falseExpr, e2), i2.test = this.resolvePrecedence(t2, e2), this.swapLocations(i2, i2.test, i2.falseExpr, e2), t2 = i2) : t2.kind === "assign" ? t2.right && t2.right.kind === "bin" && !t2.right.parenthesizedExpression && (n2 = qn.precedence["="], s2 = qn.precedence[t2.right.type], n2 && s2 && s2 < n2 && (i2 = t2.right, t2.right = t2.right.left, i2.left = t2, this.swapLocations(i2, i2.left, t2.right, e2), t2 = i2)) : t2.kind === "expressionstatement" && this.swapLocations(t2, t2.expression, t2, e2) : t2.expr.kind === "bin" ? (i2 = t2.expr, t2.expr = t2.expr.left, this.swapLocations(t2, t2, t2.expr, e2), i2.left = this.resolvePrecedence(t2, e2), this.swapLocations(i2, i2.left, i2.right, e2), t2 = i2) : t2.expr.kind === "retif" && (i2 = t2.expr, t2.expr = t2.expr.test, this.swapLocations(t2, t2, t2.expr, e2), i2.test = this.resolvePrecedence(t2, e2), this.swapLocations(i2, i2.test, i2.falseExpr, e2), t2 = i2), t2;
+        return "call" === t2.kind ? this.resolveLocations(t2, t2.what, t2, e2) : "propertylookup" === t2.kind || "staticlookup" === t2.kind || "offsetlookup" === t2.kind && t2.offset ? this.resolveLocations(t2, t2.what, t2.offset, e2) : "bin" === t2.kind ? t2.right && !t2.right.parenthesizedExpression && ("bin" === t2.right.kind ? (n2 = qn.precedence[t2.type], s2 = qn.precedence[t2.right.type], n2 && s2 && s2 <= n2 && (t2.type !== t2.right.type || !this.isRightAssociative(t2.type)) && (i2 = t2.right, t2.right = t2.right.left, this.swapLocations(t2, t2.left, t2.right, e2), i2.left = this.resolvePrecedence(t2, e2), this.swapLocations(i2, i2.left, i2.right, e2), t2 = i2)) : "retif" === t2.right.kind && (n2 = qn.precedence[t2.type], s2 = qn.precedence["?"], n2 && s2 && s2 <= n2 && (i2 = t2.right, t2.right = t2.right.test, this.swapLocations(t2, t2.left, t2.right, e2), i2.test = this.resolvePrecedence(t2, e2), this.swapLocations(i2, i2.test, i2.falseExpr, e2), t2 = i2))) : "silent" !== t2.kind && "cast" !== t2.kind || !t2.expr || t2.expr.parenthesizedExpression ? "unary" === t2.kind ? t2.what && !t2.what.parenthesizedExpression && ("bin" === t2.what.kind ? (i2 = t2.what, t2.what = t2.what.left, this.swapLocations(t2, t2, t2.what, e2), i2.left = this.resolvePrecedence(t2, e2), this.swapLocations(i2, i2.left, i2.right, e2), t2 = i2) : "retif" === t2.what.kind && (i2 = t2.what, t2.what = t2.what.test, this.swapLocations(t2, t2, t2.what, e2), i2.test = this.resolvePrecedence(t2, e2), this.swapLocations(i2, i2.test, i2.falseExpr, e2), t2 = i2)) : "retif" === t2.kind ? t2.falseExpr && "retif" === t2.falseExpr.kind && !t2.falseExpr.parenthesizedExpression && (i2 = t2.falseExpr, t2.falseExpr = i2.test, this.swapLocations(t2, t2.test, t2.falseExpr, e2), i2.test = this.resolvePrecedence(t2, e2), this.swapLocations(i2, i2.test, i2.falseExpr, e2), t2 = i2) : "assign" === t2.kind ? t2.right && "bin" === t2.right.kind && !t2.right.parenthesizedExpression && (n2 = qn.precedence["="], s2 = qn.precedence[t2.right.type], n2 && s2 && s2 < n2 && (i2 = t2.right, t2.right = t2.right.left, i2.left = t2, this.swapLocations(i2, i2.left, t2.right, e2), t2 = i2)) : "expressionstatement" === t2.kind && this.swapLocations(t2, t2.expression, t2, e2) : "bin" === t2.expr.kind ? (i2 = t2.expr, t2.expr = t2.expr.left, this.swapLocations(t2, t2, t2.expr, e2), i2.left = this.resolvePrecedence(t2, e2), this.swapLocations(i2, i2.left, i2.right, e2), t2 = i2) : "retif" === t2.expr.kind && (i2 = t2.expr, t2.expr = t2.expr.test, this.swapLocations(t2, t2, t2.expr, e2), i2.test = this.resolvePrecedence(t2, e2), this.swapLocations(i2, i2.test, i2.falseExpr, e2), t2 = i2), t2;
       }, qn.prototype.prepare = function(t2, e2, i2) {
         var n2 = null;
         (this.withPositions || this.withSource) && (n2 = i2.position());
@@ -41650,10 +43100,10 @@ var require_standalone = __commonJS({
           }
           t2 || (t2 = a2.shift());
           var l2 = s2[t2];
-          if (typeof l2 != "function")
+          if ("function" != typeof l2)
             throw new Error('Undefined node "' + t2 + '"');
           var c2 = Object.create(l2.prototype);
-          return l2.apply(c2, a2), r3.instance = c2, r3.trailingComments && (c2.trailingComments = r3.trailingComments), typeof r3.postBuild == "function" && r3.postBuild(c2), i2.debug && delete qn.stack[r3.stackUid], s2.resolvePrecedence(c2, i2);
+          return l2.apply(c2, a2), r3.instance = c2, r3.trailingComments && (c2.trailingComments = r3.trailingComments), "function" == typeof r3.postBuild && r3.postBuild(c2), i2.debug && delete qn.stack[r3.stackUid], s2.resolvePrecedence(c2, i2);
         };
         return i2.debug && (qn.stack || (qn.stack = {}, qn.stackUid = 1), qn.stack[++qn.stackUid] = { position: n2, stack: new Error().stack.split("\n").slice(3, 5) }, r2.stackUid = qn.stackUid), r2.setTrailingComments = function(t3) {
           r2.instance ? r2.instance.setTrailingComments(t3) : r2.trailingComments = t3;
@@ -41672,21 +43122,21 @@ var require_standalone = __commonJS({
       function ts(t2, e2) {
         for (var i2 = Object.keys(t2), n2 = i2.length; n2--; ) {
           var s2 = i2[n2], r2 = t2[s2];
-          r2 === null ? delete e2[s2] : typeof r2 == "function" ? e2[s2] = r2.bind(e2) : Array.isArray(r2) ? e2[s2] = Array.isArray(e2[s2]) ? e2[s2].concat(r2) : r2 : e2[s2] = typeof r2 == "object" && typeof e2[s2] == "object" ? ts(r2, e2[s2]) : r2;
+          null === r2 ? delete e2[s2] : "function" == typeof r2 ? e2[s2] = r2.bind(e2) : Array.isArray(r2) ? e2[s2] = Array.isArray(e2[s2]) ? e2[s2].concat(r2) : r2 : e2[s2] = "object" == typeof r2 && "object" == typeof e2[s2] ? ts(r2, e2[s2]) : r2;
         }
         return e2;
       }
       var es = function(t2) {
-        if (typeof this == "function")
+        if ("function" == typeof this)
           return new this(t2);
-        if (this.tokens = $, this.lexer = new k(this), this.ast = new Zn(), this.parser = new j(this.lexer, this.ast), t2 && typeof t2 == "object") {
+        if (this.tokens = $, this.lexer = new k(this), this.ast = new Zn(), this.parser = new j(this.lexer, this.ast), t2 && "object" == typeof t2) {
           if (t2.parser && (t2.lexer || (t2.lexer = {}), t2.parser.version)) {
-            if (typeof t2.parser.version == "string") {
+            if ("string" == typeof t2.parser.version) {
               var e2 = t2.parser.version.split(".");
               if (e2 = 100 * parseInt(e2[0]) + parseInt(e2[1]), isNaN(e2))
                 throw new Error("Bad version number : " + t2.parser.version);
               t2.parser.version = e2;
-            } else if (typeof t2.parser.version != "number")
+            } else if ("number" != typeof t2.parser.version)
               throw new Error("Expecting a number for version");
             if (t2.parser.version < 500 || t2.parser.version > 900)
               throw new Error("Can only handle versions between 5.x to 8.x");
@@ -41694,7 +43144,7 @@ var require_standalone = __commonJS({
           ts(t2, this), this.lexer.version = this.parser.version;
         }
       }, is = function(t2) {
-        return typeof t2.write == "function" ? t2.toString() : t2;
+        return "function" == typeof t2.write ? t2.toString() : t2;
       };
       es.create = function(t2) {
         return new es(t2);
@@ -41703,7 +43153,7 @@ var require_standalone = __commonJS({
       }, es.prototype.parseEval = function(t2) {
         return this.lexer.mode_eval = true, this.lexer.all_tokens = false, t2 = is(t2), this.parser.parse(t2, "eval");
       }, es.parseCode = function(t2, e2, i2) {
-        return typeof e2 != "object" || i2 || (i2 = e2, e2 = "unknown"), new es(i2).parseCode(t2, e2);
+        return "object" != typeof e2 || i2 || (i2 = e2, e2 = "unknown"), new es(i2).parseCode(t2, e2);
       }, es.prototype.parseCode = function(t2, e2) {
         return this.lexer.mode_eval = false, this.lexer.all_tokens = false, t2 = is(t2), this.parser.parse(t2, e2);
       }, es.tokenGetAll = function(t2, e2) {
@@ -41721,18 +43171,18 @@ var require_standalone = __commonJS({
       var ns = es, ss = $, rs = k, os = Zn, as = j, hs = ts, ls = es;
       ns.tokens = ss, ns.lexer = rs, ns.AST = os, ns.parser = as, ns.combine = hs, ns.default = ls;
       var cs = function(t2, e2, i2) {
-        var n2 = i2 && i2.parentParser === "markdown";
+        var n2 = i2 && "markdown" === i2.parentParser;
         if (!t2 && n2)
           return "";
         t2 = t2.replace(/\?>\r?\n<\?/g, "?>\n___PSEUDO_INLINE_PLACEHOLDER___<?");
-        var s2, r2 = new ns({ parser: { extractDoc: true }, ast: { withPositions: true, withSource: true } }), o2 = t2.indexOf("<?php") !== -1, a2 = n2 && !o2;
+        var s2, r2 = new ns({ parser: { extractDoc: true }, ast: { withPositions: true, withSource: true } }), o2 = -1 !== t2.indexOf("<?php"), a2 = n2 && !o2;
         try {
           s2 = a2 ? r2.parseEval(t2) : r2.parseCode(t2);
         } catch (t3) {
           throw t3 instanceof SyntaxError && "lineNumber" in t3 && (t3.loc = { start: { line: t3.lineNumber, column: t3.columnNumber } }, delete t3.lineNumber, delete t3.columnNumber), t3;
         }
         return s2.extra = { parseAsEval: a2 }, s2.comments.forEach(function(t3) {
-          t3.value[t3.value.length - 1] === "\r" && (t3.value = t3.value.slice(0, -1), t3.loc.end.offset = t3.loc.end.offset - 1), t3.value[t3.value.length - 1] === "\n" && (t3.value = t3.value.slice(0, -1), t3.loc.end.offset = t3.loc.end.offset - 1);
+          "\r" === t3.value[t3.value.length - 1] && (t3.value = t3.value.slice(0, -1), t3.loc.end.offset = t3.loc.end.offset - 1), "\n" === t3.value[t3.value.length - 1] && (t3.value = t3.value.slice(0, -1), t3.loc.end.offset = t3.loc.end.offset - 1);
         }), s2;
       }, us = n.default.util, _s = us.hasNewline, ds = us.skipEverythingButNewLine, ps = us.skipNewline, fs = us.isNextLineEmpty, Ts = us.isPreviousLineEmpty, ks = us.getNextNonSpaceNonCommentCharacterIndex, ms = n.default.version;
       function Es(t2, e2) {
@@ -41753,7 +43203,7 @@ var require_standalone = __commonJS({
       }
       function Cs(t2) {
         var e2 = t2.body;
-        return e2 ? (e2.kind === "block" && (e2 = e2.children), e2[0]) : null;
+        return e2 ? ("block" === e2.kind && (e2 = e2.children), e2[0]) : null;
       }
       function Ss(t2) {
         var e2 = t2.children || t2.body || t2.adaptations;
@@ -41768,24 +43218,24 @@ var require_standalone = __commonJS({
       }
       function Os(t2) {
         var e2 = t2.getValue();
-        if (e2.kind === "program") {
+        if ("program" === e2.kind) {
           var i2 = Ss(e2);
-          return !(!i2 || i2.length === 0) && i2[0].kind === "inline";
+          return !(!i2 || 0 === i2.length) && "inline" === i2[0].kind;
         }
-        if (e2.kind === "switch") {
+        if ("switch" === e2.kind) {
           if (!e2.body)
             return false;
           var n2 = Ss(e2.body);
-          if (n2.length === 0)
+          if (0 === n2.length)
             return false;
           var s2 = A(n2, 1)[0];
           if (!s2.body)
             return false;
           var r2 = Ss(s2.body);
-          return r2.length !== 0 && r2[0].kind === "inline";
+          return 0 !== r2.length && "inline" === r2[0].kind;
         }
         var o2 = Cs(e2);
-        return !!o2 && o2.kind === "inline";
+        return !!o2 && "inline" === o2.kind;
       }
       var Is2 = ["__construct", "__destruct", "__call", "__callStatic", "__get", "__set", "__isset", "__unset", "__sleep", "__wakeup", "__toString", "__invoke", "__set_state", "__clone", "__debugInfo"].reduce(function(t2, e2) {
         return t2[e2.toLowerCase()] = e2, t2;
@@ -41793,9 +43243,9 @@ var require_standalone = __commonJS({
       var Rs = { printNumber: function(t2) {
         return t2.toLowerCase().replace(/^([+-]?[\d.]+e)(?:\+|(-))?0*(\d)/, "$1$2$3").replace(/^([+-]?[\d.]+)e[+-]?0+$/, "$1").replace(/^([+-])?\./, "$10.").replace(/(\.\d+?)0+(?=e|$)/, "$1").replace(/\.(?=e)/, "");
       }, getPrecedence: ys, isBitwiseOperator: function(t2) {
-        return !!gs[t2] || t2 === "|" || t2 === "^" || t2 === "&";
+        return !!gs[t2] || "|" === t2 || "^" === t2 || "&" === t2;
       }, shouldFlatten: function(t2, e2) {
-        return ys(e2) === ys(t2) && (t2 !== "**" && ((!vs.includes(t2) || !vs.includes(e2)) && (!(e2 === "%" && As.includes(t2) || t2 === "%" && As.includes(e2)) && ((e2 === t2 || !As.includes(e2) || !As.includes(t2)) && (!gs.includes(t2) || !gs.includes(e2))))));
+        return ys(e2) === ys(t2) && ("**" !== t2 && ((!vs.includes(t2) || !vs.includes(e2)) && (!("%" === e2 && As.includes(t2) || "%" === t2 && As.includes(e2)) && ((e2 === t2 || !As.includes(e2) || !As.includes(t2)) && (!gs.includes(t2) || !gs.includes(e2))))));
       }, nodeHasStatement: Ns, getNodeListProperty: Ss, getParentNodeListProperty: bs, getLast: Ls, getPenultimate: function(t2) {
         return t2.length > 1 ? t2[t2.length - 2] : null;
       }, isLastStatement: function(t2) {
@@ -41808,29 +43258,29 @@ var require_standalone = __commonJS({
         var e2 = t2.getValue(), i2 = t2.getParentNode();
         if (!i2)
           return false;
-        if (["for", "foreach", "while", "do", "if", "switch"].includes(i2.kind) && e2.kind !== "block" && e2.kind !== "if" && (i2.body === e2 || i2.alternate === e2))
+        if (["for", "foreach", "while", "do", "if", "switch"].includes(i2.kind) && "block" !== e2.kind && "if" !== e2.kind && (i2.body === e2 || i2.alternate === e2))
           return true;
         if (!Ns(i2))
           return false;
-        if (e2.kind === "echo" && e2.shortForm)
+        if ("echo" === e2.kind && e2.shortForm)
           return false;
-        if (e2.kind === "traituse")
+        if ("traituse" === e2.kind)
           return !e2.adaptations;
-        if (e2.kind === "method" && e2.isAbstract)
+        if ("method" === e2.kind && e2.isAbstract)
           return true;
-        if (e2.kind === "method") {
+        if ("method" === e2.kind) {
           var n2 = t2.getParentNode();
-          if (n2 && n2.kind === "interface")
+          if (n2 && "interface" === n2.kind)
             return true;
         }
         return ["expressionstatement", "do", "usegroup", "classconstant", "propertystatement", "traitprecedence", "traitalias", "goto", "constantstatement", "global", "static", "echo", "unset", "return", "break", "continue", "throw"].includes(e2.kind);
       }, fileShouldEndWithHardline: function(t2) {
-        var e2 = t2.getValue(), i2 = e2.kind === "program", n2 = e2.children && Ls(e2.children);
+        var e2 = t2.getValue(), i2 = "program" === e2.kind, n2 = e2.children && Ls(e2.children);
         if (!i2)
           return false;
         if (n2 && ["halt", "inline"].includes(n2.kind))
           return false;
-        if (n2 && (n2.kind === "declare" || n2.kind === "namespace")) {
+        if (n2 && ("declare" === n2.kind || "namespace" === n2.kind)) {
           var s2 = n2.children.length > 0 && Ls(n2.children);
           if (s2 && ["halt", "inline"].includes(s2.kind))
             return false;
@@ -41838,7 +43288,7 @@ var require_standalone = __commonJS({
         return true;
       }, maybeStripLeadingSlashFromUse: function(t2) {
         var e2 = t2.replace(/^\\/, "");
-        return e2.indexOf("\\") !== -1 ? e2 : t2;
+        return -1 !== e2.indexOf("\\") ? e2 : t2;
       }, hasDanglingComments: function(t2) {
         return t2.comments && t2.comments.some(function(t3) {
           return !t3.leading && !t3.trailing;
@@ -41852,33 +43302,33 @@ var require_standalone = __commonJS({
           return t3.trailing;
         });
       }, docShouldHaveTrailingNewline: function t2(e2) {
-        var i2 = arguments.length > 1 && arguments[1] !== void 0 ? arguments[1] : 0, n2 = e2.getNode(i2), s2 = e2.getNode(i2 + 1), r2 = e2.getNode(i2 + 2);
+        var i2 = arguments.length > 1 && void 0 !== arguments[1] ? arguments[1] : 0, n2 = e2.getNode(i2), s2 = e2.getNode(i2 + 1), r2 = e2.getNode(i2 + 2);
         if (!s2)
           return false;
-        if (r2 && ["call", "new", "echo"].includes(r2.kind) && !["call", "array"].includes(s2.kind) || s2.kind === "parameter") {
+        if (r2 && ["call", "new", "echo"].includes(r2.kind) && !["call", "array"].includes(s2.kind) || "parameter" === s2.kind) {
           var o2 = r2.arguments.length - 1, a2 = r2.arguments.indexOf(s2);
           return a2 !== o2;
         }
-        if (r2 && r2.kind === "for") {
+        if (r2 && "for" === r2.kind) {
           var h2 = r2.init.indexOf(s2);
-          if (h2 !== -1)
+          if (-1 !== h2)
             return h2 !== r2.init.length - 1;
           var l2 = r2.test.indexOf(s2);
-          if (l2 !== -1)
+          if (-1 !== l2)
             return l2 !== r2.test.length - 1;
           var c2 = r2.increment.indexOf(s2);
-          if (c2 !== -1)
+          if (-1 !== c2)
             return c2 !== r2.increment.length - 1;
         }
-        if (s2.kind === "bin")
+        if ("bin" === s2.kind)
           return s2.left === n2 || t2(e2, i2 + 1);
-        if (s2.kind === "case" && s2.test === n2)
+        if ("case" === s2.kind && s2.test === n2)
           return true;
-        if (s2.kind === "staticvariable") {
+        if ("staticvariable" === s2.kind) {
           var u2 = r2.variables.length - 1, _2 = r2.variables.indexOf(s2);
           return _2 !== u2;
         }
-        if (s2.kind === "entry") {
+        if ("entry" === s2.kind) {
           if (s2.key === n2)
             return true;
           var d2 = r2.items.length - 1, p2 = r2.items.indexOf(s2);
@@ -41888,17 +43338,17 @@ var require_standalone = __commonJS({
           var f2 = s2.arguments.length - 1, T2 = s2.arguments.indexOf(n2);
           return T2 !== f2;
         }
-        if (s2.kind === "echo") {
+        if ("echo" === s2.kind) {
           var k2 = s2.expressions.length - 1, m2 = s2.expressions.indexOf(n2);
           return m2 !== k2;
         }
-        if (s2.kind === "array") {
+        if ("array" === s2.kind) {
           var E2 = s2.items.length - 1, x2 = s2.items.indexOf(n2);
           return x2 !== E2;
         }
-        return s2.kind === "retif" && t2(e2, i2 + 1);
+        return "retif" === s2.kind && t2(e2, i2 + 1);
       }, isLookupNode: function(t2) {
-        return t2.kind === "propertylookup" || t2.kind === "staticlookup" || t2.kind === "offsetlookup";
+        return "propertylookup" === t2.kind || "staticlookup" === t2.kind || "offsetlookup" === t2.kind;
       }, isFirstChildrenInlineNode: Os, shouldPrintHardLineAfterStartInControlStructure: function(t2) {
         var e2 = t2.getValue();
         return !["try", "catch"].includes(e2.kind) && Os(t2);
@@ -41906,15 +43356,15 @@ var require_standalone = __commonJS({
         var e2 = t2.getValue();
         if (["try", "catch"].includes(e2.kind))
           return true;
-        if (e2.kind === "switch") {
+        if ("switch" === e2.kind) {
           var i2 = Ss(e2.body);
-          if (i2.length === 0)
+          if (0 === i2.length)
             return true;
           var n2 = Ls(i2);
           if (!n2.body)
             return true;
           var s2 = Ss(n2.body);
-          return s2.length === 0 || s2[0].kind !== "inline";
+          return 0 === s2.length || "inline" !== s2[0].kind;
         }
         return !Os(t2);
       }, getAlignment: function(t2) {
@@ -41925,37 +43375,37 @@ var require_standalone = __commonJS({
       }, isReferenceLikeNode: function(t2) {
         return ["name", "parentreference", "selfreference", "staticreference"].includes(t2.kind);
       }, getNodeKindIncludingLogical: function(t2) {
-        return t2.kind === "bin" && ["||", "&&"].includes(t2.type) ? "logical" : t2.kind;
+        return "bin" === t2.kind && ["||", "&&"].includes(t2.type) ? "logical" : t2.kind;
       }, useDoubleQuote: function(t2, e2) {
         if (t2.isDoubleQuote === e2.singleQuote) {
-          var i2 = t2.raw.slice(t2.raw[0] === "b" ? 2 : 1, -1).match(/\\([$nrtfve]|[xX][0-9a-fA-F]{1,2}|[0-7]{1,3}|u{([0-9a-fA-F]+)})|\r?\n|'|"|\$/);
+          var i2 = t2.raw.slice("b" === t2.raw[0] ? 2 : 1, -1).match(/\\([$nrtfve]|[xX][0-9a-fA-F]{1,2}|[0-7]{1,3}|u{([0-9a-fA-F]+)})|\r?\n|'|"|\$/);
           return t2.isDoubleQuote ? i2 : !i2;
         }
         return t2.isDoubleQuote;
       }, hasEmptyBody: function(t2) {
-        var e2 = arguments.length > 1 && arguments[1] !== void 0 ? arguments[1] : "body", i2 = t2.getValue();
-        return i2[e2] && i2[e2].children && i2[e2].children.length === 0 && (!i2[e2].comments || i2[e2].comments.length === 0);
+        var e2 = arguments.length > 1 && void 0 !== arguments[1] ? arguments[1] : "body", i2 = t2.getValue();
+        return i2[e2] && i2[e2].children && 0 === i2[e2].children.length && (!i2[e2].comments || 0 === i2[e2].comments.length);
       }, isNextLineEmptyAfterNamespace: function(t2, e2, i2) {
         var n2 = i2(e2);
         return n2 = ds(t2, n2), n2 = ps(t2, n2), _s(t2, n2);
       }, shouldPrintHardlineBeforeTrailingComma: function(t2) {
-        return t2.kind === "nowdoc" || t2.kind === "encapsed" && t2.type === "heredoc" || t2.kind === "entry" && (t2.value.kind === "nowdoc" || t2.value.kind === "encapsed" && t2.value.type === "heredoc");
+        return "nowdoc" === t2.kind || "encapsed" === t2.kind && "heredoc" === t2.type || "entry" === t2.kind && ("nowdoc" === t2.value.kind || "encapsed" === t2.value.kind && "heredoc" === t2.value.type);
       }, isDocNode: function(t2) {
-        return t2.kind === "nowdoc" || t2.kind === "encapsed" && t2.type === "heredoc";
+        return "nowdoc" === t2.kind || "encapsed" === t2.kind && "heredoc" === t2.type;
       }, getAncestorNode: function(t2, e2) {
         var i2 = function(t3, e3) {
           for (var i3, n2 = [].concat(e3), s2 = -1; i3 = t3.getParentNode(++s2); )
-            if (n2.indexOf(i3.kind) !== -1)
+            if (-1 !== n2.indexOf(i3.kind))
               return s2;
           return -1;
         }(t2, e2);
-        return i2 === -1 ? null : t2.getParentNode(i2);
+        return -1 === i2 ? null : t2.getParentNode(i2);
       }, getNextNode: function(t2, e2) {
         var i2 = t2.getParentNode(), n2 = Ss(i2);
         if (!n2)
           return null;
         var s2 = n2.indexOf(e2);
-        return s2 === -1 ? null : i2.children[s2 + 1];
+        return -1 === s2 ? null : i2.children[s2 + 1];
       }, normalizeMagicMethodName: function(t2) {
         var e2 = t2.toLowerCase();
         return Is2[e2] ? Is2[e2] : t2;
@@ -41968,20 +43418,20 @@ var require_standalone = __commonJS({
       } }, ws = n.default.util, Ds = ws.addLeadingComment, Ps = ws.addDanglingComment, Us = ws.addTrailingComment, Bs = ws.skipNewline, Ms = ws.hasNewline, Fs = ws.hasNewlineInRange, Hs = n.default.doc.builders, Gs = Hs.concat, Vs = Hs.join, Ws = Hs.indent, Qs = Hs.hardline, Ys = Hs.cursor, js = Hs.lineSuffix, $s = Hs.breakParent, zs = Rs.getNextNonSpaceNonCommentCharacterIndex, Ks = Rs.isNextLineEmpty, Xs = Rs.isPreviousLineEmpty, Js = Rs.isLookupNode;
       function qs(t2, e2) {
         var i2 = t2.children;
-        i2.length === 0 ? Ps(t2, e2) : Ds(i2[0], e2);
+        0 === i2.length ? Ps(t2, e2) : Ds(i2[0], e2);
       }
       function Zs(t2, e2) {
-        t2.kind === "block" ? qs(t2, e2) : Ds(t2, e2);
+        "block" === t2.kind ? qs(t2, e2) : Ds(t2, e2);
       }
       function tr(t2, e2, i2, n2, s2, r2) {
         var o2 = zs(t2, s2, r2), a2 = t2.charAt(o2);
-        return e2 && e2.kind === "identifier" && i2 && (i2.kind === "function" || i2.kind === "method") && a2 === ")" ? (Us(i2, s2), true) : !(!i2 || i2.kind !== "function" && i2.kind !== "method" || !n2 || n2.kind !== "block") && (qs(n2, s2), true);
+        return e2 && "identifier" === e2.kind && i2 && ("function" === i2.kind || "method" === i2.kind) && ")" === a2 ? (Us(i2, s2), true) : !(!i2 || "function" !== i2.kind && "method" !== i2.kind || !n2 || "block" !== n2.kind) && (qs(n2, s2), true);
       }
       function er(t2, e2, i2, n2, s2, r2) {
-        if (!i2 || i2.kind !== "if" || !n2)
+        if (!i2 || "if" !== i2.kind || !n2)
           return false;
         var o2 = zs(t2, s2, r2);
-        return t2.charAt(o2) === ")" ? (Us(e2, s2), true) : e2 === i2.body && n2 === i2.alternate ? (Ps(i2, s2), true) : n2.kind === "if" ? (Zs(n2.body, s2), true) : i2.body === n2 && (Ds(n2, s2), true);
+        return ")" === t2.charAt(o2) ? (Us(e2, s2), true) : e2 === i2.body && n2 === i2.alternate ? (Ps(i2, s2), true) : "if" === n2.kind ? (Zs(n2.body, s2), true) : i2.body === n2 && (Ds(n2, s2), true);
       }
       function ir(t2, e2, i2) {
         if (t2 && ["class", "interface", "trait"].includes(t2.kind)) {
@@ -42003,41 +43453,41 @@ var require_standalone = __commonJS({
           if (!(t2.body && t2.body.length > 0))
             return Ps(t2, i2), true;
         }
-        return !!(e2 && e2.kind === "class" && e2.isAnonymous && e2.leadingComments && i2.kind === "commentblock");
+        return !!(e2 && "class" === e2.kind && e2.isAnonymous && e2.leadingComments && "commentblock" === i2.kind);
       }
       function nr(t2, e2, i2, n2, s2) {
-        if (e2 && (e2.kind === "function" || e2.kind === "method")) {
+        if (e2 && ("function" === e2.kind || "method" === e2.kind)) {
           for (var r2 = 0, o2 = 0; o2 < e2.arguments.length; o2++)
             r2 = s2.locEnd(e2.arguments[o2]) > r2 ? s2.locEnd(e2.arguments[o2]) : r2;
           var a2 = e2.body && s2.locStart(n2) > r2 && s2.locEnd(n2) < s2.locStart(e2.body), h2 = zs(t2, n2, s2);
-          if (e2.type && a2 && t2.charAt(h2) !== ")")
+          if (e2.type && a2 && ")" !== t2.charAt(h2))
             return s2.locEnd(n2) < s2.locStart(e2.type) ? (Ps(e2.type, n2), true) : (Us(e2.type, n2), true);
         }
         return false;
       }
       function sr(t2, e2, i2, n2, s2) {
-        return !(!i2 || !["function", "method", "parameter"].includes(i2.kind)) && (e2.kind === "typereference" && n2.kind === "identifier" && (Us(e2, s2), true));
+        return !(!i2 || !["function", "method", "parameter"].includes(i2.kind)) && ("typereference" === e2.kind && "identifier" === n2.kind && (Us(e2, s2), true));
       }
       function rr(t2, e2) {
         return !(!t2 || !["label", "goto"].includes(t2.kind)) && (Us(t2, e2), true);
       }
       function or(t2, e2, i2, n2) {
-        return i2 && i2.kind === "inline" ? (i2.leadingComments || (i2.leadingComments = []), i2.leadingComments.includes(n2) || i2.leadingComments.push(n2), true) : !(t2 || i2 || !e2 || e2.kind !== "inline") && (Ps(e2, n2), true);
+        return i2 && "inline" === i2.kind ? (i2.leadingComments || (i2.leadingComments = []), i2.leadingComments.includes(n2) || i2.leadingComments.push(n2), true) : !(t2 || i2 || !e2 || "inline" !== e2.kind) && (Ps(e2, n2), true);
       }
       function ar(t2, e2, i2) {
-        return !(!t2 || t2.kind !== "try" || !e2) && (e2.kind === "block" ? (qs(e2, i2), true) : e2.kind === "try" ? (Zs(e2.always, i2), true) : e2.kind === "catch" && (Zs(e2.body, i2), true));
+        return !(!t2 || "try" !== t2.kind || !e2) && ("block" === e2.kind ? (qs(e2, i2), true) : "try" === e2.kind ? (Zs(e2.always, i2), true) : "catch" === e2.kind && (Zs(e2.body, i2), true));
       }
       function hr(t2, e2, i2, n2) {
-        return i2 || e2 || !t2 || t2.kind !== "namespace" || t2.withBrackets ? !(e2 || !t2 || t2.kind !== "namespace" || t2.withBrackets) && (Ps(t2, n2), true) : (Us(t2, n2), true);
+        return i2 || e2 || !t2 || "namespace" !== t2.kind || t2.withBrackets ? !(e2 || !t2 || "namespace" !== t2.kind || t2.withBrackets) && (Ps(t2, n2), true) : (Us(t2, n2), true);
       }
       function lr(t2, e2, i2, n2) {
-        return !(!t2 || t2.kind !== "declare") && ((!e2 || e2.kind !== "noop") && (i2 && t2.directives[0] !== i2 ? !(!i2 || !e2) && (Ds(i2, n2), true) : (t2.mode === "none" ? Us(t2, n2) : Ps(t2, n2), true)));
+        return !(!t2 || "declare" !== t2.kind) && ((!e2 || "noop" !== e2.kind) && (i2 && t2.directives[0] !== i2 ? !(!i2 || !e2) && (Ds(i2, n2), true) : ("none" === t2.mode ? Us(t2, n2) : Ps(t2, n2), true)));
       }
       function cr(t2, e2, i2, n2, s2, r2) {
-        if (!i2 || i2.kind !== "while" || !n2)
+        if (!i2 || "while" !== i2.kind || !n2)
           return false;
         var o2 = zs(t2, s2, r2);
-        return t2.charAt(o2) === ")" ? (Us(e2, s2), true) : n2.kind === "block" && (qs(n2, s2), true);
+        return ")" === t2.charAt(o2) ? (Us(e2, s2), true) : "block" === n2.kind && (qs(n2, s2), true);
       }
       function ur(t2, e2) {
         return t2.getValue().printed = true, e2.printer.printComment(t2, e2);
@@ -42052,35 +43502,35 @@ var require_standalone = __commonJS({
             return Ds(t3, i3), true;
           return false;
         }(s2, r2, t2) || er(e2, n2, s2, r2, t2, i2) || cr(e2, n2, s2, r2, t2, i2) || ar(s2, r2, t2) || ir(s2, r2, t2) || sr(e2, n2, s2, r2, t2) || nr(e2, s2, r2, t2, i2) || function(t3, e3, i3, n3) {
-          if (!i3 && t3 && (t3.kind === "for" || t3.kind === "foreach"))
-            return t3.body && t3.body.kind !== "block" ? Ds(i3, n3) : Ds(t3, n3), true;
+          if (!i3 && t3 && ("for" === t3.kind || "foreach" === t3.kind))
+            return t3.body && "block" !== t3.body.kind ? Ds(i3, n3) : Ds(t3, n3), true;
           return false;
         }(s2, 0, r2, t2) || or(s2, n2, r2, t2) || lr(s2, n2, r2, t2);
       }, handleEndOfLineComment: function(t2, e2, i2) {
         var n2 = t2.precedingNode, s2 = t2.enclosingNode, r2 = t2.followingNode;
         return function(t3, e3, i3, n3, s3) {
-          if (!e3 && !n3 && i3 && i3.kind === "array")
+          if (!e3 && !n3 && i3 && "array" === i3.kind)
             return Us(i3, s3), true;
           return false;
         }(0, n2, s2, r2, t2) || function(t3, e3, i3, n3, s3) {
-          if (i3 && i3.kind === "return" && !i3.expr)
+          if (i3 && "return" === i3.kind && !i3.expr)
             return Us(i3, s3), true;
           return false;
         }(0, 0, s2, 0, t2) || tr(e2, n2, s2, r2, t2, i2) || function(t3, e3, i3, n3, s3, r3) {
           var o2 = e3 && !Fs(s3, r3.locEnd(e3), r3.locStart(n3));
-          if ((!e3 || !o2) && t3 && t3.kind === "retif" && i3)
+          if ((!e3 || !o2) && t3 && "retif" === t3.kind && i3)
             return Ds(i3, n3), true;
           return false;
         }(s2, n2, r2, t2, e2, i2) || er(e2, n2, s2, r2, t2, i2) || cr(e2, n2, s2, r2, t2, i2) || ar(s2, r2, t2) || ir(s2, r2, t2) || sr(e2, n2, s2, r2, t2) || nr(e2, s2, r2, t2, i2) || function(t3, e3) {
-          if (t3 && t3.kind === "entry")
+          if (t3 && "entry" === t3.kind)
             return Ds(t3, e3), true;
           return false;
         }(s2, t2) || function(t3, e3, i3) {
-          if (e3 && e3.kind === "call" && t3 && e3.what === t3 && e3.arguments.length > 0)
+          if (e3 && "call" === e3.kind && t3 && e3.what === t3 && e3.arguments.length > 0)
             return Ds(e3.arguments[0], i3), true;
           return false;
         }(n2, s2, t2) || function(t3, e3, i3) {
-          if (t3 && t3.kind === "assign" && e3) {
+          if (t3 && "assign" === t3.kind && e3) {
             var n3 = t3.loc.start.offset + t3.loc.source.indexOf("=");
             if (i3.loc.start.offset > n3)
               return Ds(e3, i3), true;
@@ -42091,44 +43541,44 @@ var require_standalone = __commonJS({
         var n2 = t2.precedingNode, s2 = t2.enclosingNode, r2 = t2.followingNode;
         return er(e2, n2, s2, r2, t2, i2) || cr(e2, n2, s2, r2, t2, i2) || function(t3, e3, i3, n3) {
           var s3 = zs(t3, i3, n3);
-          if (t3.charAt(s3) !== ")")
+          if (")" !== t3.charAt(s3))
             return false;
-          if (e3 && (e3.kind === "function" || e3.kind === "closure" || e3.kind === "method" || e3.kind === "call" || e3.kind === "new") && e3.arguments.length === 0)
+          if (e3 && ("function" === e3.kind || "closure" === e3.kind || "method" === e3.kind || "call" === e3.kind || "new" === e3.kind) && 0 === e3.arguments.length)
             return Ps(e3, i3), true;
           return false;
         }(e2, s2, t2, i2) || ir(s2, r2, t2) || function(t3, e3, i3) {
-          if (t3 && t3.kind === "traituse" && t3.adaptations && !t3.adaptations.length)
+          if (t3 && "traituse" === t3.kind && t3.adaptations && !t3.adaptations.length)
             return Ps(t3, i3), true;
           return false;
         }(s2, 0, t2) || sr(e2, n2, s2, r2, t2) || nr(e2, s2, r2, t2, i2) || rr(s2, t2) || function(t3, e3, i3, n3) {
-          if (e3 && e3.kind === "halt")
+          if (e3 && "halt" === e3.kind)
             return Ps(e3, n3), true;
-          if (t3 && t3.kind === "halt")
+          if (t3 && "halt" === t3.kind)
             return Ps(t3, n3), true;
           return false;
         }(n2, s2, 0, t2) || function(t3, e3) {
-          if (t3 && (t3.kind === "continue" || t3.kind === "break") && !t3.label)
+          if (t3 && ("continue" === t3.kind || "break" === t3.kind) && !t3.label)
             return Us(t3, e3), true;
           return false;
         }(s2, t2) || or(s2, n2, r2, t2) || hr(s2, n2, r2, t2);
       }, getCommentChildNodes: function(t2) {
-        return typeof t2 != "object" ? [] : function(t3) {
+        return "object" != typeof t2 ? [] : function(t3) {
           return Object.keys(t3).filter(function(t4) {
-            return t4 !== "kind" && t4 !== "loc" && t4 !== "errors" && t4 !== "extra" && t4 !== "comments" && t4 !== "leadingComments" && t4 !== "enclosingNode" && t4 !== "precedingNode" && t4 !== "followingNode";
+            return "kind" !== t4 && "loc" !== t4 && "errors" !== t4 && "extra" !== t4 && "comments" !== t4 && "leadingComments" !== t4 && "enclosingNode" !== t4 && "precedingNode" !== t4 && "followingNode" !== t4;
           }).map(function(e2) {
             return t3[e2];
           });
         }(t2);
       }, canAttachComment: function(t2) {
-        return t2.kind && t2.kind !== "commentblock" && t2.kind !== "commentline";
+        return t2.kind && "commentblock" !== t2.kind && "commentline" !== t2.kind;
       }, isBlockComment: function(t2) {
-        return t2.kind === "commentblock";
+        return "commentblock" === t2.kind;
       }, printDanglingComments: function(t2, e2, i2, n2) {
         var s2 = [], r2 = t2.getValue();
         return r2 && r2.comments ? (t2.each(function(t3) {
           var i3 = t3.getValue();
           !i3 || i3.leading || i3.trailing || n2 && !n2(i3) || s2.push(ur(t3, e2));
-        }, "comments"), s2.length === 0 ? "" : i2 ? Vs(Qs, s2) : Ws(Gs([Qs, Vs(Qs, s2)]))) : "";
+        }, "comments"), 0 === s2.length ? "" : i2 ? Vs(Qs, s2) : Ws(Gs([Qs, Vs(Qs, s2)]))) : "";
       }, hasLeadingComment: function(t2) {
         return t2.comments && t2.comments.some(function(t3) {
           return t3.leading;
@@ -42150,7 +43600,7 @@ var require_standalone = __commonJS({
         }), Gs(i2);
       }, printAllComments: function(t2, e2, i2, n2) {
         var s2 = t2.getValue(), r2 = e2(t2), o2 = s2 && s2.comments;
-        if (!o2 || o2.length === 0)
+        if (!o2 || 0 === o2.length)
           return _r(t2, i2, r2);
         var a2 = [], h2 = [n2 ? ";" : "", r2];
         return t2.each(function(t3) {
@@ -42197,19 +43647,19 @@ var require_standalone = __commonJS({
         switch (n2.kind) {
           case "pre":
           case "post":
-            if (e2.kind === "unary")
-              return n2.kind === "pre" && (n2.type === "+" && e2.type === "+" || n2.type === "-" && e2.type === "-");
+            if ("unary" === e2.kind)
+              return "pre" === n2.kind && ("+" === n2.type && "+" === e2.type || "-" === n2.type && "-" === e2.type);
           case "unary":
             switch (e2.kind) {
               case "unary":
-                return n2.type === e2.type && (n2.type === "+" || n2.type === "-");
+                return n2.type === e2.type && ("+" === n2.type || "-" === n2.type);
               case "propertylookup":
               case "staticlookup":
               case "offsetlookup":
               case "call":
-                return i2 === "what" && e2.what === n2;
+                return "what" === i2 && e2.what === n2;
               case "bin":
-                return e2.type === "**" && i2 === "left";
+                return "**" === e2.type && "left" === i2;
               default:
                 return false;
             }
@@ -42229,10 +43679,10 @@ var require_standalone = __commonJS({
               case "propertylookup":
               case "staticlookup":
               case "offsetlookup":
-                return i2 === "what" && e2.what === n2;
+                return "what" === i2 && e2.what === n2;
               case "bin":
                 var s2 = e2.type, r2 = Tr(s2), o2 = n2.type, a2 = Tr(o2);
-                return r2 > a2 || (s2 === "||" && o2 === "&&" || (r2 === a2 && i2 === "right" ? (fr.strictEqual(e2.right, n2), true) : r2 === a2 && !kr(s2, o2) || (r2 < a2 && o2 === "%" ? s2 === "+" || s2 === "-" : !!mr(s2))));
+                return r2 > a2 || ("||" === s2 && "&&" === o2 || (r2 === a2 && "right" === i2 ? (fr.strictEqual(e2.right, n2), true) : r2 === a2 && !kr(s2, o2) || (r2 < a2 && "%" === o2 ? "+" === s2 || "-" === s2 : !!mr(s2))));
               default:
                 return false;
             }
@@ -42240,7 +43690,7 @@ var require_standalone = __commonJS({
           case "staticlookup":
             switch (e2.kind) {
               case "call":
-                return i2 === "what" && e2.what === n2 && n2.parenthesizedExpression;
+                return "what" === i2 && e2.what === n2 && n2.parenthesizedExpression;
               default:
                 return false;
             }
@@ -42251,7 +43701,7 @@ var require_standalone = __commonJS({
               case "staticlookup":
               case "offsetlookup":
               case "call":
-                return i2 === "what" && e2.what === n2;
+                return "what" === i2 && e2.what === n2;
               default:
                 return false;
             }
@@ -42261,14 +43711,14 @@ var require_standalone = __commonJS({
               case "staticlookup":
               case "offsetlookup":
               case "call":
-                return i2 === "what" && e2.what === n2;
+                return "what" === i2 && e2.what === n2;
               case "retif":
                 return e2.test === n2;
               default:
                 return !(!n2.key && !n2.value);
             }
           case "assign":
-            return (e2.kind !== "for" || !e2.init.includes(n2) && !e2.increment.includes(n2)) && (e2.kind !== "assign" && (e2.kind !== "static" && (!["if", "do", "while", "foreach", "switch"].includes(e2.kind) && (e2.kind !== "silent" && e2.kind !== "call"))));
+            return ("for" !== e2.kind || !e2.init.includes(n2) && !e2.increment.includes(n2)) && ("assign" !== e2.kind && ("static" !== e2.kind && (!["if", "do", "while", "foreach", "switch"].includes(e2.kind) && ("silent" !== e2.kind && "call" !== e2.kind))));
           case "retif":
             switch (e2.kind) {
               case "cast":
@@ -42276,19 +43726,19 @@ var require_standalone = __commonJS({
               case "unary":
               case "bin":
               case "retif":
-                return !(i2 === "test" && !e2.trueExpr);
+                return !("test" === i2 && !e2.trueExpr);
               case "propertylookup":
               case "staticlookup":
               case "offsetlookup":
               case "call":
-                return i2 === "what" && e2.what === n2;
+                return "what" === i2 && e2.what === n2;
               default:
                 return false;
             }
           case "closure":
             switch (e2.kind) {
               case "call":
-                return i2 === "what" && e2.what === n2;
+                return "what" === i2 && e2.what === n2;
               case "propertylookup":
                 return true;
               default:
@@ -42304,13 +43754,13 @@ var require_standalone = __commonJS({
               case "staticlookup":
               case "offsetlookup":
               case "call":
-                return (!["string", "array"].includes(n2.kind) || e2.kind !== "offsetlookup") && (i2 === "what" && e2.what === n2);
+                return (!["string", "array"].includes(n2.kind) || "offsetlookup" !== e2.kind) && ("what" === i2 && e2.what === n2);
               default:
                 return false;
             }
           case "print":
           case "include":
-            return e2.kind === "bin";
+            return "bin" === e2.kind;
         }
         return false;
       }, xr = n.default.doc.builders, yr = xr.breakParent, vr = xr.concat, Ar = xr.join, gr = xr.line, Nr = xr.lineSuffix, Cr = xr.group, Sr = xr.conditionalGroup, br = xr.indent, Lr = xr.dedent, Or = xr.ifBreak, Ir = xr.hardline, Rr = xr.softline, wr = xr.literalline, Dr = xr.align, Pr = xr.dedentToRoot, Ur = n.default.doc.utils.willBreak, Br = n.default.util, Mr = Br.isNextLineEmptyAfterIndex, Fr = Br.hasNewline, Hr = Br.hasNewlineInRange, Gr = Rs.getLast, Vr = Rs.getPenultimate, Wr = Rs.isLastStatement, Qr = Rs.lineShouldEndWithSemicolon, Yr = Rs.printNumber, jr = Rs.shouldFlatten, $r = Rs.maybeStripLeadingSlashFromUse, zr = Rs.fileShouldEndWithHardline, Kr = Rs.hasDanglingComments, Xr = Rs.hasLeadingComment, Jr = Rs.hasTrailingComment, qr = Rs.docShouldHaveTrailingNewline, Zr = Rs.isLookupNode, to = Rs.isFirstChildrenInlineNode, eo = Rs.shouldPrintHardLineAfterStartInControlStructure, io = Rs.shouldPrintHardLineBeforeEndInControlStructure, no = Rs.getAlignment, so = Rs.isProgramLikeNode, ro = Rs.getNodeKindIncludingLogical, oo = Rs.useDoubleQuote, ao = Rs.hasEmptyBody, ho = Rs.isNextLineEmptyAfterNamespace, lo = Rs.shouldPrintHardlineBeforeTrailingComma, co = Rs.isDocNode, uo = Rs.getAncestorNode, _o = Rs.isReferenceLikeNode, po = Rs.getNextNode, fo = Rs.normalizeMagicMethodName, To = Rs.getNextNonSpaceNonCommentCharacterIndex, ko = Rs.isNextLineEmpty;
@@ -42330,7 +43780,7 @@ var require_standalone = __commonJS({
         }
       }
       function yo(t2, e2, i2) {
-        var n2 = arguments.length > 3 && arguments[3] !== void 0 && arguments[3];
+        var n2 = arguments.length > 3 && void 0 !== arguments[3] && arguments[3];
         return vr([n2 ? "?" : "", "->", t2.call(i2, "offset")]);
       }
       function vo(t2, e2, i2) {
@@ -42341,29 +43791,29 @@ var require_standalone = __commonJS({
         return vr(["::", s2 ? "{" : "", t2.call(i2, "offset"), s2 ? "}" : ""]);
       }
       function go(t2, e2, i2) {
-        var n2 = t2.getValue(), s2 = n2.offset && n2.offset.kind === "number" || uo(t2, "encapsed");
+        var n2 = t2.getValue(), s2 = n2.offset && "number" === n2.offset.kind || uo(t2, "encapsed");
         return vr(["[", n2.offset ? Cr(vr([br(vr([s2 ? "" : Rr, t2.call(i2, "offset")])), s2 ? "" : Rr])) : "", "]"]);
       }
       function No(t2) {
-        return t2.kind === "array" && (t2.items.length > 0 || t2.comments) || t2.kind === "function" || t2.kind === "method" || t2.kind === "closure";
+        return "array" === t2.kind && (t2.items.length > 0 || t2.comments) || "function" === t2.kind || "method" === t2.kind || "closure" === t2.kind;
       }
       function Co(t2) {
         var e2 = Gr(t2), i2 = Vr(t2);
         return !Xr(e2) && !Jr(e2) && No(e2) && (!i2 || i2.kind !== e2.kind);
       }
       function So(t2) {
-        if (t2.length !== 2)
+        if (2 !== t2.length)
           return false;
         var e2 = A(t2, 2), i2 = e2[0], n2 = e2[1];
-        return !(i2.comments && i2.comments.length || i2.kind !== "function" && i2.kind !== "method" && i2.kind !== "closure" || n2.kind === "retif" || No(n2));
+        return !(i2.comments && i2.comments.length || "function" !== i2.kind && "method" !== i2.kind && "closure" !== i2.kind || "retif" === n2.kind || No(n2));
       }
       function bo(t2, e2, i2) {
-        var n2 = arguments.length > 3 && arguments[3] !== void 0 ? arguments[3] : "arguments", s2 = t2.getValue()[n2];
-        if (s2.length === 0)
+        var n2 = arguments.length > 3 && void 0 !== arguments[3] ? arguments[3] : "arguments", s2 = t2.getValue()[n2];
+        if (0 === s2.length)
           return vr(["(", dr.printDanglingComments(t2, e2, true), ")"]);
         var r2 = false, o2 = false, a2 = s2.length - 1, h2 = t2.map(function(t3, n3) {
           var s3 = t3.getNode(), h3 = [i2(t3)];
-          return n3 === a2 || (ko(e2.originalText, s3, e2) ? (n3 === 0 && (o2 = true), r2 = true, h3.push(",", Ir, Ir)) : h3.push(",", gr)), vr(h3);
+          return n3 === a2 || (ko(e2.originalText, s3, e2) ? (0 === n3 && (o2 = true), r2 = true, h3.push(",", Ir, Ir)) : h3.push(",", gr)), vr(h3);
         }, n2), l2 = t2.getValue(), c2 = Gr(s2), u2 = Eo(e2, "7.3") && ["call", "new", "unset", "isset"].includes(l2.kind) || Eo(e2, "8.0") && ["function", "closure", "method", "arrowfunc"].includes(l2.kind) ? br(vr([c2 && lo(c2) ? Ir : "", ","])) : "";
         function _2() {
           return Cr(vr(["(", br(vr([gr, vr(h2)])), u2, gr, ")"]), { shouldBreak: true });
@@ -42372,7 +43822,7 @@ var require_standalone = __commonJS({
         if (d2 || p2) {
           var f2, T2 = (d2 ? h2.slice(1).some(Ur) : h2.slice(0, -1).some(Ur)) || r2, k2 = 0;
           t2.each(function(t3) {
-            d2 && k2 === 0 && (f2 = [vr([t3.call(function(t4) {
+            d2 && 0 === k2 && (f2 = [vr([t3.call(function(t4) {
               return i2(t4, { expandFirstArg: true });
             }), h2.length > 1 ? "," : "", o2 ? Ir : gr, o2 ? Ir : ""])].concat(h2.slice(1))), p2 && k2 === s2.length - 1 && (f2 = h2.slice(0, -1).concat(t3.call(function(t4) {
               return i2(t4, { expandLastArg: true });
@@ -42384,10 +43834,10 @@ var require_standalone = __commonJS({
         return Cr(vr(["(", br(vr([Rr, vr(h2)])), Or(u2), Rr, ")"]), { shouldBreak: h2.some(Ur) || r2 });
       }
       function Lo(t2) {
-        return t2.kind === "array" && t2.items.length !== 0;
+        return "array" === t2.kind && 0 !== t2.items.length;
       }
       function Oo(t2) {
-        return t2.right.kind === "array" && t2.right.items.length !== 0;
+        return "array" === t2.right.kind && 0 !== t2.right.items.length;
       }
       function Io(t2, e2, i2) {
         var n2 = t2.getValue();
@@ -42405,8 +43855,8 @@ var require_standalone = __commonJS({
         }
       }
       function Ro(t2) {
-        var e2 = arguments.length > 1 && arguments[1] !== void 0 ? arguments[1] : {}, i2 = e2.opening, n2 = i2 === void 0 || i2;
-        if (t2.type === "heredoc")
+        var e2 = arguments.length > 1 && void 0 !== arguments[1] ? arguments[1] : {}, i2 = e2.opening, n2 = void 0 === i2 || i2;
+        if ("heredoc" === t2.type)
           return n2 ? "<<<".concat(t2.label) : t2.label;
         var s2 = { string: '"', shell: "`" };
         return s2[t2.type] ? s2[t2.type] : "Unimplemented encapsed type ".concat(t2.type);
@@ -42418,7 +43868,7 @@ var require_standalone = __commonJS({
         }, "items"), vr(n2);
       }
       function Do(t2, e2) {
-        if (e2.length === 0)
+        if (0 === e2.length)
           return t2;
         var i2 = 0;
         return e2.reduce(function(e3, n2) {
@@ -42427,27 +43877,27 @@ var require_standalone = __commonJS({
         }, []);
       }
       function Po(t2, e2, i2) {
-        var n2 = arguments.length > 3 && arguments[3] !== void 0 ? arguments[3] : "children", s2 = t2.getValue(), r2 = t2.getParentNode(), o2 = -1, a2 = [], h2 = [];
+        var n2 = arguments.length > 3 && void 0 !== arguments[3] ? arguments[3] : "children", s2 = t2.getValue(), r2 = t2.getParentNode(), o2 = -1, a2 = [], h2 = [];
         t2.map(function(l3, c3) {
-          var u3 = l3.getValue(), _3 = u3.kind === "inline", d3 = i2(l3), p3 = s2[n2], f3 = p3[c3 + 1], T3 = !Wr(l3) && !_3 && (f3 && f3.kind === "case" ? !to(t2) : f3 && f3.kind !== "inline"), k3 = vr([d3, T3 ? Ir : "", T3 && ko(e2.originalText, u3, e2) ? Ir : ""]), m3 = c3 === 0, E3 = p3.length - 1 === c3, x2 = s2.kind === "block" && r2 && ["function", "closure", "method", "try", "catch"].includes(r2.kind), y2 = x2 && m3 ? "" : " ";
+          var u3 = l3.getValue(), _3 = "inline" === u3.kind, d3 = i2(l3), p3 = s2[n2], f3 = p3[c3 + 1], T3 = !Wr(l3) && !_3 && (f3 && "case" === f3.kind ? !to(t2) : f3 && "inline" !== f3.kind), k3 = vr([d3, T3 ? Ir : "", T3 && ko(e2.originalText, u3, e2) ? Ir : ""]), m3 = 0 === c3, E3 = p3.length - 1 === c3, x2 = "block" === s2.kind && r2 && ["function", "closure", "method", "try", "catch"].includes(r2.kind), y2 = x2 && m3 ? "" : " ";
           if (_3 || !_3 && E3 && o2 >= 0) {
             var v2 = o2;
             if (_3 && (o2 = c3), _3 && !m3 || !_3 && E3) {
-              var A2 = (_3 ? v2 : o2) + 1, g2 = E3 && !_3 ? c3 + 1 : c3, N2 = p3[_3 ? v2 : o2], C2 = N2 ? no(N2.raw) : "", S2 = g2 - A2 > 1, b2 = S2 ? x2 && !N2 || so(s2) && A2 === 0 ? "" : Ir : "", L2 = S2 && u3.kind !== "halt" ? x2 && E3 ? "" : Ir : "";
+              var A2 = (_3 ? v2 : o2) + 1, g2 = E3 && !_3 ? c3 + 1 : c3, N2 = p3[_3 ? v2 : o2], C2 = N2 ? no(N2.raw) : "", S2 = g2 - A2 > 1, b2 = S2 ? x2 && !N2 || so(s2) && 0 === A2 ? "" : Ir : "", L2 = S2 && "halt" !== u3.kind ? x2 && E3 ? "" : Ir : "";
               S2 && (y2 = ""), h2.push({ start: A2, end: g2, alignment: C2, before: b2, after: L2 });
             }
           }
           if (_3) {
-            var O2 = f3 && f3.kind === "echo" && f3.shortForm ? "<?=" : "<?php", I2 = u3.leadingComments && u3.leadingComments.length ? vr([m3 && s2.kind !== "namespace" && !x2 ? "<?php" : "", s2.kind !== "namespace" && x2 ? "" : Ir, dr.printComments(u3.leadingComments, e2), Ir, "?>"]) : so(s2) && m3 && s2.kind !== "namespace" ? "" : vr([y2, "?>"]), R2 = t2.getNode(c3 + 1), w2 = R2 && R2.children && R2.children.length, D2 = u3.comments && u3.comments.length ? vr([O2, Ir, w2 ? dr.printComments(u3.comments, e2) : "", Ir, w2 ? "?>" : ""]) : so(s2) && E3 ? "" : vr([O2, " "]);
+            var O2 = f3 && "echo" === f3.kind && f3.shortForm ? "<?=" : "<?php", I2 = u3.leadingComments && u3.leadingComments.length ? vr([m3 && "namespace" !== s2.kind && !x2 ? "<?php" : "", "namespace" !== s2.kind && x2 ? "" : Ir, dr.printComments(u3.leadingComments, e2), Ir, "?>"]) : so(s2) && m3 && "namespace" !== s2.kind ? "" : vr([y2, "?>"]), R2 = t2.getNode(c3 + 1), w2 = R2 && R2.children && R2.children.length, D2 = u3.comments && u3.comments.length ? vr([O2, Ir, w2 ? dr.printComments(u3.comments, e2) : "", Ir, w2 ? "?>" : ""]) : so(s2) && E3 ? "" : vr([O2, " "]);
             k3 = vr([I2, k3, D2]);
           }
           a2.push(k3);
         }, n2);
         var l2 = Do(a2, h2);
-        if (s2.kind === "program" && !s2.extra.parseAsEval) {
-          var c2 = [], u2 = A(s2.children, 1), _2 = u2[0], d2 = !_2 || _2.kind !== "inline";
+        if ("program" === s2.kind && !s2.extra.parseAsEval) {
+          var c2 = [], u2 = A(s2.children, 1), _2 = u2[0], d2 = !_2 || "inline" !== _2.kind;
           if (d2) {
-            var p2 = e2.originalText.trim().match(/^<\?(php|=)(\s+)?\S/), f2 = vr([p2 && p2[2] && p2[2].includes("\n") ? vr([Ir, p2[2].split("\n").length > 2 ? Ir : ""]) : " ", s2.comments ? dr.printComments(s2.comments, e2) : ""]), T2 = _2 && _2.kind === "echo" && _2.shortForm;
+            var p2 = e2.originalText.trim().match(/^<\?(php|=)(\s+)?\S/), f2 = vr([p2 && p2[2] && p2[2].includes("\n") ? vr([Ir, p2[2].split("\n").length > 2 ? Ir : ""]) : " ", s2.comments ? dr.printComments(s2.comments, e2) : ""]), T2 = _2 && "echo" === _2.kind && _2.shortForm;
             c2.push(vr([T2 ? "<?=" : "<?php", f2]));
           }
           c2.push(vr(l2));
@@ -42467,7 +43917,7 @@ var require_standalone = __commonJS({
         }, n2));
       }
       function Bo(t2, e2, i2) {
-        var n2 = arguments.length > 3 && arguments[3] !== void 0 ? arguments[3] : "extends", s2 = arguments.length > 4 && arguments[4] !== void 0 ? arguments[4] : " ", r2 = arguments.length > 5 && arguments[5] !== void 0 ? arguments[5] : " ", o2 = t2.getValue(), a2 = Kr(o2[n2]) ? vr([Ir, t2.call(function(t3) {
+        var n2 = arguments.length > 3 && void 0 !== arguments[3] ? arguments[3] : "extends", s2 = arguments.length > 4 && void 0 !== arguments[4] ? arguments[4] : " ", r2 = arguments.length > 5 && void 0 !== arguments[5] ? arguments[5] : " ", o2 = t2.getValue(), a2 = Kr(o2[n2]) ? vr([Ir, t2.call(function(t3) {
           return dr.printDanglingComments(t3, e2, true);
         }, n2), Ir]) : s2, h2 = Array.isArray(o2[n2]) ? Cr(vr([Ar(",", t2.map(function(t3) {
           var n3 = i2(t3);
@@ -42476,7 +43926,7 @@ var require_standalone = __commonJS({
         return br(vr([a2, n2, Ur(a2) ? br(h2) : h2]));
       }
       function Mo(t2, e2, i2) {
-        var n2 = arguments.length > 3 && arguments[3] !== void 0 ? arguments[3] : {}, s2 = n2.inline, r2 = s2 !== void 0 && s2, o2 = [];
+        var n2 = arguments.length > 3 && void 0 !== arguments[3] ? arguments[3] : {}, s2 = n2.inline, r2 = void 0 !== s2 && s2, o2 = [];
         return t2.getValue().attrGroups ? (t2.each(function(t3) {
           var n3 = ["#["];
           o2.length > 0 && o2.push(r2 ? " " : Ir), n3.push(Or(Rr)), t3.each(function(t4) {
@@ -42485,14 +43935,14 @@ var require_standalone = __commonJS({
             var r3 = [s3.name];
             s3.args.length > 0 && r3.push(bo(t4, e2, i2, "args")), n3.push(Cr(vr(r3)));
           }, "attrs"), o2.push(Cr(vr([br(vr(n3)), Or(Rr), "]", Rr, r2 ? " " : ""])));
-        }, "attrGroups"), o2.length === 0 ? [] : [vr([].concat(o2, [r2 ? "" : Ir]))]) : [];
+        }, "attrGroups"), 0 === o2.length ? [] : [vr([].concat(o2, [r2 ? "" : Ir]))]) : [];
       }
       function Fo(t2, e2, i2) {
-        var n2 = arguments.length > 3 && arguments[3] !== void 0 ? arguments[3] : "body", s2 = t2.getValue();
+        var n2 = arguments.length > 3 && void 0 !== arguments[3] ? arguments[3] : "body", s2 = t2.getValue();
         if (!s2[n2])
           return ";";
         var r2 = t2.call(i2, n2);
-        return vr([s2.shortForm ? ":" : " {", br(vr([s2[n2].kind !== "block" || s2[n2].children && s2[n2].children.length > 0 || s2[n2].comments && s2[n2].comments.length > 0 ? vr([eo(t2) ? s2.kind === "switch" ? " " : "" : Ir, r2]) : ""])), s2.kind === "if" && n2 === "body" ? "" : vr([io(t2) ? Ir : "", s2.shortForm ? vr(["end", s2.kind, ";"]) : "}"])]);
+        return vr([s2.shortForm ? ":" : " {", br(vr(["block" !== s2[n2].kind || s2[n2].children && s2[n2].children.length > 0 || s2[n2].comments && s2[n2].comments.length > 0 ? vr([eo(t2) ? "switch" === s2.kind ? " " : "" : Ir, r2]) : ""])), "if" === s2.kind && "body" === n2 ? "" : vr([io(t2) ? Ir : "", s2.shortForm ? vr(["end", s2.kind, ";"]) : "}"])]);
       }
       function Ho(t2, e2, i2, n2, s2, r2, o2) {
         if (!n2)
@@ -42504,22 +43954,22 @@ var require_standalone = __commonJS({
         var r2 = n2 ? "&" : "";
         if (dr.hasLeadingOwnLineComment(s2.originalText, e2, s2))
           return br(vr([Ir, r2, i2]));
-        var o2 = e2.kind === "cast" ? e2.expr : e2;
-        return o2.kind === "bin" && !Oo(o2) || o2.kind === "retif" && (!o2.trueExpr && !Lo(o2.falseExpr) || o2.test.kind === "bin" && !Oo(o2.test)) || (t2.kind === "variable" || t2.kind === "string" || Zr(t2)) && (o2.kind === "string" && !Vo(o2) || function t3(e3) {
-          return !!Zr(e3) && (!(e3.what.kind !== "variable" && !_o(e3.what)) || t3(e3.what));
+        var o2 = "cast" === e2.kind ? e2.expr : e2;
+        return "bin" === o2.kind && !Oo(o2) || "retif" === o2.kind && (!o2.trueExpr && !Lo(o2.falseExpr) || "bin" === o2.test.kind && !Oo(o2.test)) || ("variable" === t2.kind || "string" === t2.kind || Zr(t2)) && ("string" === o2.kind && !Vo(o2) || function t3(e3) {
+          return !!Zr(e3) && (!("variable" !== e3.what.kind && !_o(e3.what)) || t3(e3.what));
         }(o2)) ? Cr(br(vr([gr, r2, i2]))) : vr([" ", r2, i2]);
       }
       function Vo(t2) {
         return t2.raw.includes("\n");
       }
       function Wo(t2, e2, i2) {
-        return (t2.kind === "string" || t2.kind === "encapsed" && (t2.type === "string" || t2.type === "shell")) && Vo(t2) && !Fr(e2, i2.locStart(t2), { backwards: true });
+        return ("string" === t2.kind || "encapsed" === t2.kind && ("string" === t2.type || "shell" === t2.type)) && Vo(t2) && !Fr(e2, i2.locStart(t2), { backwards: true });
       }
       var Qo = function(t2, e2, i2) {
         var n2 = t2.getValue();
         if (!n2)
           return "";
-        if (typeof n2 == "string")
+        if ("string" == typeof n2)
           return n2;
         var s2 = function(t3, e3, i3) {
           var n3 = t3.getValue();
@@ -42539,13 +43989,13 @@ var require_standalone = __commonJS({
                 }, "directives"));
               };
               if (["block", "short"].includes(n3.mode))
-                return vr(["declare(", s3(t3), ")", n3.mode === "block" ? " {" : ":", n3.children.length > 0 ? br(vr([Ir, Po(t3, e3, i3)])) : "", dr.printDanglingComments(t3, e3), Ir, n3.mode === "block" ? "}" : "enddeclare;"]);
+                return vr(["declare(", s3(t3), ")", "block" === n3.mode ? " {" : ":", n3.children.length > 0 ? br(vr([Ir, Po(t3, e3, i3)])) : "", dr.printDanglingComments(t3, e3), Ir, "block" === n3.mode ? "}" : "enddeclare;"]);
               var r3 = po(t3, n3);
-              return vr(["declare(", s3(t3), ")", r3 && r3.kind === "inline" ? "" : ";"]);
+              return vr(["declare(", s3(t3), ")", r3 && "inline" === r3.kind ? "" : ";"]);
             case "declaredirective":
               return vr([t3.call(i3, "key"), "=", t3.call(i3, "value")]);
             case "namespace":
-              return vr(["namespace ", n3.name && typeof n3.name == "string" ? vr([n3.name, n3.withBrackets ? " " : ""]) : "", n3.withBrackets ? "{" : ";", Kr(n3) ? vr([" ", dr.printDanglingComments(t3, e3, true)]) : "", n3.children.length > 0 ? n3.withBrackets ? br(vr([Ir, Po(t3, e3, i3)])) : vr([n3.children[0].kind === "inline" ? "" : vr([Ir, ho(e3.originalText, n3, e3.locStart) ? Ir : ""]), Po(t3, e3, i3)]) : "", n3.withBrackets ? vr([Ir, "}"]) : ""]);
+              return vr(["namespace ", n3.name && "string" == typeof n3.name ? vr([n3.name, n3.withBrackets ? " " : ""]) : "", n3.withBrackets ? "{" : ";", Kr(n3) ? vr([" ", dr.printDanglingComments(t3, e3, true)]) : "", n3.children.length > 0 ? n3.withBrackets ? br(vr([Ir, Po(t3, e3, i3)])) : vr(["inline" === n3.children[0].kind ? "" : vr([Ir, ho(e3.originalText, n3, e3.locStart) ? Ir : ""]), Po(t3, e3, i3)]) : "", n3.withBrackets ? vr([Ir, "}"]) : ""]);
             case "usegroup":
               return Cr(vr(["use ", n3.type ? vr([n3.type, " "]) : "", br(vr([n3.name ? vr([$r(n3.name), "\\{", Rr]) : "", Ar(vr([",", gr]), t3.map(function(t4) {
                 return vr([i3(t4)]);
@@ -42556,12 +44006,12 @@ var require_standalone = __commonJS({
             case "interface":
             case "trait":
               return function(t4, e4, i4) {
-                var n4 = t4.getValue(), s4 = n4.kind === "class" && n4.isAnonymous, r4 = Mo(t4, e4, i4, { inline: s4 }), o4 = s4 ? [] : g(r4);
+                var n4 = t4.getValue(), s4 = "class" === n4.kind && n4.isAnonymous, r4 = Mo(t4, e4, i4, { inline: s4 }), o4 = s4 ? [] : g(r4);
                 n4.isFinal && o4.push("final ");
                 n4.isAbstract && o4.push("abstract ");
                 o4.push(s4 ? "" : n4.kind), n4.name && o4.push(" ", t4.call(i4, "name"));
                 n4.extends && n4.implements ? o4.push(Sr([vr([Bo(t4, e4, i4, "extends"), Bo(t4, e4, i4, "implements")]), vr([Bo(t4, e4, i4, "extends"), Bo(t4, e4, i4, "implements", " ", Ir)]), vr([Bo(t4, e4, i4, "extends", Ir, " "), Bo(t4, e4, i4, "implements", Ir, n4.implements.length > 1 ? Ir : " ")])], { shouldBreak: Kr(n4.extends) })) : (n4.extends && o4.push(Sr([Bo(t4, e4, i4, "extends"), Bo(t4, e4, i4, "extends", " ", Ir), Bo(t4, e4, i4, "extends", Ir, n4.extends.length > 1 ? Ir : " ")])), n4.implements && o4.push(Sr([Bo(t4, e4, i4, "implements"), Bo(t4, e4, i4, "implements", " ", Ir), Bo(t4, e4, i4, "implements", Ir, n4.implements.length > 1 ? Ir : " ")])));
-                var a3 = Cr(vr([Cr(vr(o4)), xo(e4) ? s4 ? gr : Ir : " "])), h3 = n4.body && n4.body.length === 0 && !Kr(n4), l3 = vr(["{", br(vr([h3 ? "" : Ir, Uo(t4, e4, i4, "body")])), dr.printDanglingComments(t4, e4, true), s4 && h3 ? Rr : Ir, "}"]);
+                var a3 = Cr(vr([Cr(vr(o4)), xo(e4) ? s4 ? gr : Ir : " "])), h3 = n4.body && 0 === n4.body.length && !Kr(n4), l3 = vr(["{", br(vr([h3 ? "" : Ir, Uo(t4, e4, i4, "body")])), dr.printDanglingComments(t4, e4, true), s4 && h3 ? Rr : Ir, "}"]);
                 return vr([a3, l3]);
               }(t3, e3, i3);
             case "traitprecedence":
@@ -42574,7 +44024,7 @@ var require_standalone = __commonJS({
             case "closure":
             case "method":
               return function(t4, e4, i4) {
-                var n4 = t4.getValue(), s4 = g(Mo(t4, e4, i4, { inline: n4.kind === "closure" }));
+                var n4 = t4.getValue(), s4 = g(Mo(t4, e4, i4, { inline: "closure" === n4.kind }));
                 n4.isFinal && s4.push("final ");
                 n4.isAbstract && s4.push("abstract ");
                 n4.visibility && s4.push(n4.visibility, " ");
@@ -42588,10 +44038,10 @@ var require_standalone = __commonJS({
                 var r4 = vr(s4);
                 if (!n4.body)
                   return r4;
-                var o4 = n4.kind === "closure", a3 = vr(["{", br(vr([ao(t4) ? "" : Ir, t4.call(i4, "body")])), o4 && ao(t4) ? "" : Ir, "}"]);
+                var o4 = "closure" === n4.kind, a3 = vr(["{", br(vr([ao(t4) ? "" : Ir, t4.call(i4, "body")])), o4 && ao(t4) ? "" : Ir, "}"]);
                 if (o4)
                   return vr([r4, " ", a3]);
-                if (n4.arguments.length === 0)
+                if (0 === n4.arguments.length)
                   return vr([r4, xo(e4) ? Ir : " ", a3]);
                 if (s4.some(Ur))
                   return vr([r4, " ", a3]);
@@ -42601,7 +44051,7 @@ var require_standalone = __commonJS({
               return vr([].concat(g(Mo(t3, e3, i3, { inline: true })), [n3.isStatic ? "static " : "", "fn", bo(t3, e3, i3), n3.type ? vr([": ", n3.nullable ? "?" : "", t3.call(i3, "type")]) : "", " => ", t3.call(i3, "body")]));
             case "parameter":
               var o3 = "";
-              n3.flags === 1 ? o3 = "public " : n3.flags === 2 ? o3 = "protected " : n3.flags === 4 && (o3 = "private ");
+              1 === n3.flags ? o3 = "public " : 2 === n3.flags ? o3 = "protected " : 4 === n3.flags && (o3 = "private ");
               var a2 = vr([].concat(g(Mo(t3, e3, i3, { inline: true })), [o3, n3.nullable ? "?" : "", n3.type ? vr([t3.call(i3, "type"), " "]) : "", n3.byref ? "&" : "", n3.variadic ? "..." : "", "$", t3.call(i3, "name")]));
               return n3.value ? Cr(vr([a2, Kr(n3) ? " " : "", dr.printDanglingComments(t3, e3, true), vr([" =", Go(n3.name, n3.value, t3.call(i3, "value"), false, e3)])])) : a2;
             case "variadic":
@@ -42618,12 +44068,12 @@ var require_standalone = __commonJS({
               }, "properties"), u2 = n3.properties.some(function(t4) {
                 return t4.value;
               });
-              if (c2.length !== 1 || n3.properties[0].comments)
+              if (1 !== c2.length || n3.properties[0].comments)
                 c2.length > 0 && (l2 = br(c2[0]));
               else
                 l2 = A(c2, 1)[0];
-              var _2 = n3.visibility || n3.visibility === null;
-              return Cr(vr([].concat(h2, [_2 ? vr([n3.visibility === null ? "var" : n3.visibility, ""]) : "", n3.isStatic ? vr([_2 ? " " : "", "static"]) : "", l2 ? vr([" ", l2]) : "", br(vr(c2.slice(1).map(function(t4) {
+              var _2 = n3.visibility || null === n3.visibility;
+              return Cr(vr([].concat(h2, [_2 ? vr([null === n3.visibility ? "var" : n3.visibility, ""]) : "", n3.isStatic ? vr([_2 ? " " : "", "static"]) : "", l2 ? vr([" ", l2]) : "", br(vr(c2.slice(1).map(function(t4) {
                 return vr([",", u2 ? Ir : gr, t4]);
               })))])));
             case "if":
@@ -42640,7 +44090,7 @@ var require_standalone = __commonJS({
                   }));
                   return e4 && !dr.isBlockComment(e4);
                 }(n3), k2 = !T2;
-                d2.push(k2 ? "" : Ir), Kr(n3) && d2.push(ko(e3.originalText, n3.body, e3) ? Ir : "", dr.printDanglingComments(t3, e3, true), T2 ? Ir : " "), d2.push("else", Cr(n3.alternate.kind === "if" ? t3.call(i3, "alternate") : Fo(t3, e3, i3, "alternate")));
+                d2.push(k2 ? "" : Ir), Kr(n3) && d2.push(ko(e3.originalText, n3.body, e3) ? Ir : "", dr.printDanglingComments(t3, e3, true), T2 ? Ir : " "), d2.push("else", Cr("if" === n3.alternate.kind ? t3.call(i3, "alternate") : Fo(t3, e3, i3, "alternate")));
               } else
                 d2.push(n3.body ? n3.shortForm ? "endif;" : "}" : "");
               return vr(d2);
@@ -42664,20 +44114,20 @@ var require_standalone = __commonJS({
               return vr([n3.test ? vr(["case ", n3.test.comments ? br(t3.call(i3, "test")) : t3.call(i3, "test"), ":"]) : "default:", n3.body && n3.body.children && n3.body.children.length ? br(vr([to(t3) ? "" : Ir, t3.call(i3, "body")])) : ""]);
             case "break":
             case "continue":
-              return n3.level && (n3.level.kind === "number" && n3.level.value !== "1") ? vr(["".concat(n3.kind, " "), t3.call(i3, "level")]) : n3.kind;
+              return n3.level && ("number" === n3.level.kind && "1" !== n3.level.value) ? vr(["".concat(n3.kind, " "), t3.call(i3, "level")]) : n3.kind;
             case "call":
-              return n3.arguments.length === 1 && Wo(n3.arguments[0], e3.originalText, e3) ? vr([t3.call(i3, "what"), vr(["(", Ar(", ", t3.map(i3, "arguments")), ")"])]) : Zr(n3.what) ? function(t4, e4, i4) {
+              return 1 === n3.arguments.length && Wo(n3.arguments[0], e3.originalText, e3) ? vr([t3.call(i3, "what"), vr(["(", Ar(", ", t3.map(i3, "arguments")), ")"])]) : Zr(n3.what) ? function(t4, e4, i4) {
                 var n4 = [];
                 function s4(t5) {
                   var i5 = e4.originalText, n5 = To(i5, t5, e4);
-                  return i5.charAt(n5) === ")" ? Mr(i5, n5 + 1, e4) : ko(i5, t5, e4);
+                  return ")" === i5.charAt(n5) ? Mr(i5, n5 + 1, e4) : ko(i5, t5, e4);
                 }
                 function r4(t5) {
                   var o5 = t5.getValue();
-                  if (o5.kind !== "call" || !Zr(o5.what) && o5.what.kind !== "call")
+                  if ("call" !== o5.kind || !Zr(o5.what) && "call" !== o5.what.kind)
                     if (Zr(o5)) {
                       var a4 = null;
-                      a4 = o5.kind === "propertylookup" ? yo(t5, e4, i4) : o5.kind === "nullsafepropertylookup" ? vo(t5, e4, i4) : o5.kind === "staticlookup" ? Ao(t5, e4, i4) : go(t5, e4, i4), n4.unshift({ node: o5, needsParens: Er(t5), printed: dr.printAllComments(t5, function() {
+                      a4 = "propertylookup" === o5.kind ? yo(t5, e4, i4) : "nullsafepropertylookup" === o5.kind ? vo(t5, e4, i4) : "staticlookup" === o5.kind ? Ao(t5, e4, i4) : go(t5, e4, i4), n4.unshift({ node: o5, needsParens: Er(t5), printed: dr.printAllComments(t5, function() {
                         return a4;
                       }, e4) }), t5.call(function(t6) {
                         return r4(t6);
@@ -42696,44 +44146,44 @@ var require_standalone = __commonJS({
                   return r4(t5);
                 }, "what");
                 for (var a3 = 0; a3 < n4.length; ++a3)
-                  n4[a3].node.kind === "call" && n4[a3 - 1] && ["propertylookup", "staticlookup"].includes(n4[a3 - 1].node.kind) && n4[a3 - 1].needsParens && (n4[0].printed = vr(["(", n4[0].printed]), n4[a3 - 1].printed = vr([n4[a3 - 1].printed, ")"]));
-                for (var h3 = [], l3 = [n4[0]], c3 = 1; c3 < n4.length && (n4[c3].node.kind === "call" || Zr(n4[c3].node) && n4[c3].node.offset && n4[c3].node.offset.kind === "number"); ++c3)
+                  "call" === n4[a3].node.kind && n4[a3 - 1] && ["propertylookup", "staticlookup"].includes(n4[a3 - 1].node.kind) && n4[a3 - 1].needsParens && (n4[0].printed = vr(["(", n4[0].printed]), n4[a3 - 1].printed = vr([n4[a3 - 1].printed, ")"]));
+                for (var h3 = [], l3 = [n4[0]], c3 = 1; c3 < n4.length && ("call" === n4[c3].node.kind || Zr(n4[c3].node) && n4[c3].node.offset && "number" === n4[c3].node.offset.kind); ++c3)
                   l3.push(n4[c3]);
-                if (n4[0].node.kind !== "call")
+                if ("call" !== n4[0].node.kind)
                   for (; c3 + 1 < n4.length && (Zr(n4[c3].node) && Zr(n4[c3 + 1].node)); ++c3)
                     l3.push(n4[c3]);
                 h3.push(l3), l3 = [];
                 for (var u3 = false; c3 < n4.length; ++c3) {
                   if (u3 && Zr(n4[c3].node)) {
-                    if (n4[c3].node.kind === "offsetlookup" && n4[c3].node.offset && n4[c3].node.offset.kind === "number") {
+                    if ("offsetlookup" === n4[c3].node.kind && n4[c3].node.offset && "number" === n4[c3].node.offset.kind) {
                       l3.push(n4[c3]);
                       continue;
                     }
                     h3.push(l3), l3 = [], u3 = false;
                   }
-                  n4[c3].node.kind === "call" && (u3 = true), l3.push(n4[c3]), n4[c3].node.comments && dr.hasTrailingComment(n4[c3].node) && (h3.push(l3), l3 = [], u3 = false);
+                  "call" === n4[c3].node.kind && (u3 = true), l3.push(n4[c3]), n4[c3].node.comments && dr.hasTrailingComment(n4[c3].node) && (h3.push(l3), l3 = [], u3 = false);
                 }
                 l3.length > 0 && h3.push(l3);
                 function _3(t5) {
-                  var i5 = t5[1].length && t5[1][0].node.kind === "offsetlookup";
-                  if (t5[0].length === 1) {
+                  var i5 = t5[1].length && "offsetlookup" === t5[1][0].node.kind;
+                  if (1 === t5[0].length) {
                     var n5 = t5[0][0].node;
-                    return n5.kind === "variable" && (n5.name === "this" || d3 && s5(n5.name)) || _o(n5);
+                    return "variable" === n5.kind && ("this" === n5.name || d3 && s5(n5.name)) || _o(n5);
                   }
                   function s5(t6) {
                     return t6.length < e4.tabWidth;
                   }
                   var r5 = Gr(t5[0]).node;
-                  return Zr(r5) && (r5.offset.kind === "identifier" || r5.offset.kind === "variable") && i5;
+                  return Zr(r5) && ("identifier" === r5.offset.kind || "variable" === r5.offset.kind) && i5;
                 }
-                var d3 = t4.getParentNode().kind === "expressionstatement", p3 = h3.length >= 2 && !h3[1][0].node.comments && _3(h3);
+                var d3 = "expressionstatement" === t4.getParentNode().kind, p3 = h3.length >= 2 && !h3[1][0].node.comments && _3(h3);
                 function f3(t5) {
                   for (var e5 = [], i5 = 0; i5 < t5.length; i5++)
                     t5[i5 + 1] && t5[i5 + 1].needsParens ? (e5.push("(", t5[i5].printed, t5[i5 + 1].printed, ")"), i5++) : e5.push(t5[i5].printed);
                   return vr(e5);
                 }
                 function T3(t5) {
-                  return t5.length === 0 ? "" : br(Cr(vr([Ir, Ar(Ir, t5.map(f3))])));
+                  return 0 === t5.length ? "" : br(Cr(vr([Ir, Ar(Ir, t5.map(f3))])));
                 }
                 var k3 = h3.map(f3), m3 = vr(k3), E3 = p3 ? 3 : 2, x3 = h3.slice(0, E3).reduce(function(t5, e5) {
                   return t5.concat(e5);
@@ -42744,20 +44194,20 @@ var require_standalone = __commonJS({
                 }) || h3[E3] && dr.hasLeadingComment(h3[E3][0].node), v3 = uo(t4, "encapsed");
                 if (h3.length <= E3 && !y3 || v3)
                   return Cr(m3);
-                var A2 = Gr(p3 ? h3.slice(1, 2)[0] : h3[0]).node, g2 = A2.kind !== "call" && s4(A2), N3 = vr([f3(h3[0]), p3 ? vr(h3.slice(1, 2).map(f3)) : "", g2 ? Ir : "", T3(h3.slice(p3 ? 2 : 1))]), C3 = n4.filter(function(t5) {
-                  return t5.node.kind === "call";
+                var A2 = Gr(p3 ? h3.slice(1, 2)[0] : h3[0]).node, g2 = "call" !== A2.kind && s4(A2), N3 = vr([f3(h3[0]), p3 ? vr(h3.slice(1, 2).map(f3)) : "", g2 ? Ir : "", T3(h3.slice(p3 ? 2 : 1))]), C3 = n4.filter(function(t5) {
+                  return "call" === t5.node.kind;
                 }).length;
                 if (y3 || C3 >= 3 || k3.slice(0, -1).some(Ur))
                   return Cr(N3);
                 return vr([Ur(m3) || g2 ? yr : "", Sr([m3, N3])]);
               }(t3, e3, i3) : vr([t3.call(i3, "what"), bo(t3, e3, i3)]);
             case "new":
-              var S2 = n3.what && n3.what.kind === "class" && n3.what.isAnonymous;
-              if (!S2 && n3.arguments.length === 1 && Wo(n3.arguments[0], e3.originalText, e3))
+              var S2 = n3.what && "class" === n3.what.kind && n3.what.isAnonymous;
+              if (!S2 && 1 === n3.arguments.length && Wo(n3.arguments[0], e3.originalText, e3))
                 return vr(["new "].concat(g(t3.call(Mo, "what")), [t3.call(i3, "what"), "(", Ar(", ", t3.map(i3, "arguments")), ")"]));
               var b2 = [];
               if (b2.push("new "), S2)
-                b2.push.apply(b2, [n3.what.leadingComments && n3.what.leadingComments[0].kind === "commentblock" ? vr([dr.printComments(n3.what.leadingComments, e3), " "]) : ""].concat(g(t3.call(function(t4, e4, i4) {
+                b2.push.apply(b2, [n3.what.leadingComments && "commentblock" === n3.what.leadingComments[0].kind ? vr([dr.printComments(n3.what.leadingComments, e3), " "]) : ""].concat(g(t3.call(function(t4, e4, i4) {
                   return Mo(t4, e4, i4, { inline: true });
                 }, "what")), ["class", n3.arguments.length > 0 ? vr([" ", bo(t3, e3, i3)]) : "", Cr(t3.call(i3, "what"))]));
               else {
@@ -42775,7 +44225,7 @@ var require_standalone = __commonJS({
               do {
                 O2 = t3.getParentNode(R2), R2++;
               } while (O2 && Zr(O2));
-              var w2 = uo(t3, "encapsed") || O2 && (O2.kind === "new" || O2.kind === "assign" && O2.left.kind !== "variable") || n3.kind === "offsetlookup" || (_o(n3.what) || n3.what.kind === "variable") && ["identifier", "variable", "encapsedpart"].includes(n3.offset.kind) && I2 && !Zr(I2);
+              var w2 = uo(t3, "encapsed") || O2 && ("new" === O2.kind || "assign" === O2.kind && "variable" !== O2.left.kind) || "offsetlookup" === n3.kind || (_o(n3.what) || "variable" === n3.what.kind) && ["identifier", "variable", "encapsedpart"].includes(n3.offset.kind) && I2 && !Zr(I2);
               return vr([t3.call(i3, "what"), w2 ? Io(t3, e3, i3) : Cr(br(vr([Rr, Io(t3, e3, i3)])))]);
             case "exit":
               return Cr(vr([n3.useDie ? "die" : "exit", "(", n3.expression ? Wo(n3.expression, e3.originalText, e3) ? t3.call(i3, "expression") : vr([br(vr([Rr, t3.call(i3, "expression")])), Rr]) : dr.printDanglingComments(t3, e3), ")"]));
@@ -42799,7 +44249,7 @@ var require_standalone = __commonJS({
               var D2, P2 = t3.map(function(t4) {
                 return i3(t4);
               }, "expressions");
-              if (P2.length !== 1 || n3.expressions[0].comments)
+              if (1 !== P2.length || n3.expressions[0].comments)
                 P2.length > 0 && (D2 = co(n3.expressions[0]) || n3.expressions[0].comments ? br(P2[0]) : Lr(P2[0]));
               else
                 D2 = A(P2, 1)[0];
@@ -42821,14 +44271,14 @@ var require_standalone = __commonJS({
             case "empty":
               return Cr(vr(["empty(", br(vr([Rr, t3.call(i3, "expression")])), Rr, ")"]));
             case "variable":
-              var M2 = t3.getParentNode(), F2 = t3.getParentNode(1), H2 = M2.kind === "assign" ? "" : n3.byref ? "&" : "", G2 = M2.kind === "encapsedpart" && M2.syntax === "simple" && M2.curly || F2 && M2.kind === "offsetlookup" && F2.kind === "encapsedpart" && F2.syntax === "simple" && F2.curly ? "" : "$", V2 = n3.curly ? "{" : "", W2 = n3.curly ? "}" : "";
+              var M2 = t3.getParentNode(), F2 = t3.getParentNode(1), H2 = "assign" === M2.kind ? "" : n3.byref ? "&" : "", G2 = "encapsedpart" === M2.kind && "simple" === M2.syntax && M2.curly || F2 && "offsetlookup" === M2.kind && "encapsedpart" === F2.kind && "simple" === F2.syntax && F2.curly ? "" : "$", V2 = n3.curly ? "{" : "", W2 = n3.curly ? "}" : "";
               return vr([H2, G2, V2, t3.call(i3, "name"), W2]);
             case "constantstatement":
             case "classconstant":
               var Q2, Y2 = Mo(t3, e3, i3), j2 = t3.map(function(t4) {
                 return i3(t4);
               }, "constants");
-              if (j2.length !== 1 || n3.constants[0].comments)
+              if (1 !== j2.length || n3.constants[0].comments)
                 j2.length > 0 && (Q2 = br(j2[0]));
               else
                 Q2 = A(j2, 1)[0];
@@ -42843,7 +44293,7 @@ var require_standalone = __commonJS({
               }, "variables"), K2 = n3.variables.some(function(t4) {
                 return t4.defaultValue;
               });
-              if (z2.length !== 1 || n3.variables[0].comments)
+              if (1 !== z2.length || n3.variables[0].comments)
                 z2.length > 0 && ($2 = br(z2[0]));
               else
                 $2 = A(z2, 1)[0];
@@ -42854,11 +44304,11 @@ var require_standalone = __commonJS({
               return Ho(n3.variable, t3.call(i3, "variable"), " =", n3.defaultValue, t3.call(i3, "defaultValue"), false, e3);
             case "list":
             case "array":
-              var X2 = n3.kind === "array" && mo(e3.phpVersion, "5.4") || n3.kind === "list" && (n3.shortForm || mo(e3.phpVersion, "7.1")), J2 = X2 ? "[" : vr([n3.kind, "("]), q2 = X2 ? "]" : ")";
-              if (n3.items.length === 0)
+              var X2 = "array" === n3.kind && mo(e3.phpVersion, "5.4") || "list" === n3.kind && (n3.shortForm || mo(e3.phpVersion, "7.1")), J2 = X2 ? "[" : vr([n3.kind, "("]), q2 = X2 ? "]" : ")";
+              if (0 === n3.items.length)
                 return Kr(n3) ? Cr(vr([J2, dr.printDanglingComments(t3, e3), Rr, q2])) : vr([J2, q2]);
-              var Z2 = Gr(n3.items), tt2 = Z2 && Z2.kind === "noop", et2 = A(n3.items.filter(function(t4) {
-                return t4.kind !== "noop";
+              var Z2 = Gr(n3.items), tt2 = Z2 && "noop" === Z2.kind, et2 = A(n3.items.filter(function(t4) {
+                return "noop" !== t4.kind;
               }).sort(function(t4, i4) {
                 return e3.locStart(t4) - e3.locStart(i4);
               }), 1)[0], it2 = !(!et2 || !et2.key) && et2 && Hr(e3.originalText, e3.locStart(n3), e3.locStart(et2));
@@ -42881,16 +44331,16 @@ var require_standalone = __commonJS({
               return vr(["(", n3.type, ") ", n3.expr.comments ? br(t3.call(i3, "expr")) : t3.call(i3, "expr")]);
             case "assignref":
             case "assign":
-              var ot2 = n3.kind === "assignref";
+              var ot2 = "assignref" === n3.kind;
               return Ho(n3.left, t3.call(i3, "left"), vr([" ", ot2 ? "=" : n3.operator]), n3.right, t3.call(i3, "right"), ot2, e3);
             case "bin":
-              var at2 = t3.getParentNode(), ht2 = t3.getParentNode(1), lt2 = n3 !== at2.body && (at2.kind === "if" || at2.kind === "while" || at2.kind === "switch" || at2.kind === "do"), ct2 = function t4(e4, i4, n4, s4, r4) {
+              var at2 = t3.getParentNode(), ht2 = t3.getParentNode(1), lt2 = n3 !== at2.body && ("if" === at2.kind || "while" === at2.kind || "switch" === at2.kind || "do" === at2.kind), ct2 = function t4(e4, i4, n4, s4, r4) {
                 var o4 = [], a3 = e4.getValue();
-                if (a3.kind === "bin") {
+                if ("bin" === a3.kind) {
                   jr(a3.type, a3.left.type) ? o4 = o4.concat(e4.call(function(e5) {
                     return t4(e5, i4, n4, true, r4);
                   }, "left")) : o4.push(e4.call(i4, "left"));
-                  var h3 = Oo(a3), l3 = vr(h3 ? [a3.type, " ", e4.call(i4, "right")] : [a3.type, gr, e4.call(i4, "right")]), c3 = e4.getParentNode(), u3 = !(r4 && ["||", "&&"].includes(a3.type)) && ro(c3) !== ro(a3) && ro(a3.left) !== ro(a3) && ro(a3.right) !== ro(a3), _3 = co(a3.left) || a3.left.kind === "bin" && co(a3.left.right);
+                  var h3 = Oo(a3), l3 = vr(h3 ? [a3.type, " ", e4.call(i4, "right")] : [a3.type, gr, e4.call(i4, "right")]), c3 = e4.getParentNode(), u3 = !(r4 && ["||", "&&"].includes(a3.type)) && ro(c3) !== ro(a3) && ro(a3.left) !== ro(a3) && ro(a3.right) !== ro(a3), _3 = co(a3.left) || "bin" === a3.left.kind && co(a3.left.right);
                   o4.push(_3 ? "" : " ", u3 ? Cr(l3) : l3), s4 && a3.comments && (o4 = dr.printAllComments(e4, function() {
                     return vr(o4);
                   }, n4));
@@ -42900,9 +44350,9 @@ var require_standalone = __commonJS({
               }(t3, i3, e3, false, lt2);
               if (lt2)
                 return vr(ct2);
-              if (at2.kind === "unary" || Zr(at2) && at2.kind !== "offsetlookup")
+              if ("unary" === at2.kind || Zr(at2) && "offsetlookup" !== at2.kind)
                 return Cr(vr([br(vr([Rr, vr(ct2)])), Rr]));
-              var ut2 = n3 !== at2.body && at2.kind === "for" || at2.kind === "retif" && ht2 && ht2.kind !== "return", _t2 = ["assign", "property", "constant", "staticvariable", "entry"].includes(at2.kind), dt2 = n3.left.kind === "bin" && jr(n3.type, n3.left.type);
+              var ut2 = n3 !== at2.body && "for" === at2.kind || "retif" === at2.kind && ht2 && "return" !== ht2.kind, _t2 = ["assign", "property", "constant", "staticvariable", "entry"].includes(at2.kind), dt2 = "bin" === n3.left.kind && jr(n3.type, n3.left.type);
               if (ut2 || Oo(n3) && !dt2 || !Oo(n3) && _t2)
                 return Cr(vr(ct2));
               var pt2 = vr(ct2.slice(1));
@@ -42911,41 +44361,41 @@ var require_standalone = __commonJS({
               var ft2, Tt2 = [], kt2 = t3.getParentNode(), mt2 = 0;
               do {
                 ft2 = t3.getParentNode(mt2), mt2++;
-              } while (ft2 && ft2.kind === "retif");
-              var Et2 = ft2 || kt2, xt2 = n3.falseExpr.kind === "bin" ? br(t3.call(i3, "falseExpr")) : t3.call(i3, "falseExpr"), yt2 = vr([n3.trueExpr ? gr : " ", "?", n3.trueExpr ? vr([" ", n3.trueExpr.kind === "bin" ? br(t3.call(i3, "trueExpr")) : t3.call(i3, "trueExpr"), gr]) : "", ":", n3.trueExpr ? vr([" ", xt2]) : vr([Lo(n3.falseExpr) ? " " : gr, xt2])]);
+              } while (ft2 && "retif" === ft2.kind);
+              var Et2 = ft2 || kt2, xt2 = "bin" === n3.falseExpr.kind ? br(t3.call(i3, "falseExpr")) : t3.call(i3, "falseExpr"), yt2 = vr([n3.trueExpr ? gr : " ", "?", n3.trueExpr ? vr([" ", "bin" === n3.trueExpr.kind ? br(t3.call(i3, "trueExpr")) : t3.call(i3, "trueExpr"), gr]) : "", ":", n3.trueExpr ? vr([" ", xt2]) : vr([Lo(n3.falseExpr) ? " " : gr, xt2])]);
               Tt2.push(yt2);
               var vt2 = function(t4) {
                 return kt2 === Et2 ? Cr(t4) : t4;
-              }, At2 = t3.getParentNode(1), gt2 = kt2.kind === "cast" && At2 ? At2 : kt2, Nt2 = ["propertylookup", "staticlookup"].includes(gt2.kind), Ct2 = t3.call(i3, "test");
+              }, At2 = t3.getParentNode(1), gt2 = "cast" === kt2.kind && At2 ? At2 : kt2, Nt2 = ["propertylookup", "staticlookup"].includes(gt2.kind), Ct2 = t3.call(i3, "test");
               if (!n3.trueExpr) {
-                var St2 = vr([Ct2, gt2.kind === "bin" || ["print", "echo", "return", "include"].includes(Et2.kind) ? br(vr(Tt2)) : vr(Tt2)]);
-                return gt2.kind === "call" && gt2.what === n3 || gt2.kind === "unary" || Zr(gt2) && gt2.kind !== "offsetlookup" ? Cr(vr([br(vr([Rr, St2])), Rr])) : vt2(St2);
+                var St2 = vr([Ct2, "bin" === gt2.kind || ["print", "echo", "return", "include"].includes(Et2.kind) ? br(vr(Tt2)) : vr(Tt2)]);
+                return "call" === gt2.kind && gt2.what === n3 || "unary" === gt2.kind || Zr(gt2) && "offsetlookup" !== gt2.kind ? Cr(vr([br(vr([Rr, St2])), Rr])) : vt2(St2);
               }
-              return vt2(vr([n3.test.kind === "retif" ? br(Ct2) : Ct2, br(vr(Tt2)), Nt2 ? Rr : ""]));
+              return vt2(vr(["retif" === n3.test.kind ? br(Ct2) : Ct2, br(vr(Tt2)), Nt2 ? Rr : ""]));
             case "boolean":
               return n3.value ? "true" : "false";
             case "number":
               return Yr(n3.value);
             case "string":
-              if (t3.getParentNode().kind === "encapsedpart") {
+              if ("encapsedpart" === t3.getParentNode().kind) {
                 var bt2 = t3.getParentNode(1), Lt2 = 0, Ot2 = mo(e3.phpVersion, "7.3"), It2 = wr;
-                if (bt2.type === "heredoc") {
+                if ("heredoc" === bt2.type) {
                   It2 = Ot2 ? Ir : wr;
                   var Rt2 = bt2.raw.split(/\r?\n/g);
-                  (Lt2 = Rt2[Rt2.length - 1].search(/\S/)) === -1 && (Lt2 = Rt2[Rt2.length - 2].search(/\S/));
+                  -1 === (Lt2 = Rt2[Rt2.length - 1].search(/\S/)) && (Lt2 = Rt2[Rt2.length - 2].search(/\S/));
                 }
                 return Ar(It2, n3.raw.split(/\r?\n/g).map(function(t4, e4) {
-                  return e4 > 0 || n3.loc.start.column === 0 ? t4.substring(Lt2) : t4;
+                  return e4 > 0 || 0 === n3.loc.start.column ? t4.substring(Lt2) : t4;
                 }));
               }
               var wt2 = oo(n3, e3) ? '"' : "'", Dt2 = n3.raw;
-              return n3.raw[0] === "b" && (Dt2 = Dt2.slice(1)), ['"', "'"].includes(Dt2[0]) && (Dt2 = Dt2.substr(1)), ['"', "'"].includes(Dt2[Dt2.length - 1]) && (Dt2 = Dt2.substr(0, Dt2.length - 1)), vr([n3.raw[0] === "b" ? "b" : "", wt2, Ar(wr, Dt2.split(/\r?\n/g)), wt2]);
+              return "b" === n3.raw[0] && (Dt2 = Dt2.slice(1)), ['"', "'"].includes(Dt2[0]) && (Dt2 = Dt2.substr(1)), ['"', "'"].includes(Dt2[Dt2.length - 1]) && (Dt2 = Dt2.substr(0, Dt2.length - 1)), vr(["b" === n3.raw[0] ? "b" : "", wt2, Ar(wr, Dt2.split(/\r?\n/g)), wt2]);
             case "uniontype":
               return Cr(vr(t3.map(function(e4, n4) {
-                return vr(n4 === 0 ? [t3.call(i3)] : ["|", t3.call(i3)]);
+                return vr(0 === n4 ? [t3.call(i3)] : ["|", t3.call(i3)]);
               }, "types")));
             case "encapsedpart":
-              var Pt2 = n3.syntax === "simple" && n3.curly || n3.syntax === "complex" ? vr([n3.curly ? "$" : "", "{"]) : "", Ut2 = n3.syntax === "simple" && n3.curly || n3.syntax === "complex" ? "}" : "";
+              var Pt2 = "simple" === n3.syntax && n3.curly || "complex" === n3.syntax ? vr([n3.curly ? "$" : "", "{"]) : "", Ut2 = "simple" === n3.syntax && n3.curly || "complex" === n3.syntax ? "}" : "";
               return vr([Pt2, t3.call(i3, "expression"), Ut2]);
             case "encapsed":
               switch (n3.type) {
@@ -42953,7 +44403,7 @@ var require_standalone = __commonJS({
                 case "shell":
                 case "heredoc":
                   var Bt2 = mo(e3.phpVersion, "7.3") ? Ir : wr;
-                  return vr([Ro(n3), n3.type === "heredoc" ? Bt2 : "", vr(t3.map(i3, "value")), Ro(n3, { opening: false }), n3.type === "heredoc" && qr(t3) ? Ir : ""]);
+                  return vr([Ro(n3), "heredoc" === n3.type ? Bt2 : "", vr(t3.map(i3, "value")), Ro(n3, { opening: false }), "heredoc" === n3.type && qr(t3) ? Ir : ""]);
                 default:
                   return "Have not implemented kind ".concat(n3.type, " yet.");
               }
@@ -42965,7 +44415,7 @@ var require_standalone = __commonJS({
               var Mt2 = mo(e3.phpVersion, "7.3") ? Ir : wr;
               return vr(["<<<'", n3.label, "'", Mt2, Ar(Mt2, n3.value.split(/\r?\n/g)), Mt2, n3.label, qr(t3) ? Ir : ""]);
             case "name":
-              return vr([n3.resolution === "rn" ? "namespace\\" : "", n3.name]);
+              return vr(["rn" === n3.resolution ? "namespace\\" : "", n3.name]);
             case "literal":
               return t3.call(i3, "value");
             case "parentreference":
@@ -42979,10 +44429,10 @@ var require_standalone = __commonJS({
             case "nullkeyword":
               return "null";
             case "identifier":
-              return t3.getParentNode().kind === "method" && (n3.name = fo(n3.name)), t3.call(i3, "name");
+              return "method" === t3.getParentNode().kind && (n3.name = fo(n3.name)), t3.call(i3, "name");
             case "match":
               var Ft2 = t3.map(function(t4, e4) {
-                var n4 = t4.getValue().conds === null ? "default" : vr(t4.map(function(t5, e5) {
+                var n4 = null === t4.getValue().conds ? "default" : vr(t4.map(function(t5, e5) {
                   return Cr(vr(e5 > 0 ? [",", gr, i3(t5)] : [i3(t5)]));
                 }, "conds")), s4 = t4.call(i3, "body");
                 return vr(e4 > 0 ? [", ", gr, n4, " => ", s4] : [gr, n4, " => ", s4]);
@@ -43002,37 +44452,37 @@ var require_standalone = __commonJS({
       var Yo = function(t2, e2) {
         if (["loc", "range", "raw", "comments", "leadingComments", "trailingComments", "parenthesizedExpression", "parent", "prev", "start", "end", "tokens", "errors", "extra"].forEach(function(t3) {
           delete e2[t3];
-        }), t2.kind === "string" && delete e2.isDoubleQuote, ["array", "list"].includes(t2.kind) && delete e2.shortForm, t2.kind === "inline") {
+        }), "string" === t2.kind && delete e2.isDoubleQuote, ["array", "list"].includes(t2.kind) && delete e2.shortForm, "inline" === t2.kind) {
           if (t2.value.includes("___PSEUDO_INLINE_PLACEHOLDER___"))
             return null;
           e2.value = e2.value.replace(/\r\n?|\n/g, "");
         }
-        if ((t2.kind === "continue" || t2.kind === "break") && t2.level) {
+        if (("continue" === t2.kind || "break" === t2.kind) && t2.level) {
           var i2 = e2.level;
-          i2.kind === "number" && (e2.level = i2.value === "1" ? null : i2);
+          "number" === i2.kind && (e2.level = "1" === i2.value ? null : i2);
         }
-        if (t2.kind === "block" && t2.children.length === 1 && t2.children[0].kind === "block")
-          for (; e2.children[0].kind === "block"; )
+        if ("block" === t2.kind && 1 === t2.children.length && "block" === t2.children[0].kind)
+          for (; "block" === e2.children[0].kind; )
             e2.children = e2.children[0].children;
-        if (t2.kind === "number" && (e2.value = Rs.printNumber(t2.value)), ["foreach", "for", "if", "while", "do"].includes(t2.kind) && (t2.body && t2.body.kind !== "block" ? e2.body = { kind: "block", children: [e2.body] } : e2.body = e2.body ? e2.body : null, t2.alternate && t2.alternate.kind !== "block" ? e2.alternate = { kind: "block", children: [e2.alternate] } : e2.alternate = e2.alternate ? e2.alternate : null), t2.kind === "usegroup" && typeof t2.name == "string" && (e2.name = e2.name.replace(/^\\/, "")), t2.kind === "useitem" && (e2.name = e2.name.replace(/^\\/, "")), t2.kind === "method" && t2.name.kind === "identifier" && (e2.name.name = Rs.normalizeMagicMethodName(e2.name.name)), t2.kind === "noop")
+        if ("number" === t2.kind && (e2.value = Rs.printNumber(t2.value)), ["foreach", "for", "if", "while", "do"].includes(t2.kind) && (t2.body && "block" !== t2.body.kind ? e2.body = { kind: "block", children: [e2.body] } : e2.body = e2.body ? e2.body : null, t2.alternate && "block" !== t2.alternate.kind ? e2.alternate = { kind: "block", children: [e2.alternate] } : e2.alternate = e2.alternate ? e2.alternate : null), "usegroup" === t2.kind && "string" == typeof t2.name && (e2.name = e2.name.replace(/^\\/, "")), "useitem" === t2.kind && (e2.name = e2.name.replace(/^\\/, "")), "method" === t2.kind && "identifier" === t2.name.kind && (e2.name.name = Rs.normalizeMagicMethodName(e2.name.name)), "noop" === t2.kind)
           return null;
       }, jo = "PHP", $o = { phpVersion: { since: "0.13.0", category: jo, type: "choice", default: "7.0", description: "Minimum target PHP version.", choices: [{ value: "5.0" }, { value: "5.1" }, { value: "5.2" }, { value: "5.3" }, { value: "5.4" }, { value: "5.5" }, { value: "5.6" }, { value: "7.0" }, { value: "7.1" }, { value: "7.2" }, { value: "7.3" }, { value: "7.4" }, { value: "8.0" }] }, trailingCommaPHP: { since: "0.0.0", category: jo, type: "boolean", default: true, description: "Print trailing commas wherever possible when multi-line." }, braceStyle: { since: "0.10.0", category: jo, type: "choice", default: "psr-2", description: "Print one space or newline for code blocks (classes and functions).", choices: [{ value: "psr-2", description: "Use PSR-2 brace style." }, { value: "1tbs", description: "Use 1tbs brace style." }] } }, zo = function(t2, e2, i2, n2) {
-        if (i2 !== "length" && i2 !== "prototype" && i2 !== "arguments" && i2 !== "caller") {
+        if ("length" !== i2 && "prototype" !== i2 && "arguments" !== i2 && "caller" !== i2) {
           var s2 = Object.getOwnPropertyDescriptor(t2, i2), r2 = Object.getOwnPropertyDescriptor(e2, i2);
           !Ko(s2, r2) && n2 || Object.defineProperty(t2, i2, r2);
         }
       }, Ko = function(t2, e2) {
-        return t2 === void 0 || t2.configurable || t2.writable === e2.writable && t2.enumerable === e2.enumerable && t2.configurable === e2.configurable && (t2.writable || t2.value === e2.value);
+        return void 0 === t2 || t2.configurable || t2.writable === e2.writable && t2.enumerable === e2.enumerable && t2.configurable === e2.configurable && (t2.writable || t2.value === e2.value);
       }, Xo = function(t2, e2) {
         var i2 = Object.getPrototypeOf(e2);
         i2 !== Object.getPrototypeOf(t2) && Object.setPrototypeOf(t2, i2);
       }, Jo = function(t2, e2) {
         return "/* Wrapped ".concat(t2, "*/\n").concat(e2);
       }, qo = Object.getOwnPropertyDescriptor(Function.prototype, "toString"), Zo = Object.getOwnPropertyDescriptor(Function.prototype.toString, "name"), ta = function(t2, e2, i2) {
-        var n2 = i2 === "" ? "" : "with ".concat(i2.trim(), "() "), s2 = Jo.bind(null, n2, e2.toString());
+        var n2 = "" === i2 ? "" : "with ".concat(i2.trim(), "() "), s2 = Jo.bind(null, n2, e2.toString());
         Object.defineProperty(s2, "name", Zo), Object.defineProperty(t2, "toString", v(v({}, qo), {}, { value: s2 }));
       }, ea = function(t2, e2) {
-        var i2, n2 = arguments.length > 2 && arguments[2] !== void 0 ? arguments[2] : {}, s2 = n2.ignoreNonConfigurable, r2 = s2 !== void 0 && s2, o2 = t2.name, a2 = S(Reflect.ownKeys(e2));
+        var i2, n2 = arguments.length > 2 && void 0 !== arguments[2] ? arguments[2] : {}, s2 = n2.ignoreNonConfigurable, r2 = void 0 !== s2 && s2, o2 = t2.name, a2 = S(Reflect.ownKeys(e2));
         try {
           for (a2.s(); !(i2 = a2.n()).done; ) {
             var h2 = i2.value;
@@ -43044,7 +44494,7 @@ var require_standalone = __commonJS({
           a2.f();
         }
         return Xo(t2, e2), ta(t2, e2, o2), t2;
-      }, ia = typeof globalThis != "undefined" ? globalThis : typeof window != "undefined" ? window : typeof global != "undefined" ? global : typeof self != "undefined" ? self : {};
+      }, ia = "undefined" != typeof globalThis ? globalThis : "undefined" != typeof window ? window : "undefined" != typeof global ? global : "undefined" != typeof self ? self : {};
       function na(t2) {
         return t2 && t2.default || t2;
       }
@@ -43085,14 +44535,14 @@ var require_standalone = __commonJS({
         Object.defineProperty(e2, "__esModule", { value: true });
         var s2 = n2(ra);
         function r2(t3) {
-          var e3, n3, r3, o2 = this, a2 = arguments.length > 1 && arguments[1] !== void 0 ? arguments[1] : "maxAge", h2 = function() {
+          var e3, n3, r3, o2 = this, a2 = arguments.length > 1 && void 0 !== arguments[1] ? arguments[1] : "maxAge", h2 = function() {
             return i2(o2, void 0, void 0, regeneratorRuntime.mark(function o3() {
               var h3, l3, c3, u2, _2 = this;
               return regeneratorRuntime.wrap(function(o4) {
                 for (; ; )
                   switch (o4.prev = o4.next) {
                     case 0:
-                      if (e3 === void 0) {
+                      if (void 0 === e3) {
                         o4.next = 2;
                         break;
                       }
@@ -43111,9 +44561,9 @@ var require_standalone = __commonJS({
                                   }
                                   return t3.delete(o5[0]), r3.resolve(), i4.abrupt("return");
                                 case 6:
-                                  return e3 = o5[0], typeof (n3 = setTimeout(function() {
+                                  return e3 = o5[0], "function" == typeof (n3 = setTimeout(function() {
                                     t3.delete(o5[0]), r3 && r3.resolve();
-                                  }, h4)).unref == "function" && n3.unref(), i4.abrupt("return", r3.promise);
+                                  }, h4)).unref && n3.unref(), i4.abrupt("return", r3.promise);
                                 case 10:
                                 case "end":
                                   return i4.stop();
@@ -43151,7 +44601,7 @@ var require_standalone = __commonJS({
               }, o3, null, [[3, 23], [5, 15, 18, 21]]);
             }));
           }, l2 = function() {
-            e3 = void 0, n3 !== void 0 && (clearTimeout(n3), n3 = void 0), r3 !== void 0 && (r3.reject(void 0), r3 = void 0);
+            e3 = void 0, void 0 !== n3 && (clearTimeout(n3), n3 = void 0), void 0 !== r3 && (r3.reject(void 0), r3 = void 0);
           }, c2 = t3.set.bind(t3);
           return t3.set = function(i3, n4) {
             t3.has(i3) && t3.delete(i3);
@@ -43163,8 +44613,8 @@ var require_standalone = __commonJS({
       });
       (sa = oa) && sa.__esModule && Object.prototype.hasOwnProperty.call(sa, "default") && sa.default;
       var aa = oa, ha = /* @__PURE__ */ new WeakMap(), la = /* @__PURE__ */ new WeakMap(), ca = function(t2) {
-        var e2 = arguments.length > 1 && arguments[1] !== void 0 ? arguments[1] : {}, i2 = e2.cacheKey, n2 = e2.cache, s2 = n2 === void 0 ? /* @__PURE__ */ new Map() : n2, r2 = e2.maxAge;
-        typeof r2 == "number" && aa(s2);
+        var e2 = arguments.length > 1 && void 0 !== arguments[1] ? arguments[1] : {}, i2 = e2.cacheKey, n2 = e2.cache, s2 = void 0 === n2 ? /* @__PURE__ */ new Map() : n2, r2 = e2.maxAge;
+        "number" == typeof r2 && aa(s2);
         var o2 = function() {
           for (var e3 = arguments.length, n3 = new Array(e3), o3 = 0; o3 < e3; o3++)
             n3[o3] = arguments[o3];
@@ -43177,10 +44627,10 @@ var require_standalone = __commonJS({
         return ea(o2, t2, { ignoreNonConfigurable: true }), la.set(o2, s2), o2;
       };
       ca.decorator = function() {
-        var t2 = arguments.length > 0 && arguments[0] !== void 0 ? arguments[0] : {};
+        var t2 = arguments.length > 0 && void 0 !== arguments[0] ? arguments[0] : {};
         return function(e2, i2, n2) {
           var s2 = e2[i2];
-          if (typeof s2 != "function")
+          if ("function" != typeof s2)
             throw new TypeError("The decorated value must be a function");
           delete n2.value, delete n2.writable, n2.get = function() {
             if (!ha.has(this)) {
@@ -43194,13 +44644,13 @@ var require_standalone = __commonJS({
         var e2 = la.get(t2);
         if (!e2)
           throw new TypeError("Can't clear a function that was not memoized!");
-        if (typeof e2.clear != "function")
+        if ("function" != typeof e2.clear)
           throw new TypeError("The cache Map can't be cleared!");
         e2.clear();
       };
       var ua = /@prettier|@format/, _a = ca(function(t2) {
         var e2 = cs(t2), i2 = A(e2.children, 1)[0], n2 = A(e2.comments.filter(function(t3) {
-          return t3.kind === "commentblock";
+          return "commentblock" === t3.kind;
         }), 1)[0];
         if (i2 && n2 && n2.loc.start.line < i2.loc.start.line)
           return n2;
@@ -43220,7 +44670,7 @@ var require_standalone = __commonJS({
           var i2 = e2.loc, n2 = i2.start.offset, s2 = i2.end.offset, r2 = t2.substring(0, n2), o2 = t2.substring(s2);
           return "".concat(r2).concat(function(t3, e3) {
             var i3 = t3.split(/\r?\n/g);
-            if (i3.length === 1) {
+            if (1 === i3.length) {
               var n3 = A(/\/*\*\*(.*)\*\//.exec(i3[0]), 2)[1];
               i3 = ["/**", " * ".concat(n3.trim()), " */"];
             }
@@ -43229,7 +44679,7 @@ var require_standalone = __commonJS({
             }) || 1;
             return i3.splice(s3, 0, " * @format"), i3.join(function(t4) {
               var e4 = t4.indexOf("\n");
-              return e4 >= 0 && t4.charAt(e4 - 1) === "\r" ? "\r\n" : "\n";
+              return e4 >= 0 && "\r" === t4.charAt(e4 - 1) ? "\r\n" : "\n";
             }(e3));
           }(e2.value, t2)).concat(o2);
         }
@@ -43242,7 +44692,7 @@ var require_standalone = __commonJS({
       function Ha(t2, e2) {
         var i2 = e2.extend, n2 = e2.override, s2 = {};
         for (var r2 in t2) {
-          s2[r2 === "languageId" ? "linguistLanguageId" : r2] = t2[r2];
+          s2["languageId" === r2 ? "linguistLanguageId" : r2] = t2[r2];
         }
         if (i2)
           for (var o2 in i2)
@@ -43257,7 +44707,7 @@ var require_standalone = __commonJS({
         };
       }, Wa = { php: { parse: cs, astFormat: "php", locStart: Va("start"), locEnd: Va("end"), hasPragma: Ma } }, Qa = { languages: Ga, printers: { php: { print: Qo, insertPragma: Fa, massageAstNode: Yo, getCommentChildNodes: dr.getCommentChildNodes, canAttachComment: dr.canAttachComment, isBlockComment: dr.isBlockComment, handleComments: { ownLine: dr.handleOwnLineComment, endOfLine: dr.handleEndOfLineComment, remaining: dr.handleRemainingComment }, willPrintOwnComments(t2) {
         var e2 = t2.getValue();
-        return e2 && e2.kind === "noop";
+        return e2 && "noop" === e2.kind;
       }, printComment(t2) {
         var e2 = t2.getValue();
         switch (e2.kind) {
@@ -43266,7 +44716,7 @@ var require_standalone = __commonJS({
               return e2.value;
             var i2 = e2.value.split(/\r?\n/g);
             return i2.slice(1, i2.length - 1).every(function(t3) {
-              return t3.trim()[0] === "*";
+              return "*" === t3.trim()[0];
             }) ? Ua(Ba, i2.map(function(t3, e3) {
               return (e3 > 0 ? " " : "") + (e3 < i2.length - 1 ? t3.trim() : t3.trimLeft());
             })) : e2.value;
@@ -43279,7 +44729,7 @@ var require_standalone = __commonJS({
         var e2 = function(t3) {
           return t3.value.includes("prettier-ignore") && !t3.value.includes("prettier-ignore-start") && !t3.value.includes("prettier-ignore-end");
         }, i2 = t2.getParentNode(), n2 = t2.getNode();
-        return n2 && n2.kind !== "classconstant" && n2.comments && n2.comments.length > 0 && n2.comments.some(e2) || n2 && n2.kind === "constant" && i2 && i2.kind === "classconstant" && i2.comments && i2.comments.length > 0 && i2.comments.some(e2);
+        return n2 && "classconstant" !== n2.kind && n2.comments && n2.comments.length > 0 && n2.comments.some(e2) || n2 && "constant" === n2.kind && i2 && "classconstant" === i2.kind && i2.comments && i2.comments.length > 0 && i2.comments.some(e2);
       } } }, parsers: Wa, options: $o, defaultOptions: { tabWidth: 4 } }, Ya = Qa.languages, ja = Qa.printers, $a = Qa.parsers, za = Qa.options, Ka = Qa.defaultOptions;
       t.default = Qa, t.defaultOptions = Ka, t.languages = Ya, t.options = za, t.parsers = $a, t.printers = ja, Object.defineProperty(t, "__esModule", { value: true });
     });
@@ -43303,11 +44753,19 @@ function cleanOptions(options) {
   return options;
 }
 function setOptions(options) {
-  htmlOptions = cleanOptions(Object.assign({}, options, { htmlWhitespaceSensitivity: "ignore", parser: "html", plugins: options.plugins }));
-  phpOptions = cleanOptions(Object.assign({}, options, {
-    parser: "php",
-    plugins: [import_standalone.default]
-  }));
+  htmlOptions = cleanOptions(
+    Object.assign(
+      {},
+      options,
+      { htmlWhitespaceSensitivity: "ignore", parser: "html", plugins: options.plugins }
+    )
+  );
+  phpOptions = cleanOptions(
+    Object.assign({}, options, {
+      parser: "php",
+      plugins: [import_standalone.default]
+    })
+  );
 }
 function formatPhp(text) {
   let result = prettier.format("<?php " + text, phpOptions).trim();
@@ -43323,6 +44781,7 @@ function formatAsHtml(text) {
 var prettier, plugin, import_standalone, phpOptions, htmlOptions;
 var init_utils6 = __esm({
   "server/src/formatting/prettier/utils.ts"() {
+    "use strict";
     prettier = __toESM(require("prettier"));
     plugin = __toESM(require_plugin());
     import_standalone = __toESM(require_standalone());
@@ -43441,7 +44900,13 @@ function makeSnippet(mark, options) {
   for (i = 1; i <= options.linesBefore; i++) {
     if (foundLineNo - i < 0)
       break;
-    line = getLine(mark.buffer, lineStarts[foundLineNo - i], lineEnds[foundLineNo - i], mark.position - (lineStarts[foundLineNo] - lineStarts[foundLineNo - i]), maxLineLength);
+    line = getLine(
+      mark.buffer,
+      lineStarts[foundLineNo - i],
+      lineEnds[foundLineNo - i],
+      mark.position - (lineStarts[foundLineNo] - lineStarts[foundLineNo - i]),
+      maxLineLength
+    );
     result = common.repeat(" ", options.indent) + padStart((mark.line - i + 1).toString(), lineNoLength) + " | " + line.str + "\n" + result;
   }
   line = getLine(mark.buffer, lineStarts[foundLineNo], lineEnds[foundLineNo], mark.position, maxLineLength);
@@ -43450,7 +44915,13 @@ function makeSnippet(mark, options) {
   for (i = 1; i <= options.linesAfter; i++) {
     if (foundLineNo + i >= lineEnds.length)
       break;
-    line = getLine(mark.buffer, lineStarts[foundLineNo + i], lineEnds[foundLineNo + i], mark.position - (lineStarts[foundLineNo] - lineStarts[foundLineNo + i]), maxLineLength);
+    line = getLine(
+      mark.buffer,
+      lineStarts[foundLineNo + i],
+      lineEnds[foundLineNo + i],
+      mark.position - (lineStarts[foundLineNo] - lineStarts[foundLineNo + i]),
+      maxLineLength
+    );
     result += common.repeat(" ", options.indent) + padStart((mark.line + i + 1).toString(), lineNoLength) + " | " + line.str + "\n";
   }
   return result.replace(/\n$/, "");
@@ -43964,7 +45435,10 @@ function charFromCodepoint(c) {
   if (c <= 65535) {
     return String.fromCharCode(c);
   }
-  return String.fromCharCode((c - 65536 >> 10) + 55296, (c - 65536 & 1023) + 56320);
+  return String.fromCharCode(
+    (c - 65536 >> 10) + 55296,
+    (c - 65536 & 1023) + 56320
+  );
 }
 function State$1(input, options) {
   this.input = input;
@@ -45184,7 +46658,16 @@ function writeScalar(state, string, level, iskey, inblock) {
     function testAmbiguity(string2) {
       return testImplicitResolving(state, string2);
     }
-    switch (chooseScalarStyle(string, singleLineOnly, state.indent, lineWidth, testAmbiguity, state.quotingType, state.forceQuotes && !iskey, inblock)) {
+    switch (chooseScalarStyle(
+      string,
+      singleLineOnly,
+      state.indent,
+      lineWidth,
+      testAmbiguity,
+      state.quotingType,
+      state.forceQuotes && !iskey,
+      inblock
+    )) {
       case STYLE_PLAIN:
         return string;
       case STYLE_SINGLE:
@@ -45481,7 +46964,9 @@ function writeNode(state, level, object, block, compact, iskey, isblockseq) {
       throw new exception("unacceptable kind of an object to dump " + type2);
     }
     if (state.tag !== null && state.tag !== "?") {
-      tagStr = encodeURI(state.tag[0] === "!" ? state.tag.slice(1) : state.tag).replace(/!/g, "%21");
+      tagStr = encodeURI(
+        state.tag[0] === "!" ? state.tag.slice(1) : state.tag
+      ).replace(/!/g, "%21");
       if (state.tag[0] === "!") {
         tagStr = "!" + tagStr;
       } else if (tagStr.slice(0, 18) === "tag:yaml.org,2002:") {
@@ -45719,7 +47204,9 @@ var init_js_yaml = __esm({
         hexadecimal: [16, "hex"]
       }
     });
-    YAML_FLOAT_PATTERN = new RegExp("^(?:[-+]?(?:[0-9][0-9_]*)(?:\\.[0-9_]*)?(?:[eE][-+]?[0-9]+)?|\\.[0-9_]+(?:[eE][-+]?[0-9]+)?|[-+]?\\.(?:inf|Inf|INF)|\\.(?:nan|NaN|NAN))$");
+    YAML_FLOAT_PATTERN = new RegExp(
+      "^(?:[-+]?(?:[0-9][0-9_]*)(?:\\.[0-9_]*)?(?:[eE][-+]?[0-9]+)?|\\.[0-9_]+(?:[eE][-+]?[0-9]+)?|[-+]?\\.(?:inf|Inf|INF)|\\.(?:nan|NaN|NAN))$"
+    );
     SCIENTIFIC_WITHOUT_DOT = /^[-+]?[0-9]+e/;
     float = new type("tag:yaml.org,2002:float", {
       kind: "scalar",
@@ -45738,8 +47225,12 @@ var init_js_yaml = __esm({
       ]
     });
     core = json;
-    YAML_DATE_REGEXP = new RegExp("^([0-9][0-9][0-9][0-9])-([0-9][0-9])-([0-9][0-9])$");
-    YAML_TIMESTAMP_REGEXP = new RegExp("^([0-9][0-9][0-9][0-9])-([0-9][0-9]?)-([0-9][0-9]?)(?:[Tt]|[ \\t]+)([0-9][0-9]?):([0-9][0-9]):([0-9][0-9])(?:\\.([0-9]*))?(?:[ \\t]*(Z|([-+])([0-9][0-9]?)(?::([0-9][0-9]))?))?$");
+    YAML_DATE_REGEXP = new RegExp(
+      "^([0-9][0-9][0-9][0-9])-([0-9][0-9])-([0-9][0-9])$"
+    );
+    YAML_TIMESTAMP_REGEXP = new RegExp(
+      "^([0-9][0-9][0-9][0-9])-([0-9][0-9]?)-([0-9][0-9]?)(?:[Tt]|[ \\t]+)([0-9][0-9]?):([0-9][0-9]):([0-9][0-9])(?:\\.([0-9]*))?(?:[ \\t]*(Z|([-+])([0-9][0-9]?)(?::([0-9][0-9]))?))?$"
+    );
     timestamp = new type("tag:yaml.org,2002:timestamp", {
       kind: "scalar",
       resolve: resolveYamlTimestamp,
@@ -45949,6 +47440,7 @@ var init_js_yaml = __esm({
 var FrontMatterFormatter;
 var init_frontMatterFormatter = __esm({
   "server/src/formatting/frontMatterFormatter.ts"() {
+    "use strict";
     init_js_yaml();
     FrontMatterFormatter = class {
       static formatFrontMatter(contents) {
@@ -45978,6 +47470,7 @@ var init_frontMatterFormatter = __esm({
 var ErrorPrinter;
 var init_errorPrinter = __esm({
   "server/src/runtime/document/printers/errorPrinter.ts"() {
+    "use strict";
     ErrorPrinter = class {
       static printError(error, lines) {
         var _a, _b;
@@ -46009,6 +47502,7 @@ var init_errorPrinter = __esm({
 var PrettierDocumentFormatter;
 var init_prettierDocumentFormatter = __esm({
   "server/src/formatting/prettier/prettierDocumentFormatter.ts"() {
+    "use strict";
     init_documentFormatter();
     init_utils6();
     init_frontMatterFormatter();

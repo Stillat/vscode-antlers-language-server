@@ -124,4 +124,14 @@ suite('Formatter Prettier Conditional Elements', () => {
 </html>`;
         assert.strictEqual(formatStringWithPrettier(input).trim(), output);
     });
+
+    test('it doesnt wrap inline ternary', () => {
+        const input = `
+            <div class="{{ index % 2 == 0 ? 'order-2' : 'order-1' }} relative"><p>Test</p></div>
+            `;
+        const expected = `<div class="{{ index % 2 == 0 ? 'order-2' : 'order-1' }} relative">
+    <p>Test</p>
+</div>`;
+        assert.strictEqual(formatStringWithPrettier(input).trim(), expected);
+    });
 });

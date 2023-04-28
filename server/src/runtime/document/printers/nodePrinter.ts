@@ -56,7 +56,7 @@ export class NodePrinter {
                 } else {
                     if (!node.prev?.isVirtual && node.prev?.isVirtualGroupOperatorResolve && node.prev.producesVirtualStatementTerminator) {
                         if (node.next != null) {
-                            if (!(node.prev instanceof VariableNode)) {
+                            if (!(node.prev instanceof VariableNode) && !(node.next instanceof InlineTernarySeparator) && !(node instanceof InlineTernarySeparator)) {
                                 nodeBuffer.newlineIndent();
                             }
                         }
