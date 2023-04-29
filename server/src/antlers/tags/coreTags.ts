@@ -123,6 +123,7 @@ import CookieSet from './core/cookie/cookieSet';
 import CookieValue from './core/cookie/cookieValue';
 import UserProfileForm from './core/userProfileForm';
 import UserPasswordForm from './core/userPasswordForm';
+import ViteAsset from './core/vite/viteAsset';
 
 const coreTags = [
     If,
@@ -275,7 +276,8 @@ const coreTags = [
     Markdown,
     MarkdownIndent,
     Widont,
-    Vite
+    Vite,
+    ViteAsset
 ];
 
 export { coreTags };

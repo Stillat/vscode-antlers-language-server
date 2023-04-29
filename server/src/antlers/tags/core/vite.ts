@@ -1,6 +1,13 @@
+import { CompletionItem } from 'vscode-languageserver';
 import { makeTagDocWithCodeSample } from '../../../documentation/utils';
 import { ISuggestionRequest } from '../../../suggestions/suggestionRequest';
-import { IAntlersTag } from '../../tagManager';
+import { EmptyCompletionResult, IAntlersTag, exclusiveResult } from '../../tagManager';
+import { tagToCompletionItem } from '../../documentedLabel';
+import ViteAsset from './vite/viteAsset';
+
+const ViteTagCompletionItems: CompletionItem[] = [
+    tagToCompletionItem(ViteAsset)
+];
 
 const Vite: IAntlersTag = {
     tagName: 'vite',
@@ -22,6 +29,17 @@ const Vite: IAntlersTag = {
             isDynamic: false
         }
     ],
+    resolveCompletionItems: (params: ISuggestionRequest) => {
+        if (
+            (params.leftWord == "vite" ||
+                params.leftWord == "/vite") &&
+            params.leftChar == ":"
+        ) {
+            return exclusiveResult(ViteTagCompletionItems);
+        }
+
+        return EmptyCompletionResult;
+    },
     resolveDocumentation: (params?: ISuggestionRequest) => {
         return makeTagDocWithCodeSample(
             'vite Tag',
