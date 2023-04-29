@@ -3,13 +3,13 @@ import { extractCommentDescription } from './phpUtils';
 
 const engine = require('php-parser');
 
-export interface IParsedQueryScope {
+export interface IHandledClass {
     className: string | undefined,
     handle: string | undefined,
     description: string
 }
-export class QueryScopesParser {
-    static parsePhp(code: string): IParsedQueryScope {
+export class HandleableClassParser {
+    static parsePhp(code: string): IHandledClass {
         let className: string | undefined,
             staticHandle: string | undefined,
             description = '';

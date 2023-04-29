@@ -28,7 +28,7 @@ import { replaceAllInString } from '../../utils/strings';
 import { sendProjectDetails } from '../../server';
 import { FieldSetParser, BlueprintParser, IParsedBlueprint } from '../structuredFieldTypes/types';
 import { EnsureFields } from '../structuredFieldTypes/ensureFields';
-import { QueryScopesParser } from '../../php/queryScopesParser';
+import { HandleableClassParser } from '../../php/handleableClassParser';
 
 function getRootProjectPath(path: string): string {
     const parts = normalizePath(path).split("/");
@@ -70,6 +70,10 @@ function getAppDirectory(laravelRoot: string): string {
 
 function getQueryScopesDirectory(laravelRoot: string): string {
     return getAppDirectory(laravelRoot) + "Scopes/";
+}
+
+function getModifiersDirectory(laravelRoot: string): string {
+    return getAppDirectory(laravelRoot) + "Modifiers/";
 }
 
 function getComposerVendorDirectory(laravelRoot: string): string {
@@ -273,7 +277,8 @@ export function getProjectStructure(resourcePath: string): FileSystemStatamicPro
         laravelRoot = getLaravelRoot(projectPath),
         composerLock = getComposerLockFile(laravelRoot),
         vendorDirectory = getComposerVendorDirectory(laravelRoot),
-        queryScopesDirectory = getQueryScopesDirectory(laravelRoot);
+        queryScopesDirectory = getQueryScopesDirectory(laravelRoot),
+        modifiersDirectory = getModifiersDirectory(laravelRoot);
     let hasMacroFile = false;
 
     let statamicPackage: IComposerPackage | null = null;
@@ -315,7 +320,8 @@ export function getProjectStructure(resourcePath: string): FileSystemStatamicPro
         navigationItems: Map<string, INavigation> = new Map(),
         collections: Map<string, ICollection> = new Map(),
         assets: Map<string, IAssets> = new Map(),
-        assetFields: Map<string, IBlueprintField[]> = new Map();
+        assetFields: Map<string, IBlueprintField[]> = new Map(),
+        customModifierNames: string[] = [];
 
     if (macroFilePath.trim().length > 0) {
         hasMacroFile = fs.existsSync(macroFilePath);
@@ -330,21 +336,36 @@ export function getProjectStructure(resourcePath: string): FileSystemStatamicPro
         }
     }
 
-    // Query scopes.
-    const scopePaths = getFiles(queryScopesDirectory, '.php', []);
+    if (fs.existsSync(modifiersDirectory)) {
+        const modifierPaths = getFiles(modifiersDirectory, '.php', []);
 
-    for (let i = 0; i < scopePaths.length; i++) {
-        try {
-            const scopeDetails = QueryScopesParser.parsePhp(fs.readFileSync(scopePaths[i], { encoding: 'utf8' }));
-            if (typeof scopeDetails.className !== 'undefined' && typeof scopeDetails.handle !== 'undefined') {
-                collectionScopes.push({
-                    description: scopeDetails.description,
-                    handle: scopeDetails.handle,
-                    name: scopeDetails.className,
-                    path: convertPathToUri(scopePaths[i])
-                });
-            }
-        } catch (err) { /* Prevent parser failures from crashing process.*/ }
+        for (let i = 0; i < modifierPaths.length; i++) {
+            try {
+                const modifierDetails = HandleableClassParser.parsePhp(fs.readFileSync(modifierPaths[i], { encoding: 'utf8' }));
+                if (typeof modifierDetails.className !== 'undefined' && typeof modifierDetails.handle !== 'undefined') {
+                    customModifierNames.push(modifierDetails.handle);
+                }
+            } catch (err) { /* Prevent parser failures from crashing process.*/ }
+        }
+    }
+
+    // Query scopes.
+    if (fs.existsSync(queryScopesDirectory)) {
+        const scopePaths = getFiles(queryScopesDirectory, '.php', []);
+
+        for (let i = 0; i < scopePaths.length; i++) {
+            try {
+                const scopeDetails = HandleableClassParser.parsePhp(fs.readFileSync(scopePaths[i], { encoding: 'utf8' }));
+                if (typeof scopeDetails.className !== 'undefined' && typeof scopeDetails.handle !== 'undefined') {
+                    collectionScopes.push({
+                        description: scopeDetails.description,
+                        handle: scopeDetails.handle,
+                        name: scopeDetails.className,
+                        path: convertPathToUri(scopePaths[i])
+                    });
+                }
+            } catch (err) { /* Prevent parser failures from crashing process.*/ }
+        }
     }
 
     // Assets.
@@ -802,7 +823,8 @@ export function getProjectStructure(resourcePath: string): FileSystemStatamicPro
 
         internalFieldReference: allBlueprintFields,
         restoreProperties: null,
-        namedBluePrintFields: speculativeFields
+        namedBluePrintFields: speculativeFields,
+        customModifierNames: customModifierNames
     }, resourcePath);
 }
 

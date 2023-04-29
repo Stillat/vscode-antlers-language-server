@@ -43,6 +43,7 @@ class JsonSourceProject implements IProjectDetailsProvider {
     public blueprintFiles: string[] = [];
     public collectionNames: string[] = [];
     public speculativeFields: Map<string, IBlueprintField> = new Map();
+    public customModifierNames: string[] = [];
 
     public collections: Map<string, ICollection> = new Map();
     public fieldsets: Map<string, IFieldsetField[]> = new Map();
@@ -125,6 +126,7 @@ class JsonSourceProject implements IProjectDetailsProvider {
         this.navigationMenus = structure.navigationMenus;
         this.rootPath = structure.workingDirectory;
         this.speculativeFields = structure.namedBluePrintFields;
+        this.customModifierNames = structure.customModifierNames;
 
         this.buildDetails();
 
@@ -169,6 +171,7 @@ class JsonSourceProject implements IProjectDetailsProvider {
             this.userRoles = this.sourceStructure.restoreProperties.userRoles;
             this.viewMap = this.sourceStructure.restoreProperties.viewMap;
             this.views = this.sourceStructure.restoreProperties.views;
+            this.customModifierNames = this.sourceStructure.restoreProperties.customModifierNames;
         }
     }
 
@@ -178,6 +181,10 @@ class JsonSourceProject implements IProjectDetailsProvider {
 
     getProjectRoot(): string {
         return this.rootPath;
+    }
+
+    getCustomModifierNames(): string[] {
+        return this.customModifierNames;
     }
 
     export(): IStatamicStructure {
@@ -230,7 +237,8 @@ class JsonSourceProject implements IProjectDetailsProvider {
             userGroups: this.userGroups,
             userRoles: this.userRoles,
             viewMap: this.viewMap,
-            views: this.views
+            views: this.views,
+            customModifierNames: this.customModifierNames
         };
     }
 

@@ -12,6 +12,7 @@ export interface IProjectDetailsProvider {
     getOAuthProviders(): string[],
     getSiteNames(): string[],
     getSearchIndexes(): string[],
+    getCustomModifierNames(): string[],
     getStatamicVersion(): string,
     hasComposerPackage(packageName: string): boolean,
     hasStatamicAddon(addonName: string): boolean,

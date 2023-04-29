@@ -64,6 +64,8 @@ interface IStatamicStructure {
     internalFieldReference: IBlueprintField[];
     restoreProperties: IStructureRestore | null;
     namedBluePrintFields: Map<string, IBlueprintField>;
+
+    customModifierNames:string[];
 }
 
 interface IStructureRestore {
@@ -112,6 +114,8 @@ interface IStructureRestore {
     statamicAddonMapping: Map<string, IComposerPackage>;
     blueprintFieldReference: IBlueprintField[];
     baseResourcePath: string;
+
+    customModifierNames: string[]
 }
 
 const MockStructure: IStatamicStructure = {
@@ -165,7 +169,8 @@ const MockStructure: IStatamicStructure = {
 
     internalFieldReference: [],
     restoreProperties: null,
-    namedBluePrintFields: new Map()
+    namedBluePrintFields: new Map(),
+    customModifierNames: []
 };
 
 export { IStatamicStructure, IStructureRestore };

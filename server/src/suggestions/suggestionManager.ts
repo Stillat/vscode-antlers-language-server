@@ -22,6 +22,7 @@ import { GenericTypesSuggestions } from "./genericTypesSuggestions";
 import { getParameterCompletionItems } from "./parameterSuggestionProvider";
 import { ScopeVariableSuggestionsManager } from "./scopeVariableSuggestionsManager";
 import { ISuggestionRequest } from './suggestionRequest';
+import ProjectManager from '../projects/projectManager';
 
 const ConditionalCompletionTriggers: string[] = ["if", "elseif", "unless", "elseunless"];
 
@@ -159,6 +160,16 @@ function convertScopeToCompletionList(params: ISuggestionRequest, scope: Scope):
     return items;
 }
 
+function mergeCustomModifiers(items: CompletionItem[]) {
+    ProjectManager.instance?.getStructure().getCustomModifierNames().forEach((name: string) => {
+        items.push({
+            kind: CompletionItemKind.Function,
+            label: name,
+            insertText: name
+        })
+    });
+}
+
 function getModifierCompletionList(): CompletionItem[] {
     const items: CompletionItem[] = [];
 
@@ -166,6 +177,8 @@ function getModifierCompletionList(): CompletionItem[] {
         if (modifier.isDeprecated) { return; }
         items.push(makeModifierSuggest(modifier));
     });
+
+    mergeCustomModifiers(items);
 
     return items;
 }
@@ -743,6 +756,8 @@ export class SuggestionManager {
 
                             completionItems.push(suggestion);
                         });
+
+                        mergeCustomModifiers(completionItems);
                     }
                 } else {
                     if (params.context.modifierContext != null) {
@@ -755,6 +770,8 @@ export class SuggestionManager {
 
                             completionItems.push(suggestion);
                         });
+
+                        mergeCustomModifiers(completionItems);
                     }
                 }
             }
