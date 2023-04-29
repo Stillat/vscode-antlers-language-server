@@ -42,7 +42,7 @@ class TagManager {
             }
         });
 
-        ProjectManager.instance?.getStructure().getCustomAntlersTags().forEach((tag) => {
+        ProjectManager.instance?.getStructure()?.getCustomAntlersTags().forEach((tag) => {
             tags.push({
                 label: tag.tagName,
                 documentation: ''
@@ -56,7 +56,7 @@ class TagManager {
         const items:string[] = [],
             len = tagName.length + 1;
 
-        ProjectManager.instance?.getStructure().getCustomAntlersTags().forEach((tag) => {
+        ProjectManager.instance?.getStructure()?.getCustomAntlersTags().forEach((tag) => {
             if (tag.tagName.startsWith(`${tagName}:`)) {
                 const methodName = tag.tagName.substr(len).trim();
 
@@ -78,7 +78,7 @@ class TagManager {
             }
         });
 
-        ProjectManager.instance?.getStructure().getCustomAntlersTags().forEach((tag) => {
+        ProjectManager.instance?.getStructure()?.getCustomAntlersTags().forEach((tag) => {
             tagNames.push(tag.tagName);
         });
 
@@ -99,7 +99,7 @@ class TagManager {
             }
         });
 
-        ProjectManager.instance?.getStructure().getCustomAntlersTags().forEach((tag) => {
+        ProjectManager.instance?.getStructure()?.getCustomAntlersTags().forEach((tag) => {
             if (tag.tagName.startsWith(`${tagName}:`)) {
                 const methodName = tagName.substr(len).trim();
 
@@ -119,7 +119,7 @@ class TagManager {
             tagNames.push(name);
         });
 
-        ProjectManager.instance?.getStructure().getCustomAntlersTags().forEach((tag) => {
+        ProjectManager.instance?.getStructure()?.getCustomAntlersTags().forEach((tag) => {
             tagNames.push(tag.tagName);
         });
 
@@ -139,7 +139,7 @@ class TagManager {
     }
 
     findCustomTag(name: string): IAntlersTag | undefined {
-        const customTags = ProjectManager.instance?.getStructure().getCustomAntlersTags() ?? [];
+        const customTags = ProjectManager.instance?.getStructure()?.getCustomAntlersTags() ?? [];
 
         for (let i = 0; i < customTags.length; i++) {
             if (customTags[i].tagName == name) {
@@ -212,7 +212,7 @@ class TagManager {
     }
 
     isCustomTag(name:string):boolean {
-        const customTags = ProjectManager.instance?.getStructure().getCustomAntlersTags() ?? [];
+        const customTags = ProjectManager.instance?.getStructure()?.getCustomAntlersTags() ?? [];
 
         for (var i = 0; i < customTags.length; i++) {
             if (customTags[i].tagName == name) {
