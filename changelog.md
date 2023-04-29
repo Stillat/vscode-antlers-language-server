@@ -2,6 +2,30 @@
 
 Bugs fixed, what's new, and more! :)
 
+## 2.6.0
+
+- Adds completion support for custom Tags and modifiers,
+- Improves general formatting,
+- Improves modifier completions and parameter suggestions, particularly with method-style syntax,
+- Adds initial support for select Statamic Marketplace addon tags and modifiers,
+  - `aerni/social-links`
+  - `aerni/advanced-seo`
+  - `aerni/livewire-forms`
+  - `anakadote/statamic-recaptcha`
+  - `aryehraber/statamic-captcha`
+  - `cnj/seotamic`
+  - `ddm-studio/cookie-byte`
+  - `doublethreedigital/simple-commerce`
+  - `jonassiewertsen/statamic-livewire`
+  - `kolaente/statamic-snippet`
+  - `octoper/statamic-inline-assets`
+  - `parfaitementweb/statamic-fast-seo`
+  - `statamic/seo-pro`
+  - `stillat/antlers-layouts`
+  - `visuellverstehen/statamic-classify`
+  - `withcandour/aardvark-seo`
+- Adds support custom Collection Tag filter autocomplete
+
 ## 2.5.3
 
 - Improves static analysis of Query Builder modifier detection
