@@ -6,15 +6,16 @@ const engine = require('php-parser');
 export interface IHandledClass {
     className: string | undefined,
     handle: string | undefined,
-    description: string
+    description: string,
+    methodNames: string[]
 }
+
 export class HandleableClassParser {
     static parsePhp(code: string): IHandledClass {
         let className: string | undefined,
             staticHandle: string | undefined,
             description = '';
         const parser = new engine({
-            // some options :
             parser: {
                 extractDoc: true,
                 php7: true,
@@ -24,7 +25,8 @@ export class HandleableClassParser {
             },
         });
 
-        const ast = parser.parseCode(code);
+        const ast = parser.parseCode(code),
+            methodNames: string[] = [];
 
         ast.children.forEach((node: any) => {
             if (node.kind === 'namespace') {
@@ -40,8 +42,10 @@ export class HandleableClassParser {
                                         staticHandle = grandchildNode.properties[0].value?.value;
                                     }
                                 }
+                            } else if (grandchildNode.kind === 'method' && grandchildNode.visibility === 'public' && !grandchildNode.isStatic) {
+                                methodNames.push(grandchildNode.name.name);
                             }
-                          });
+                        });
                     }
                 });
             }
@@ -54,7 +58,8 @@ export class HandleableClassParser {
         return {
             className: className,
             handle: staticHandle,
-            description: description
+            description: description,
+            methodNames: methodNames
         };
     }
 }

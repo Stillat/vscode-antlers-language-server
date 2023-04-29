@@ -906,7 +906,7 @@ export class DocumentParser {
                     return;
                 }
 
-                node.isTagNode = TagManager.instance?.isKnownTag(node.runtimeName()) ?? false;
+                node.isTagNode = TagManager.instance?.isKnownTag(node.getTagName()) ?? false;
                 node.scopeName = node.findParameterValue('scope', '');
                 node.antlersNodeIndex = curIndex;
 

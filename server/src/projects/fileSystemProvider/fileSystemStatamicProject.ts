@@ -29,6 +29,11 @@ import { sendProjectDetails } from '../../server';
 import { FieldSetParser, BlueprintParser, IParsedBlueprint } from '../structuredFieldTypes/types';
 import { EnsureFields } from '../structuredFieldTypes/ensureFields';
 import { HandleableClassParser } from '../../php/handleableClassParser';
+import { IAntlersTag } from '../../antlers/tagManager';
+import { ISuggestionRequest } from '../../suggestions/suggestionRequest';
+import { CompletionItem, CompletionItemKind } from 'vscode-languageserver';
+import { StringUtilities } from '../../runtime/utilities/stringUtilities';
+import { makeTagDoc } from '../../documentation/utils';
 
 function getRootProjectPath(path: string): string {
     const parts = normalizePath(path).split("/");
@@ -74,6 +79,10 @@ function getQueryScopesDirectory(laravelRoot: string): string {
 
 function getModifiersDirectory(laravelRoot: string): string {
     return getAppDirectory(laravelRoot) + "Modifiers/";
+}
+
+function getTagsDirectory(laravelRoot: string): string {
+    return getAppDirectory(laravelRoot) + "Tags/";
 }
 
 function getComposerVendorDirectory(laravelRoot: string): string {
@@ -278,7 +287,9 @@ export function getProjectStructure(resourcePath: string): FileSystemStatamicPro
         composerLock = getComposerLockFile(laravelRoot),
         vendorDirectory = getComposerVendorDirectory(laravelRoot),
         queryScopesDirectory = getQueryScopesDirectory(laravelRoot),
-        modifiersDirectory = getModifiersDirectory(laravelRoot);
+        modifiersDirectory = getModifiersDirectory(laravelRoot),
+        tagsDirectory = getTagsDirectory(laravelRoot);
+
     let hasMacroFile = false;
 
     let statamicPackage: IComposerPackage | null = null;
@@ -321,7 +332,8 @@ export function getProjectStructure(resourcePath: string): FileSystemStatamicPro
         collections: Map<string, ICollection> = new Map(),
         assets: Map<string, IAssets> = new Map(),
         assetFields: Map<string, IBlueprintField[]> = new Map(),
-        customModifierNames: string[] = [];
+        customModifierNames: string[] = [],
+        customTags: IAntlersTag[] = [];
 
     if (macroFilePath.trim().length > 0) {
         hasMacroFile = fs.existsSync(macroFilePath);
@@ -336,6 +348,69 @@ export function getProjectStructure(resourcePath: string): FileSystemStatamicPro
         }
     }
 
+    if (fs.existsSync(tagsDirectory)) {
+        const tagsPaths = getFiles(tagsDirectory, '.php', []);
+
+        for (let i = 0; i < tagsPaths.length; i++) {
+            try {
+                const tagDetails = HandleableClassParser.parsePhp(fs.readFileSync(tagsPaths[i], { encoding: 'utf8' }));
+                if (typeof tagDetails.className !== 'undefined' && typeof tagDetails.handle !== 'undefined') {
+                    const tagMethodCandidates = tagDetails.methodNames.filter(f => f != 'index' && f != 'wildcard').map(f => StringUtilities.snakeCase(f));
+
+                    customTags.push({
+                        tagName: tagDetails.handle,
+                        requiresClose: false,
+                        allowsContentClose: true,
+                        allowsArbitraryParameters: true,
+                        injectParentScope: true,
+                        parameters: [],
+                        hideFromCompletions: false,
+                        introducedIn: null,
+                        resolveCompletionItems: (params: ISuggestionRequest) => {
+                            if (params.leftWord == tagDetails.handle ||
+                                params.leftWord == `/${tagDetails.handle}`) {
+                                const items: CompletionItem[] = [];
+
+                                tagMethodCandidates.forEach((name) => {
+                                    items.push({
+                                        label: name,
+                                        kind: CompletionItemKind.Text,
+                                        sortText: '1',
+                                    });
+                                });
+
+                                return {
+                                    items: items,
+                                    isExclusiveResult: true,
+                                    analyzeDefaults: false,
+                                };
+                            }
+
+                            return {
+                                items: [],
+                                isExclusiveResult: false,
+                                analyzeDefaults: true,
+                            };
+                        }
+                    });
+
+                    tagMethodCandidates.forEach((tag) => {
+                        customTags.push({
+                            tagName: `${tagDetails.handle}:${tag}`,
+                            requiresClose: false,
+                            allowsContentClose: true,
+                            allowsArbitraryParameters: true,
+                            injectParentScope: true,
+                            parameters: [],
+                            hideFromCompletions: false,
+                            introducedIn: null,
+                        });
+                    });
+                }
+            } catch (err) { /* Prevent parser failures from crashing the process.*/ }
+        }
+    }
+
     if (fs.existsSync(modifiersDirectory)) {
         const modifierPaths = getFiles(modifiersDirectory, '.php', []);
 
@@ -345,7 +420,7 @@ export function getProjectStructure(resourcePath: string): FileSystemStatamicPro
                 if (typeof modifierDetails.className !== 'undefined' && typeof modifierDetails.handle !== 'undefined') {
                     customModifierNames.push(modifierDetails.handle);
                 }
-            } catch (err) { /* Prevent parser failures from crashing process.*/ }
+            } catch (err) { /* Prevent parser failures from crashing the process.*/ }
         }
     }
 
@@ -364,7 +439,7 @@ export function getProjectStructure(resourcePath: string): FileSystemStatamicPro
                         path: convertPathToUri(scopePaths[i])
                     });
                 }
-            } catch (err) { /* Prevent parser failures from crashing process.*/ }
+            } catch (err) { /* Prevent parser failures from crashing the process.*/ }
         }
     }
 
@@ -824,7 +899,8 @@ export function getProjectStructure(resourcePath: string): FileSystemStatamicPro
         internalFieldReference: allBlueprintFields,
         restoreProperties: null,
         namedBluePrintFields: speculativeFields,
-        customModifierNames: customModifierNames
+        customModifierNames: customModifierNames,
+        customTags: customTags
     }, resourcePath);
 }
 

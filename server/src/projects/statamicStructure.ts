@@ -1,3 +1,4 @@
+import { IAntlersTag } from '../antlers/tagManager';
 import { IComposerPackage } from '../composer/composerPackage';
 import { IAssets } from './assets/asset';
 import { IBlueprint, IBlueprintField } from './blueprints/fields';
@@ -66,6 +67,7 @@ interface IStatamicStructure {
     namedBluePrintFields: Map<string, IBlueprintField>;
 
     customModifierNames:string[];
+    customTags:IAntlersTag[];
 }
 
 interface IStructureRestore {
@@ -115,7 +117,8 @@ interface IStructureRestore {
     blueprintFieldReference: IBlueprintField[];
     baseResourcePath: string;
 
-    customModifierNames: string[]
+    customModifierNames: string[];
+    customTags:IAntlersTag[];
 }
 
 const MockStructure: IStatamicStructure = {
@@ -170,7 +173,8 @@ const MockStructure: IStatamicStructure = {
     internalFieldReference: [],
     restoreProperties: null,
     namedBluePrintFields: new Map(),
-    customModifierNames: []
+    customModifierNames: [],
+    customTags: [],
 };
 
 export { IStatamicStructure, IStructureRestore };

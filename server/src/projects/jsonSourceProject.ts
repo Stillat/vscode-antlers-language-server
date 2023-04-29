@@ -1,5 +1,6 @@
 import ModifierManager from '../antlers/modifierManager';
 import { parseMacros } from '../antlers/modifiers/macros';
+import { IAntlersTag } from '../antlers/tagManager';
 import { IComposerPackage } from '../composer/composerPackage';
 import { replaceAllInString } from '../utils/strings';
 import { convertUriToPath } from '../utils/uris';
@@ -44,6 +45,7 @@ class JsonSourceProject implements IProjectDetailsProvider {
     public collectionNames: string[] = [];
     public speculativeFields: Map<string, IBlueprintField> = new Map();
     public customModifierNames: string[] = [];
+    public customTags: IAntlersTag[] = [];
 
     public collections: Map<string, ICollection> = new Map();
     public fieldsets: Map<string, IFieldsetField[]> = new Map();
@@ -127,6 +129,7 @@ class JsonSourceProject implements IProjectDetailsProvider {
         this.rootPath = structure.workingDirectory;
         this.speculativeFields = structure.namedBluePrintFields;
         this.customModifierNames = structure.customModifierNames;
+        this.customTags = structure.customTags;
 
         this.buildDetails();
 
@@ -172,6 +175,7 @@ class JsonSourceProject implements IProjectDetailsProvider {
             this.viewMap = this.sourceStructure.restoreProperties.viewMap;
             this.views = this.sourceStructure.restoreProperties.views;
             this.customModifierNames = this.sourceStructure.restoreProperties.customModifierNames;
+            this.customTags = this.sourceStructure.restoreProperties.customTags;
         }
     }
 
@@ -238,7 +242,8 @@ class JsonSourceProject implements IProjectDetailsProvider {
             userRoles: this.userRoles,
             viewMap: this.viewMap,
             views: this.views,
-            customModifierNames: this.customModifierNames
+            customModifierNames: this.customModifierNames,
+            customTags: this.customTags
         };
     }
 
@@ -254,6 +259,10 @@ class JsonSourceProject implements IProjectDetailsProvider {
         }
 
         return null;
+    }
+
+    getCustomAntlersTags(): IAntlersTag[] {
+        return this.customTags;
     }
 
     findAnyBlueprintField(field: string): IBlueprintField | null {

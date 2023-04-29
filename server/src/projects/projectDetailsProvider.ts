@@ -1,3 +1,4 @@
+import { IAntlersTag } from '../antlers/tagManager';
 import { IComposerPackage } from '../composer/composerPackage';
 import { IBlueprintField } from './blueprints/fields';
 import { ICollection } from './collections/collection';
@@ -30,6 +31,7 @@ export interface IProjectDetailsProvider {
     getTaxonomyTerms(name: string): string[],
     hasTaxonomy(name: string): boolean,
     getCollectionQueryScopes(): ICollectionScope[],
+    getCustomAntlersTags():IAntlersTag[],
     findQueryScopeByHandle(handle: string): ICollectionScope | null,
     getBlueprintFields(collections: string[]): IBlueprintField[],
     getBlueprintField(collectionName: string, handle: string): IBlueprintField | null,

@@ -42,7 +42,31 @@ class TagManager {
             }
         });
 
+        ProjectManager.instance?.getStructure().getCustomAntlersTags().forEach((tag) => {
+            tags.push({
+                label: tag.tagName,
+                documentation: ''
+            })
+        });
+
         return tags;
+    }
+
+    getCustomTagMethodsForTag(tagName:string): string[] {
+        const items:string[] = [],
+            len = tagName.length + 1;
+
+        ProjectManager.instance?.getStructure().getCustomAntlersTags().forEach((tag) => {
+            if (tag.tagName.startsWith(`${tagName}:`)) {
+                const methodName = tag.tagName.substr(len).trim();
+
+                if (methodName.length > 0) {
+                    items.push(methodName);
+                }
+            }
+        });
+
+        return items;
     }
 
     getVisibleTagNames(): string[] {
@@ -52,6 +76,10 @@ class TagManager {
             if (tag.hideFromCompletions == false) {
                 tagNames.push(name);
             }
+        });
+
+        ProjectManager.instance?.getStructure().getCustomAntlersTags().forEach((tag) => {
+            tagNames.push(tag.tagName);
         });
 
         return [...new Set(tagNames)];
@@ -71,6 +99,16 @@ class TagManager {
             }
         });
 
+        ProjectManager.instance?.getStructure().getCustomAntlersTags().forEach((tag) => {
+            if (tag.tagName.startsWith(`${tagName}:`)) {
+                const methodName = tagName.substr(len).trim();
+
+                if (methodName.length > 0) {
+                    methodNames.push(methodName);
+                }
+            }
+        });
+
         return [...new Set(methodNames)];
     }
 
@@ -79,6 +117,10 @@ class TagManager {
 
         this.tags.forEach((tag: IAntlersTag, name: string) => {
             tagNames.push(name);
+        });
+
+        ProjectManager.instance?.getStructure().getCustomAntlersTags().forEach((tag) => {
+            tagNames.push(tag.tagName);
         });
 
         return [...new Set(tagNames)];
@@ -96,8 +138,20 @@ class TagManager {
         return this.tags.get(this.resolveTagName(name));
     }
 
+    findCustomTag(name: string): IAntlersTag | undefined {
+        const customTags = ProjectManager.instance?.getStructure().getCustomAntlersTags() ?? [];
+
+        for (let i = 0; i < customTags.length; i++) {
+            if (customTags[i].tagName == name) {
+                return customTags[i];
+            }
+        }
+
+        return;
+    }
+
     isKnownTag(name: string): boolean {
-        return this.tags.has(this.resolveTagName(name));
+        return this.tags.has(this.resolveTagName(name)) || this.isCustomTag(name);
     }
 
     isSymbolKnownTag(node: AntlersNode): boolean {
@@ -157,6 +211,18 @@ class TagManager {
         return tag.resolveSpecialType(symbol, project);
     }
 
+    isCustomTag(name:string):boolean {
+        const customTags = ProjectManager.instance?.getStructure().getCustomAntlersTags() ?? [];
+
+        for (var i = 0; i < customTags.length; i++) {
+            if (customTags[i].tagName == name) {
+                return true;
+            }
+        }
+
+        return false;
+    }
+
     getCompletionItems(params: ISuggestionRequest): IProviderCompletionResult {
         let lastScopeItem = null;
         let resolvedParams: CompletionItem[] = [];
@@ -171,22 +237,37 @@ class TagManager {
         }
 
         if (params.currentNode != null) {
-            if (this.isKnownTag(params.currentNode.runtimeName())) {
-                const tagReference = this.findTag(
+            if (this.isKnownTag(params.currentNode.runtimeName()) || this.isCustomTag(params.currentNode.getTagName())) {
+                let tagReference = this.findTag(
                     params.currentNode.runtimeName()
                 ) as IAntlersTag;
 
                 if (typeof tagReference === "undefined") {
-                    return {
-                        isExclusive: false,
-                        items: [],
-                    };
+                    tagReference = this.findCustomTag(params.currentNode.getTagName()) as IAntlersTag;
+
+                    if (typeof tagReference === "undefined") {
+                        return {
+                            isExclusive: false,
+                            items: [],
+                        };
+                    }
                 }
 
                 const dynamicRefNames: string[] = [];
 
                 if (tagReference.resolveCompletionItems != null) {
-                    const result = tagReference.resolveCompletionItems(params);
+                    const result = tagReference.resolveCompletionItems(params),
+                        customMethods = this.getCustomTagMethodsForTag(tagReference.tagName);
+
+                    if (customMethods.length > 0) {
+                        customMethods.forEach((method) => {
+                            result.items.push({
+                                label: method,
+                                kind: CompletionItemKind.Text,
+                                insertText: method
+                            })
+                        });
+                    }
 
                     if (result.isExclusiveResult) {
                         return {
