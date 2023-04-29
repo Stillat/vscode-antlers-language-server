@@ -225,7 +225,7 @@ export function activate(context: ExtensionContext) {
         resetTimings();
     });
 
-    projectWatcher = workspace.createFileSystemWatcher('**/*.{yaml,php}');
+    projectWatcher = workspace.createFileSystemWatcher('**/*.{yaml,php,json}');
 
     projectWatcher.onDidDelete(() => { debounceAskForProjectUpdate(); });
     projectWatcher.onDidCreate(() => { debounceAskForProjectUpdate(); });
