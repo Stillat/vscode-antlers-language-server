@@ -34,6 +34,7 @@ import { ISuggestionRequest } from '../../suggestions/suggestionRequest';
 import { CompletionItem, CompletionItemKind } from 'vscode-languageserver';
 import { StringUtilities } from '../../runtime/utilities/stringUtilities';
 import { makeTagDoc } from '../../documentation/utils';
+import PackageManager from '../../marketplace/packageManager';
 
 function getRootProjectPath(path: string): string {
     const parts = normalizePath(path).split("/");
@@ -307,6 +308,8 @@ export function getProjectStructure(resourcePath: string): FileSystemStatamicPro
         }
     }
 
+    PackageManager.instance?.loadPackages();
+
     const blueprints: IBlueprint[] = [];
     const fieldsets: Map<string, IFieldsetField[]> = new Map();
     const pluralizedTaxonomyNames: Map<string, string> = new Map();
@@ -347,6 +350,81 @@ export function getProjectStructure(resourcePath: string): FileSystemStatamicPro
             partialNames.push(projectViews[i].relativeDisplayName);
         }
     }
+
+    composerPackages.forEach((composerPackage) => {
+        if (PackageManager.instance?.hasPackage(composerPackage.name)) {
+            const addon = PackageManager.instance?.getPackage(composerPackage.name);
+
+            addon.providesModifiers.forEach((modifierName) => {
+                customModifierNames.push(modifierName);
+            });
+
+            addon.providesTags.forEach((tagName) => {
+                const subTags = addon.providesTags.filter(f => f.startsWith(`${tagName}:`)),
+                    len = tagName.length + 1,
+                    methodNames:string[] = [];
+
+                subTags.forEach((tagName) => {
+                    const methodName = tagName.substr(len).trim();
+
+                    if (methodName.length > 0) {
+                        methodNames.push(methodName);
+                    }
+                });
+                const tagMethodCandidates = methodNames.filter(f => f != 'index' && f != 'wildcard');
+
+                customTags.push({
+                    tagName: tagName,
+                    requiresClose: false,
+                    allowsContentClose: true,
+                    allowsArbitraryParameters: true,
+                    injectParentScope: true,
+                    parameters: [],
+                    hideFromCompletions: false,
+                    introducedIn: null,
+                    resolveCompletionItems: (params: ISuggestionRequest) => {
+                        if (params.leftWord == tagName ||
+                            params.leftWord == `/${tagName}`) {
+                            const items: CompletionItem[] = [];
+
+                            tagMethodCandidates.forEach((name) => {
+                                items.push({
+                                    label: name,
+                                    kind: CompletionItemKind.Text,
+                                    sortText: '1',
+                                });
+                            });
+
+                            return {
+                                items: items,
+                                isExclusiveResult: true,
+                                analyzeDefaults: false,
+                            };
+                        }
+
+                        return {
+                            items: [],
+                            isExclusiveResult: false,
+                            analyzeDefaults: true,
+                        };
+                    }
+                });
+
+                tagMethodCandidates.forEach((tag) => {
+                    customTags.push({
+                        tagName: `${tagName}:${tag}`,
+                        requiresClose: false,
+                        allowsContentClose: true,
+                        allowsArbitraryParameters: true,
+                        injectParentScope: true,
+                        parameters: [],
+                        hideFromCompletions: false,
+                        introducedIn: null,
+                    });
+                });
+            });
+        }
+    });
 
     if (fs.existsSync(tagsDirectory)) {
         const tagsPaths = getFiles(tagsDirectory, '.php', []);
