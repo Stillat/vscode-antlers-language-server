@@ -71,4 +71,8 @@ export class StringUtilities {
 
         return lines[0];
     }
-}
+
+    static snakeCase(string: string): string {
+        return string.replace(/([A-Z])/g, ($1) => `_${$1.toLowerCase()}`).replace(/^_/, '');
+    }
+}            

@@ -238,6 +238,16 @@ class JsonSourceProject implements IProjectDetailsProvider {
         return this;
     }
 
+    findQueryScopeByHandle(handle: string): ICollectionScope | null {
+        for (let i = 0; i < this.collectionQueryScopes.length; i++) {
+            if (this.collectionQueryScopes[i].handle === handle) {
+                return this.collectionQueryScopes[i];
+            }
+        }
+
+        return null;
+    }
+
     findAnyBlueprintField(field: string): IBlueprintField | null {
         if (this.speculativeFields.has(field)) {
             return this.speculativeFields.get(field) as IBlueprintField;

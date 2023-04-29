@@ -29,6 +29,7 @@ export interface IProjectDetailsProvider {
     getTaxonomyTerms(name: string): string[],
     hasTaxonomy(name: string): boolean,
     getCollectionQueryScopes(): ICollectionScope[],
+    findQueryScopeByHandle(handle: string): ICollectionScope | null,
     getBlueprintFields(collections: string[]): IBlueprintField[],
     getBlueprintField(collectionName: string, handle: string): IBlueprintField | null,
     getTaxonomyBlueprintFields(taxonomies: string[]): IBlueprintField[],
@@ -55,5 +56,5 @@ export interface IProjectDetailsProvider {
     findPartial(partialName: string): IView | null,
     getFields(): Map<string, IBlueprintField[]>
     export(): IStatamicStructure,
-    findAnyBlueprintField(field:string): IBlueprintField | null
+    findAnyBlueprintField(field: string): IBlueprintField | null
 }

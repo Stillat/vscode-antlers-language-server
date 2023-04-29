@@ -121,9 +121,10 @@ export function makeQueryScopeSuggestions(project: IProjectDetailsProvider): Com
 
     for (let i = 0; i < queryScopes.length; i++) {
         items.push({
-            label: queryScopes[i].name,
+            label: `${queryScopes[i].handle} (${queryScopes[i].name})`,
             detail: queryScopes[i].description,
-            kind: CompletionItemKind.Variable
+            insertText: queryScopes[i].handle,
+            kind: CompletionItemKind.EnumMember
         });
     }
 

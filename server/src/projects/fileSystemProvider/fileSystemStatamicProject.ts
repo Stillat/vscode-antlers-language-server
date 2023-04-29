@@ -28,6 +28,7 @@ import { replaceAllInString } from '../../utils/strings';
 import { sendProjectDetails } from '../../server';
 import { FieldSetParser, BlueprintParser, IParsedBlueprint } from '../structuredFieldTypes/types';
 import { EnsureFields } from '../structuredFieldTypes/ensureFields';
+import { QueryScopesParser } from '../../php/queryScopesParser';
 
 function getRootProjectPath(path: string): string {
     const parts = normalizePath(path).split("/");
@@ -61,6 +62,14 @@ function getLaravelRoot(root: string): string {
 
 function getComposerLockFile(laravelRoot: string): string {
     return laravelRoot + "composer.lock";
+}
+
+function getAppDirectory(laravelRoot: string): string {
+    return laravelRoot + "app/";
+}
+
+function getQueryScopesDirectory(laravelRoot: string): string {
+    return getAppDirectory(laravelRoot) + "Scopes/";
 }
 
 function getComposerVendorDirectory(laravelRoot: string): string {
@@ -263,7 +272,8 @@ export function getProjectStructure(resourcePath: string): FileSystemStatamicPro
         macroFilePath = makeMacroFilePath(projectPath),
         laravelRoot = getLaravelRoot(projectPath),
         composerLock = getComposerLockFile(laravelRoot),
-        vendorDirectory = getComposerVendorDirectory(laravelRoot);
+        vendorDirectory = getComposerVendorDirectory(laravelRoot),
+        queryScopesDirectory = getQueryScopesDirectory(laravelRoot);
     let hasMacroFile = false;
 
     let statamicPackage: IComposerPackage | null = null;
@@ -318,6 +328,23 @@ export function getProjectStructure(resourcePath: string): FileSystemStatamicPro
             partialCache.push(projectViews[i]);
             partialNames.push(projectViews[i].relativeDisplayName);
         }
+    }
+
+    // Query scopes.
+    const scopePaths = getFiles(queryScopesDirectory, '.php', []);
+
+    for (let i = 0; i < scopePaths.length; i++) {
+        try {
+            const scopeDetails = QueryScopesParser.parsePhp(fs.readFileSync(scopePaths[i], { encoding: 'utf8' }));
+            if (typeof scopeDetails.className !== 'undefined' && typeof scopeDetails.handle !== 'undefined') {
+                collectionScopes.push({
+                    description: scopeDetails.description,
+                    handle: scopeDetails.handle,
+                    name: scopeDetails.className,
+                    path: convertPathToUri(scopePaths[i])
+                });
+            }
+        } catch (err) { /* Prevent parser failures from crashing process.*/ }
     }
 
     // Assets.
