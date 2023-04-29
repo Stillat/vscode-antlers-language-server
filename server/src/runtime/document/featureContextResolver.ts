@@ -19,7 +19,15 @@ export class FeatureContextResolver {
                 }
             }
 
-            if (thisNode instanceof LogicGroupBegin || thisNode instanceof LogicGroupEnd) {
+            if (thisNode instanceof LogicGroupEnd) {
+                if (i == checkNodes.length - 1) {
+                    continue;
+                }
+
+                return false;
+            }
+
+            if (thisNode instanceof LogicGroupBegin) {
                 return false;
             }
 

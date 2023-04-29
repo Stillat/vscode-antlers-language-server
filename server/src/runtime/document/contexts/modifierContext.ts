@@ -63,7 +63,6 @@ export class ModifierContext {
 
         if (modifier != null) {
             context.activeModifier = modifier;
-            context.valueCount = modifier.valueNodes.length;
 
             if (modifier.nameNode != null) {
                 context.name = modifier.nameNode.name;
@@ -71,14 +70,40 @@ export class ModifierContext {
 
             if (modifier.nameNode != null && position.isWithin(modifier.nameNode.startPosition, modifier.nameNode.endPosition, 1)) {
                 context.inModifierName = true;
-            } else {
-                for (let i = 0; i < modifier.valueNodes.length; i++) {
-                    const value = modifier.valueNodes[i];
+            }
 
-                    if (position.isWithin(value.startPosition, value.endPosition, 1)) {
-                        context.activeValueIndex = i;
-                        context.activeValue = value;
-                        break;
+            if (modifier.methodStyleArguments != null) {
+                // Method syntax: {{ title | ensure_right('value') }}
+                context.valueCount = modifier.methodStyleArguments.args.length;
+
+                if (! context.inModifierName) {
+                    for (let i = 0; i < modifier.methodStyleArguments.args.length; i++) {
+                        const argValue = modifier.methodStyleArguments.args[i];
+
+                        if (position.isWithin(argValue.startPosition, argValue.endPosition, 1)) {
+                            context.activeValueIndex = i;
+                            context.activeValue = argValue;
+                        }
+                    }
+
+                    if (context.activeValueIndex === -1 && position.isWithin(modifier.methodStyleArguments.startPosition, modifier.methodStyleArguments.endPosition)) {
+                        context.valueCount += 1;
+                        context.activeValueIndex = context.valueCount - 1;
+                    }
+                }
+            } else {
+                // Legacy syntax: {{ title | ensure_right:value }}
+                context.valueCount = modifier.valueNodes.length;
+
+                 if (! context.inModifierName) {
+                    for (let i = 0; i < modifier.valueNodes.length; i++) {
+                        const value = modifier.valueNodes[i];
+
+                        if (position.isWithin(value.startPosition, value.endPosition, 1)) {
+                            context.activeValueIndex = i;
+                            context.activeValue = value;
+                            break;
+                        }
                     }
                 }
             }

@@ -819,6 +819,11 @@ export class LanguageParser {
             }
         });
 
+        if (argGroup.args.length > 0) {
+            argGroup.startPosition = argGroup.args[0].startPosition;
+            argGroup.endPosition = argGroup.args[argGroup.args.length - 1].endPosition;
+        }
+
         return argGroup;
     }
 
@@ -2547,6 +2552,9 @@ export class LanguageParser {
             const unwrapped = this.unpack(tokens[0].nodes),
                 tArgGroup = this.makeArgGroup(unwrapped);
 
+            // Reassign the end position.
+            tArgGroup.endPosition = tokens[0].endPosition;
+
             const modifier = new ModifierNode();
             modifier.nameNode = modifierName;
             modifier.methodStyleArguments = tArgGroup;
@@ -2560,6 +2568,9 @@ export class LanguageParser {
                     ));
                 }
             }
+
+            modifier.startPosition = modifierName.startPosition;
+            modifier.endPosition = tArgGroup.endPosition;
 
             return modifier;
         }
