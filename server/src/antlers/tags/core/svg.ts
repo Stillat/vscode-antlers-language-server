@@ -21,6 +21,26 @@ const SVGTag: IAntlersTag = {
             description: 'The SVG filename relative to the project root',
             expectsTypes: ['string'],
             isDynamic: false
+        },
+        {
+            isRequired: false,
+            name: 'title',
+            acceptsVariableInterpolation: false, 
+            aliases: [],
+            allowsVariableReference: false,
+            description: '',
+            expectsTypes: ['string'],
+            isDynamic: false
+        },
+        {
+            isRequired: false,
+            name: 'desc',
+            acceptsVariableInterpolation: false, 
+            aliases: [],
+            allowsVariableReference: false,
+            description: '',
+            expectsTypes: ['string'],
+            isDynamic: false
         }
     ],
     resolveDynamicParameter: returnDynamicParameter,
