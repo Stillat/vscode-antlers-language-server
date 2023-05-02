@@ -868,15 +868,17 @@ export class Transformer {
         let value = content;
 
         this.inlineComments.forEach((comment, slug) => {
-            const open = this.selfClosing(slug);
+            const open = this.selfClosing(slug),
+                commentResult = CommentPrinter.printComment(comment, this.options.tabSize, 0, this.inlineFormatter);
 
-            value = value.replace(open, CommentPrinter.printComment(comment, this.options.tabSize, 0, this.inlineFormatter));
+            value = value.replace(open, commentResult);
         });
 
         this.blockComments.forEach((structure) => {
-            const comment = structure.node as AntlersNode;
+            const comment = structure.node as AntlersNode,
+                commentResult = CommentPrinter.printComment(comment, this.options.tabSize, this.indentLevel(structure.pairOpen), this.inlineFormatter);
 
-            value = value.replace(structure.pairOpen, CommentPrinter.printComment(comment, this.options.tabSize, this.indentLevel(structure.pairOpen), this.inlineFormatter));
+            value = value.replace(structure.pairOpen, commentResult);
             this.removeLines.push(structure.pairClose);
             this.removeLines.push(structure.virtualElement);
         });

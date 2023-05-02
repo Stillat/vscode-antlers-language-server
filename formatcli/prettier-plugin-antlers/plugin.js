@@ -3432,6 +3432,9 @@ var init_stringUtilities = __esm({
         }
         return lines[0];
       }
+      static snakeCase(string) {
+        return string.replace(/([A-Z])/g, ($1) => `_${$1.toLowerCase()}`).replace(/^_/, "");
+      }
     };
   }
 });
@@ -13030,9 +13033,10 @@ function makeQueryScopeSuggestions(project) {
   const queryScopes = project.getCollectionQueryScopes();
   for (let i = 0; i < queryScopes.length; i++) {
     items.push({
-      label: queryScopes[i].name,
+      label: `${queryScopes[i].handle} (${queryScopes[i].name})`,
       detail: queryScopes[i].description,
-      kind: import_vscode_languageserver_types3.CompletionItemKind.Variable
+      insertText: queryScopes[i].handle,
+      kind: import_vscode_languageserver_types3.CompletionItemKind.EnumMember
     });
   }
   return items;
@@ -13860,6 +13864,7 @@ var init_suggestionManager = __esm({
     init_genericTypesSuggestions();
     init_parameterSuggestionProvider();
     init_scopeVariableSuggestionsManager();
+    init_projectManager();
   }
 });
 
@@ -16815,6 +16820,26 @@ var init_svg = __esm({
           aliases: [],
           allowsVariableReference: false,
           description: "The SVG filename relative to the project root",
+          expectsTypes: ["string"],
+          isDynamic: false
+        },
+        {
+          isRequired: false,
+          name: "title",
+          acceptsVariableInterpolation: false,
+          aliases: [],
+          allowsVariableReference: false,
+          description: "",
+          expectsTypes: ["string"],
+          isDynamic: false
+        },
+        {
+          isRequired: false,
+          name: "desc",
+          acceptsVariableInterpolation: false,
+          aliases: [],
+          allowsVariableReference: false,
+          description: "",
           expectsTypes: ["string"],
           isDynamic: false
         }
@@ -21940,12 +21965,57 @@ var init_mountUrl = __esm({
   }
 });
 
+// server/src/antlers/tags/core/vite/viteAsset.ts
+var ViteAsset, viteAsset_default;
+var init_viteAsset = __esm({
+  "server/src/antlers/tags/core/vite/viteAsset.ts"() {
+    "use strict";
+    init_utils();
+    ViteAsset = {
+      tagName: "vite:asset",
+      hideFromCompletions: false,
+      requiresClose: true,
+      injectParentScope: false,
+      allowsContentClose: false,
+      allowsArbitraryParameters: false,
+      introducedIn: "3.4.4",
+      parameters: [
+        {
+          isRequired: true,
+          acceptsVariableInterpolation: false,
+          aliases: [],
+          allowsVariableReference: false,
+          name: "src",
+          description: "The asset's path",
+          expectsTypes: ["string"],
+          isDynamic: false
+        }
+      ],
+      resolveDocumentation: (params) => {
+        return makeTagDocWithCodeSample(
+          "vite Tag",
+          "Generates Vite asset URL for the provided resource.",
+          `<img src="{{ vite:asset src="resources/images/logo.svg" /}}" />`,
+          null
+        );
+      }
+    };
+    viteAsset_default = ViteAsset;
+  }
+});
+
 // server/src/antlers/tags/core/vite.ts
-var Vite, vite_default;
+var ViteTagCompletionItems, Vite, vite_default;
 var init_vite = __esm({
   "server/src/antlers/tags/core/vite.ts"() {
     "use strict";
     init_utils();
+    init_tagManager();
+    init_documentedLabel();
+    init_viteAsset();
+    ViteTagCompletionItems = [
+      tagToCompletionItem(viteAsset_default)
+    ];
     Vite = {
       tagName: "vite",
       hideFromCompletions: false,
@@ -21966,6 +22036,12 @@ var init_vite = __esm({
           isDynamic: false
         }
       ],
+      resolveCompletionItems: (params) => {
+        if ((params.leftWord == "vite" || params.leftWord == "/vite") && params.leftChar == ":") {
+          return exclusiveResult(ViteTagCompletionItems);
+        }
+        return EmptyCompletionResult;
+      },
       resolveDocumentation: (params) => {
         return makeTagDocWithCodeSample(
           "vite Tag",
@@ -22386,6 +22462,7 @@ var init_coreTags = __esm({
     init_cookieValue();
     init_userProfileForm();
     init_userPasswordForm();
+    init_viteAsset();
     coreTags = [
       if_default,
       elseIf_default,
@@ -22518,7 +22595,8 @@ var init_coreTags = __esm({
       markdown_default,
       markdownIndent_default,
       widont_default,
-      vite_default
+      vite_default,
+      viteAsset_default
     ];
   }
 });
@@ -22545,6 +22623,7 @@ var init_tagManagerInstance = __esm({
         this.loadCoreTags();
       }
       getVisibleTagsWithDocumentation() {
+        var _a, _b;
         const tags = [];
         this.tags.forEach((tag, name) => {
           if (tag.hideFromCompletions == false) {
@@ -22558,18 +22637,42 @@ var init_tagManagerInstance = __esm({
             });
           }
         });
+        (_b = (_a = projectManager_default.instance) == null ? void 0 : _a.getStructure()) == null ? void 0 : _b.getCustomAntlersTags().forEach((tag) => {
+          tags.push({
+            label: tag.tagName,
+            documentation: ""
+          });
+        });
         return tags;
       }
+      getCustomTagMethodsForTag(tagName) {
+        var _a, _b;
+        const items = [], len = tagName.length + 1;
+        (_b = (_a = projectManager_default.instance) == null ? void 0 : _a.getStructure()) == null ? void 0 : _b.getCustomAntlersTags().forEach((tag) => {
+          if (tag.tagName.startsWith(`${tagName}:`)) {
+            const methodName = tag.tagName.substr(len).trim();
+            if (methodName.length > 0) {
+              items.push(methodName);
+            }
+          }
+        });
+        return items;
+      }
       getVisibleTagNames() {
+        var _a, _b;
         const tagNames = [];
         this.tags.forEach((tag, name) => {
           if (tag.hideFromCompletions == false) {
             tagNames.push(name);
           }
         });
+        (_b = (_a = projectManager_default.instance) == null ? void 0 : _a.getStructure()) == null ? void 0 : _b.getCustomAntlersTags().forEach((tag) => {
+          tagNames.push(tag.tagName);
+        });
         return [...new Set(tagNames)];
       }
       getPossibleTagMethods(tagName) {
+        var _a, _b;
         const methodNames = [], len = tagName.length + 1;
         this.tags.forEach((tag, name) => {
           if (name.startsWith(tagName)) {
@@ -22579,12 +22682,24 @@ var init_tagManagerInstance = __esm({
             }
           }
         });
+        (_b = (_a = projectManager_default.instance) == null ? void 0 : _a.getStructure()) == null ? void 0 : _b.getCustomAntlersTags().forEach((tag) => {
+          if (tag.tagName.startsWith(`${tagName}:`)) {
+            const methodName = tagName.substr(len).trim();
+            if (methodName.length > 0) {
+              methodNames.push(methodName);
+            }
+          }
+        });
         return [...new Set(methodNames)];
       }
       getTagNames() {
+        var _a, _b;
         const tagNames = [];
         this.tags.forEach((tag, name) => {
           tagNames.push(name);
+        });
+        (_b = (_a = projectManager_default.instance) == null ? void 0 : _a.getStructure()) == null ? void 0 : _b.getCustomAntlersTags().forEach((tag) => {
+          tagNames.push(tag.tagName);
         });
         return [...new Set(tagNames)];
       }
@@ -22597,8 +22712,18 @@ var init_tagManagerInstance = __esm({
       findTag(name) {
         return this.tags.get(this.resolveTagName(name));
       }
+      findCustomTag(name) {
+        var _a, _b, _c;
+        const customTags = (_c = (_b = (_a = projectManager_default.instance) == null ? void 0 : _a.getStructure()) == null ? void 0 : _b.getCustomAntlersTags()) != null ? _c : [];
+        for (let i = 0; i < customTags.length; i++) {
+          if (customTags[i].tagName == name) {
+            return customTags[i];
+          }
+        }
+        return;
+      }
       isKnownTag(name) {
-        return this.tags.has(this.resolveTagName(name));
+        return this.tags.has(this.resolveTagName(name)) || this.isCustomTag(name);
       }
       isSymbolKnownTag(node) {
         return this.isKnownTag(node.runtimeName());
@@ -22632,6 +22757,16 @@ var init_tagManagerInstance = __esm({
         }
         return tag.resolveSpecialType(symbol, project);
       }
+      isCustomTag(name) {
+        var _a, _b, _c;
+        const customTags = (_c = (_b = (_a = projectManager_default.instance) == null ? void 0 : _a.getStructure()) == null ? void 0 : _b.getCustomAntlersTags()) != null ? _c : [];
+        for (var i = 0; i < customTags.length; i++) {
+          if (customTags[i].tagName == name) {
+            return true;
+          }
+        }
+        return false;
+      }
       getCompletionItems(params) {
         var _a;
         let lastScopeItem = null;
@@ -22644,19 +22779,31 @@ var init_tagManagerInstance = __esm({
           lastScopeItem = params.nodesInScope[params.nodesInScope.length - 1];
         }
         if (params.currentNode != null) {
-          if (this.isKnownTag(params.currentNode.runtimeName())) {
-            const tagReference = this.findTag(
+          if (this.isKnownTag(params.currentNode.runtimeName()) || this.isCustomTag(params.currentNode.getTagName())) {
+            let tagReference = this.findTag(
               params.currentNode.runtimeName()
             );
             if (typeof tagReference === "undefined") {
-              return {
-                isExclusive: false,
-                items: []
-              };
+              tagReference = this.findCustomTag(params.currentNode.getTagName());
+              if (typeof tagReference === "undefined") {
+                return {
+                  isExclusive: false,
+                  items: []
+                };
+              }
             }
             const dynamicRefNames = [];
             if (tagReference.resolveCompletionItems != null) {
-              const result = tagReference.resolveCompletionItems(params);
+              const result = tagReference.resolveCompletionItems(params), customMethods = this.getCustomTagMethodsForTag(tagReference.tagName);
+              if (customMethods.length > 0) {
+                customMethods.forEach((method) => {
+                  result.items.push({
+                    label: method,
+                    kind: import_vscode_languageserver10.CompletionItemKind.Text,
+                    insertText: method
+                  });
+                });
+              }
               if (result.isExclusiveResult) {
                 return {
                   isExclusive: true,
@@ -23229,7 +23376,9 @@ function getSystemVariables() {
   systemVariables.push({ dataType: "string", name: "amp_url", sourceField: null, sourceName: "*internal.system", introducedBy: null });
   systemVariables.push({ dataType: "string", name: "api_url", sourceField: null, sourceName: "*internal.system", introducedBy: null });
   systemVariables.push({ dataType: "string", name: "current_full_url", sourceField: null, sourceName: "*internal.system", introducedBy: null });
+  systemVariables.push({ dataType: "string", name: "template_contents", sourceField: null, sourceName: "*internal.system", introducedBy: null });
   systemVariables.push({ dataType: "string", name: "current_template", sourceField: null, sourceName: "*internal.system", introducedBy: null });
+  systemVariables.push({ dataType: "string", name: "current_layout", sourceField: null, sourceName: "*internal.system", introducedBy: null });
   systemVariables.push({ dataType: "boolean", name: "logged_in", sourceField: null, sourceName: "*internal.system", introducedBy: null });
   systemVariables.push({ dataType: "boolean", name: "logged_out", sourceField: null, sourceName: "*internal.system", introducedBy: null });
   systemVariables.push({ dataType: "boolean", name: "is_homepage", sourceField: null, sourceName: "*internal.system", introducedBy: null });
@@ -27465,6 +27614,10 @@ var init_languageParser = __esm({
             }
           }
         });
+        if (argGroup.args.length > 0) {
+          argGroup.startPosition = argGroup.args[0].startPosition;
+          argGroup.endPosition = argGroup.args[argGroup.args.length - 1].endPosition;
+        }
         return argGroup;
       }
       cleanVariableForMethodInvocation(node) {
@@ -28812,6 +28965,7 @@ var init_languageParser = __esm({
         const modifierName = tokens.shift(), values = [], tokenCount = tokens.length;
         if (tokens.length > 0 && tokens[0] instanceof LogicGroup) {
           const unwrapped = this.unpack(tokens[0].nodes), tArgGroup = this.makeArgGroup(unwrapped);
+          tArgGroup.endPosition = tokens[0].endPosition;
           const modifier = new ModifierNode();
           modifier.nameNode = modifierName;
           modifier.methodStyleArguments = tArgGroup;
@@ -28824,6 +28978,8 @@ var init_languageParser = __esm({
               ));
             }
           }
+          modifier.startPosition = modifierName.startPosition;
+          modifier.endPosition = tArgGroup.endPosition;
           return modifier;
         }
         for (let i = 0; i < tokenCount; i++) {
@@ -30481,10 +30637,10 @@ var init_documentParser = __esm({
                   literalNode.withParser(this);
                   literalNode.content = this.prepareLiteralContent(nodeContent);
                   if (literalNode.content.length > 0) {
-                    literalNode.startPosition = this.positionFromOffset(thisOffset, thisOffset);
+                    literalNode.startPosition = this.positionFromOffset(literalStartIndex, thisOffset);
                     literalNode.endPosition = this.positionFromOffset(nextAntlersStart, nextAntlersStart - 1);
                     const startOffset = (_d = literalNode.startPosition.index) != null ? _d : 0, endOffset = literalNode.endPosition.index + 1;
-                    literalNode.sourceContent = this.content.substr(startOffset + 2, this.inputLen - startOffset + 2);
+                    literalNode.sourceContent = this.content.substr(literalStartIndex, this.inputLen - startOffset + 2);
                     this.nodes.push(literalNode);
                   }
                   break;
@@ -30697,7 +30853,7 @@ var init_documentParser = __esm({
             if (node.isComment) {
               return;
             }
-            node.isTagNode = (_b2 = (_a2 = tagManagerInstance_default.instance) == null ? void 0 : _a2.isKnownTag(node.runtimeName())) != null ? _b2 : false;
+            node.isTagNode = (_b2 = (_a2 = tagManagerInstance_default.instance) == null ? void 0 : _a2.isKnownTag(node.getTagName())) != null ? _b2 : false;
             node.scopeName = node.findParameterValue("scope", "");
             node.antlersNodeIndex = curIndex;
             curIndex += 1;
@@ -31813,7 +31969,13 @@ var init_featureContextResolver = __esm({
               return true;
             }
           }
-          if (thisNode instanceof LogicGroupBegin || thisNode instanceof LogicGroupEnd) {
+          if (thisNode instanceof LogicGroupEnd) {
+            if (i == checkNodes.length - 1) {
+              continue;
+            }
+            return false;
+          }
+          if (thisNode instanceof LogicGroupBegin) {
             return false;
           }
           if (thisNode instanceof ModifierSeparator) {
@@ -31923,19 +32085,37 @@ var init_modifierContext = __esm({
         }
         if (modifier != null) {
           context.activeModifier = modifier;
-          context.valueCount = modifier.valueNodes.length;
           if (modifier.nameNode != null) {
             context.name = modifier.nameNode.name;
           }
           if (modifier.nameNode != null && position.isWithin(modifier.nameNode.startPosition, modifier.nameNode.endPosition, 1)) {
             context.inModifierName = true;
+          }
+          if (modifier.methodStyleArguments != null) {
+            context.valueCount = modifier.methodStyleArguments.args.length;
+            if (!context.inModifierName) {
+              for (let i = 0; i < modifier.methodStyleArguments.args.length; i++) {
+                const argValue = modifier.methodStyleArguments.args[i];
+                if (position.isWithin(argValue.startPosition, argValue.endPosition, 1)) {
+                  context.activeValueIndex = i;
+                  context.activeValue = argValue;
+                }
+              }
+              if (context.activeValueIndex === -1 && position.isWithin(modifier.methodStyleArguments.startPosition, modifier.methodStyleArguments.endPosition)) {
+                context.valueCount += 1;
+                context.activeValueIndex = context.valueCount - 1;
+              }
+            }
           } else {
-            for (let i = 0; i < modifier.valueNodes.length; i++) {
-              const value = modifier.valueNodes[i];
-              if (position.isWithin(value.startPosition, value.endPosition, 1)) {
-                context.activeValueIndex = i;
-                context.activeValue = value;
-                break;
+            context.valueCount = modifier.valueNodes.length;
+            if (!context.inModifierName) {
+              for (let i = 0; i < modifier.valueNodes.length; i++) {
+                const value = modifier.valueNodes[i];
+                if (position.isWithin(value.startPosition, value.endPosition, 1)) {
+                  context.activeValueIndex = i;
+                  context.activeValue = value;
+                  break;
+                }
               }
             }
           }
@@ -39693,12 +39873,12 @@ ${this.close(slug)}
       transformComments(content) {
         let value = content;
         this.inlineComments.forEach((comment, slug) => {
-          const open = this.selfClosing(slug);
-          value = value.replace(open, CommentPrinter.printComment(comment, this.options.tabSize, 0, this.inlineFormatter));
+          const open = this.selfClosing(slug), commentResult = CommentPrinter.printComment(comment, this.options.tabSize, 0, this.inlineFormatter);
+          value = value.replace(open, commentResult);
         });
         this.blockComments.forEach((structure) => {
-          const comment = structure.node;
-          value = value.replace(structure.pairOpen, CommentPrinter.printComment(comment, this.options.tabSize, this.indentLevel(structure.pairOpen), this.inlineFormatter));
+          const comment = structure.node, commentResult = CommentPrinter.printComment(comment, this.options.tabSize, this.indentLevel(structure.pairOpen), this.inlineFormatter);
+          value = value.replace(structure.pairOpen, commentResult);
           this.removeLines.push(structure.pairClose);
           this.removeLines.push(structure.virtualElement);
         });

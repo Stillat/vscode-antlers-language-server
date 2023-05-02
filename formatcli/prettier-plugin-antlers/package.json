@@ -1,6 +1,6 @@
 {
     "name": "prettier-plugin-antlers",
-    "version": "1.2.4",
+    "version": "1.2.5",
     "description": "Antlers Prettier plugin.",
     "main": "plugin.js",
     "scripts": {},

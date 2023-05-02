@@ -631,11 +631,11 @@ export class DocumentParser {
                             literalNode.content = this.prepareLiteralContent(nodeContent);
 
                             if (literalNode.content.length > 0) {
-                                literalNode.startPosition = this.positionFromOffset(thisOffset, thisOffset);
+                                literalNode.startPosition = this.positionFromOffset(literalStartIndex, thisOffset);
                                 literalNode.endPosition = this.positionFromOffset(nextAntlersStart, nextAntlersStart - 1);
                                 const startOffset = (literalNode.startPosition.index ?? 0),
                                     endOffset = (literalNode.endPosition.index) + 1;
-                                literalNode.sourceContent = this.content.substr(startOffset + 2, this.inputLen - startOffset + 2);
+                                literalNode.sourceContent = this.content.substr(literalStartIndex, this.inputLen - startOffset + 2);
                                 this.nodes.push(literalNode);
                             }
 

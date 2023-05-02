@@ -2,6 +2,10 @@
 
 Bugs fixed, what's new, and more! :)
 
+## 2.6.1
+
+- Improves formatting of comments when they begin a line and are followed by a literal node (#71)
+
 ## 2.6.0
 
 - Adds completion support for custom Tags and modifiers,

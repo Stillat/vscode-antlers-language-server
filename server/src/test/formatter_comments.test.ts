@@ -39,4 +39,16 @@ suite('Formatter Comments', () => {
             assert.strictEqual(formatAntlers(result), result);
         }
     });
+
+    test('comment end sequence is not doubled up when it begins the line before final literal', () => {
+        const input = `Showing {{title }}
+
+{{# {{ partial src="default" }} #}}
+
+`;
+        const expected = `Showing {{ title }}
+
+{{# {{ partial src="default" }} #}}`;
+        assert.strictEqual(formatAntlers(input).trim(), expected);
+    });
 });
