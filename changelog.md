@@ -2,6 +2,10 @@
 
 Bugs fixed, what's new, and more! :)
 
+## 2.6.2
+
+- Removes block comments from the Antlers configuration file, relying entirely on the setting when the extension is activated
+
 ## 2.6.1
 
 - Improves formatting of comments when they begin a line and are followed by a literal node (#71)
