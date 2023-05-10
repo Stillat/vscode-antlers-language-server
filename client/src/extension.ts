@@ -94,7 +94,6 @@ namespace SemanticTokenLegendRequest {
     export const type: RequestType0<{ types: string[]; modifiers: string[] } | null, any> = new RequestType0('antlers/semanticTokenLegend');
 }
 
-let didChangeHtmlComments = false;
 let client: LanguageClient;
 let projectWatcher: FileSystemWatcher | null = null;
 let projectExplorer:ProjectExplorer;
@@ -151,20 +150,70 @@ export function activate(context: ExtensionContext) {
         }
     };
 
+    let adjustCommentStylesDynamically = true;
+    const activeEditor = vscode.window.activeTextEditor;
+
+    // Handle the case of initial open.
+    if (activeEditor != null) {
+        if (! adjustCommentStylesDynamically) {
+            return;
+        }
+        if (typeof activeEditor.document === 'undefined' || activeEditor.document == null) {
+            return;
+        }
+        if (typeof activeEditor.document.fileName === 'undefined' || activeEditor.document.fileName == null) {
+            return;
+        }
+        const fileName = activeEditor.document.fileName;
+        if (fileName.toLowerCase().endsWith('.antlers.html') || fileName.toLowerCase().endsWith('.antlers.xml')) {
+            vscode.languages.setLanguageConfiguration('html', {
+                comments: {
+                    blockComment: ['{{#', '#}}']
+                }
+            });
+        } else {
+            vscode.languages.setLanguageConfiguration('html', {
+                comments: {
+                    blockComment: ['<!--', '-->']
+                }
+            });
+        }
+    }
+
+    vscode.window.onDidChangeActiveTextEditor((e) => {
+        if (! adjustCommentStylesDynamically) {
+            return;
+        }
+        if (typeof e.document === 'undefined' || e.document == null) {
+            return;
+        }
+        if (typeof e.document.fileName === 'undefined' || e.document.fileName == null) {
+            return;
+        }
+        const fileName = e.document.fileName;
+        if (fileName.toLowerCase().endsWith('.antlers.html') || fileName.toLowerCase().endsWith('.antlers.xml')) {
+            vscode.languages.setLanguageConfiguration('html', {
+                comments: {
+                    blockComment: ['{{#', '#}}']
+                }
+            });
+        } else {
+            vscode.languages.setLanguageConfiguration('html', {
+                comments: {
+                    blockComment: ['<!--', '-->']
+                }
+            });
+        }
+    });
+   
     workspace.onDidChangeConfiguration((e) => {
         if (e.affectsConfiguration('antlersOverrideHtmlComments')) {
             const newHtmlCommentSetting = workspace.getConfiguration().get('antlersOverrideHtmlComments');
 
             if (typeof newHtmlCommentSetting !== 'undefined' && newHtmlCommentSetting === true) {
-                didChangeHtmlComments = true;
-
-                vscode.languages.setLanguageConfiguration('html', {
-                    comments: {
-                        blockComment: ['{{#', '#}}']
-                    }
-                });
+                adjustCommentStylesDynamically = true;
             } else {
-                didChangeHtmlComments = false;
+                adjustCommentStylesDynamically = false;
                 vscode.languages.setLanguageConfiguration('html', {
                     comments: {
                         blockComment: ['<!--', '-->']
@@ -175,12 +224,7 @@ export function activate(context: ExtensionContext) {
     });
 
     if (typeof antlersOverrideHtmlComments !== 'undefined' && antlersOverrideHtmlComments === true) {
-        didChangeHtmlComments = true;
-        vscode.languages.setLanguageConfiguration('html', {
-            comments: {
-                blockComment: ['{{#', '#}}']
-            }
-        });
+        adjustCommentStylesDynamically = true;
     }
 
     context.subscriptions.push(
@@ -281,13 +325,11 @@ export function deactivate(): Thenable<void> | undefined {
         return undefined;
     }
 
-    if (didChangeHtmlComments) {
-        vscode.languages.setLanguageConfiguration('html', {
-            comments: {
-                blockComment: ['<!--', '-->']
-            }
-        });
-    }
+    vscode.languages.setLanguageConfiguration('html', {
+        comments: {
+            blockComment: ['<!--', '-->']
+        }
+    });
 
     projectWatcher?.dispose();
 

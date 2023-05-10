@@ -2,6 +2,10 @@
 
 Bugs fixed, what's new, and more! :)
 
+## 2.6.3
+
+- Refactors how Antlers comment styles are applied (watches for file changes to apply only on `.antlers.html` and `.antlers.xml`)
+
 ## 2.6.2
 
 - Removes block comments from the Antlers configuration file, relying entirely on the setting when the extension is activated
