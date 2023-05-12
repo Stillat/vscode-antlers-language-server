@@ -2,6 +2,10 @@
 
 Bugs fixed, what's new, and more! :)
 
+## 2.6.4
+
+- Improves modifier type diagnostics reporting
+
 ## 2.6.3
 
 - Refactors how Antlers comment styles are applied (watches for file changes to apply only on `.antlers.html` and `.antlers.xml`)

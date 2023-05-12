@@ -83,6 +83,7 @@ const ModifierRuntimeTypeHandler: IDiagnosticsHandler = {
                         lastModifier.modifier.returnsType.includes("*") ||
                         thisModifier.modifier.acceptsType.includes("*")
                     ) {
+                        lastModifier = thisModifier;
                         continue;
                     } else {
                         const lastModifierReturns = lastModifier.modifier.returnsType;
@@ -114,6 +115,7 @@ const ModifierRuntimeTypeHandler: IDiagnosticsHandler = {
                             }
                             break;
                         }
+                        lastModifier = thisModifier;
                     }
                 }
             }
@@ -146,6 +148,7 @@ const ModifierRuntimeTypeHandler: IDiagnosticsHandler = {
                             lastModifier.modifier.returnsType.includes("*") ||
                             thisModifier.modifier.acceptsType.includes("*")
                         ) {
+                            lastModifier = thisModifier;
                             continue;
                         } else {
                             const lastModifierReturns = lastModifier.modifier.returnsType;
@@ -179,6 +182,7 @@ const ModifierRuntimeTypeHandler: IDiagnosticsHandler = {
                                 }
                                 break;
                             }
+                            lastModifier = thisModifier;
                         }
                     }
                 }
