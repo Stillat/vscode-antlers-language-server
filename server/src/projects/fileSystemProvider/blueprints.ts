@@ -136,17 +136,23 @@ export function getBlueprintFields(fileName: string, blueprintName: string, blue
             for (const tabName of Object.keys(tabs)) {
                 const tab = tabs[tabName];
 
-                if (typeof tab.fields !== "undefined") {
-                    const tabFields = getFields(
-                        tab,
-                        blueprintName,
-                        "fields",
-                        blueprintName,
-                        fieldsets
-                    );
-
-                    if (tabFields.length > 0) {
-                        fields = fields.concat(tabFields);
+                if (typeof tab.sections !== "undefined") {
+                    for (const sectionName of Object.keys(tab.sections)) {
+                        const section = tab.sections[sectionName];
+        
+                        if (typeof section.fields !== "undefined") {
+                            const sectionFields = getFields(
+                                section,
+                                blueprintName,
+                                "fields",
+                                blueprintName,
+                                fieldsets
+                            );
+        
+                            if (sectionFields.length > 0) {
+                                fields = fields.concat(sectionFields);
+                            }
+                        }
                     }
                 }
             }

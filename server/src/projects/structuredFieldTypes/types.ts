@@ -3687,6 +3687,30 @@ export class BlueprintParser {
 
     parseTabs(context: any) :IParsedSection[] {
         const tabs:IParsedSection[] = [],
+            tabNames = Object.keys(context);
+
+        tabNames.forEach((sectionHandle) => {
+            try {
+                const _tSectionContext = context[sectionHandle];
+
+                if (typeof _tSectionContext['sections'] !== 'undefined') {
+                    const tabDisplay = _tSectionContext['display'] ?? 'Tab';
+                    this.parseSections(_tSectionContext['sections']).forEach((section) => {
+                        tabs.push({
+                            ...section,
+                            display: tabDisplay,
+                            handle: tabDisplay
+                        });
+                    });
+                }
+            } catch (e) { }
+        });
+
+        return tabs;
+    }
+
+    parseSections(context: any) :IParsedSection[] {
+        const tabs:IParsedSection[] = [],
             sectionNames = Object.keys(context);
 
         sectionNames.forEach((sectionHandle) => {
@@ -3717,7 +3741,7 @@ export class BlueprintParser {
             _tTabs = this.parseTabs(context['tabs']);
         } else if (typeof context['sections'] !== 'undefined') {
             // Statamic 3
-            _tTabs = this.parseTabs(context['sections']);
+            _tTabs = this.parseSections(context['sections']);
         }
 
         if (typeof context['fields'] !== 'undefined') {
