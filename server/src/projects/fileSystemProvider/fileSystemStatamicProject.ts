@@ -163,6 +163,12 @@ function getFiles(
         return [];
     }
 
+    const fStats = fs.statSync(startPath);
+
+    if (!fStats.isDirectory()) {
+        return [];
+    }
+
     let returnFiles = foundFiles || [];
     const files = fs.readdirSync(startPath);
 
@@ -182,6 +188,12 @@ function getFiles(
 
 function getDirectFiles(startPath: string, filter: string): string[] {
     if (!fs.existsSync(startPath)) {
+        return [];
+    }
+
+    const fStats = fs.statSync(startPath);
+
+    if (!fStats.isDirectory()) {
         return [];
     }
 

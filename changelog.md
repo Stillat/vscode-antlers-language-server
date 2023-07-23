@@ -2,6 +2,10 @@
 
 Bugs fixed, what's new, and more! :)
 
+## 2.6.6
+
+- Improves directory scanning logic (#74)
+
 ## 2.6.5
 
 - Improves error reporting with arrays as modifier values

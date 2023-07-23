@@ -4,7 +4,7 @@
     "description": "Provides Antlers syntax highlighting, formatting, error reporting, project-specific suggestions, and more.",
     "author": "John Koster",
     "license": "MIT",
-    "version": "2.6.6",
+    "version": "2.6.7",
     "repository": {
         "type": "git",
         "url": "https://github.com/Stillat/vscode-antlers-language-server"
@@ -184,7 +184,7 @@
             ]
         }
     },
-    "bundleDependencies": false,
+    "bundleDependencies": [],
     "scripts": {
         "vscode:prepublish": "npm run compile && npm run build:webview",
         "compile": "tsc -b",
