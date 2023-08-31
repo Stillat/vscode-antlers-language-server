@@ -47,7 +47,9 @@ export interface INodeInterpolation {
 
 export interface StructuralFragment {
     start: FragmentNode,
-    end: FragmentNode
+    end: FragmentNode,
+    content: string,
+    outerContent: string,
 }
 
 export enum FragmentPosition {

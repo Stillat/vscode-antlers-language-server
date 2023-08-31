@@ -1,7 +1,7 @@
 import { HTMLFormatter, PHPFormatter, YAMLFormatter } from '../../formatting/formatters';
 import { replaceAllInString } from '../../utils/strings';
 import { ConditionPairAnalyzer } from '../analyzers/conditionPairAnalyzer';
-import { AbstractNode, AntlersNode, ConditionNode, EscapedContentNode, ExecutionBranch, FragmentPosition, LiteralNode } from '../nodes/abstractNode';
+import { AbstractNode, AntlersNode, ConditionNode, EscapedContentNode, ExecutionBranch, FragmentPosition, LiteralNode, StructuralFragment } from '../nodes/abstractNode';
 import { StringUtilities } from '../utilities/stringUtilities';
 import { AntlersDocument } from './antlersDocument';
 import { InlineFormatter } from './inlineFormatter';
@@ -76,7 +76,6 @@ export class Transformer {
     private virtualBlocks: VirtualBlockStructure[] = [];
     private inlineComments: Map<string, AntlersNode> = new Map();
     private blockComments: VirtualBlockStructure[] = [];
-    private extractedEmbeddedDocuments: Map<string, EmbeddedDocument> = new Map();
     private dynamicElementAntlers: Map<string, string> = new Map();
     private dynamicElementAntlersNodes: Map<string, AntlersNode> = new Map();
     private dynamicElementPairedAntlers: Map<string, string> = new Map();
@@ -173,30 +172,15 @@ export class Transformer {
     }
 
     private makeSlug(length: number): string {
-        if (length <= 2) {
-            length = 7;
-        }
-
-        let result = '';
-        const characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789',
-            charactersLength = characters.length;
-
-        for (let i = 0; i < length - 1; i++) {
-            result += characters.charAt(Math.floor(Math.random() *
-                charactersLength));
-        }
-
-        let slug = 'A' + result + 'A';
-
-        slug = slug.toLowerCase();
+        const slug = StringUtilities.makeSlug(length);
 
         if (this.slugs.includes(slug)) {
             return this.makeSlug(length + 1);
         }
 
-        this.slugs.push(slug.toLowerCase());
+        this.slugs.push(slug);
 
-        return slug.toLowerCase();
+        return slug;
     }
 
     private transformInlineConditions(value: string): string {
@@ -402,36 +386,6 @@ export class Transformer {
                     value = value.replace(structure.pairClose, this.printNode(structureTag.isClosedBy as AntlersNode));
                 }
             });
-        });
-
-        return value;
-    }
-
-    private transformExtractedDocuments(content: string): string {
-        let value = content;
-
-        this.extractedEmbeddedDocuments.forEach((document, slug) => {
-            let target = '',
-                indent = 0;
-
-            if (document.isScript) {
-                target = '//' + slug;
-            } else {
-                target = '/*' + slug + '*/';
-            }
-
-            indent = this.indentLevel(target);
-
-            if (value.includes(target)) {
-                let replaceContent = '';
-
-                if (document.content.includes('{{ /') || document.content.includes('{{/')) {
-                    replaceContent = document.content.trim();
-                } else {
-                    replaceContent = IndentLevel.indentRelative(document.content, indent);
-                }
-                value = value.replace(target, replaceContent);
-            }
         });
 
         return value;
@@ -886,20 +840,6 @@ export class Transformer {
         return value;
     }
 
-    private registerEmbeddedDocument(slug: string, content: string, isScript: boolean): string {
-        if (this.parentTransformer != null) {
-            return this.parentTransformer.registerEmbeddedDocument(slug, content, isScript);
-        }
-
-        this.extractedEmbeddedDocuments.set(slug, {
-            slug: slug,
-            content: content,
-            isScript: isScript
-        });
-
-        return slug;
-    }
-
     clone(): Transformer {
         const cloned = new Transformer(this.doc);
         cloned.withOptions(this.options).setParentTransformer(this);
@@ -953,39 +893,6 @@ export class Transformer {
                 }
             }
         });
-
-        const structures = this.doc.getDocumentParser().getFragmentsContainingStructures();
-
-        if (structures.length > 0) {
-            const referenceDocument = new AntlersDocument();
-            referenceDocument.loadString(result);
-
-            structures.forEach((pair) => {
-                const ref = this.doc.getDocumentParser().getText((pair.start.endPosition?.offset ?? 0) + 1, pair.end.startPosition?.offset ?? 0),
-                    refOpen = referenceDocument.getDocumentParser().getFragmentsParser().getEmbeddedFragment(pair.start.embeddedIndex);
-
-                if (refOpen == null) { return; }
-                const refClose = referenceDocument.getDocumentParser().getFragmentsParser().getClosingFragmentAfter(refOpen);
-                if (refClose == null) { return; }
-
-                const
-                    curRef = referenceDocument.getDocumentParser().getText((refOpen.endPosition?.offset ?? 0) + 1, refClose?.startPosition?.offset ?? 0),
-                    refSlug = this.makeSlug(16),
-                    isScript = pair.start.name.toLowerCase() == 'script';
-
-                let replaceSlug = refSlug;
-
-                if (isScript) {
-                    replaceSlug = '//' + refSlug;
-                } else {
-                    replaceSlug = '/*' + refSlug + '*/';
-                }
-
-                result = result.replace(curRef, replaceSlug);
-
-                this.registerEmbeddedDocument(refSlug, ref, isScript);
-            });
-        }
 
         return result;
     }
@@ -1102,6 +1009,27 @@ export class Transformer {
         }
 
         return newLines.join("\n");
+    }
+
+    public applyFragmentReplacements(content: string, fragments:Map<string, StructuralFragment>, tabSize:number): string {
+        let value = content;
+
+        fragments.forEach((fragment, slug) => {
+            const targetIndent = this.indentLevel(slug);
+            
+            let fragmentContent =  IndentLevel.shiftIndent(
+                fragment.outerContent,
+                targetIndent,
+                true,
+                tabSize,
+                true,
+                (targetIndent == 0)
+            );
+
+            value = value.replace(slug, fragmentContent);
+        });
+
+        return value;
     }
 
     private cleanStructuralNewLines(content: string): string {
@@ -1228,7 +1156,6 @@ export class Transformer {
         results = this.transformVirtualStructures(results);
         results = this.transformDynamicAntlers(results);
         results = this.transformPairedAntlers(results);
-        results = this.transformExtractedDocuments(results);
         results = this.cleanVirtualStructures(results);
         results = this.cleanLines(results);
         //results = this.removeVirtualStructures(results);

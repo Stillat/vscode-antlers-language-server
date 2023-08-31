@@ -67,7 +67,7 @@ export class IndentLevel {
         return reflowedLines.join("\n");
     }
 
-    static shiftIndent(value: string, targetIndent: number, skipFirst = false, tabSize = 4, adjustStructures = true): string {
+    static shiftIndent(value: string, targetIndent: number, skipFirst = false, tabSize = 4, adjustStructures = true, skipLast = false): string {
         if (targetIndent < 0) {
             targetIndent = 0;
         }
@@ -77,6 +77,7 @@ export class IndentLevel {
 
         for (let i = 0; i < lines.length; i++) {
             if (i == 0 && skipFirst) { reflowedLines.push(lines[i]); continue; }
+            if (i == lines.length - 1 && skipLast) { reflowedLines.push(lines[i]); continue; }
             const line = lines[i];
 
             reflowedLines.push(' '.repeat(targetIndent) + line);
@@ -90,6 +91,7 @@ export class IndentLevel {
 
             for (let i = 0; i < lines.length; i++) {
                 if (i == 0 && skipFirst) { reflowedLines.push(lines[i]); continue; }
+                if (i == lines.length - 1 && skipLast) { reflowedLines.push(lines[i]); continue; }
                 const line = lines[i];
 
                 if (i == lines.length - 1) {

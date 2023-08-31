@@ -75,4 +75,23 @@ export class StringUtilities {
     static snakeCase(string: string): string {
         return string.replace(/([A-Z])/g, ($1) => `_${$1.toLowerCase()}`).replace(/^_/, '');
     }
+
+    static makeSlug(length: number): string {
+        if (length <= 2) {
+            length = 7;
+        }
+
+        let result = '';
+        const characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789',
+            charactersLength = characters.length;
+
+        for (let i = 0; i < length - 1; i++) {
+            result += characters.charAt(Math.floor(Math.random() *
+                charactersLength));
+        }
+
+        let slug = 'A' + result + 'A';
+
+        return slug.toLowerCase();
+    }
 }            

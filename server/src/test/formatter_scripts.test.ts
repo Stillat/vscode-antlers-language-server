@@ -44,4 +44,30 @@ suite('Formatter: JavaScript and Antlers', () => {
         assert.strictEqual(formatAntlers(input), expected);
         
     });
+
+    test('it does not duplicate script tags', () => {
+        const template = `<script type="application/json">
+{{ if something }}
+{{ /if }}
+</script>
+AAA 
+BBB
+{{ if somethingElse }}
+
+<script>
+</script>
+
+{{ /if }}`;
+        const out = `<script type="application/json">
+{{ if something }}
+{{ /if }}
+</script>
+AAA
+BBB
+{{ if somethingElse }}
+    <script>
+    </script>
+{{ /if }}`;
+        assert.strictEqual(formatAntlers(template), out);
+    });
 });
