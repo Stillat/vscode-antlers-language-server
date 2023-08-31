@@ -2,6 +2,10 @@
 
 Bugs fixed, what's new, and more! :)
 
+## 2.6.8
+
+- Corrects an issue where the formatter may duplicate content within `<script>` tags (#76)
+
 ## 2.6.6
 
 - Improves directory scanning logic (#74)

@@ -3435,6 +3435,18 @@ var init_stringUtilities = __esm({
       static snakeCase(string) {
         return string.replace(/([A-Z])/g, ($1) => `_${$1.toLowerCase()}`).replace(/^_/, "");
       }
+      static makeSlug(length) {
+        if (length <= 2) {
+          length = 7;
+        }
+        let result = "";
+        const characters = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789", charactersLength = characters.length;
+        for (let i = 0; i < length - 1; i++) {
+          result += characters.charAt(Math.floor(Math.random() * charactersLength));
+        }
+        let slug = "A" + result + "A";
+        return slug.toLowerCase();
+      }
     };
   }
 });
@@ -25951,7 +25963,9 @@ var init_antlersNodeParser = __esm({
           nodeTypeAnalyzer_default.analyzeParametersForModifiers(node);
           node.resetContentCache();
         }
-        node.pathReference = this.pathParser.parse(name);
+        if (name.startsWith("[") == false) {
+          node.pathReference = this.pathParser.parse(name);
+        }
         node.mergeErrors(this.pathParser.getAntlersErrors());
         if (node.pathReference != null) {
           if (node.pathReference.isStrictTagReference) {
@@ -29825,17 +29839,27 @@ var init_fragmentsParser = __esm({
       }
       getFragmentsContainingStructures() {
         const structures = [];
+        let anyContainsStructures = false;
         this.fragments.forEach((fragment) => {
+          if (fragment.containsStructures) {
+            anyContainsStructures = true;
+          }
+        });
+        this.fragments.forEach((fragment) => {
+          var _a, _b, _c, _d, _e, _f, _g, _h;
           const lowerName = fragment.name.toLowerCase();
           if (lowerName != "script" && lowerName != "style") {
             return;
           }
-          if (!fragment.isClosingFragment && !fragment.isSelfClosing && fragment.containsStructures) {
+          if (!fragment.isClosingFragment && !fragment.isSelfClosing && (anyContainsStructures || fragment.containsStructures)) {
             const close = this.getClosingFragmentAfter(fragment);
             if (close != null) {
+              const structureContent = this.content.substring(((_b = (_a = fragment.endPosition) == null ? void 0 : _a.offset) != null ? _b : 0) + 1, (_d = (_c = close == null ? void 0 : close.startPosition) == null ? void 0 : _c.offset) != null ? _d : 0), outerContent = this.content.substring((_f = (_e = fragment.startPosition) == null ? void 0 : _e.offset) != null ? _f : 0, ((_h = (_g = close == null ? void 0 : close.endPosition) == null ? void 0 : _g.offset) != null ? _h : 0) + 1);
               structures.push({
                 start: fragment,
-                end: close
+                end: close,
+                content: structureContent,
+                outerContent
               });
             }
           }
@@ -38702,13 +38726,17 @@ var init_indentLevel = __esm({
         }
         return reflowedLines.join("\n");
       }
-      static shiftIndent(value, targetIndent, skipFirst = false, tabSize = 4, adjustStructures = true) {
+      static shiftIndent(value, targetIndent, skipFirst = false, tabSize = 4, adjustStructures = true, skipLast = false) {
         if (targetIndent < 0) {
           targetIndent = 0;
         }
         let lines = StringUtilities.breakByNewLine(value.trim()), reflowedLines = [];
         for (let i = 0; i < lines.length; i++) {
           if (i == 0 && skipFirst) {
+            reflowedLines.push(lines[i]);
+            continue;
+          }
+          if (i == lines.length - 1 && skipLast) {
             reflowedLines.push(lines[i]);
             continue;
           }
@@ -38721,6 +38749,10 @@ var init_indentLevel = __esm({
           reflowedLines = [];
           for (let i = 0; i < lines.length; i++) {
             if (i == 0 && skipFirst) {
+              reflowedLines.push(lines[i]);
+              continue;
+            }
+            if (i == lines.length - 1 && skipLast) {
               reflowedLines.push(lines[i]);
               continue;
             }
@@ -39248,7 +39280,6 @@ var init_transformer = __esm({
     init_conditionPairAnalyzer();
     init_abstractNode();
     init_stringUtilities();
-    init_antlersDocument();
     init_commentPrinter();
     init_indentLevel();
     init_nodePrinter();
@@ -39274,7 +39305,6 @@ var init_transformer = __esm({
         this.virtualBlocks = [];
         this.inlineComments = /* @__PURE__ */ new Map();
         this.blockComments = [];
-        this.extractedEmbeddedDocuments = /* @__PURE__ */ new Map();
         this.dynamicElementAntlers = /* @__PURE__ */ new Map();
         this.dynamicElementAntlersNodes = /* @__PURE__ */ new Map();
         this.dynamicElementPairedAntlers = /* @__PURE__ */ new Map();
@@ -39353,21 +39383,12 @@ var init_transformer = __esm({
         return "<" + value + ">" + innerContent + "</" + value + ">";
       }
       makeSlug(length) {
-        if (length <= 2) {
-          length = 7;
-        }
-        let result = "";
-        const characters = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789", charactersLength = characters.length;
-        for (let i = 0; i < length - 1; i++) {
-          result += characters.charAt(Math.floor(Math.random() * charactersLength));
-        }
-        let slug = "A" + result + "A";
-        slug = slug.toLowerCase();
+        const slug = StringUtilities.makeSlug(length);
         if (this.slugs.includes(slug)) {
           return this.makeSlug(length + 1);
         }
-        this.slugs.push(slug.toLowerCase());
-        return slug.toLowerCase();
+        this.slugs.push(slug);
+        return slug;
       }
       transformInlineConditions(value) {
         let results = value;
@@ -39525,28 +39546,6 @@ var init_transformer = __esm({
               value = value.replace(structure.pairClose, this.printNode(structureTag.isClosedBy));
             }
           });
-        });
-        return value;
-      }
-      transformExtractedDocuments(content) {
-        let value = content;
-        this.extractedEmbeddedDocuments.forEach((document, slug) => {
-          let target = "", indent = 0;
-          if (document.isScript) {
-            target = "//" + slug;
-          } else {
-            target = "/*" + slug + "*/";
-          }
-          indent = this.indentLevel(target);
-          if (value.includes(target)) {
-            let replaceContent = "";
-            if (document.content.includes("{{ /") || document.content.includes("{{/")) {
-              replaceContent = document.content.trim();
-            } else {
-              replaceContent = IndentLevel.indentRelative(document.content, indent);
-            }
-            value = value.replace(target, replaceContent);
-          }
         });
         return value;
       }
@@ -39884,17 +39883,6 @@ ${this.close(slug)}
         });
         return value;
       }
-      registerEmbeddedDocument(slug, content, isScript) {
-        if (this.parentTransformer != null) {
-          return this.parentTransformer.registerEmbeddedDocument(slug, content, isScript);
-        }
-        this.extractedEmbeddedDocuments.set(slug, {
-          slug,
-          content,
-          isScript
-        });
-        return slug;
-      }
       clone() {
         const cloned = new Transformer(this.doc);
         cloned.withOptions(this.options).setParentTransformer(this);
@@ -39943,31 +39931,6 @@ ${this.close(slug)}
             }
           }
         });
-        const structures = this.doc.getDocumentParser().getFragmentsContainingStructures();
-        if (structures.length > 0) {
-          const referenceDocument = new AntlersDocument();
-          referenceDocument.loadString(result);
-          structures.forEach((pair) => {
-            var _a, _b, _c, _d, _e, _f, _g, _h;
-            const ref = this.doc.getDocumentParser().getText(((_b = (_a = pair.start.endPosition) == null ? void 0 : _a.offset) != null ? _b : 0) + 1, (_d = (_c = pair.end.startPosition) == null ? void 0 : _c.offset) != null ? _d : 0), refOpen = referenceDocument.getDocumentParser().getFragmentsParser().getEmbeddedFragment(pair.start.embeddedIndex);
-            if (refOpen == null) {
-              return;
-            }
-            const refClose = referenceDocument.getDocumentParser().getFragmentsParser().getClosingFragmentAfter(refOpen);
-            if (refClose == null) {
-              return;
-            }
-            const curRef = referenceDocument.getDocumentParser().getText(((_f = (_e = refOpen.endPosition) == null ? void 0 : _e.offset) != null ? _f : 0) + 1, (_h = (_g = refClose == null ? void 0 : refClose.startPosition) == null ? void 0 : _g.offset) != null ? _h : 0), refSlug = this.makeSlug(16), isScript = pair.start.name.toLowerCase() == "script";
-            let replaceSlug = refSlug;
-            if (isScript) {
-              replaceSlug = "//" + refSlug;
-            } else {
-              replaceSlug = "/*" + refSlug + "*/";
-            }
-            result = result.replace(curRef, replaceSlug);
-            this.registerEmbeddedDocument(refSlug, ref, isScript);
-          });
-        }
         return result;
       }
       removeVirtualStructures(content) {
@@ -40050,6 +40013,22 @@ ${this.close(slug)}
           }
         }
         return newLines.join("\n");
+      }
+      applyFragmentReplacements(content, fragments, tabSize) {
+        let value = content;
+        fragments.forEach((fragment, slug) => {
+          const targetIndent = this.indentLevel(slug);
+          let fragmentContent = IndentLevel.shiftIndent(
+            fragment.outerContent,
+            targetIndent,
+            true,
+            tabSize,
+            true,
+            targetIndent == 0
+          );
+          value = value.replace(slug, fragmentContent);
+        });
+        return value;
       }
       cleanStructuralNewLines(content) {
         const lines = StringUtilities.breakByNewLine(content), newLines = [];
@@ -40146,7 +40125,6 @@ ${this.close(slug)}
         results = this.transformVirtualStructures(results);
         results = this.transformDynamicAntlers(results);
         results = this.transformPairedAntlers(results);
-        results = this.transformExtractedDocuments(results);
         results = this.cleanVirtualStructures(results);
         results = this.cleanLines(results);
         if (this.doc.hasFrontMatter()) {
@@ -40712,6 +40690,7 @@ var init_documentFormatter = __esm({
     "use strict";
     init_interleavedNodes();
     init_antlersDocument();
+    init_stringUtilities();
     DocumentFormatter = class {
       constructor() {
         this.htmlFormatter = null;
@@ -40748,30 +40727,51 @@ var init_documentFormatter = __esm({
         return this.formatDocument(document, settings);
       }
       formatDocument(document, currentSettings) {
+        var _a, _b;
         if (!document.isFormattingEnabled()) {
           return document.getOriginalContent();
         }
+        let documentToFormat = document;
+        const structureFragments = document.getDocumentParser().getFragmentsContainingStructures();
+        const structureMapping = /* @__PURE__ */ new Map();
+        if (structureFragments.length > 0) {
+          let formatText = document.getOriginalContent();
+          structureFragments.forEach((fragment) => {
+            const slug = StringUtilities.makeSlug(64);
+            formatText = formatText.replace(fragment.outerContent, slug);
+            structureMapping.set(slug, fragment);
+          });
+          documentToFormat = AntlersDocument.fromText(formatText);
+        }
         if (this.preFormatter != null) {
-          const preformatResult = this.preFormatter(document);
+          const preformatResult = this.preFormatter(documentToFormat);
           if (preformatResult != null) {
             return preformatResult;
           }
         }
-        const antlersNodes = document.getAllAntlersNodes();
+        const antlersNodes = documentToFormat.getAllAntlersNodes();
         for (let i = 0; i < antlersNodes.length; i++) {
           if (interleavedNodes_default.checkNode(antlersNodes[i], currentSettings).length > 0) {
             return document.getOriginalContent();
           }
         }
-        if (this.htmlFormatter == null || document.isValid() == false) {
-          return document.getOriginalContent();
+        if (this.htmlFormatter == null || documentToFormat.isValid() == false) {
+          return documentToFormat.getOriginalContent();
         }
-        document.transform().withInlineFormatter((content) => this.formatText(content, currentSettings)).produceExtraStructuralPairs(this.createExtraVirtualStructures).withHtmlFormatter(this.htmlFormatter).withPhpFormatter(this.phpFormatter).withYamlFormatter(this.yamlFormatter);
+        documentToFormat.transform().withInlineFormatter((content) => this.formatText(content, currentSettings)).produceExtraStructuralPairs(this.createExtraVirtualStructures).withHtmlFormatter(this.htmlFormatter).withPhpFormatter(this.phpFormatter).withYamlFormatter(this.yamlFormatter);
         if (this.transformOptions != null) {
-          document.transform().withOptions(this.transformOptions);
+          documentToFormat.transform().withOptions(this.transformOptions);
         }
-        const structure = document.transform().toStructure(), formatted = this.htmlFormatter(structure);
-        return document.transform().fromStructure(formatted);
+        const structure = documentToFormat.transform().toStructure(), formatted = this.htmlFormatter(structure);
+        let formattedDocument = documentToFormat.transform().fromStructure(formatted);
+        if (structureFragments.length > 0) {
+          formattedDocument = documentToFormat.transform().applyFragmentReplacements(
+            formattedDocument,
+            structureMapping,
+            (_b = (_a = this.transformOptions) == null ? void 0 : _a.tabSize) != null ? _b : 4
+          );
+        }
+        return formattedDocument;
       }
     };
   }
