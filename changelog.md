@@ -5,7 +5,7 @@ Bugs fixed, what's new, and more! :)
 ## 2.6.9
 
 - Improves formatting of `<script>` and `<style>` tags when multiple appear in a document, and at least one contains Antlers tag pairs
-
+- Improves highlighting of HTML tags inside HTML comments (#78)
 
 ## 2.6.8
 
