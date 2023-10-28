@@ -59,7 +59,8 @@
                 "path": "./client/syntaxes/antlers.json",
                 "embeddedLanguages": {
                     "meta.embedded.block.frontmatter": "yaml",
-                    "source.php": "php"
+                    "source.php": "php",
+                    "source.js": "js"
                 }
             }
         ],
