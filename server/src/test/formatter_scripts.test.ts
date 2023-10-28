@@ -70,4 +70,37 @@ BBB
 {{ /if }}`;
         assert.strictEqual(formatAntlers(template), out);
     });
+
+    test('it does not continue to indent things', () => {
+        const input = `
+<script>{{ if thing }}{{ /if }}</script>
+{{ if true }}
+    <script>
+        gtag('consent', 'default', {
+            'ad_storage': 'denied',
+            'analytics_storage': 'denied',
+            'wait_for_update': 500
+        });
+        dataLayer.push({
+            'event': 'default_consent'
+        });
+    </script>
+{{ /if }}
+
+`;
+        const out = `<script>{{ if thing }}{{ /if }}</script>
+{{ if true }}
+    <script>
+        gtag('consent', 'default', {
+            'ad_storage': 'denied',
+            'analytics_storage': 'denied',
+            'wait_for_update': 500
+        });
+        dataLayer.push({
+            'event': 'default_consent'
+        });
+    </script>
+{{ /if }}`;
+        assert.strictEqual(formatAntlers(input).trim(), out);
+    });
 });

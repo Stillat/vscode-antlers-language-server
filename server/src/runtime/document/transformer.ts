@@ -1017,14 +1017,15 @@ export class Transformer {
         fragments.forEach((fragment, slug) => {
             const targetIndent = this.indentLevel(slug);
             
-            let fragmentContent =  IndentLevel.shiftIndent(
-                fragment.outerContent,
-                targetIndent,
-                true,
-                tabSize,
-                true,
-                (targetIndent == 0)
-            );
+            let fragmentContent = fragment.outerContent;
+            
+            if (targetIndent > 0) {
+                let lDiff = fragmentContent.length - fragmentContent.trimStart().length;
+
+                if (lDiff == 0 || lDiff > targetIndent) {
+                    fragmentContent = IndentLevel.shiftIndentLTrim(fragmentContent, targetIndent).trimStart();
+                }
+            }
 
             value = value.replace(slug, fragmentContent);
         });

@@ -67,6 +67,60 @@ export class IndentLevel {
         return reflowedLines.join("\n");
     }
 
+    static shiftIndentLTrim(value: string, targetIndent: number, skipFirst = false, tabSize = 4, adjustStructures = true, skipLast = false): string {
+        if (targetIndent < 0) {
+            targetIndent = 0;
+        }
+
+        let lines = StringUtilities.breakByNewLine(value.trim()),
+            reflowedLines: string[] = [];
+
+        let firstWasIndented = false;
+        let lastWasIndented = false;
+
+        if (lines.length >= 2) {
+            firstWasIndented = (lines[0].length - lines[0].trimStart().length) != 0;
+            lastWasIndented = (lines[lines.length - 1].length - lines[lines.length - 1].trimStart().length) != 0;
+        }
+
+        for (let i = 0; i < lines.length; i++) {
+            if (i == 0 && skipFirst) { reflowedLines.push(lines[i]); continue; }
+            if (i == lines.length - 1 && skipLast) { reflowedLines.push(lines[i]); continue; }
+            const line = lines[i];
+
+            if (i > 0 && !firstWasIndented && lastWasIndented) {
+                reflowedLines.push(line);
+                continue;
+            }
+
+            reflowedLines.push(' '.repeat(targetIndent) + line);
+        }
+
+        let result = reflowedLines.join("\n");
+
+        if (adjustStructures && reflowedLines.length > 0 && (targetIndent - tabSize > tabSize) && reflowedLines[reflowedLines.length - 1].trim() == ') }}') {
+            lines = StringUtilities.breakByNewLine(result.trim());
+            reflowedLines = [];
+
+            for (let i = 0; i < lines.length; i++) {
+                if (i == 0 && skipFirst) { reflowedLines.push(lines[i]); continue; }
+                if (i == lines.length - 1 && skipLast) { reflowedLines.push(lines[i]); continue; }
+                const line = lines[i];
+
+                if (i == lines.length - 1) {
+                    reflowedLines.push(line);
+                    break;
+                }
+
+                reflowedLines.push(' '.repeat(tabSize) + line);
+            }
+
+            result = reflowedLines.join("\n");
+        }
+
+        return result;
+    }
+
     static shiftIndent(value: string, targetIndent: number, skipFirst = false, tabSize = 4, adjustStructures = true, skipLast = false): string {
         if (targetIndent < 0) {
             targetIndent = 0;
