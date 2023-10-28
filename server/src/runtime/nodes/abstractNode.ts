@@ -929,6 +929,8 @@ export class ParameterNode extends AbstractNode {
     public name = "";
     public value = "";
 
+    public containsEscapedContent = false;    
+
     public interpolations: string[] = [];
     public parent: AntlersNode | null = null;
 

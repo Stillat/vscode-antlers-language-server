@@ -8,6 +8,7 @@ Bugs fixed, what's new, and more! :)
 - Improves highlighting of HTML tags inside HTML comments (#78)
 - Renames internal `template_contents` variable to `template_content`
 - Improves error reporting surrounding array syntax
+- Adds language server support for experimental escaped Antlers parameter syntax
 
 ## 2.6.8
 

@@ -115,6 +115,11 @@ export class DocumentParser {
     private fragmentsAnalyzer: FragmentPositionAnalyzer;
     private parseChildDocuments = false;
 
+    private mayBeStartingEscapedContent = false;
+    private isParsingEscapedContent = false;
+    private escapedContentEndSymbol: string | null = null;
+    private escapedContentSymbolEncountered = 0;
+
     private structuralErrorCodes:string[] = [
         AntlersErrorCodes.TYPE_PARSE_UNCLOSED_CONDITIONAL,
         AntlersErrorCodes.TYPE_PARSE_UNPAIRED_CONDITIONAL,
@@ -1660,7 +1665,17 @@ export class DocumentParser {
         return newString;
     }
 
+    private resetEscapedContentState()
+    {
+        this.mayBeStartingEscapedContent = false;
+        this.isParsingEscapedContent = false;
+        this.escapedContentEndSymbol = null;
+        this.escapedContentSymbolEncountered = 0;
+    }
+
     private scanToEndOfAntlersRegion() {
+        this.resetEscapedContentState();
+
         if (this.currentIndex == this.inputLen) {
             this.doesHaveUnclosedStructures = true;
         }
@@ -1680,7 +1695,42 @@ export class DocumentParser {
                 continue;
             }
 
-            if (this.cur == DocumentParser.LeftBrace) {
+            if (this.isParsingEscapedContent && this.cur == this.escapedContentEndSymbol && this.prev != DocumentParser.String_EscapeCharacter) {
+                this.escapedContentSymbolEncountered += 1;
+
+                if (this.escapedContentSymbolEncountered >= 2) {
+                    this.resetEscapedContentState();
+                }
+            }
+
+            if (this.mayBeStartingEscapedContent) {
+                if (this.cur != null && StringUtilities.ctypeSpace(this.cur) || this.next == null) {
+                    this.resetEscapedContentState();
+                } else {
+                    if (this.cur == DocumentParser.Punctuation_Equals && (this.next == DocumentParser.String_Terminator_SingleQuote || this.next == DocumentParser.String_Terminator_DoubleQuote)) {
+                        this.mayBeStartingEscapedContent = false;
+                        this.isParsingEscapedContent = true;
+                        this.escapedContentEndSymbol = this.next;
+
+                        // We'll use this counter to track the number of
+                        // times we've seen the end symbol. We will do
+                        // it this way to avoid modifying the logic
+                        // below, which is already a bit complex.
+                        this.escapedContentSymbolEncountered = 0;
+                    }
+                }
+            }
+
+            if (this.cur == DocumentParser.String_EscapeCharacter && (this.prev != null && StringUtilities.ctypeSpace(this.prev))) {
+                if (this.next != null && (StringUtilities.ctypeAlpha(this.next) || this.next == DocumentParser.Punctuation_Underscore || this.next == DocumentParser.AtChar)) {
+                    // It is possible that we might be starting some escaped content.
+                    // We will need more information to determine this, but let's
+                    // flag that it is currently a possibility and handle it.
+                    this.mayBeStartingEscapedContent = true;
+                }
+            }
+
+            if (!this.isParsingEscapedContent && this.cur == DocumentParser.LeftBrace) {
                 const results = this.scanToEndOfInterpolatedRegion();
                 const regionEnd = this.currentIndex + this.seedOffset,
                     regionStart = regionEnd - results.content.length,
@@ -1702,7 +1752,7 @@ export class DocumentParser {
                 continue;
             }
 
-            if (this.cur == DocumentParser.RightBrace && this.next != null
+            if (!this.isParsingEscapedContent && this.cur == DocumentParser.RightBrace && this.next != null
                 && this.next == DocumentParser.RightBrace) {
                 const node = this.makeAntlersTagNode(this.currentIndex, false);
 

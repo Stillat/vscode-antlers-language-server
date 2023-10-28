@@ -415,7 +415,7 @@ export class AntlersNodeParser {
 
             if (hasFoundName == false && current == DocumentParser.Punctuation_Equals) {
                 if (currentChars.length > 0) {
-                    if ((StringUtilities.ctypeAlpha(currentChars[0]) || StringUtilities.ctypeDigit(currentChars[0]) || currentChars[0] == DocumentParser.Punctuation_Colon || currentChars[0] == DocumentParser.AtChar) == false) {
+                    if ((StringUtilities.ctypeAlpha(currentChars[0]) || StringUtilities.ctypeDigit(currentChars[0]) || currentChars[0] == DocumentParser.Punctuation_Colon || currentChars[0] == DocumentParser.AtChar || currentChars[0] == DocumentParser.String_EscapeCharacter) == false) {
                         currentChars = [];
                         continue;
                     }
@@ -547,6 +547,10 @@ export class AntlersNodeParser {
                 parameterNode.nameDelimiter = nameDelimiter;
                 parameterNode.name = name;
                 parameterNode.value = content;
+
+                if (name.startsWith(DocumentParser.String_EscapeCharacter)) {
+                    parameterNode.containsEscapedContent = true;
+                }
 
                 if (parameterNode.nameDelimiter == null) {
                     parameterNode.hasValidValueDelimiter = false;
