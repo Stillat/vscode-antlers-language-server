@@ -453,6 +453,17 @@ const arrayModifiers: IModifier[] = [
             }
         ],
         isDeprecated: false
+    },
+    {
+        name: 'classes',
+        acceptsType: ['array'],
+        returnsType: ['string'],
+        forFieldType: [],
+        description: 'Converts an array of conditional class names to a CSS class list.',
+        canBeParameter: true,
+        docLink: '',
+        parameters: [],
+        isDeprecated: false
     }
 ];
 

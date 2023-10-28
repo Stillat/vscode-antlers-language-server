@@ -9,6 +9,11 @@ Bugs fixed, what's new, and more! :)
 - Renames internal `template_contents` variable to `template_content`
 - Improves error reporting surrounding array syntax
 - Adds language server support for experimental escaped Antlers parameter syntax
+- Adds support for the `classes` modifier
+- Adds support for the `svg` tag's `sanitize` parameter
+- Adds support for the `svg` tag's `allow_attrs` parameter
+- Adds support for the `svg` tag's `allow_tags` parameter
+- Adds support for the `is_svg` augmented assets variable
 
 ## 2.6.8
 

@@ -13,6 +13,7 @@ export function makeAssetVariables(symbol: AntlersNode): IScopeVariable[] {
         { name: 'is_audio', dataType: 'boolean', sourceName: '*internal.asset', sourceField: null, introducedBy: symbol },
         { name: 'is_previewable', dataType: 'boolean', sourceName: '*internal.asset', sourceField: null, introducedBy: symbol },
         { name: 'is_image', dataType: 'boolean', sourceName: '*internal.asset', sourceField: null, introducedBy: symbol },
+        { name: 'is_svg', dataType: 'boolean', sourceName: '*internal.asset', sourceField: null, introducedBy: symbol },
         { name: 'is_video', dataType: 'boolean', sourceName: '*internal.asset', sourceField: null, introducedBy: symbol },
         { name: 'edit_url', dataType: 'string', sourceName: '*internal.asset', sourceField: null, introducedBy: symbol },
         { name: 'url', dataType: 'string', sourceName: '*internal.asset', sourceField: null, introducedBy: symbol },
