@@ -30,7 +30,7 @@ export function getSystemVariables(): IScopeVariable[] {
     systemVariables.push({ dataType: 'string', name: 'amp_url', sourceField: null, sourceName: '*internal.system', introducedBy: null });
     systemVariables.push({ dataType: 'string', name: 'api_url', sourceField: null, sourceName: '*internal.system', introducedBy: null });
     systemVariables.push({ dataType: 'string', name: 'current_full_url', sourceField: null, sourceName: '*internal.system', introducedBy: null });
-    systemVariables.push({ dataType: 'string', name: 'template_contents', sourceField: null, sourceName: '*internal.system', introducedBy: null });
+    systemVariables.push({ dataType: 'string', name: 'template_content', sourceField: null, sourceName: '*internal.system', introducedBy: null });
     systemVariables.push({ dataType: 'string', name: 'current_template', sourceField: null, sourceName: '*internal.system', introducedBy: null });
     systemVariables.push({ dataType: 'string', name: 'current_layout', sourceField: null, sourceName: '*internal.system', introducedBy: null });
     systemVariables.push({ dataType: 'boolean', name: 'logged_in', sourceField: null, sourceName: '*internal.system', introducedBy: null });
