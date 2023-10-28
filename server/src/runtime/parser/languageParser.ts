@@ -2134,7 +2134,8 @@ export class LanguageParser {
             token instanceof FalseConstant || token instanceof NullConstant ||
             token instanceof TrueConstant || token instanceof LibraryInvocationConstruct ||
             token instanceof DirectionGroup || token instanceof ListValueNode ||
-            token instanceof SwitchGroup || token instanceof ArrayNode || token instanceof TupleListStart;
+            token instanceof SwitchGroup || token instanceof ArrayNode || token instanceof TupleListStart ||
+            token instanceof ScopeAssignmentOperator;
     }
 
     private isProperMethodChainTargetStrict(token: AbstractNode) {

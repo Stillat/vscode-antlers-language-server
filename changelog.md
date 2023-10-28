@@ -7,6 +7,7 @@ Bugs fixed, what's new, and more! :)
 - Improves formatting of `<script>` and `<style>` tags when multiple appear in a document, and at least one contains Antlers tag pairs
 - Improves highlighting of HTML tags inside HTML comments (#78)
 - Renames internal `template_contents` variable to `template_content`
+- Improves error reporting surrounding array syntax
 
 ## 2.6.8
 
