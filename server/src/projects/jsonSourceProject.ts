@@ -784,6 +784,17 @@ class JsonSourceProject implements IProjectDetailsProvider {
             }
         }
 
+        // Check for "partials/" directory.
+        if (!relativeName.startsWith("partials/")) {
+            if (relativeName.startsWith('_')) {
+                relativeName = relativeName.substring(1);
+            }
+
+            relativeName = "partials/" + relativeName;
+
+            return this.findRelativeView(relativeName);
+        }
+
         return null;
     }
 
@@ -796,6 +807,17 @@ class JsonSourceProject implements IProjectDetailsProvider {
             ) {
                 return this.views[i];
             }
+        }
+        
+        // Check for "partials/" directory.
+        if (!partialName.startsWith("partials/")) {
+            if (partialName.startsWith('_')) {
+                partialName = partialName.substring(1);
+            }
+
+            partialName = "partials/" + partialName;
+
+            return this.findRelativeView(partialName);
         }
 
         return null;

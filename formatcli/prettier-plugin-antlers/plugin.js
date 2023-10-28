@@ -982,6 +982,17 @@ var init_arrayModifiers = __esm({
           }
         ],
         isDeprecated: false
+      },
+      {
+        name: "classes",
+        acceptsType: ["array"],
+        returnsType: ["string"],
+        forFieldType: [],
+        description: "Converts an array of conditional class names to a CSS class list.",
+        canBeParameter: true,
+        docLink: "",
+        parameters: [],
+        isDeprecated: false
       }
     ];
   }
@@ -5011,6 +5022,7 @@ var init_abstractNode = __esm({
         this.isVariableReference = false;
         this.name = "";
         this.value = "";
+        this.containsEscapedContent = false;
         this.interpolations = [];
         this.parent = null;
         this.blockPosition = null;
@@ -13338,6 +13350,7 @@ function makeAssetVariables(symbol) {
     { name: "is_audio", dataType: "boolean", sourceName: "*internal.asset", sourceField: null, introducedBy: symbol },
     { name: "is_previewable", dataType: "boolean", sourceName: "*internal.asset", sourceField: null, introducedBy: symbol },
     { name: "is_image", dataType: "boolean", sourceName: "*internal.asset", sourceField: null, introducedBy: symbol },
+    { name: "is_svg", dataType: "boolean", sourceName: "*internal.asset", sourceField: null, introducedBy: symbol },
     { name: "is_video", dataType: "boolean", sourceName: "*internal.asset", sourceField: null, introducedBy: symbol },
     { name: "edit_url", dataType: "string", sourceName: "*internal.asset", sourceField: null, introducedBy: symbol },
     { name: "url", dataType: "string", sourceName: "*internal.asset", sourceField: null, introducedBy: symbol },
@@ -16853,6 +16866,36 @@ var init_svg = __esm({
           allowsVariableReference: false,
           description: "",
           expectsTypes: ["string"],
+          isDynamic: false
+        },
+        {
+          isRequired: false,
+          name: "sanitize",
+          acceptsVariableInterpolation: true,
+          aliases: [],
+          allowsVariableReference: true,
+          description: "Determines whether the rendered SVG will be sanitized.",
+          expectsTypes: ["bool"],
+          isDynamic: false
+        },
+        {
+          isRequired: false,
+          name: "allow_attrs",
+          acceptsVariableInterpolation: true,
+          aliases: [],
+          allowsVariableReference: true,
+          description: "A list of allowed attributes when sanitizing.",
+          expectsTypes: ["array", "string"],
+          isDynamic: false
+        },
+        {
+          isRequired: false,
+          name: "allow_tags",
+          acceptsVariableInterpolation: true,
+          aliases: [],
+          allowsVariableReference: true,
+          description: "A list of allowed tags when sanitizing.",
+          expectsTypes: ["array", "string"],
           isDynamic: false
         }
       ],
@@ -23388,7 +23431,7 @@ function getSystemVariables() {
   systemVariables.push({ dataType: "string", name: "amp_url", sourceField: null, sourceName: "*internal.system", introducedBy: null });
   systemVariables.push({ dataType: "string", name: "api_url", sourceField: null, sourceName: "*internal.system", introducedBy: null });
   systemVariables.push({ dataType: "string", name: "current_full_url", sourceField: null, sourceName: "*internal.system", introducedBy: null });
-  systemVariables.push({ dataType: "string", name: "template_contents", sourceField: null, sourceName: "*internal.system", introducedBy: null });
+  systemVariables.push({ dataType: "string", name: "template_content", sourceField: null, sourceName: "*internal.system", introducedBy: null });
   systemVariables.push({ dataType: "string", name: "current_template", sourceField: null, sourceName: "*internal.system", introducedBy: null });
   systemVariables.push({ dataType: "string", name: "current_layout", sourceField: null, sourceName: "*internal.system", introducedBy: null });
   systemVariables.push({ dataType: "boolean", name: "logged_in", sourceField: null, sourceName: "*internal.system", introducedBy: null });
@@ -26111,7 +26154,7 @@ var init_antlersNodeParser = __esm({
           }
           if (hasFoundName == false && current == DocumentParser.Punctuation_Equals) {
             if (currentChars.length > 0) {
-              if ((StringUtilities.ctypeAlpha(currentChars[0]) || StringUtilities.ctypeDigit(currentChars[0]) || currentChars[0] == DocumentParser.Punctuation_Colon || currentChars[0] == DocumentParser.AtChar) == false) {
+              if ((StringUtilities.ctypeAlpha(currentChars[0]) || StringUtilities.ctypeDigit(currentChars[0]) || currentChars[0] == DocumentParser.Punctuation_Colon || currentChars[0] == DocumentParser.AtChar || currentChars[0] == DocumentParser.String_EscapeCharacter) == false) {
                 currentChars = [];
                 continue;
               }
@@ -26218,6 +26261,9 @@ var init_antlersNodeParser = __esm({
             parameterNode.nameDelimiter = nameDelimiter;
             parameterNode.name = name;
             parameterNode.value = content2;
+            if (name.startsWith(DocumentParser.String_EscapeCharacter)) {
+              parameterNode.containsEscapedContent = true;
+            }
             if (parameterNode.nameDelimiter == null) {
               parameterNode.hasValidValueDelimiter = false;
               parameterNode.nameDelimiter = '"';
@@ -28646,7 +28692,7 @@ var init_languageParser = __esm({
         return newTokens;
       }
       isOperand(token) {
-        return token instanceof VariableNode || token instanceof LogicGroup || token instanceof StringValueNode || token instanceof NumberNode || token instanceof FalseConstant || token instanceof NullConstant || token instanceof TrueConstant || token instanceof LibraryInvocationConstruct || token instanceof DirectionGroup || token instanceof ListValueNode || token instanceof SwitchGroup || token instanceof ArrayNode || token instanceof TupleListStart;
+        return token instanceof VariableNode || token instanceof LogicGroup || token instanceof StringValueNode || token instanceof NumberNode || token instanceof FalseConstant || token instanceof NullConstant || token instanceof TrueConstant || token instanceof LibraryInvocationConstruct || token instanceof DirectionGroup || token instanceof ListValueNode || token instanceof SwitchGroup || token instanceof ArrayNode || token instanceof TupleListStart || token instanceof ScopeAssignmentOperator;
       }
       isProperMethodChainTargetStrict(token) {
         return token instanceof LogicGroup || token instanceof StringValueNode || token instanceof NumberNode || token instanceof FalseConstant || token instanceof NullConstant || token instanceof TrueConstant || token instanceof LibraryInvocationConstruct || token instanceof DirectionGroup || token instanceof ListValueNode || token instanceof SwitchGroup || token instanceof ArrayNode;
@@ -30279,6 +30325,10 @@ var init_documentParser = __esm({
         this.doesHaveUncloseIfStructures = false;
         this.doesHaveUnclosedStructures = false;
         this.parseChildDocuments = false;
+        this.mayBeStartingEscapedContent = false;
+        this.isParsingEscapedContent = false;
+        this.escapedContentEndSymbol = null;
+        this.escapedContentSymbolEncountered = 0;
         this.structuralErrorCodes = [
           AntlersErrorCodes.TYPE_PARSE_UNCLOSED_CONDITIONAL,
           AntlersErrorCodes.TYPE_PARSE_UNPAIRED_CONDITIONAL,
@@ -31455,7 +31505,14 @@ var init_documentParser = __esm({
         }
         return newString;
       }
+      resetEscapedContentState() {
+        this.mayBeStartingEscapedContent = false;
+        this.isParsingEscapedContent = false;
+        this.escapedContentEndSymbol = null;
+        this.escapedContentSymbolEncountered = 0;
+      }
       scanToEndOfAntlersRegion() {
+        this.resetEscapedContentState();
         if (this.currentIndex == this.inputLen) {
           this.doesHaveUnclosedStructures = true;
         }
@@ -31471,7 +31528,30 @@ var init_documentParser = __esm({
             this.appendContent(this.cur);
             continue;
           }
-          if (this.cur == _DocumentParser.LeftBrace) {
+          if (this.isParsingEscapedContent && this.cur == this.escapedContentEndSymbol && this.prev != _DocumentParser.String_EscapeCharacter) {
+            this.escapedContentSymbolEncountered += 1;
+            if (this.escapedContentSymbolEncountered >= 2) {
+              this.resetEscapedContentState();
+            }
+          }
+          if (this.mayBeStartingEscapedContent) {
+            if (this.cur != null && StringUtilities.ctypeSpace(this.cur) || this.next == null) {
+              this.resetEscapedContentState();
+            } else {
+              if (this.cur == _DocumentParser.Punctuation_Equals && (this.next == _DocumentParser.String_Terminator_SingleQuote || this.next == _DocumentParser.String_Terminator_DoubleQuote)) {
+                this.mayBeStartingEscapedContent = false;
+                this.isParsingEscapedContent = true;
+                this.escapedContentEndSymbol = this.next;
+                this.escapedContentSymbolEncountered = 0;
+              }
+            }
+          }
+          if (this.cur == _DocumentParser.String_EscapeCharacter && (this.prev != null && StringUtilities.ctypeSpace(this.prev))) {
+            if (this.next != null && (StringUtilities.ctypeAlpha(this.next) || this.next == _DocumentParser.Punctuation_Underscore || this.next == _DocumentParser.AtChar)) {
+              this.mayBeStartingEscapedContent = true;
+            }
+          }
+          if (!this.isParsingEscapedContent && this.cur == _DocumentParser.LeftBrace) {
             const results = this.scanToEndOfInterpolatedRegion();
             const regionEnd = this.currentIndex + this.seedOffset, regionStart = regionEnd - results.content.length, leadingContent = this.getParseableContent(regionStart - 1);
             GlobalRuntimeState.interpolatedVariables.push(results.varContent);
@@ -31487,7 +31567,7 @@ var init_documentParser = __esm({
             });
             continue;
           }
-          if (this.cur == _DocumentParser.RightBrace && this.next != null && this.next == _DocumentParser.RightBrace) {
+          if (!this.isParsingEscapedContent && this.cur == _DocumentParser.RightBrace && this.next != null && this.next == _DocumentParser.RightBrace) {
             const node = this.makeAntlersTagNode(this.currentIndex, false);
             if (node.name != null && node.name.name == "noparse") {
               this.isNoParse = true;
@@ -38726,6 +38806,57 @@ var init_indentLevel = __esm({
         }
         return reflowedLines.join("\n");
       }
+      static shiftIndentLTrim(value, targetIndent, skipFirst = false, tabSize = 4, adjustStructures = true, skipLast = false) {
+        if (targetIndent < 0) {
+          targetIndent = 0;
+        }
+        let lines = StringUtilities.breakByNewLine(value.trim()), reflowedLines = [];
+        let firstWasIndented = false;
+        let lastWasIndented = false;
+        if (lines.length >= 2) {
+          firstWasIndented = lines[0].length - lines[0].trimStart().length != 0;
+          lastWasIndented = lines[lines.length - 1].length - lines[lines.length - 1].trimStart().length != 0;
+        }
+        for (let i = 0; i < lines.length; i++) {
+          if (i == 0 && skipFirst) {
+            reflowedLines.push(lines[i]);
+            continue;
+          }
+          if (i == lines.length - 1 && skipLast) {
+            reflowedLines.push(lines[i]);
+            continue;
+          }
+          const line = lines[i];
+          if (i > 0 && !firstWasIndented && lastWasIndented) {
+            reflowedLines.push(line);
+            continue;
+          }
+          reflowedLines.push(" ".repeat(targetIndent) + line);
+        }
+        let result = reflowedLines.join("\n");
+        if (adjustStructures && reflowedLines.length > 0 && targetIndent - tabSize > tabSize && reflowedLines[reflowedLines.length - 1].trim() == ") }}") {
+          lines = StringUtilities.breakByNewLine(result.trim());
+          reflowedLines = [];
+          for (let i = 0; i < lines.length; i++) {
+            if (i == 0 && skipFirst) {
+              reflowedLines.push(lines[i]);
+              continue;
+            }
+            if (i == lines.length - 1 && skipLast) {
+              reflowedLines.push(lines[i]);
+              continue;
+            }
+            const line = lines[i];
+            if (i == lines.length - 1) {
+              reflowedLines.push(line);
+              break;
+            }
+            reflowedLines.push(" ".repeat(tabSize) + line);
+          }
+          result = reflowedLines.join("\n");
+        }
+        return result;
+      }
       static shiftIndent(value, targetIndent, skipFirst = false, tabSize = 4, adjustStructures = true, skipLast = false) {
         if (targetIndent < 0) {
           targetIndent = 0;
@@ -40018,14 +40149,13 @@ ${this.close(slug)}
         let value = content;
         fragments.forEach((fragment, slug) => {
           const targetIndent = this.indentLevel(slug);
-          let fragmentContent = IndentLevel.shiftIndent(
-            fragment.outerContent,
-            targetIndent,
-            true,
-            tabSize,
-            true,
-            targetIndent == 0
-          );
+          let fragmentContent = fragment.outerContent;
+          if (targetIndent > 0) {
+            let lDiff = fragmentContent.length - fragmentContent.trimStart().length;
+            if (lDiff == 0 || lDiff > targetIndent) {
+              fragmentContent = IndentLevel.shiftIndentLTrim(fragmentContent, targetIndent).trimStart();
+            }
+          }
           value = value.replace(slug, fragmentContent);
         });
         return value;

@@ -14,6 +14,7 @@ Bugs fixed, what's new, and more! :)
 - Adds support for the `svg` tag's `allow_attrs` parameter
 - Adds support for the `svg` tag's `allow_tags` parameter
 - Adds support for the `is_svg` augmented assets variable
+- Improves support for partial linking when omitting the "partials/" directory prefix
 
 ## 2.6.8
 
