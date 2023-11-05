@@ -2,6 +2,10 @@
 
 Bugs fixed, what's new, and more! :)
 
+## 2.6.10
+
+- Corrects an issue with string array indexes duplicating leading variable names when formatting (#79)
+
 ## 2.6.9
 
 - Improves formatting of `<script>` and `<style>` tags when multiple appear in a document, and at least one contains Antlers tag pairs

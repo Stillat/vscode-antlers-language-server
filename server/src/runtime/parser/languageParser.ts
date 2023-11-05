@@ -449,6 +449,8 @@ export class LanguageParser {
                 if (left instanceof VariableNode && right instanceof VariableNode && NodeHelpers.distance(left, node) <= 1 && NodeHelpers.distance(node, right) <= 1) {
                     newNodes.pop();
 
+                    /*
+                    Note: We don't need to do this just for static analysis/formatting.
                     NodeHelpers.mergeVarContentLeft(node.sourceTerminator + node.value + node.sourceTerminator, node, left);
                     NodeHelpers.mergeVarContentLeft(right.name, right, left);
                     this.createdVariables.push(left);
@@ -457,6 +459,8 @@ export class LanguageParser {
                     this.mergedComponents.set(node, left);
                     this.mergedComponents.set(left, left);
                     this.mergedComponents.set(right, left);
+                    */
+
                     i += 1;
                     continue;
                 } else {

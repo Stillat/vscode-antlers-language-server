@@ -152,4 +152,14 @@ After Partial
         const input = `{{ article | raw | where('type', 'paragraph') | bard_text | safe_truncate(180, '...') | entities | mark }}`;
         assert.strictEqual(formatAntlers(input), input);
     });
+
+    test('it doesnt duplicate array values with strings', () => {
+        assert.strictEqual(formatAntlers(`{{ view:background['default'] }}`).trim(), `{{ view:background['default'] }}`);
+        assert.strictEqual(formatAntlers(`{{ not_view:background['default'] }}`).trim(), `{{ not_view:background['default'] }}`);
+        assert.strictEqual(formatAntlers(`{{ view:background['default']['one'] }}`).trim(), `{{ view:background['default']['one'] }}`);
+        assert.strictEqual(formatAntlers(`{{ view:background['default'].{test}.one }}`).trim(), `{{ view:background['default'].{test}.one }}`);
+        assert.strictEqual(formatAntlers(`{{ view:background['default'].1.['one'] }}`).trim(), `{{ view:background['default'].1.['one'] }}`);
+        assert.strictEqual(formatAntlers(`{{ view:background['default']['one'] + 'that' }}`).trim(), `{{ view:background['default']['one'] + 'that' }}`);
+        assert.strictEqual(formatAntlers(`{{ view:background[default] }}`).trim(), `{{ view:background[default] }}`);
+    });
 });
