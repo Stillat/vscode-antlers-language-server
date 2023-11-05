@@ -27383,14 +27383,6 @@ var init_languageParser = __esm({
             const left = newNodes[newNodeCount - 1], right = tokens[i + 1];
             if (left instanceof VariableNode && right instanceof VariableNode && NodeHelpers.distance(left, node) <= 1 && NodeHelpers.distance(node, right) <= 1) {
               newNodes.pop();
-              NodeHelpers.mergeVarContentLeft(node.sourceTerminator + node.value + node.sourceTerminator, node, left);
-              NodeHelpers.mergeVarContentLeft(right.name, right, left);
-              this.createdVariables.push(left);
-              newNodes.push(left);
-              this.mergedVariablePaths.push(left);
-              this.mergedComponents.set(node, left);
-              this.mergedComponents.set(left, left);
-              this.mergedComponents.set(right, left);
               i += 1;
               continue;
             } else {
