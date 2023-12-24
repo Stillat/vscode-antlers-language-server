@@ -1,5 +1,5 @@
 import { replaceAllInString } from '../../../utils/strings';
-import { AbstractNode, AdditionOperator, AntlersNode, ArgSeparator, DivisionOperator, InlineBranchSeparator, InlineTernarySeparator, LeftAssignmentOperator, LogicalNegationOperator, LogicGroupBegin, LogicGroupEnd, ModifierNameNode, ModifierSeparator, ModifierValueNode, ModifierValueSeparator, ModulusOperator, MultiplicationOperator, NumberNode, ScopeAssignmentOperator, StatementSeparatorNode, StringValueNode, SubtractionOperator, TupleListStart, VariableNode } from '../../nodes/abstractNode';
+import { AbstractNode, AdditionOperator, AntlersNode, ArgSeparator, DivisionOperator, InlineBranchSeparator, InlineTernarySeparator, LeftAssignmentOperator, LogicalNegationOperator, LogicGroupBegin, LogicGroupEnd, MethodInvocationNode, ModifierNameNode, ModifierSeparator, ModifierValueNode, ModifierValueSeparator, ModulusOperator, MultiplicationOperator, NumberNode, ScopeAssignmentOperator, StatementSeparatorNode, StringValueNode, SubtractionOperator, TupleListStart, VariableNode } from '../../nodes/abstractNode';
 import { LanguageParser } from '../../parser/languageParser';
 import { NodeHelpers } from '../../utilities/nodeHelpers';
 import { AntlersDocument } from '../antlersDocument';
@@ -308,6 +308,8 @@ export class NodePrinter {
                     } else {
                         nodeBuffer.appendS(node.rawContent());
                     }
+                } else if (node instanceof MethodInvocationNode) {
+                    nodeBuffer.append('->');
                 } else {
                     nodeBuffer.appendS(node.rawContent());
                 }

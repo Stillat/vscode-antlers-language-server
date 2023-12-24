@@ -39364,6 +39364,8 @@ var init_nodePrinter = __esm({
               } else {
                 nodeBuffer.appendS(node.rawContent());
               }
+            } else if (node instanceof MethodInvocationNode) {
+              nodeBuffer.append("->");
             } else {
               nodeBuffer.appendS(node.rawContent());
             }

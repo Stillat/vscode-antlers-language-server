@@ -2,6 +2,10 @@
 
 Bugs fixed, what's new, and more! :)
 
+## 2.6.11
+
+- Corrects an issue where extra whitespace is added around `->` method invocation syntax
+
 ## 2.6.10
 
 - Corrects an issue with string array indexes duplicating leading variable names when formatting (#79)
