@@ -1,7 +1,6 @@
 import { AntlersSettings } from '../antlersSettings.js';
 import InterleavedNodeHandler from '../diagnostics/handlers/interleavedNodes.js';
 import { AntlersDocument } from '../runtime/document/antlersDocument.js';
-import { IndentLevel } from '../runtime/document/printers/indentLevel.js';
 import { TransformOptions } from '../runtime/document/transformOptions.js';
 import { StructuralFragment } from '../runtime/nodes/abstractNode.js';
 import { StringUtilities } from '../runtime/utilities/stringUtilities.js';
