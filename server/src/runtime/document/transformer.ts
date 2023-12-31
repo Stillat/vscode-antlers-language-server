@@ -911,16 +911,6 @@ export class Transformer {
         return result;
     }
 
-    private removeVirtualStructures(content: string): string {
-        let value = content;
-
-        this.removeLines.forEach((line) => {
-            value = value.replace(line, '');
-        });
-
-        return value;
-    }
-
     private indentLevel(value: string, includeIndex = false): number {
 
         for (let i = 0; i < this.structureLines.length; i++) {
