@@ -42,8 +42,12 @@ const plugin: prettier.Plugin = {
 
                 document.loadString(text);
 
-                const result = await (new PrettierDocumentFormatter(formatterOptions as prettier.ParserOptions))
+                let result = await (new PrettierDocumentFormatter(formatterOptions as prettier.ParserOptions))
                     .formatDocumentAsync(document, defaultAntlersSettings);
+
+                const adjustHtmlDoctype = /^(\s*)<!doctype html>/im;
+
+                result = result.replace(adjustHtmlDoctype, '$1<!DOCTYPE html>');
 
                 return {
                     doc: document,
