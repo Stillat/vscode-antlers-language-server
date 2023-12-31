@@ -1,4 +1,4 @@
-import { IUserPermission, NativePermissions } from "./nativePermissions";
+import { IUserPermission, NativePermissions } from "./nativePermissions.js";
 
 class PermissionsManager {
     private contextItems: Map<string, string[]> = new Map();

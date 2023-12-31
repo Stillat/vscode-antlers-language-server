@@ -1,4 +1,4 @@
-import { IMarketplaceAddon } from '../../marketplaceTypes';
+import { IMarketplaceAddon } from '../../marketplaceTypes.js';
 
 const StatamicLivewireForms: IMarketplaceAddon = {
     packageName: 'aerni/livewire-forms',

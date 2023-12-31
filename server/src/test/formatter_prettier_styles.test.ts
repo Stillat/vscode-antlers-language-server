@@ -1,8 +1,8 @@
-import assert = require('assert');
-import { formatStringWithPrettier } from '../formatting/prettier/utils';
+import assert from 'assert';
+import { formatStringWithPrettier } from '../formatting/prettier/utils.js';
 
 suite('Formatter PRettier CSS and Antlers', () => {
-    test('it does not do weird things with many chained strings and numeric values', () => {
+    test('it does not do weird things with many chained strings and numeric values', async () => {
         const template = `<html>
         <head>
         </head>
@@ -39,6 +39,6 @@ suite('Formatter PRettier CSS and Antlers', () => {
         </script>
     </body>
 </html>`;
-        assert.strictEqual(formatStringWithPrettier(template).trim(), output);
+        assert.strictEqual((await formatStringWithPrettier(template)).trim(), output);
     });
 });

@@ -1,8 +1,8 @@
 import { CompletionItem } from "vscode-languageserver-types";
-import FieldtypeManager from '../antlers/fieldtypes/fieldtypeManager';
-import { IFieldtypeInjection } from '../projects/fieldsets/fieldtypeInjection';
-import { AntlersNode } from '../runtime/nodes/abstractNode';
-import { ISuggestionRequest } from './suggestionRequest';
+import FieldtypeManager from '../antlers/fieldtypes/fieldtypeManager.js';
+import { IFieldtypeInjection } from '../projects/fieldsets/fieldtypeInjection.js';
+import { AntlersNode } from '../runtime/nodes/abstractNode.js';
+import { ISuggestionRequest } from './suggestionRequest.js';
 
 export class ScopeVariableSuggestionsManager {
     static getVariableSuggestions(params: ISuggestionRequest, symbol: AntlersNode): CompletionItem[] {

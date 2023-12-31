@@ -1,11 +1,11 @@
-import { AntlersDocument } from './antlersDocument';
-import { PositionContext } from './contexts/positionContext';
-import { NodeQueries } from './scanners/nodeQueries';
-import { ContextResolver } from './contexts/contextResolver';
-import { TagIdentifier } from '../nodes/tagIdentifier';
-import { Scope } from '../../antlers/scope/scope';
-import { AntlersNodeQueries } from './scanners/antlersNodeQueries';
-import { AntlersNode, AbstractNode, StaticTracedAssignment } from '../nodes/abstractNode';
+import { AntlersDocument } from './antlersDocument.js';
+import { PositionContext } from './contexts/positionContext.js';
+import { NodeQueries } from './scanners/nodeQueries.js';
+import { ContextResolver } from './contexts/contextResolver.js';
+import { TagIdentifier } from '../nodes/tagIdentifier.js';
+import { Scope } from '../../antlers/scope/scope.js';
+import { AntlersNodeQueries } from './scanners/antlersNodeQueries.js';
+import { AntlersNode, AbstractNode, StaticTracedAssignment } from '../nodes/abstractNode.js';
 
 export class DocumentCursor {
     private doc: AntlersDocument;

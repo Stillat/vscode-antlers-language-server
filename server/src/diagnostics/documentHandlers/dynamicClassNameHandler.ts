@@ -1,14 +1,14 @@
-import { Position } from 'vscode-languageserver';
-import ProjectManager from '../../projects/projectManager';
-import { DynamicClassAnalyzer } from '../../runtime/analyzers/dynamicClassAnalyzer';
-import { AntlersDocument } from '../../runtime/document/antlersDocument';
-import { AntlersError, ErrrorLevel } from '../../runtime/errors/antlersError';
-import { AntlersErrorCodes } from '../../runtime/errors/antlersErrorCodes';
-import { AntlersNode, ConditionNode } from '../../runtime/nodes/abstractNode';
-import { antlersPositionToVsCode } from '../../utils/conversions';
-import { IDocumentDiagnosticsHandler } from '../documentHandler';
+import { Position } from 'vscode-languageserver';;
+import ProjectManager from '../../projects/projectManager.js';
+import { DynamicClassAnalyzer } from '../../runtime/analyzers/dynamicClassAnalyzer.js';
+import { AntlersDocument } from '../../runtime/document/antlersDocument.js';
+import { AntlersError, ErrorLevel } from '../../runtime/errors/antlersError.js';
+import { AntlersErrorCodes } from '../../runtime/errors/antlersErrorCodes.js';
+import { AntlersNode, ConditionNode } from '../../runtime/nodes/abstractNode.js';
+import { antlersPositionToVsCode } from '../../utils/conversions.js';
+import { IDocumentDiagnosticsHandler } from '../documentHandler.js';
 import * as fs from 'fs';
-import { AntlersSettings } from '../../antlersSettings';
+import { AntlersSettings } from '../../antlersSettings.js';
 
 const DynamicClassNameHandler: IDocumentDiagnosticsHandler = {
     checkDocument(document: AntlersDocument, settings: AntlersSettings) {
@@ -47,7 +47,7 @@ const DynamicClassNameHandler: IDocumentDiagnosticsHandler = {
                     `Dynamic CSS class name generation detected. Some build tools, like PurgeCSS, may not be able to find these classes. It is recommended to use full class names, or configure a class safelist.
     
 Possible Classes: ${allNames.join(', ')}`,
-                    ErrrorLevel.Warning
+                    ErrorLevel.Warning
                 );
 
             let doCreate = true;

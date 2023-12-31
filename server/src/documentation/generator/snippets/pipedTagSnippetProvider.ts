@@ -1,4 +1,4 @@
-import { IDocumentationSnippet } from '../types';
+import { IDocumentationSnippet } from '../types.js';
 
 export class PipedTagSnippetProvider {
     static generate(tagName: string, parameterName: string, handle: string): IDocumentationSnippet {

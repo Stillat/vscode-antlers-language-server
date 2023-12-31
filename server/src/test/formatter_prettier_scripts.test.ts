@@ -1,9 +1,9 @@
-import assert = require('assert');
-import { formatStringWithPrettier } from '../formatting/prettier/utils';
-import { formatAntlers } from './testUtils/formatAntlers';
+import assert from 'assert';
+import { formatStringWithPrettier } from '../formatting/prettier/utils.js';
+import { formatAntlers } from './testUtils/formatAntlers.js';
 
 suite('Formatter Prettier JavaScript and Antlers', () => {
-    test('it preserves antlers in scripts inside conditions', () => {
+    test('it preserves antlers in scripts inside conditions', async () => {
         const input = `{{ if conditionOne }}
 <script>
     const test = {{ data }};
@@ -34,7 +34,7 @@ suite('Formatter Prettier JavaScript and Antlers', () => {
         {{ /if }}
     {{ /if }}
 {{ /if }}`;
-        assert.strictEqual(formatStringWithPrettier(input).trim(), expected);
+        assert.strictEqual((await formatStringWithPrettier(input)).trim(), expected);
     });
 
     test('it does not attempt to format script tags that contain antlers pairs', () => {
@@ -62,16 +62,16 @@ suite('Formatter Prettier JavaScript and Antlers', () => {
         }
     });
     
-    test('it preserves antlers inside scripts', () => {
+    test('it preserves antlers inside scripts', async () => {
         const input = `<script>const element = {{ value }};</script>`;
         const expected = `<script>
     const element = {{ value }};
 </script>`;
-        assert.strictEqual(formatStringWithPrettier(input).trim(), expected);
+        assert.strictEqual((await formatStringWithPrettier(input)).trim(), expected);
         
     });
 
-    test('repeated formatting does not continue to indent structures inside scripts', () => {
+    test('repeated formatting does not continue to indent structures inside scripts', async () => {
         const input = `<div>
 <!-- ... -->
 </div>
@@ -90,12 +90,12 @@ let linkColour = \`{{ $colorName}}\`
 
     let linkColour = \`{{ $colorName }}\`;
 </script>`;
-        let output = formatStringWithPrettier(input).trim();
+        let output = (await formatStringWithPrettier(input)).trim();
 
         assert.strictEqual(output, expected);
 
         for (let i = 0; i < 5; i++) {
-            output = formatStringWithPrettier(output).trim();
+            output = (await formatStringWithPrettier(output)).trim();
             assert.strictEqual(output, expected);
         }
     });

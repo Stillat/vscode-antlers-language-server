@@ -1,11 +1,11 @@
-import { Position } from '../../nodes/position';
-import { GeneralContext } from './generalContext';
-import { ModifierContext } from './modifierContext';
-import { ParameterContext } from './parameterContext';
-import { IdentifierContext } from './identifierContext';
-import { AntlersNode, AbstractNode } from '../../nodes/abstractNode';
-import { VariableContext } from './variableContext';
-import { getId } from '../../../utils/simpleIds';
+import { Position } from '../../nodes/position.js';
+import { GeneralContext } from './generalContext.js';
+import { ModifierContext } from './modifierContext.js';
+import { ParameterContext } from './parameterContext.js';
+import { IdentifierContext } from './identifierContext.js';
+import { AntlersNode, AbstractNode } from '../../nodes/abstractNode.js';
+import { VariableContext } from './variableContext.js';
+import { getId } from '../../../utils/simpleIds.js';
 
 export class PositionContext {
     public refId = '';

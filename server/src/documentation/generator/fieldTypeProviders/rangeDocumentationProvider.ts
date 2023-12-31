@@ -1,6 +1,6 @@
-import { IProjectFields, IRangeFieldType } from '../../../projects/structuredFieldTypes/types';
-import { IDocumentationResult } from '../types';
-import { GeneralNumberDocumentationProvider } from './generalNumberDocumentationProvider';
+import { IProjectFields, IRangeFieldType } from '../../../projects/structuredFieldTypes/types.js';
+import { IDocumentationResult } from '../types.js';
+import { GeneralNumberDocumentationProvider } from './generalNumberDocumentationProvider.js';
 
 export class RangeDocumentationProvider extends GeneralNumberDocumentationProvider {
     resolve(context: IRangeFieldType, currentProject: IProjectFields): IDocumentationResult {

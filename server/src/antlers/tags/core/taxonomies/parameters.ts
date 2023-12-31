@@ -1,4 +1,4 @@
-import { IAntlersParameter } from '../../../tagManager';
+import { IAntlersParameter } from '../../../tagManager.js';
 
 const TaxonomyParameters: IAntlersParameter[] = [
     {

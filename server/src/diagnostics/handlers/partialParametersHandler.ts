@@ -1,9 +1,9 @@
-import { getViewName } from '../../antlers/tags/core/partials/partialUtilities';
-import ProjectManager from '../../projects/projectManager';
-import { AntlersError, ErrrorLevel } from '../../runtime/errors/antlersError';
-import { AntlersErrorCodes } from '../../runtime/errors/antlersErrorCodes';
-import { AntlersNode } from '../../runtime/nodes/abstractNode';
-import { IDiagnosticsHandler } from '../diagnosticsHandler';
+import { getViewName } from '../../antlers/tags/core/partials/partialUtilities.js';
+import ProjectManager from '../../projects/projectManager.js';
+import { AntlersError, ErrorLevel } from '../../runtime/errors/antlersError.js';
+import { AntlersErrorCodes } from '../../runtime/errors/antlersErrorCodes.js';
+import { AntlersNode } from '../../runtime/nodes/abstractNode.js';
+import { IDiagnosticsHandler } from '../diagnosticsHandler.js';
 
 const PartialParametersHandler: IDiagnosticsHandler = {
     checkNode(node: AntlersNode) {
@@ -25,7 +25,7 @@ const PartialParametersHandler: IDiagnosticsHandler = {
                             AntlersErrorCodes.LINT_MISSING_REQUIRED_PARAMETER,
                             node,
                             "Missing required parameter: " + parameter.name,
-                            ErrrorLevel.Error
+                            ErrorLevel.Error
                         ));
                     }
                 });

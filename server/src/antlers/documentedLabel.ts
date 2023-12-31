@@ -1,5 +1,5 @@
 import { CompletionItem, CompletionItemKind } from 'vscode-languageserver';
-import { IAntlersTag } from './tagManager';
+import { IAntlersTag } from './tagManager.js';
 
 export interface IDocumentedLabel {
     label: string;

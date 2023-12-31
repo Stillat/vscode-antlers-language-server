@@ -1,10 +1,10 @@
-import { KeysResolver } from '../../../projects/structuredFieldTypes/keysResolver';
-import { IProjectFields, ISitesFieldType } from '../../../projects/structuredFieldTypes/types';
-import { AugmentationTypes } from '../augmentationTypes';
-import { Faker } from '../faker';
-import { NestedFieldsProvider } from '../providers/nestedFieldsProvider';
-import { OfficialDocumentationLinkProvider } from '../providers/officialDocumentationLinkProvider';
-import { IDocumentationProperty, IDocumentationProvider, IDocumentationResult, IDocumentationSnippet, IInjectedField } from '../types';
+import { KeysResolver } from '../../../projects/structuredFieldTypes/keysResolver.js';
+import { IProjectFields, ISitesFieldType } from '../../../projects/structuredFieldTypes/types.js';
+import { AugmentationTypes } from '../augmentationTypes.js';
+import { Faker } from '../faker.js';
+import { NestedFieldsProvider } from '../providers/nestedFieldsProvider.js';
+import { OfficialDocumentationLinkProvider } from '../providers/officialDocumentationLinkProvider.js';
+import { IDocumentationProperty, IDocumentationProvider, IDocumentationResult, IDocumentationSnippet, IInjectedField } from '../types.js';
 
 export class SitesDocumentationProvider implements IDocumentationProvider {
     private injectsKeys: string[] = ['handle', 'name', 'lang', 'locale', 'short_locale', 'url', 'direction'];

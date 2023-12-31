@@ -1,10 +1,10 @@
-import { makeTagDoc } from '../../../documentation/utils';
-import { getTranslationSuggestions } from '../../../suggestions/project/translationCompletions';
-import { getCurrentSymbolMethodNameValue } from '../../../suggestions/suggestionManager';
-import { ISuggestionRequest } from '../../../suggestions/suggestionRequest';
-import { EmptyCompletionResult, exclusiveResult, IAntlersParameter, IAntlersTag, ICompletionResult } from '../../tagManager';
-import { createDefinitionAlias } from '../alias';
-import { returnDynamicParameter } from '../dynamicParameterResolver';
+import { makeTagDoc } from '../../../documentation/utils.js';
+import { getTranslationSuggestions } from '../../../suggestions/project/translationCompletions.js';
+import { getCurrentSymbolMethodNameValue } from '../../../suggestions/suggestionManager.js';
+import { ISuggestionRequest } from '../../../suggestions/suggestionRequest.js';
+import { EmptyCompletionResult, exclusiveResult, IAntlersParameter, IAntlersTag, ICompletionResult } from '../../tagManager.js';
+import { createDefinitionAlias } from '../alias.js';
+import { returnDynamicParameter } from '../dynamicParameterResolver.js';
 
 const TranslateTriggerTagNames = [
     'translate', 'trans', 'trans_choice'

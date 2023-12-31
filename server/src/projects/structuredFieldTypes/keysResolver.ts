@@ -1,6 +1,6 @@
-import { Faker } from '../../documentation/generator/faker';
-import { IInjectedField } from '../../documentation/generator/types';
-import { IFieldDetails } from './types';
+import { Faker } from '../../documentation/generator/faker.js';
+import { IInjectedField } from '../../documentation/generator/types.js';
+import { IFieldDetails } from './types.js';
 
 export class KeysResolver {
     static getKeys(context: any): string[] {

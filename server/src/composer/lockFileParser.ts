@@ -1,7 +1,7 @@
 import * as fs from "fs";
 import * as semver from "semver";
-import { trimLeft, trimRight } from "../utils/strings";
-import { IComposerPackage, IAntlersExtension } from './composerPackage';
+import { trimLeft, trimRight } from "../utils/strings.js";
+import { IComposerPackage, IAntlersExtension } from './composerPackage.js';
 
 
 function isStatamicAddon(composerJsonPath: string): boolean {

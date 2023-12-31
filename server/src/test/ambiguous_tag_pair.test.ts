@@ -1,5 +1,5 @@
-import assert = require("assert");
-import { AntlersNode, LiteralNode } from '../runtime/nodes/abstractNode';
+import assert from 'assert';
+import { AntlersNode, LiteralNode } from '../runtime/nodes/abstractNode.js';
 import {
     assertCount,
     assertInstanceOf,
@@ -7,8 +7,8 @@ import {
     assertNull,
     assertTrue,
     toAntlers,
-} from "./testUtils/assertions";
-import { parseNodes } from "./testUtils/parserUtils";
+} from "./testUtils/assertions.js";
+import { parseNodes } from "./testUtils/parserUtils.js";
 
 suite("Ambiguous Tag Pair Test", () => {
     test("self closing tags are not considered during matching", () => {

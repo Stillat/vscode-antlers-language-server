@@ -1,6 +1,6 @@
-import { makeTagDoc } from '../../../documentation/utils';
-import { ISuggestionRequest } from '../../../suggestions/suggestionRequest';
-import { IAntlersTag } from '../../tagManager';
+import { makeTagDoc } from '../../../documentation/utils.js';
+import { ISuggestionRequest } from '../../../suggestions/suggestionRequest.js';
+import { IAntlersTag } from '../../tagManager.js';
 
 const Link: IAntlersTag = {
     tagName: 'link',

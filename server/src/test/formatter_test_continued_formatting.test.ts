@@ -1,7 +1,7 @@
-import assert = require('assert');
-import { AntlersFormattingOptions } from '../formatting/antlersFormattingOptions';
-import { IHTMLFormatConfiguration } from '../formatting/htmlCompat';
-import { formatAntlers } from './testUtils/formatAntlers';
+import assert from 'assert';
+import { AntlersFormattingOptions } from '../formatting/antlersFormattingOptions.js';
+import { IHTMLFormatConfiguration } from '../formatting/htmlCompat.js';
+import { formatAntlers } from './testUtils/formatAntlers.js';
 
 suite('Formatter Continued Formatting Test', () => {
     test('it does not distort formatted results', () => {

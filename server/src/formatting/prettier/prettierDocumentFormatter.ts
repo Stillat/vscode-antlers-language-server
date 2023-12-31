@@ -1,8 +1,8 @@
-import { DocumentFormatter } from '../documentFormatter';
+import { DocumentFormatter } from '../documentFormatter.js';
 import * as prettier from 'prettier';
-import { formatAsHtml, formatPhp, setOptions } from './utils';
-import { FrontMatterFormatter } from '../frontMatterFormatter';
-import { ErrorPrinter } from '../../runtime/document/printers/errorPrinter';
+import { formatAsHtml, formatPhp, setOptions } from './utils.js';
+import { FrontMatterFormatter } from '../frontMatterFormatter.js';
+import { ErrorPrinter } from '../../runtime/document/printers/errorPrinter.js';
 
 export class PrettierDocumentFormatter extends DocumentFormatter {
 
@@ -12,7 +12,7 @@ export class PrettierDocumentFormatter extends DocumentFormatter {
         this.createExtraVirtualStructures = true;
         setOptions(options);
 
-        this.withHtmlFormatter(formatAsHtml)
+        this.withAsyncHtmlFormatter(formatAsHtml)
             .withYamlFormatter(FrontMatterFormatter.formatFrontMatter)
             .withTransformOptions({
                 endNewline: true,
@@ -20,7 +20,7 @@ export class PrettierDocumentFormatter extends DocumentFormatter {
                 newlinesAfterFrontMatter: 1,
                 tabSize: options.tabWidth
             })
-            .withPhpFormatter(formatPhp)
+            .withAsyncPhpFormatter(formatPhp)
             .withPreFormatter((document) => {
                 if (document.errors.hasStructureErrors()) {
                     const firstError = document.errors.getFirstStructureError(),

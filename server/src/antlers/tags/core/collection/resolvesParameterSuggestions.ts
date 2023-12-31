@@ -1,8 +1,8 @@
-import { getConditionCompletionItems } from '../../../../suggestions/defaults/conditionItems';
-import { getAbsoluteRoot, getRoot } from '../../../../suggestions/suggestionManager';
-import { ISuggestionRequest } from '../../../../suggestions/suggestionRequest';
-import { exclusiveResult, IAntlersParameter, ICompletionResult } from '../../../tagManager';
-import { makeCollectionNameSuggestions, makeStatusSuggestions, makeQueryScopeSuggestions, makeTaxonomySuggestions, makeSingleCollectionNameSuggestions, getCollectionBlueprintFields } from './utils';
+import { getConditionCompletionItems } from '../../../../suggestions/defaults/conditionItems.js';
+import { getAbsoluteRoot, getRoot } from '../../../../suggestions/suggestionManager.js';
+import { ISuggestionRequest } from '../../../../suggestions/suggestionRequest.js';
+import { exclusiveResult, IAntlersParameter, ICompletionResult } from '../../../tagManager.js';
+import { makeCollectionNameSuggestions, makeStatusSuggestions, makeQueryScopeSuggestions, makeTaxonomySuggestions, makeSingleCollectionNameSuggestions, getCollectionBlueprintFields } from './utils.js';
 
 const collectionParamNames: string[] = [
     'from', 'folder', 'use', 'not_from', 'not_folder'

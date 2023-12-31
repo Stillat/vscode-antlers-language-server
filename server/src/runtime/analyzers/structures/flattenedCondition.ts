@@ -1,4 +1,4 @@
-import { AbstractNode, AntlersNode } from '../../nodes/abstractNode';
+import { AbstractNode, AntlersNode } from '../../nodes/abstractNode.js';
 
 interface IFlattenedCondition {
     conditions: AntlersNode[],

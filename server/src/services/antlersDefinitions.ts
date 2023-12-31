@@ -3,10 +3,10 @@ import {
     Location,
     LocationLink,
 } from "vscode-languageserver-protocol";
-import { DefinitionManager } from "../definitions/definitionManager";
-import { sessionDocuments } from '../languageService/documents';
-import ProjectManager from '../projects/projectManager';
-import { makeProviderRequest } from "../providers/providerParameters";
+import { DefinitionManager } from "../definitions/definitionManager.js";
+import { sessionDocuments } from '../languageService/documents.js';
+import ProjectManager from '../projects/projectManager.js';
+import { makeProviderRequest } from "../providers/providerParameters.js";
 
 export function handleDefinitionRequest(params: DefinitionParams): Location[] | LocationLink[] | null {
     if (ProjectManager.instance?.hasStructure() == false) {

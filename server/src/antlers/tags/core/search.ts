@@ -1,17 +1,17 @@
 import { CompletionItem } from "vscode-languageserver-types";
-import { makeTagDoc } from '../../../documentation/utils';
-import { AntlersNode } from '../../../runtime/nodes/abstractNode';
-import { ISuggestionRequest } from '../../../suggestions/suggestionRequest';
-import { tagToCompletionItem } from '../../documentedLabel';
-import { Scope } from '../../scope/scope';
-import { IScopeVariable } from '../../scope/types';
+import { makeTagDoc } from '../../../documentation/utils.js';
+import { AntlersNode } from '../../../runtime/nodes/abstractNode.js';
+import { ISuggestionRequest } from '../../../suggestions/suggestionRequest.js';
+import { tagToCompletionItem } from '../../documentedLabel.js';
+import { Scope } from '../../scope/scope.js';
+import { IScopeVariable } from '../../scope/types.js';
 import { 
     EmptyCompletionResult,
     exclusiveResultList,
     IAntlersParameter,
     IAntlersTag,
     nonExclusiveResult,
-} from "../../tagManager";
+} from "../../tagManager.js";
 
 
 const SearchResultsTag: IAntlersTag = {

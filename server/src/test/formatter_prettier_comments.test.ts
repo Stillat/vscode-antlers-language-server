@@ -1,8 +1,8 @@
-import assert = require('assert');
-import { formatStringWithPrettier } from '../formatting/prettier/utils';
+import assert from 'assert';
+import { formatStringWithPrettier } from '../formatting/prettier/utils.js';
 
 suite('Formatter Prettier Comments', () => {
-    test('it does not continue to indent comments', () => {
+    test('it does not continue to indent comments', async () => {
         const initial = `<div>
         {{#  comment 1 #}}
         {{# comment 2 #}}
@@ -13,13 +13,13 @@ suite('Formatter Prettier Comments', () => {
     {{# comment 2 #}}
     {{ variable }}
 </div>`;
-        assert.strictEqual(formatStringWithPrettier(initial).trim(), output);
+        assert.strictEqual((await formatStringWithPrettier(initial)).trim(), output);
         for (let i = 0; i <= 10; i++) {
-            assert.strictEqual(formatStringWithPrettier(output).trim(), output);
+            assert.strictEqual((await formatStringWithPrettier(output)).trim(), output);
         }
     });
 
-    test('it preserves relative indents when formatting comments', () => {
+    test('it preserves relative indents when formatting comments', async () => {
         const template = `
 <div>
     {{# 
@@ -45,10 +45,10 @@ suite('Formatter Prettier Comments', () => {
         {{ /collection:articles }}
     #}}
 </div>`;
-        assert.strictEqual(formatStringWithPrettier(template).trim(), formatted);
+        assert.strictEqual((await formatStringWithPrettier(template)).trim(), formatted);
     });
 
-    test('it doesnt duplicate whitespace when continuously formatting comments', () => {
+    test('it doesnt duplicate whitespace when continuously formatting comments', async () => {
         const template = `
 <div>
 <div>
@@ -136,12 +136,12 @@ suite('Formatter Prettier Comments', () => {
         #}}
     </div>
 </div>`;
-            let res = formatStringWithPrettier(template).trim();
+            let res = (await formatStringWithPrettier(template)).trim();
             assert.strictEqual(res, expected);
 
             // Lets keep formatting the already formatted output.
             for (let i = 0; i < 5; i++) {
-                res = formatStringWithPrettier(res).trim();
+                res = (await formatStringWithPrettier(res)).trim();
                 assert.strictEqual(res, expected);
             }
     });

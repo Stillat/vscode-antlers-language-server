@@ -1,20 +1,20 @@
-import ModifierManager from '../antlers/modifierManager';
-import { parseMacros } from '../antlers/modifiers/macros';
-import { IAntlersTag } from '../antlers/tagManager';
-import { IComposerPackage } from '../composer/composerPackage';
-import { replaceAllInString } from '../utils/strings';
-import { convertUriToPath } from '../utils/uris';
-import { IAssets } from './assets/asset';
-import { IBlueprintField, blueprintFieldsFromFieldset, IBlueprint } from './blueprints/fields';
-import { ICollection } from './collections/collection';
-import { ICollectionScope } from './collections/collectionScope';
-import { IFieldsetField } from './fieldsets/fieldset';
-import { INavigation } from './navigations/navigation';
-import { IProjectDetailsProvider } from './projectDetailsProvider';
-import { IStatamicStructure, IStructureRestore } from './statamicStructure';
-import { ITemplate } from './templates';
-import { IUserGroup } from './users/users';
-import { IView } from './views/view';
+import ModifierManager from '../antlers/modifierManager.js';
+import { parseMacros } from '../antlers/modifiers/macros.js';
+import { IAntlersTag } from '../antlers/tagManager.js';
+import { IComposerPackage } from '../composer/composerPackage.js';
+import { replaceAllInString } from '../utils/strings.js';
+import { convertUriToPath } from '../utils/uris.js';
+import { IAssets } from './assets/asset.js';
+import { IBlueprintField, blueprintFieldsFromFieldset, IBlueprint } from './blueprints/fields.js';
+import { ICollection } from './collections/collection.js';
+import { ICollectionScope } from './collections/collectionScope.js';
+import { IFieldsetField } from './fieldsets/fieldset.js';
+import { INavigation } from './navigations/navigation.js';
+import { IProjectDetailsProvider } from './projectDetailsProvider.js';
+import { IStatamicStructure, IStructureRestore } from './statamicStructure.js';
+import { ITemplate } from './templates.js';
+import { IUserGroup } from './users/users.js';
+import { IView } from './views/view.js';
 
 function makeBlueprintField(blueprintName: string, fieldName: string, fieldType: string): IBlueprintField {
     return {

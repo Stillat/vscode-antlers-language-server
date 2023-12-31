@@ -2,32 +2,32 @@ import {
     CompletionItem,
     CompletionItemKind,
 } from "vscode-languageserver-types";
-import { makeTagDoc } from '../../../documentation/utils';
-import { AntlersNode } from '../../../runtime/nodes/abstractNode';
-import { formatSuggestionList } from "../../../suggestions/fieldFormatter";
-import { ISuggestionRequest } from '../../../suggestions/suggestionRequest';
-import { tagToCompletionItem } from '../../documentedLabel';
-import { Scope } from '../../scope/scope';
+import { makeTagDoc } from '../../../documentation/utils.js';
+import { AntlersNode } from '../../../runtime/nodes/abstractNode.js';
+import { formatSuggestionList } from "../../../suggestions/fieldFormatter.js";
+import { ISuggestionRequest } from '../../../suggestions/suggestionRequest.js';
+import { tagToCompletionItem } from '../../documentedLabel.js';
+import { Scope } from '../../scope/scope.js';
 import {
     EmptyCompletionResult,
     exclusiveResult,
     IAntlersParameter,
     IAntlersTag,
-} from "../../tagManager";
-import UserCan from './userCan';
-import UserCant from './userCant';
-import { UserForgotPasswordForm } from './userForgotPasswordForm';
-import UserIs from './userIs';
-import UserIsnt from './userIsnt';
-import UserLogout from './userLogout';
-import UserLogoutUrl from './userLogoutUrl';
-import UserNotIn from './userNotIn';
-import UserPasswordForm from './userPasswordForm';
-import { UserPasswordReset } from './userPasswordReset';
-import UserProfile from './userProfile';
-import UserProfileForm from './userProfileForm';
-import { UserProfileParameters } from './userProfileParameters';
-import { UserRegister } from './userRegister';
+} from "../../tagManager.js";
+import UserCan from './userCan.js';
+import UserCant from './userCant.js';
+import { UserForgotPasswordForm } from './userForgotPasswordForm.js';
+import UserIs from './userIs.js';
+import UserIsnt from './userIsnt.js';
+import UserLogout from './userLogout.js';
+import UserLogoutUrl from './userLogoutUrl.js';
+import UserNotIn from './userNotIn.js';
+import UserPasswordForm from './userPasswordForm.js';
+import { UserPasswordReset } from './userPasswordReset.js';
+import UserProfile from './userProfile.js';
+import UserProfileForm from './userProfileForm.js';
+import { UserProfileParameters } from './userProfileParameters.js';
+import { UserRegister } from './userRegister.js';
 
 const UserTagCompletionItems: CompletionItem[] = [
     tagToCompletionItem(UserIs),

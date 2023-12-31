@@ -1,5 +1,5 @@
-import { AntlersDocument } from "../runtime/document/antlersDocument";
-import { assertFalse, assertNotNull, assertTrue } from "./testUtils/assertions";
+import { AntlersDocument } from "../runtime/document/antlersDocument.js";
+import { assertFalse, assertNotNull, assertTrue } from "./testUtils/assertions.js";
 
 suite("Node Identifier Tests", () => {
     const template = `start

@@ -1,8 +1,8 @@
-import { QueryBuilderInspection } from '../../antlers/variables/queryBuilderInspection';
-import { AntlersError, ErrrorLevel } from '../../runtime/errors/antlersError';
-import { AntlersErrorCodes } from '../../runtime/errors/antlersErrorCodes';
-import { AntlersNode, PathNode, VariableNode } from '../../runtime/nodes/abstractNode';
-import { IDiagnosticsHandler } from '../diagnosticsHandler';
+import { QueryBuilderInspection } from '../../antlers/variables/queryBuilderInspection.js';
+import { AntlersError, ErrorLevel } from '../../runtime/errors/antlersError.js';
+import { AntlersErrorCodes } from '../../runtime/errors/antlersErrorCodes.js';
+import { AntlersNode, PathNode, VariableNode } from '../../runtime/nodes/abstractNode.js';
+import { IDiagnosticsHandler } from '../diagnosticsHandler.js';
 
 const queryBuilderMessage = `Query builder fields must use an alias in order to use modifiers`;
 
@@ -26,7 +26,7 @@ const QueryBuildersHandler: IDiagnosticsHandler = {
                             AntlersErrorCodes.LINT_MODIFIERS_ON_QUERY_BUILDERS_REQUIRE_AS,
                             node,
                             queryBuilderMessage,
-                            ErrrorLevel.Warning
+                            ErrorLevel.Warning
                         ));
 
                         return errors;
@@ -42,7 +42,7 @@ const QueryBuildersHandler: IDiagnosticsHandler = {
                                         AntlersErrorCodes.LINT_MODIFIERS_ON_QUERY_BUILDERS_REQUIRE_AS,
                                         node,
                                         queryBuilderMessage,
-                                        ErrrorLevel.Warning
+                                        ErrorLevel.Warning
                                     ));
 
                                     return errors;

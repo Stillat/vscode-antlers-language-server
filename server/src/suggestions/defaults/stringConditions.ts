@@ -1,4 +1,4 @@
-import { ICompletionCondition } from './conditionItems';
+import { ICompletionCondition } from './conditionItems.js';
 
 const StringConditionItems: ICompletionCondition[] = [
     { name: 'is', description: 'Tests if a field is equal to a value' },

@@ -1,9 +1,9 @@
-import { makeTagDocWithCodeSample } from '../../../documentation/utils';
-import { IProjectDetailsProvider } from '../../../projects/projectDetailsProvider';
-import { AntlersNode } from '../../../runtime/nodes/abstractNode';
-import { ISuggestionRequest } from '../../../suggestions/suggestionRequest';
-import { exclusiveResultList, IAntlersParameter, IAntlersTag } from "../../tagManager";
-import { ICacheContext } from "./contexts/cacheContext";
+import { makeTagDocWithCodeSample } from '../../../documentation/utils.js';
+import { IProjectDetailsProvider } from '../../../projects/projectDetailsProvider.js';
+import { AntlersNode } from '../../../runtime/nodes/abstractNode.js';
+import { ISuggestionRequest } from '../../../suggestions/suggestionRequest.js';
+import { exclusiveResultList, IAntlersParameter, IAntlersTag } from "../../tagManager.js";
+import { ICacheContext } from "./contexts/cacheContext.js";
 
 const Cache: IAntlersTag = {
     tagName: "cache",

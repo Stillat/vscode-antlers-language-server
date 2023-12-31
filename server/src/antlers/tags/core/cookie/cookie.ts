@@ -1,11 +1,11 @@
-import { CompletionItem } from 'vscode-languageserver';
-import { ISuggestionRequest } from '../../../../suggestions/suggestionRequest';
-import { tagToCompletionItem } from '../../../documentedLabel';
-import { EmptyCompletionResult, exclusiveResult, IAntlersTag } from '../../../tagManager';
-import CookieForget from './cookieForget';
-import CookieHas from './cookieHas';
-import CookieSet from './cookieSet';
-import CookieValue from './cookieValue';
+import { CompletionItem } from 'vscode-languageserver';;
+import { ISuggestionRequest } from '../../../../suggestions/suggestionRequest.js';
+import { tagToCompletionItem } from '../../../documentedLabel.js';
+import { EmptyCompletionResult, exclusiveResult, IAntlersTag } from '../../../tagManager.js';
+import CookieForget from './cookieForget.js';
+import CookieHas from './cookieHas.js';
+import CookieSet from './cookieSet.js';
+import CookieValue from './cookieValue.js';
 
 const CookieCompletions: CompletionItem[] = [
     tagToCompletionItem(CookieForget),

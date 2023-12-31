@@ -1,4 +1,4 @@
-import { IDocumentationSnippet } from '../types';
+import { IDocumentationSnippet } from '../types.js';
 
 export class EvenOddProvider {
     static generate(handle: string):IDocumentationSnippet[] {

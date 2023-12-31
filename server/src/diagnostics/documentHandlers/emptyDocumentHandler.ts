@@ -1,7 +1,7 @@
-import { AntlersDocument } from '../../runtime/document/antlersDocument';
-import { AntlersError } from '../../runtime/errors/antlersError';
-import { AntlersErrorCodes } from '../../runtime/errors/antlersErrorCodes';
-import { IDocumentDiagnosticsHandler } from '../documentHandler';
+import { AntlersDocument } from '../../runtime/document/antlersDocument.js';
+import { AntlersError } from '../../runtime/errors/antlersError.js';
+import { AntlersErrorCodes } from '../../runtime/errors/antlersErrorCodes.js';
+import { IDocumentDiagnosticsHandler } from '../documentHandler.js';
 
 const EmptyDocumentHandler: IDocumentDiagnosticsHandler = {
     checkDocument(document: AntlersDocument) {

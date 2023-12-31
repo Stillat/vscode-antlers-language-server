@@ -1,8 +1,8 @@
-import { IProjectFields, IReplicatorFieldType } from '../../../projects/structuredFieldTypes/types';
-import { AugmentationTypes } from '../augmentationTypes';
-import { OfficialDocumentationLinkProvider } from '../providers/officialDocumentationLinkProvider';
-import { SetsSnippetProvider } from '../snippets/setsSnippetProvider';
-import { IDocumentationProperty, IDocumentationProvider, IDocumentationResult, IDocumentationSnippet, IInjectedField } from '../types';
+import { IProjectFields, IReplicatorFieldType } from '../../../projects/structuredFieldTypes/types.js';
+import { AugmentationTypes } from '../augmentationTypes.js';
+import { OfficialDocumentationLinkProvider } from '../providers/officialDocumentationLinkProvider.js';
+import { SetsSnippetProvider } from '../snippets/setsSnippetProvider.js';
+import { IDocumentationProperty, IDocumentationProvider, IDocumentationResult, IDocumentationSnippet, IInjectedField } from '../types.js';
 
 export class ReplicatorDocumentationProvider implements IDocumentationProvider {
     resolve(replicator: IReplicatorFieldType, currentProject: IProjectFields): IDocumentationResult {

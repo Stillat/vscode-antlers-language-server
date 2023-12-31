@@ -1,6 +1,6 @@
-import { IFieldDetails, IProjectFields } from '../../../projects/structuredFieldTypes/types';
-import { TextSnippetProvider } from '../snippets/textSnippetProvider';
-import { IDocumentationProperty, IDocumentationProvider, IDocumentationResult, IDocumentationSnippet, IFieldtypeDocumentationOverview, stringDocumentationResult } from '../types';
+import { IFieldDetails, IProjectFields } from '../../../projects/structuredFieldTypes/types.js';
+import { TextSnippetProvider } from '../snippets/textSnippetProvider.js';
+import { IDocumentationProperty, IDocumentationProvider, IDocumentationResult, IDocumentationSnippet, IFieldtypeDocumentationOverview, stringDocumentationResult } from '../types.js';
 
 export interface ITextField extends IFieldDetails {
     characterLimit?: number | null,

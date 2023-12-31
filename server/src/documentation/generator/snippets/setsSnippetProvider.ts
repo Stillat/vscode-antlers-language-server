@@ -1,5 +1,5 @@
-import { ISet } from '../../../projects/structuredFieldTypes/types';
-import { IDocumentationSnippet } from '../types';
+import { ISet } from '../../../projects/structuredFieldTypes/types.js';
+import { IDocumentationSnippet } from '../types.js';
 
 export class SetsSnippetProvider {
     static generate(fieldHandle: string, sets: ISet[]): IDocumentationSnippet[] {

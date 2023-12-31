@@ -1,7 +1,7 @@
 import { Range, SemanticTokensBuilder } from "vscode-languageserver";
 import { TextDocument } from "vscode-languageserver-textdocument";
-import { sessionDocuments } from '../languageService/documents';
-import { AbstractNode, ModifierNameNode } from '../runtime/nodes/abstractNode';
+import { sessionDocuments } from '../languageService/documents.js';
+import { AbstractNode, ModifierNameNode } from '../runtime/nodes/abstractNode.js';
 
 interface SemanticTokenProvider {
     readonly legend: { types: string[]; modifiers: string[] };

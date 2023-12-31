@@ -1,10 +1,10 @@
 import { Md5 } from 'ts-md5';
-import { CodeAction } from 'vscode-languageserver';
-import { AbstractNode } from '../nodes/abstractNode';
-import { Range } from '../nodes/position';
-import * as ls from 'vscode-languageserver';
+import { CodeAction } from 'vscode-languageserver';;
+import { AbstractNode } from '../nodes/abstractNode.js';
+import { Range } from '../nodes/position.js';
+import * as ls from 'vscode-languageserver';;
 
-export enum ErrrorLevel {
+export enum ErrorLevel {
     Error = 0,
     Warning = 1
 }
@@ -13,7 +13,7 @@ export class AntlersError {
     public node: AbstractNode | null = null;
     public errorCode = '';
     public message = '';
-    public level: ErrrorLevel = ErrrorLevel.Error;
+    public level: ErrorLevel = ErrorLevel.Error;
     public range: Range | null = null;
     public actions: CodeAction[] = [];
     public lsRange: ls.Range | null = null;
@@ -30,9 +30,9 @@ export class AntlersError {
         return Md5.hashStr(positionSlug + "|" + this.errorCode);
     }
 
-    static makeSyntaxError(errorCode: string, node: AbstractNode | null, message: string, level?: ErrrorLevel) {
+    static makeSyntaxError(errorCode: string, node: AbstractNode | null, message: string, level?: ErrorLevel) {
         if (level == null) {
-            level = ErrrorLevel.Error;
+            level = ErrorLevel.Error;
         }
 
         const error = new AntlersError();

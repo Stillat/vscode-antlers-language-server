@@ -1,10 +1,10 @@
-import { IAntlersTag } from '../antlers/tagManager';
-import { IComposerPackage } from '../composer/composerPackage';
-import { IBlueprintField } from './blueprints/fields';
-import { ICollection } from './collections/collection';
-import { ICollectionScope } from './collections/collectionScope';
-import { IStatamicStructure } from './statamicStructure';
-import { IView } from './views/view';
+import { IAntlersTag } from '../antlers/tagManager.js';
+import { IComposerPackage } from '../composer/composerPackage.js';
+import { IBlueprintField } from './blueprints/fields.js';
+import { ICollection } from './collections/collection.js';
+import { ICollectionScope } from './collections/collectionScope.js';
+import { IStatamicStructure } from './statamicStructure.js';
+import { IView } from './views/view.js';
 
 export interface IProjectDetailsProvider {
     reloadDetails(): IProjectDetailsProvider,

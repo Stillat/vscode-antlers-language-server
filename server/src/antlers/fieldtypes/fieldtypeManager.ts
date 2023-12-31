@@ -1,5 +1,5 @@
-import { IFieldtypeInjection } from "../../projects/fieldsets/fieldtypeInjection";
-import CoreFieldtypes from "./core/coreFieldtypes";
+import { IFieldtypeInjection } from "../../projects/fieldsets/fieldtypeInjection.js";
+import CoreFieldtypes from "./core/coreFieldtypes.js";
 
 class FieldtypeManager {
     private fieldTypes: Map<string, IFieldtypeInjection> = new Map();

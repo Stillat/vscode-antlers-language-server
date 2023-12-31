@@ -1,5 +1,5 @@
-import { AntlersNode } from '../../../runtime/nodes/abstractNode';
-import { Scope } from '../../scope/scope';
+import { AntlersNode } from '../../../runtime/nodes/abstractNode.js';
+import { Scope } from '../../scope/scope.js';
 
 export function augmentGroupByScope(node: AntlersNode, scope: Scope): Scope {
     const iterableItems = scope.copy(),

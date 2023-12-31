@@ -1,5 +1,5 @@
-import { AntlersNode } from '../../nodes/abstractNode';
-import { DocumentParser } from "../documentParser";
+import { AntlersNode } from '../../nodes/abstractNode.js';
+import { DocumentParser } from "../documentParser.js";
 
 export class VirtualHierarchy {
     private parser: DocumentParser;

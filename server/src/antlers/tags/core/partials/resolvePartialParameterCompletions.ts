@@ -1,10 +1,10 @@
-import { CompletionItem, CompletionItemKind, MarkupKind } from 'vscode-languageserver';
-import { DocumentDetailsManager } from '../../../../idehelper/documentDetailsManager';
-import { IEnvironmentHelper } from '../../../../idehelper/parser';
-import ProjectManager from '../../../../projects/projectManager';
-import { IView } from '../../../../projects/views/view';
-import { ISuggestionRequest } from '../../../../suggestions/suggestionRequest';
-import { exclusiveResult, IAntlersParameter, resultList } from '../../../tagManager';
+import { CompletionItem, CompletionItemKind, MarkupKind } from 'vscode-languageserver';;
+import { DocumentDetailsManager } from '../../../../idehelper/documentDetailsManager.js';
+import { IEnvironmentHelper } from '../../../../idehelper/parser.js';
+import ProjectManager from '../../../../projects/projectManager.js';
+import { IView } from '../../../../projects/views/view.js';
+import { ISuggestionRequest } from '../../../../suggestions/suggestionRequest.js';
+import { exclusiveResult, IAntlersParameter, resultList } from '../../../tagManager.js';
 
 export function resolvePartialParameterCompletions(parameter: IAntlersParameter, params: ISuggestionRequest) {
     if (parameter.isDynamic) {

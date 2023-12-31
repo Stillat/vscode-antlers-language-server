@@ -1,10 +1,10 @@
-import { IAntlersParameter, IAntlersTag } from '../../antlers/tagManager';
-import TagManager from '../../antlers/tagManagerInstance';
-import { GlobalFeatureConfiguration } from '../../featureConfiguration';
-import { trimLeft } from '../../utils/strings';
-import { AntlersError, ErrrorLevel } from '../errors/antlersError';
-import { AntlersErrorCodes } from '../errors/antlersErrorCodes';
-import { AntlersNode } from '../nodes/abstractNode';
+import { IAntlersParameter, IAntlersTag } from '../../antlers/tagManager.js';
+import TagManager from '../../antlers/tagManagerInstance.js';
+import { GlobalFeatureConfiguration } from '../../featureConfiguration.js';
+import { trimLeft } from '../../utils/strings.js';
+import { AntlersError, ErrorLevel } from '../errors/antlersError.js';
+import { AntlersErrorCodes } from '../errors/antlersErrorCodes.js';
+import { AntlersNode } from '../nodes/abstractNode.js';
 
 interface IValidationResult {
     isValid: boolean;
@@ -110,7 +110,7 @@ export class ParameterValidator {
                                 AntlersErrorCodes.LINT_UNKNOWN_PARAMETER,
                                 node,
                                 errorMessage,
-                                ErrrorLevel.Warning
+                                ErrorLevel.Warning
                             ));
                         }
                     } else {
@@ -123,7 +123,7 @@ export class ParameterValidator {
                                         AntlersErrorCodes.LINT_GENERAL_INVALID_PARAMETER_CONTENTS,
                                         paramToAnalyze,
                                         error.message,
-                                        ErrrorLevel.Warning
+                                        ErrorLevel.Warning
                                     ));
                                 });
                             }
@@ -143,7 +143,7 @@ export class ParameterValidator {
                                             AntlersErrorCodes.LINT_PARAMETER_CONTENT_INVALID_INTEGER,
                                             paramToAnalyze,
                                             result.message,
-                                            ErrrorLevel.Warning
+                                            ErrorLevel.Warning
                                         ));
                                     }
                                 } else if (curTypeToCheck == 'boolean') {
@@ -160,7 +160,7 @@ export class ParameterValidator {
                                                     AntlersErrorCodes.LINT_PAGINATE_INVALID_VALUE,
                                                     paramToAnalyze,
                                                     message,
-                                                    ErrrorLevel.Error
+                                                    ErrorLevel.Error
                                                 ));
                                             }
                                         }
@@ -170,7 +170,7 @@ export class ParameterValidator {
                                                 AntlersErrorCodes.LINT_PARAMETER_CONTENT_INVALID_BOOLEAN,
                                                 paramToAnalyze,
                                                 result.message,
-                                                ErrrorLevel.Warning
+                                                ErrorLevel.Warning
                                             ));
                                         }
                                     }

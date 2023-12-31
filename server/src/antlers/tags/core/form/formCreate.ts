@@ -1,16 +1,16 @@
-import { makeTagDoc } from '../../../../documentation/utils';
-import { AntlersNode } from '../../../../runtime/nodes/abstractNode';
-import { ISuggestionRequest } from '../../../../suggestions/suggestionRequest';
-import { Scope } from '../../../scope/scope';
-import { blueprintFieldsToScopeVariables } from '../../../scope/scopeUtilities';
-import { IAntlersTag } from '../../../tagManager';
-import { makeFieldsVariables } from '../../../variables/forms/fieldsVariables';
-import { makeStandardFormVariables } from '../../../variables/forms/standardFormVariables';
-import { returnDynamicParameter } from '../../dynamicParameterResolver';
-import FormHandleParam from './formHandleParam';
-import { resolveFormParameterCompletions } from './parameterCompletions';
-import { resolveFormSetReference } from './resolveFormSetReference';
-import { getFormHandle } from './utils';
+import { makeTagDoc } from '../../../../documentation/utils.js';
+import { AntlersNode } from '../../../../runtime/nodes/abstractNode.js';
+import { ISuggestionRequest } from '../../../../suggestions/suggestionRequest.js';
+import { Scope } from '../../../scope/scope.js';
+import { blueprintFieldsToScopeVariables } from '../../../scope/scopeUtilities.js';
+import { IAntlersTag } from '../../../tagManager.js';
+import { makeFieldsVariables } from '../../../variables/forms/fieldsVariables.js';
+import { makeStandardFormVariables } from '../../../variables/forms/standardFormVariables.js';
+import { returnDynamicParameter } from '../../dynamicParameterResolver.js';
+import FormHandleParam from './formHandleParam.js';
+import { resolveFormParameterCompletions } from './parameterCompletions.js';
+import { resolveFormSetReference } from './resolveFormSetReference.js';
+import { getFormHandle } from './utils.js';
 
 
 const FormCreate: IAntlersTag = {

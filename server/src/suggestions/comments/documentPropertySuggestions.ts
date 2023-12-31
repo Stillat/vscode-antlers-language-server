@@ -1,4 +1,4 @@
-import { CompletionItem, CompletionItemKind } from 'vscode-languageserver';
+import { CompletionItem, CompletionItemKind } from 'vscode-languageserver';;
 
 const DocumentPropertySuggestions: CompletionItem[] = [
     { label: 'name', kind: CompletionItemKind.Property },

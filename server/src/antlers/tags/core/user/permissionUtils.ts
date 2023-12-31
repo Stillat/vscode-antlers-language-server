@@ -1,5 +1,5 @@
 import { CompletionItem, CompletionItemKind } from 'vscode-languageserver-types';
-import { IProjectDetailsProvider } from '../../../../projects/projectDetailsProvider';
+import { IProjectDetailsProvider } from '../../../../projects/projectDetailsProvider.js';
 
 export function getAllGroupSuggestionsn(project: IProjectDetailsProvider): CompletionItem[] {
     const items: CompletionItem[] = [],

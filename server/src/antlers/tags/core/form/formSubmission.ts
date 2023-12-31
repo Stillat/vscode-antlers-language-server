@@ -1,12 +1,12 @@
-import { makeTagDoc } from '../../../../documentation/utils';
-import { AntlersNode } from '../../../../runtime/nodes/abstractNode';
-import { ISuggestionRequest } from '../../../../suggestions/suggestionRequest';
-import { Scope } from '../../../scope/scope';
-import { exclusiveResultList, IAntlersParameter, IAntlersTag, } from "../../../tagManager";
-import FormHandleParam from "./formHandleParam";
-import { HandleParams } from "./parameterCompletions";
-import { resolveFormSetReference } from "./resolveFormSetReference";
-import { getFormHandle } from "./utils";
+import { makeTagDoc } from '../../../../documentation/utils.js';
+import { AntlersNode } from '../../../../runtime/nodes/abstractNode.js';
+import { ISuggestionRequest } from '../../../../suggestions/suggestionRequest.js';
+import { Scope } from '../../../scope/scope.js';
+import { exclusiveResultList, IAntlersParameter, IAntlersTag, } from "../../../tagManager.js";
+import FormHandleParam from "./formHandleParam.js";
+import { HandleParams } from "./parameterCompletions.js";
+import { resolveFormSetReference } from "./resolveFormSetReference.js";
+import { getFormHandle } from "./utils.js";
 
 const FormSubmission: IAntlersTag = {
     tagName: "form:submission",

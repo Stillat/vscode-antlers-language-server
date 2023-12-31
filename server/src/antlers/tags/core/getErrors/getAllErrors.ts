@@ -1,9 +1,9 @@
-import { makeTagDoc } from '../../../../documentation/utils';
-import { AntlersNode } from '../../../../runtime/nodes/abstractNode';
-import { ISuggestionRequest } from '../../../../suggestions/suggestionRequest';
-import { Scope } from '../../../scope/scope';
-import { IAntlersTag } from '../../../tagManager';
-import { GetErrorsParameters } from './getErrorsParameters';
+import { makeTagDoc } from '../../../../documentation/utils.js';
+import { AntlersNode } from '../../../../runtime/nodes/abstractNode.js';
+import { ISuggestionRequest } from '../../../../suggestions/suggestionRequest.js';
+import { Scope } from '../../../scope/scope.js';
+import { IAntlersTag } from '../../../tagManager.js';
+import { GetErrorsParameters } from './getErrorsParameters.js';
 
 const GetAllErrors: IAntlersTag = {
     tagName: 'get_errors:all',

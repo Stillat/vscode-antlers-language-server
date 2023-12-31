@@ -1,11 +1,11 @@
-import assert = require("assert");
-import { SemanticGroup, VariableNode, ModifierNode, ModifierValueNode, StringValueNode, ModifierNameNode } from '../runtime/nodes/abstractNode';
+import assert from 'assert';
+import { SemanticGroup, VariableNode, ModifierNode, ModifierValueNode, StringValueNode, ModifierNameNode } from '../runtime/nodes/abstractNode.js';
 import {
     assertCount,
     assertInstanceOf,
     assertNotNull,
-} from "./testUtils/assertions";
-import { getParsedRuntimeNodes } from "./testUtils/parserUtils";
+} from "./testUtils/assertions.js";
+import { getParsedRuntimeNodes } from "./testUtils/parserUtils.js";
 
 suite("Node Modifiers Test", () => {
     test("it parses node modifiers", () => {

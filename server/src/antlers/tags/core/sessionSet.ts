@@ -1,10 +1,10 @@
-import { makeTagDoc } from '../../../documentation/utils';
-import { IProjectDetailsProvider } from '../../../projects/projectDetailsProvider';
-import { AntlersNode } from '../../../runtime/nodes/abstractNode';
-import { ISuggestionRequest } from '../../../suggestions/suggestionRequest';
-import { IAntlersTag } from '../../tagManager';
-import { returnDynamicParameter } from '../dynamicParameterResolver';
-import { SessionVariableContext } from './contexts/sessionContext';
+import { makeTagDoc } from '../../../documentation/utils.js';
+import { IProjectDetailsProvider } from '../../../projects/projectDetailsProvider.js';
+import { AntlersNode } from '../../../runtime/nodes/abstractNode.js';
+import { ISuggestionRequest } from '../../../suggestions/suggestionRequest.js';
+import { IAntlersTag } from '../../tagManager.js';
+import { returnDynamicParameter } from '../dynamicParameterResolver.js';
+import { SessionVariableContext } from './contexts/sessionContext.js';
 
 const SessionSet: IAntlersTag = {
     tagName: 'session:set',

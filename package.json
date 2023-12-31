@@ -32,6 +32,7 @@
         "onLanguage:html",
         "onView:antlers.projectExplorer"
     ],
+    "type": "module",
     "main": "./client/out/extension",
     "contributes": {
         "languages": [
@@ -194,7 +195,7 @@
         "bundle:antlersls": "npm run compile && npm run esbuild:antlersls",
         "esbuild:antlersls": "esbuild ./server/src/server.ts --bundle --minify --outfile=./antlersls/server.js --format=cjs --platform=node",
         "bundle:prettier": "npm run compile && npm run esbuild:prettier",
-        "esbuild:prettier": "esbuild ./server/src/formatting/prettier/plugin.ts --bundle --outfile=./formatcli/prettier-plugin-antlers/plugin.js --format=cjs --platform=node --external:prettier",
+        "esbuild:prettier": "esbuild ./server/src/formatting/prettier/plugin.ts --bundle --outfile=./formatcli/prettier-plugin-antlers/plugin.js --format=esm --platform=node --external:prettier --banner:js=\"import {createRequire} from 'module';const require=createRequire(import.meta.url);\"",
         "watch": "tsc -b -w",
         "start:webview": "cd docsui && npm run start",
         "build:webview": "cd docsui && npm run build",

@@ -1,14 +1,14 @@
-import assert = require("assert");
+import assert from 'assert';
 import {
     assertCount,
     assertInstanceOf,
     assertNotNull,
     assertTrue,
     toAntlers,
-} from "./testUtils/assertions";
-import { getParsedRuntimeNodes, parseNodes } from "./testUtils/parserUtils";
-import EnvironmentDetails from "../runtime/runtime/environmentDetails";
-import { AntlersNode, LiteralNode, SemanticGroup, VariableNode, LogicGroup, EqualCompOperator, ModifierNode, PathNode, VariableReference } from '../runtime/nodes/abstractNode';
+} from "./testUtils/assertions.js";
+import { getParsedRuntimeNodes, parseNodes } from "./testUtils/parserUtils.js";
+import EnvironmentDetails from "../runtime/runtime/environmentDetails.js";
+import { AntlersNode, LiteralNode, SemanticGroup, VariableNode, LogicGroup, EqualCompOperator, ModifierNode, PathNode, VariableReference } from '../runtime/nodes/abstractNode.js';
 
 suite("Basic Node Test", () => {
     test("it returns nodes", () => {

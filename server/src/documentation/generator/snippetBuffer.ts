@@ -1,4 +1,4 @@
-import { IInjectedField } from './types';
+import { IInjectedField } from './types.js';
 
 export class SnippetBuffer {
     private buffer = '';

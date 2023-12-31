@@ -1,7 +1,7 @@
-import { IAntlersParameter } from "../antlers/tagManager";
-import ProjectManager from '../projects/projectManager';
-import { AntlersNode } from '../runtime/nodes/abstractNode';
-import { DocumentDetailsManager } from "./documentDetailsManager";
+import { IAntlersParameter } from "../antlers/tagManager.js";
+import ProjectManager from '../projects/projectManager.js';
+import { AntlersNode } from '../runtime/nodes/abstractNode.js';
+import { DocumentDetailsManager } from "./documentDetailsManager.js";
 
 export interface IEnvironmentHelper {
     documentName: string;

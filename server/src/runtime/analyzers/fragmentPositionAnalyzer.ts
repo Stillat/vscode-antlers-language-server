@@ -1,7 +1,7 @@
-import { AntlersNode, ConditionNode, FragmentPosition, LiteralNode } from '../nodes/abstractNode';
-import { DocumentParser } from '../parser/documentParser';
-import { FragmentsParser } from '../parser/fragmentsParser';
-import { ConditionPairAnalyzer } from './conditionPairAnalyzer';
+import { AntlersNode, ConditionNode, FragmentPosition, LiteralNode } from '../nodes/abstractNode.js';
+import { DocumentParser } from '../parser/documentParser.js';
+import { FragmentsParser } from '../parser/fragmentsParser.js';
+import { ConditionPairAnalyzer } from './conditionPairAnalyzer.js';
 
 export class FragmentPositionAnalyzer {
     private documentParser: DocumentParser;

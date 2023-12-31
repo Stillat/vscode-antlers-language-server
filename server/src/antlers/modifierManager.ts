@@ -1,14 +1,14 @@
-import { getFieldRuntimeType } from "../projects/blueprints/blueprintTypes";
-import { arrayModifiers } from "./modifiers/arrayModifiers";
-import { assetModifiers } from "./modifiers/assetModifiers";
-import { conditionalModifiers } from "./modifiers/conditionalModifiers";
-import { dateModifiers } from "./modifiers/dateModifiers";
-import { markupModifiers } from "./modifiers/markupModifiers";
-import { mathModifiers } from "./modifiers/mathModifiers";
-import { specialModifiers } from "./modifiers/specialModifiers";
-import { stringModifiers } from "./modifiers/stringModifiers";
-import { utilityModifiers } from "./modifiers/utilityModifiers";
-import { IModifier, IModifierMacro } from "./modifierTypes";
+import { getFieldRuntimeType } from "../projects/blueprints/blueprintTypes.js";
+import { arrayModifiers } from "./modifiers/arrayModifiers.js";
+import { assetModifiers } from "./modifiers/assetModifiers.js";
+import { conditionalModifiers } from "./modifiers/conditionalModifiers.js";
+import { dateModifiers } from "./modifiers/dateModifiers.js";
+import { markupModifiers } from "./modifiers/markupModifiers.js";
+import { mathModifiers } from "./modifiers/mathModifiers.js";
+import { specialModifiers } from "./modifiers/specialModifiers.js";
+import { stringModifiers } from "./modifiers/stringModifiers.js";
+import { utilityModifiers } from "./modifiers/utilityModifiers.js";
+import { IModifier, IModifierMacro } from "./modifierTypes.js";
 
 class ModifierManager {
     private registeredModifiers: Map<string, IModifier> = new Map();

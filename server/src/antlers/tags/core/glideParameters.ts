@@ -1,8 +1,8 @@
-import { parameterError } from '../../../diagnostics/utils';
-import { AntlersNode, ParameterNode } from '../../../runtime/nodes/abstractNode';
-import { ISuggestionRequest } from '../../../suggestions/suggestionRequest';
-import { IAntlersParameter, ICompletionResult, exclusiveResultList, EmptyCompletionResult } from '../../tagManager';
-import { IReportableError } from '../../types';
+import { parameterError } from '../../../diagnostics/utils.js';
+import { AntlersNode, ParameterNode } from '../../../runtime/nodes/abstractNode.js';
+import { ISuggestionRequest } from '../../../suggestions/suggestionRequest.js';
+import { IAntlersParameter, ICompletionResult, exclusiveResultList, EmptyCompletionResult } from '../../tagManager.js';
+import { IReportableError } from '../../types.js';
 
 const GlideFilters: string[] = ["greyscale", "sepia"];
 

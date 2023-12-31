@@ -1,10 +1,10 @@
-import { KeysResolver } from '../../../projects/structuredFieldTypes/keysResolver';
-import { ICollectionsFieldType, IProjectFields } from '../../../projects/structuredFieldTypes/types';
-import { AugmentationTypes } from '../augmentationTypes';
-import { NestedFieldsProvider } from '../providers/nestedFieldsProvider';
-import { OfficialDocumentationLinkProvider } from '../providers/officialDocumentationLinkProvider';
-import { PipedTagSnippetProvider } from '../snippets/pipedTagSnippetProvider';
-import { IDocumentationProperty, IDocumentationProvider, IDocumentationResult, IDocumentationSnippet } from '../types';
+import { KeysResolver } from '../../../projects/structuredFieldTypes/keysResolver.js';
+import { ICollectionsFieldType, IProjectFields } from '../../../projects/structuredFieldTypes/types.js';
+import { AugmentationTypes } from '../augmentationTypes.js';
+import { NestedFieldsProvider } from '../providers/nestedFieldsProvider.js';
+import { OfficialDocumentationLinkProvider } from '../providers/officialDocumentationLinkProvider.js';
+import { PipedTagSnippetProvider } from '../snippets/pipedTagSnippetProvider.js';
+import { IDocumentationProperty, IDocumentationProvider, IDocumentationResult, IDocumentationSnippet } from '../types.js';
 
 export class CollectionsDocumentationProvider implements IDocumentationProvider {
     private injectsKeys: string[] = ['title', 'handle'];

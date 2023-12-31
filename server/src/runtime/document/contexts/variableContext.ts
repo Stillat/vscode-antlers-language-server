@@ -1,7 +1,7 @@
-import { replaceAllInString, trimRight } from '../../../utils/strings';
-import { AbstractNode, AntlersNode, InlineBranchSeparator, VariableNode } from '../../nodes/abstractNode';
-import { Position } from '../../nodes/position';
-import { AntlersDocument } from '../antlersDocument';
+import { replaceAllInString, trimRight } from '../../../utils/strings.js';
+import { AbstractNode, AntlersNode, InlineBranchSeparator, VariableNode } from '../../nodes/abstractNode.js';
+import { Position } from '../../nodes/position.js';
+import { AntlersDocument } from '../antlersDocument.js';
 
 export class VariableContext {
 

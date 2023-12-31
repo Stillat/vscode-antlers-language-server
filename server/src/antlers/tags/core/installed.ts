@@ -1,8 +1,8 @@
-import { CompletionItem, CompletionItemKind } from 'vscode-languageserver';
-import { IComposerPackage } from '../../../composer/composerPackage';
-import { makeTagDocWithCodeSample } from '../../../documentation/utils';
-import { ISuggestionRequest } from '../../../suggestions/suggestionRequest';
-import { EmptyCompletionResult, exclusiveResult, IAntlersTag, ICompletionResult } from '../../tagManager';
+import { CompletionItem, CompletionItemKind } from 'vscode-languageserver';;
+import { IComposerPackage } from '../../../composer/composerPackage.js';
+import { makeTagDocWithCodeSample } from '../../../documentation/utils.js';
+import { ISuggestionRequest } from '../../../suggestions/suggestionRequest.js';
+import { EmptyCompletionResult, exclusiveResult, IAntlersTag, ICompletionResult } from '../../tagManager.js';
 
 const InstalledTag: IAntlersTag = {
     tagName: 'installed',

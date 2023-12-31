@@ -1,8 +1,8 @@
-import { IFieldtypeInjection } from '../../../projects/fieldsets/fieldtypeInjection';
-import { AntlersNode } from '../../../runtime/nodes/abstractNode';
-import { Scope } from '../../scope/scope';
-import { makeArrayVariables } from '../../variables/arrayVariables';
-import { makeAssetVariables } from '../../variables/assetVariables';
+import { IFieldtypeInjection } from '../../../projects/fieldsets/fieldtypeInjection.js';
+import { AntlersNode } from '../../../runtime/nodes/abstractNode.js';
+import { Scope } from '../../scope/scope.js';
+import { makeArrayVariables } from '../../variables/arrayVariables.js';
+import { makeAssetVariables } from '../../variables/assetVariables.js';
 
 const AssetsFieldType: IFieldtypeInjection = {
     name: 'assets',

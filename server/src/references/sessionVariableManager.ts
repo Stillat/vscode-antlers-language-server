@@ -1,4 +1,4 @@
-import { SessionVariableContext } from '../antlers/tags/core/contexts/sessionContext';
+import { SessionVariableContext } from '../antlers/tags/core/contexts/sessionContext.js';
 
 class SessionVariableManager {
     private knownVariables: Map<string, Map<string, SessionVariableContext>> =

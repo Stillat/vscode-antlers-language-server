@@ -1,7 +1,7 @@
-import { DocumentHighlight, DocumentHighlightParams } from 'vscode-languageserver';
-import { makeProviderRequest } from '../providers/providerParameters';
-import { AbstractNode, VariableNode } from '../runtime/nodes/abstractNode';
-import { nodeToRange } from '../utils/conversions';
+import { DocumentHighlight, DocumentHighlightParams } from 'vscode-languageserver';;
+import { makeProviderRequest } from '../providers/providerParameters.js';
+import { AbstractNode, VariableNode } from '../runtime/nodes/abstractNode.js';
+import { nodeToRange } from '../utils/conversions.js';
 
 export function handleDocumentHighlight(_params: DocumentHighlightParams): DocumentHighlight[] | null {
     const docPath = decodeURIComponent(_params.textDocument.uri);

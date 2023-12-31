@@ -1,4 +1,4 @@
-import { IMarketplaceAddon } from '../../marketplaceTypes';
+import { IMarketplaceAddon } from '../../marketplaceTypes.js';
 
 const StatamicAdvancedSeo: IMarketplaceAddon = {
     packageName: 'aerni/advanced-seo',

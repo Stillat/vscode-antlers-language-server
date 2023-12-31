@@ -1,7 +1,7 @@
 import * as fs from 'fs';
 import * as YAML from 'yaml';
-import ModifierManager from '../modifierManager';
-import { IModifier, IModifierMacro, IModifierReference } from '../modifierTypes';
+import ModifierManager from '../modifierManager.js';
+import { IModifier, IModifierMacro, IModifierReference } from '../modifierTypes.js';
 
 export function parseMacros(macroFile: string): IModifierMacro[] {
     const contents = fs.readFileSync(macroFile, { encoding: 'utf8' }),

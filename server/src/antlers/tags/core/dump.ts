@@ -1,7 +1,7 @@
-import { makeTagDocWithCodeSample } from '../../../documentation/utils';
-import { convertImmediateScopeToCompletionList } from '../../../suggestions/suggestionManager';
-import { ISuggestionRequest } from '../../../suggestions/suggestionRequest';
-import { EmptyCompletionResult, exclusiveResult, IAntlersTag, ICompletionResult } from '../../tagManager';
+import { makeTagDocWithCodeSample } from '../../../documentation/utils.js';
+import { convertImmediateScopeToCompletionList } from '../../../suggestions/suggestionManager.js';
+import { ISuggestionRequest } from '../../../suggestions/suggestionRequest.js';
+import { EmptyCompletionResult, exclusiveResult, IAntlersTag, ICompletionResult } from '../../tagManager.js';
 
 const Dump: IAntlersTag = {
     tagName: 'dump',

@@ -1,7 +1,7 @@
-import { IProjectDetailsProvider } from '../../projects/projectDetailsProvider';
-import { AntlersNode } from '../../runtime/nodes/abstractNode';
-import { trimLeft } from "../../utils/strings";
-import { Scope } from './scope';
+import { IProjectDetailsProvider } from '../../projects/projectDetailsProvider.js';
+import { AntlersNode } from '../../runtime/nodes/abstractNode.js';
+import { trimLeft } from "../../utils/strings.js";
+import { Scope } from './scope.js';
 
 class InjectionManager {
     private fileInjections: Map<string, Map<string, AntlersNode[]>> = new Map();

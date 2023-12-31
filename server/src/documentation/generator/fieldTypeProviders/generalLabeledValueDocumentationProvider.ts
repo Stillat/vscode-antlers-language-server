@@ -1,10 +1,10 @@
-import { KeysResolver } from '../../../projects/structuredFieldTypes/keysResolver';
-import { IFieldDetails, IProjectFields } from '../../../projects/structuredFieldTypes/types';
-import { AugmentationTypes } from '../augmentationTypes';
-import { ForeachProvider } from '../providers/foreachProvider';
-import { NestedFieldsProvider } from '../providers/nestedFieldsProvider';
-import { OfficialDocumentationLinkProvider } from '../providers/officialDocumentationLinkProvider';
-import { IDocumentationProperty, IDocumentationProvider, IDocumentationResult, IDocumentationSnippet } from '../types';
+import { KeysResolver } from '../../../projects/structuredFieldTypes/keysResolver.js';
+import { IFieldDetails, IProjectFields } from '../../../projects/structuredFieldTypes/types.js';
+import { AugmentationTypes } from '../augmentationTypes.js';
+import { ForeachProvider } from '../providers/foreachProvider.js';
+import { NestedFieldsProvider } from '../providers/nestedFieldsProvider.js';
+import { OfficialDocumentationLinkProvider } from '../providers/officialDocumentationLinkProvider.js';
+import { IDocumentationProperty, IDocumentationProvider, IDocumentationResult, IDocumentationSnippet } from '../types.js';
 
 export class LabeledValueDocumentationProvider implements IDocumentationProvider {
     resolve(context: IFieldDetails, currentProject: IProjectFields): IDocumentationResult {

@@ -1,8 +1,8 @@
-import { IProjectDetailsProvider } from '../../../../projects/projectDetailsProvider';
-import { AntlersNode } from '../../../../runtime/nodes/abstractNode';
-import { getScopeName } from "../../../tags";
-import { ICollectionContext, ISpecialResolverResults } from "../../../types";
-import { CollectionRestrictionParams, CollectionSourceParams } from "./parameters";
+import { IProjectDetailsProvider } from '../../../../projects/projectDetailsProvider.js';
+import { AntlersNode } from '../../../../runtime/nodes/abstractNode.js';
+import { getScopeName } from "../../../tags.js";
+import { ICollectionContext, ISpecialResolverResults } from "../../../types.js";
+import { CollectionRestrictionParams, CollectionSourceParams } from "./parameters.js";
 
 function getAliasName(node: AntlersNode): string | null {
     return node.findParameterValueOrNull('as');

@@ -1,14 +1,14 @@
-import assert = require('assert');
-import { formatStringWithPrettier } from '../formatting/prettier/utils';
+import assert from 'assert';
+import { formatStringWithPrettier } from '../formatting/prettier/utils.js';
 
 suite('Formatter Prettier Escaped Nodes', () => {
-    test('it emits escaped content chars 3', () => {
+    test('it emits escaped content chars 3', async () => {
         const template = `@{{ foo bar="{baz}" }}`;
         const output = `@{{ foo bar="{baz}" }}`;
-        assert.strictEqual(formatStringWithPrettier(template).trim(), output);
+        assert.strictEqual((await formatStringWithPrettier(template)).trim(), output);
     });
 
-    test('it emits complex escaped content', () => {
+    test('it emits complex escaped content', async () => {
         const template= `{{ if conditionOne }}
 @{{test}}
 <script>
@@ -51,10 +51,10 @@ suite('Formatter Prettier Escaped Nodes', () => {
     {{ /if }}
     @{{test}}
 {{ /if }}`;
-        assert.strictEqual(formatStringWithPrettier(template).trim(), expected);
+        assert.strictEqual((await formatStringWithPrettier(template)).trim(), expected);
     });
 
-    test('it emits escpaed content chars 2', () => {
+    test('it emits escpaed content chars 2', async () => {
         const template = `@{{ foo
     bar:baz="qux"
   }} {{ qux }}
@@ -62,10 +62,10 @@ bar
 {{ baz }}`;
         const output = `@{{ foo bar:baz="qux" }} {{ qux }} bar
 {{ baz }}`;
-        assert.strictEqual(formatStringWithPrettier(template).trim(), output);
+        assert.strictEqual((await formatStringWithPrettier(template)).trim(), output);
     });
     
-    test('it does not do weird things with spacing on things not flagged as tags', () => {
+    test('it does not do weird things with spacing on things not flagged as tags', async () => {
         const template = `<html>
         <head>
         </head>
@@ -102,10 +102,10 @@ bar
         </script>
     </body>
 </html>`;
-        assert.strictEqual(formatStringWithPrettier(template).trim(), output);
+        assert.strictEqual((await formatStringWithPrettier(template)).trim(), output);
     });
     
-    test('it emits escaped content chars', () => {
+    test('it emits escaped content chars', async () => {
         const template = `start
         {{articles}}{{test}}@{{ foo }} {{ qux }} bar {{ /articles }}
         end`;
@@ -114,10 +114,10 @@ bar
     {{ test }}@{{ foo }} {{ qux }} bar
 {{ /articles }}
 end`;
-        assert.strictEqual(formatStringWithPrettier(template).trim(), output);
+        assert.strictEqual((await formatStringWithPrettier(template)).trim(), output);
     });
     
-    test('template test 22', () => {
+    test('template test 22', async () => {
         const template = `{{ tag:array }}{{ noparse }}{{ string }}{{ /noparse }}{{ /tag:array }}
 {{ tag:loop }}
     {{ index }} {{ noparse }}{{ string }}{{ /noparse }} {{ string }}
@@ -129,10 +129,10 @@ end`;
     {{ index }}
     {{ noparse }}{{ string }}{{ /noparse }} {{ string }}
 {{ /tag:loop }}`;
-        assert.strictEqual(formatStringWithPrettier(template).trim(), output);
+        assert.strictEqual((await formatStringWithPrettier(template)).trim(), output);
     });
 
-    test('it emits escaped content characters', () => {
-        assert.strictEqual(formatStringWithPrettier('{{ "hello{"@@{world@@}"}" }}').trim(), '{{ "hello{"@@{world@@}"}" }}');
+    test('it emits escaped content characters', async () => {
+        assert.strictEqual((await formatStringWithPrettier('{{ "hello{"@@{world@@}"}" }}')).trim(), '{{ "hello{"@@{world@@}"}" }}');
     });
 });

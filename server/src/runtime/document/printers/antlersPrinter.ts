@@ -1,7 +1,7 @@
-import { AntlersNode } from '../../nodes/abstractNode';
-import { AntlersDocument } from '../antlersDocument';
-import { TransformOptions } from '../transformOptions';
-import { NodePrinter } from './nodePrinter';
+import { AntlersNode } from '../../nodes/abstractNode.js';
+import { AntlersDocument } from '../antlersDocument.js';
+import { TransformOptions } from '../transformOptions.js';
+import { NodePrinter } from './nodePrinter.js';
 
 export class AntlersPrinter {
     static printNode(node: AntlersNode, document: AntlersDocument, options: TransformOptions) {

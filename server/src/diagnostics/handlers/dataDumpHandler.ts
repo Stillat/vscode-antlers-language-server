@@ -1,7 +1,7 @@
-import { AntlersError, ErrrorLevel } from '../../runtime/errors/antlersError';
-import { AntlersErrorCodes } from '../../runtime/errors/antlersErrorCodes';
-import { AntlersNode } from '../../runtime/nodes/abstractNode';
-import { IDiagnosticsHandler } from '../diagnosticsHandler';
+import { AntlersError, ErrorLevel } from '../../runtime/errors/antlersError.js';
+import { AntlersErrorCodes } from '../../runtime/errors/antlersErrorCodes.js';
+import { AntlersNode } from '../../runtime/nodes/abstractNode.js';
+import { IDiagnosticsHandler } from '../diagnosticsHandler.js';
 
 const DataDumpTags: string[] = [
     'dump', 'dd', 'ddd'
@@ -17,7 +17,7 @@ const DataDumpHandler: IDiagnosticsHandler = {
                 AntlersErrorCodes.LINT_DEBUG_DATA_EXPOSED,
                 node,
                 tagName + ' exposes data and should be removed after debugging.',
-                ErrrorLevel.Warning
+                ErrorLevel.Warning
             ));
         }
 
@@ -26,7 +26,7 @@ const DataDumpHandler: IDiagnosticsHandler = {
                 AntlersErrorCodes.LINT_DEBUG_DATA_EXPOSED,
                 node,
                 'dump modifier exposes data and should be removed after debugging.',
-                ErrrorLevel.Warning
+                ErrorLevel.Warning
             ));
         }
 

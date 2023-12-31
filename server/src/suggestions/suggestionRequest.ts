@@ -1,8 +1,8 @@
-import { Position } from 'vscode-languageserver';
-import { IProjectDetailsProvider } from '../projects/projectDetailsProvider';
-import { AntlersDocument } from '../runtime/document/antlersDocument';
-import { PositionContext } from '../runtime/document/contexts/positionContext';
-import { AntlersNode } from '../runtime/nodes/abstractNode';
+import { Position } from 'vscode-languageserver';;
+import { IProjectDetailsProvider } from '../projects/projectDetailsProvider.js';
+import { AntlersDocument } from '../runtime/document/antlersDocument.js';
+import { PositionContext } from '../runtime/document/contexts/positionContext.js';
+import { AntlersNode } from '../runtime/nodes/abstractNode.js';
 
 export interface ISuggestionRequest {
     /**

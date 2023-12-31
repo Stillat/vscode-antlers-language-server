@@ -1,8 +1,8 @@
-import { AntlersNode } from '../../../../runtime/nodes/abstractNode';
-import { Scope } from '../../../scope/scope';
-import { makeContentVariables } from "../../../variables/contentVariables";
-import { makeRoutableVariables } from "../../../variables/routeableVariables";
-import { getTaxonomyNames } from "./utils";
+import { AntlersNode } from '../../../../runtime/nodes/abstractNode.js';
+import { Scope } from '../../../scope/scope.js';
+import { makeContentVariables } from "../../../variables/contentVariables.js";
+import { makeRoutableVariables } from "../../../variables/routeableVariables.js";
+import { getTaxonomyNames } from "./utils.js";
 
 export function augmentTaxonomyScope(node: AntlersNode, scope: Scope): Scope {
     const taxonomyNames = getTaxonomyNames(node, scope.statamicProject),

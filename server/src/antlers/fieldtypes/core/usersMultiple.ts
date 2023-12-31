@@ -1,8 +1,8 @@
-import { IFieldtypeInjection } from '../../../projects/fieldsets/fieldtypeInjection';
-import { AntlersNode } from '../../../runtime/nodes/abstractNode';
-import { Scope } from '../../scope/scope';
-import { makeArrayVariables } from '../../variables/arrayVariables';
-import { makeLoopVariables } from '../../variables/loopVariables';
+import { IFieldtypeInjection } from '../../../projects/fieldsets/fieldtypeInjection.js';
+import { AntlersNode } from '../../../runtime/nodes/abstractNode.js';
+import { Scope } from '../../scope/scope.js';
+import { makeArrayVariables } from '../../variables/arrayVariables.js';
+import { makeLoopVariables } from '../../variables/loopVariables.js';
 
 const UsersMultipleFieldtype: IFieldtypeInjection = {
     name: 'users_multiple',

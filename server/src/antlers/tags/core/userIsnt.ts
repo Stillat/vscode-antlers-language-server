@@ -1,7 +1,7 @@
-import { makeTagDoc } from '../../../documentation/utils';
-import { ISuggestionRequest } from '../../../suggestions/suggestionRequest';
-import { exclusiveResult, IAntlersParameter, IAntlersTag } from '../../tagManager';
-import { makeUserRolesSuggestions } from './user/permissionUtils';
+import { makeTagDoc } from '../../../documentation/utils.js';
+import { ISuggestionRequest } from '../../../suggestions/suggestionRequest.js';
+import { exclusiveResult, IAntlersParameter, IAntlersTag } from '../../tagManager.js';
+import { makeUserRolesSuggestions } from './user/permissionUtils.js';
 
 const UserIsnt: IAntlersTag = {
     tagName: 'user:isnt',

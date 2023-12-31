@@ -1,15 +1,15 @@
 import { CompletionItem, CompletionItemKind } from "vscode-languageserver";
-import ProjectManager from '../projects/projectManager';
-import { IProjectDetailsProvider } from '../projects/projectDetailsProvider';
-import { makeTagParameterSuggestions } from "../suggestions/attributeSuggestions";
-import { formatSuggestion } from "../suggestions/fieldFormatter";
-import { trimLeft } from "../utils/strings";
-import { IAntlersTag, IAntlersParameter, IProviderCompletionResult, ICompletionResult } from "./tagManager";
-import { coreTags } from "./tags/coreTags";
-import { ISpecialResolverResults } from "./types";
-import { ISuggestionRequest } from '../suggestions/suggestionRequest';
-import { AntlersNode } from '../runtime/nodes/abstractNode';
-import { IDocumentedLabel } from './documentedLabel';
+import ProjectManager from '../projects/projectManager.js';
+import { IProjectDetailsProvider } from '../projects/projectDetailsProvider.js';
+import { makeTagParameterSuggestions } from "../suggestions/attributeSuggestions.js";
+import { formatSuggestion } from "../suggestions/fieldFormatter.js";
+import { trimLeft } from "../utils/strings.js";
+import { IAntlersTag, IAntlersParameter, IProviderCompletionResult, ICompletionResult } from "./tagManager.js";
+import { coreTags } from "./tags/coreTags.js";
+import { ISpecialResolverResults } from "./types.js";
+import { ISuggestionRequest } from '../suggestions/suggestionRequest.js';
+import { AntlersNode } from '../runtime/nodes/abstractNode.js';
+import { IDocumentedLabel } from './documentedLabel.js';
 
 class TagManager {
     private tags: Map<string, IAntlersTag> = new Map();

@@ -1,5 +1,5 @@
-import { SnippetBuffer } from '../snippetBuffer';
-import { IDocumentationSnippet } from '../types';
+import { SnippetBuffer } from '../snippetBuffer.js';
+import { IDocumentationSnippet } from '../types.js';
 
 export class ForeachProvider {
     static generate(field:string, tabSize: number = 4): IDocumentationSnippet {

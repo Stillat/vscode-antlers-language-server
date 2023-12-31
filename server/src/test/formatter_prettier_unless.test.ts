@@ -1,34 +1,34 @@
-import assert = require('assert');
-import { formatStringWithPrettier } from '../formatting/prettier/utils';
+import assert from 'assert';
+import { formatStringWithPrettier } from '../formatting/prettier/utils.js';
 
 suite('Formatter Prettier Unless', () => {    
-    test('it does not remove unless else', () => {
+    test('it does not remove unless else', async () => {
         const output = `<body
     class="flex flex-col min-h-screen bg-white selection:bg-primary selection:text-white {{ unless segment_1 }}home-{{else}}page-{{ /unless }}content"
 ></body>`;
         assert.strictEqual(
-            formatStringWithPrettier(`<body class="flex flex-col min-h-screen bg-white selection:bg-primary selection:text-white {{ unless segment_1 }}home-{{else}}page-{{ /unless }}content">`).trim(),
+            (await formatStringWithPrettier(`<body class="flex flex-col min-h-screen bg-white selection:bg-primary selection:text-white {{ unless segment_1 }}home-{{else}}page-{{ /unless }}content">`)).trim(),
             output
         );
     });
 
-    test('it rewrites incorrect endunless', () => {
+    test('it rewrites incorrect endunless', async () => {
         const template = `{{ unless 		true}}Inner{{			 endunless }}`,
             expected = `{{ unless true }}
     Inner
 {{ /unless }}`;
-        assert.strictEqual(formatStringWithPrettier(template).trim(), expected);
+        assert.strictEqual((await formatStringWithPrettier(template)).trim(), expected);
     });
 
-    test('it emits endunless', () => {
+    test('it emits endunless', async () => {
         const template = `{{ unless 		true}}Inner{{			 /unless }}`,
             expected = `{{ unless true }}
     Inner
 {{ /unless }}`;
-        assert.strictEqual(formatStringWithPrettier(template).trim(), expected);
+        assert.strictEqual((await formatStringWithPrettier(template)).trim(), expected);
     });
 
-    test('it emits unless pairs', () => {
+    test('it emits unless pairs', async () => {
         const template = `
         Leading Literal
         {{ unless true}}
@@ -47,6 +47,6 @@ suite('Formatter Prettier Unless', () => {
 {{ else }}
     <div>C</div>
 {{ /unless }}`;
-        assert.strictEqual(formatStringWithPrettier(template).trim(), expected);
+        assert.strictEqual((await formatStringWithPrettier(template)).trim(), expected);
     });
 });

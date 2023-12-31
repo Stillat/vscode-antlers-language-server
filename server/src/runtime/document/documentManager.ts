@@ -1,7 +1,7 @@
-import { IProjectDetailsProvider } from '../../projects/projectDetailsProvider';
-import ProjectManager from '../../projects/projectManager';
-import { AntlersError } from '../errors/antlersError';
-import { AntlersDocument } from './antlersDocument';
+import { IProjectDetailsProvider } from '../../projects/projectDetailsProvider.js';
+import ProjectManager from '../../projects/projectManager.js';
+import { AntlersError } from '../errors/antlersError.js';
+import { AntlersDocument } from './antlersDocument.js';
 
 class DocumentManager {
     private loadedDocuments: Map<string, AntlersDocument> = new Map();

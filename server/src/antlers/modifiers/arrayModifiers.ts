@@ -1,6 +1,6 @@
-import { IModifier } from '../modifierTypes';
-import { augmentGroupByScope } from './scopeAugmentation/augmentGroupByScope';
-import { augmentSplitScope } from './scopeAugmentation/augmentSplitScope';
+import { IModifier } from '../modifierTypes.js';
+import { augmentGroupByScope } from './scopeAugmentation/augmentGroupByScope.js';
+import { augmentSplitScope } from './scopeAugmentation/augmentSplitScope.js';
 
 const arrayModifiers: IModifier[] = [
     {

@@ -1,4 +1,4 @@
-import { IEnvironmentHelper } from "./parser";
+import { IEnvironmentHelper } from "./parser.js";
 
 export class DocumentDetailsManager {
     static documentDetails: Map<string, IEnvironmentHelper> = new Map();

@@ -1,7 +1,7 @@
-import { IBlueprintField, variablesToBlueprintFields } from '../../../projects/blueprints/fields';
-import { AntlersNode } from '../../../runtime/nodes/abstractNode';
-import { makeLoopVariables } from "../../variables/loopVariables";
-import { Scope } from '../scope';
+import { IBlueprintField, variablesToBlueprintFields } from '../../../projects/blueprints/fields.js';
+import { AntlersNode } from '../../../runtime/nodes/abstractNode.js';
+import { makeLoopVariables } from "../../variables/loopVariables.js";
+import { Scope } from '../scope.js';
 
 /**
  * Analyzes the provided node for "as" and "scope" parameters and applies them to the reference scope.

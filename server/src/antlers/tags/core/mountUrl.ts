@@ -1,8 +1,8 @@
-import { CompletionItem, CompletionItemKind } from 'vscode-languageserver';
-import { makeTagDoc } from '../../../documentation/utils';
-import { ISuggestionRequest } from '../../../suggestions/suggestionRequest';
-import { exclusiveResult, IAntlersParameter, IAntlersTag, ICompletionResult } from '../../tagManager';
-import { makeCollectionNameSuggestions } from './collection/utils';
+import { CompletionItem, CompletionItemKind } from 'vscode-languageserver';;
+import { makeTagDoc } from '../../../documentation/utils.js';
+import { ISuggestionRequest } from '../../../suggestions/suggestionRequest.js';
+import { exclusiveResult, IAntlersParameter, IAntlersTag, ICompletionResult } from '../../tagManager.js';
+import { makeCollectionNameSuggestions } from './collection/utils.js';
 
 const MountUrlTag: IAntlersTag = {
     tagName: 'mount_url',

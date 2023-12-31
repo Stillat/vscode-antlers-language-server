@@ -1,28 +1,28 @@
 import { CompletionItem, CompletionItemKind, InsertTextFormat, Position, TextEdit, } from "vscode-languageserver-protocol";
 import { Range } from "vscode-languageserver-textdocument";
-import ModifierManager from '../antlers/modifierManager';
-import { parseMacros } from '../antlers/modifiers/macros';
-import { IModifier } from '../antlers/modifierTypes';
-import { Scope } from '../antlers/scope/scope';
-import { IScopeVariable } from '../antlers/scope/types';
+import ModifierManager from '../antlers/modifierManager.js';
+import { parseMacros } from '../antlers/modifiers/macros.js';
+import { IModifier } from '../antlers/modifierTypes.js';
+import { Scope } from '../antlers/scope/scope.js';
+import { IScopeVariable } from '../antlers/scope/types.js';
 import {
     IAntlersParameter,
     IAntlersTag
-} from "../antlers/tagManager";
-import TagManager from '../antlers/tagManagerInstance';
-import { UnclosedTagManager } from "../antlers/unclosedTagManager";
-import { ContentVariableNames } from "../antlers/variables/contentVariables";
-import { IBlueprintField } from '../projects/blueprints/fields';
-import { AntlersNode, StringValueNode, EqualCompOperator, VariableNode, PhpExecutionNode } from '../runtime/nodes/abstractNode';
-import { trimLeft, trimRight } from "../utils/strings";
-import { DocumentPropertySuggestions } from './comments/documentPropertySuggestions';
-import LanguageConstructs from "./defaults/languageConstructs";
-import { makeFieldSuggest, makeModifierSuggest } from "./fieldFormatter";
-import { GenericTypesSuggestions } from "./genericTypesSuggestions";
-import { getParameterCompletionItems } from "./parameterSuggestionProvider";
-import { ScopeVariableSuggestionsManager } from "./scopeVariableSuggestionsManager";
-import { ISuggestionRequest } from './suggestionRequest';
-import ProjectManager from '../projects/projectManager';
+} from "../antlers/tagManager.js";
+import TagManager from '../antlers/tagManagerInstance.js';
+import { UnclosedTagManager } from "../antlers/unclosedTagManager.js";
+import { ContentVariableNames } from "../antlers/variables/contentVariables.js";
+import { IBlueprintField } from '../projects/blueprints/fields.js';
+import { AntlersNode, StringValueNode, EqualCompOperator, VariableNode, PhpExecutionNode } from '../runtime/nodes/abstractNode.js';
+import { trimLeft, trimRight } from "../utils/strings.js";
+import { DocumentPropertySuggestions } from './comments/documentPropertySuggestions.js';
+import LanguageConstructs from "./defaults/languageConstructs.js";
+import { makeFieldSuggest, makeModifierSuggest } from "./fieldFormatter.js";
+import { GenericTypesSuggestions } from "./genericTypesSuggestions.js";
+import { getParameterCompletionItems } from "./parameterSuggestionProvider.js";
+import { ScopeVariableSuggestionsManager } from "./scopeVariableSuggestionsManager.js";
+import { ISuggestionRequest } from './suggestionRequest.js';
+import ProjectManager from '../projects/projectManager.js';
 
 const ConditionalCompletionTriggers: string[] = ["if", "elseif", "unless", "elseunless"];
 

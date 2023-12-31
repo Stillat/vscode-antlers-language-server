@@ -1,7 +1,7 @@
-import { AntlersError, ErrrorLevel } from '../../runtime/errors/antlersError';
-import { AntlersErrorCodes } from '../../runtime/errors/antlersErrorCodes';
-import { AntlersNode } from '../../runtime/nodes/abstractNode';
-import { IDiagnosticsHandler } from '../diagnosticsHandler';
+import { AntlersError, ErrorLevel } from '../../runtime/errors/antlersError.js';
+import { AntlersErrorCodes } from '../../runtime/errors/antlersErrorCodes.js';
+import { AntlersNode } from '../../runtime/nodes/abstractNode.js';
+import { IDiagnosticsHandler } from '../diagnosticsHandler.js';
 
 const InvalidParameterHandler: IDiagnosticsHandler = {
     checkNode(node: AntlersNode) {
@@ -17,7 +17,7 @@ const InvalidParameterHandler: IDiagnosticsHandler = {
                     AntlersErrorCodes.LINT_INVALID_PARAMETER_VALUE_DELIMITER,
                     param,
                     'Parameter values must be enclosed in single or double quotes.',
-                    ErrrorLevel.Warning
+                    ErrorLevel.Warning
                 ));
             }
         });      

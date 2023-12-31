@@ -1,8 +1,8 @@
 import { Hover, HoverParams } from "vscode-languageserver-protocol";
-import { HoverManager } from "../hovers/hoverManager";
-import { sessionDocuments } from '../languageService/documents';
-import ProjectManager from '../projects/projectManager';
-import { makeProviderRequest } from "../providers/providerParameters";
+import { HoverManager } from "../hovers/hoverManager.js";
+import { sessionDocuments } from '../languageService/documents.js';
+import ProjectManager from '../projects/projectManager.js';
+import { makeProviderRequest } from "../providers/providerParameters.js";
 
 export function handleDocumentHover(_params: HoverParams): Hover | null {
     if (ProjectManager.instance?.hasStructure() == false) {

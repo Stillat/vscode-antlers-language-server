@@ -1,13 +1,13 @@
-import { AntlersDocument } from '../document/antlersDocument';
-import { AntlersError } from '../errors/antlersError';
-import { AntlersErrorCodes } from '../errors/antlersErrorCodes';
-import { AbstractNode, AntlersNode, AntlersParserFailNode, ConditionNode, EscapedContentNode, ExecutionBranch, RecursiveNode } from '../nodes/abstractNode';
-import { getStartPosition } from '../nodes/helpers';
-import { TagIdentifier } from '../nodes/tagIdentifier';
-import { DocumentParser } from '../parser/documentParser';
-import { NoParseManager } from '../runtime/noParseManager';
-import { intersect } from '../utilities/arrayHelpers';
-import { ConditionPairAnalyzer } from './conditionPairAnalyzer';
+import { AntlersDocument } from '../document/antlersDocument.js';
+import { AntlersError } from '../errors/antlersError.js';
+import { AntlersErrorCodes } from '../errors/antlersErrorCodes.js';
+import { AbstractNode, AntlersNode, AntlersParserFailNode, ConditionNode, EscapedContentNode, ExecutionBranch, RecursiveNode } from '../nodes/abstractNode.js';
+import { getStartPosition } from '../nodes/helpers.js';
+import { TagIdentifier } from '../nodes/tagIdentifier.js';
+import { DocumentParser } from '../parser/documentParser.js';
+import { NoParseManager } from '../runtime/noParseManager.js';
+import { intersect } from '../utilities/arrayHelpers.js';
+import { ConditionPairAnalyzer } from './conditionPairAnalyzer.js';
 
 export class TagPairAnalyzer {
     static readonly ForceBreakLimit = 100000;

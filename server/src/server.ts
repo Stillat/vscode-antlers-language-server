@@ -27,49 +27,49 @@ import {
     handleOnCompletion,
     handleOnCompletionResolve,
 } from "./services/antlersCompletion";
-import { handleFoldingRequest } from "./services/antlersFoldingRegions";
+import { handleFoldingRequest } from "./services/antlersFoldingRegions.js";
 import {
     parseDocument,
     parseDocumentText,
     sendAllDiagnostics,
     validateTextDocument,
 } from "./services/antlersDiagnostics";
-import { formatAntlersDocument } from "./formatting/formatter";
-import { handleSignatureHelpRequest } from "./services/modifierMethodSignatures";
-import { handleDocumentHover } from "./services/antlersHover";
-import { handleDefinitionRequest } from "./services/antlersDefinitions";
-import { newSemanticTokenProvider } from "./services/semanticTokens";
-import { handleDocumentSymbolRequest } from "./services/documentSymbols";
-import { DocumentLinkManager } from "./services/antlersLinks";
-import ProjectManager from './projects/projectManager';
-import InjectionManager from './antlers/scope/injections';
-import { sessionDocuments, documentMap } from './languageService/documents';
-import { getProjectStructure } from './projects/fileSystemProvider/fileSystemStatamicProject';
-import TagManager from './antlers/tagManagerInstance';
-import { YieldContext } from './antlers/tags/core/sections/yield';
-import { UnclosedTagManager } from './antlers/unclosedTagManager';
-import DiagnosticsManager from './diagnostics/diagnosticsManager';
-import ReferenceManager from './references/referenceManager';
-import SectionManager from './references/sectionManager';
-import SessionVariableManager from './references/sessionVariableManager';
-import { AntlersError } from './runtime/errors/antlersError';
-import { htmlFormatterSettings, updateHtmlFormatterSettings } from './languageService/htmlFormatterSettings';
-import { AntlersNode } from './runtime/nodes/abstractNode';
-import { SessionVariableContext } from './antlers/tags/core/contexts/sessionContext';
-import { handleReferences } from './services/antlersVariableReferences';
-import { handleDocumentHighlight } from './services/antlersDocumentHighlight';
-import DocumentTransformer from './runtime/parser/documentTransformer';
-import { IHTMLFormatConfiguration } from './formatting/htmlCompat';
-import { AntlersDocument } from './runtime/document/antlersDocument';
-import { handleCodeActions } from './services/antlersRefactoring';
-import ExtractPartialHandler from './refactoring/core/extractPartialHandler';
-import { BeautifyDocumentFormatter } from './formatting/beautifyDocumentFormatter';
-import { AntlersSettings } from './antlersSettings';
+import { formatAntlersDocument } from "./formatting/formatter.js";
+import { handleSignatureHelpRequest } from "./services/modifierMethodSignatures.js";
+import { handleDocumentHover } from "./services/antlersHover.js";
+import { handleDefinitionRequest } from "./services/antlersDefinitions.js";
+import { newSemanticTokenProvider } from "./services/semanticTokens.js";
+import { handleDocumentSymbolRequest } from "./services/documentSymbols.js";
+import { DocumentLinkManager } from "./services/antlersLinks.js";
+import ProjectManager from './projects/projectManager.js';
+import InjectionManager from './antlers/scope/injections.js';
+import { sessionDocuments, documentMap } from './languageService/documents.js';
+import { getProjectStructure } from './projects/fileSystemProvider/fileSystemStatamicProject.js';
+import TagManager from './antlers/tagManagerInstance.js';
+import { YieldContext } from './antlers/tags/core/sections/yield.js';
+import { UnclosedTagManager } from './antlers/unclosedTagManager.js';
+import DiagnosticsManager from './diagnostics/diagnosticsManager.js';
+import ReferenceManager from './references/referenceManager.js';
+import SectionManager from './references/sectionManager.js';
+import SessionVariableManager from './references/sessionVariableManager.js';
+import { AntlersError } from './runtime/errors/antlersError.js';
+import { htmlFormatterSettings, updateHtmlFormatterSettings } from './languageService/htmlFormatterSettings.js';
+import { AntlersNode } from './runtime/nodes/abstractNode.js';
+import { SessionVariableContext } from './antlers/tags/core/contexts/sessionContext.js';
+import { handleReferences } from './services/antlersVariableReferences.js';
+import { handleDocumentHighlight } from './services/antlersDocumentHighlight.js';
+import DocumentTransformer from './runtime/parser/documentTransformer.js';
+import { IHTMLFormatConfiguration } from './formatting/htmlCompat.js';
+import { AntlersDocument } from './runtime/document/antlersDocument.js';
+import { handleCodeActions } from './services/antlersRefactoring.js';
+import ExtractPartialHandler from './refactoring/core/extractPartialHandler.js';
+import { BeautifyDocumentFormatter } from './formatting/beautifyDocumentFormatter.js';
+import { AntlersSettings } from './antlersSettings.js';
 import { debounce } from 'ts-debounce';
-import { DocumentationHandler } from './documentation/generator/handler';
-import { IProjectFields } from './projects/structuredFieldTypes/types';
-import { IDocumentationResult } from './documentation/generator/types';
-import { updateCurrentDetails } from './documentation/generator/documentationProvider';
+import { DocumentationHandler } from './documentation/generator/handler.js';
+import { IProjectFields } from './projects/structuredFieldTypes/types.js';
+import { IDocumentationResult } from './documentation/generator/types.js';
+import { updateCurrentDetails } from './documentation/generator/documentationProvider.js';
 
 const defaultSettings: AntlersSettings = {
     formatFrontMatter: false,

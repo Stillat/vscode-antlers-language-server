@@ -1,5 +1,5 @@
-import { AntlersNode } from '../../runtime/nodes/abstractNode';
-import { IScopeVariable } from '../scope/types';
+import { AntlersNode } from '../../runtime/nodes/abstractNode.js';
+import { IScopeVariable } from '../scope/types.js';
 
 export function makeGlideVariables(node: AntlersNode): IScopeVariable[] {
     return [

@@ -1,7 +1,7 @@
-import { AntlersError, ErrrorLevel } from '../../runtime/errors/antlersError';
-import { AntlersErrorCodes } from '../../runtime/errors/antlersErrorCodes';
-import { AntlersNode } from '../../runtime/nodes/abstractNode';
-import { IDiagnosticsHandler } from '../diagnosticsHandler';
+import { AntlersError, ErrorLevel } from '../../runtime/errors/antlersError.js';
+import { AntlersErrorCodes } from '../../runtime/errors/antlersErrorCodes.js';
+import { AntlersNode } from '../../runtime/nodes/abstractNode.js';
+import { IDiagnosticsHandler } from '../diagnosticsHandler.js';
 
 const MixedModifierHandler: IDiagnosticsHandler = {
     checkNode(node: AntlersNode) {
@@ -13,7 +13,7 @@ const MixedModifierHandler: IDiagnosticsHandler = {
                     AntlersErrorCodes.LINT_MIXED_MODIFIERS,
                     node,
                     'Mixed modifier styles is not supported',
-                    ErrrorLevel.Error
+                    ErrorLevel.Error
                 ));
             }
         }

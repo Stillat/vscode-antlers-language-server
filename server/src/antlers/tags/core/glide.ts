@@ -1,21 +1,19 @@
-import { CompletionItemKind } from "vscode-languageserver";
 import { CompletionItem } from "vscode-languageserver-types";
-import { parameterError } from "../../../diagnostics/utils";
-import { makeTagDoc } from '../../../documentation/utils';
-import { AntlersNode, ParameterNode } from '../../../runtime/nodes/abstractNode';
-import { ISuggestionRequest } from '../../../suggestions/suggestionRequest';
-import { tagToCompletionItem } from '../../documentedLabel';
-import { Scope } from '../../scope/scope';
+import { makeTagDoc } from '../../../documentation/utils.js';
+import { AntlersNode } from '../../../runtime/nodes/abstractNode.js';
+import { ISuggestionRequest } from '../../../suggestions/suggestionRequest.js';
+import { tagToCompletionItem } from '../../documentedLabel.js';
+import { Scope } from '../../scope/scope.js';
 import {
     EmptyCompletionResult,
     exclusiveResult,
     IAntlersTag,
     ICompletionResult,
-} from "../../tagManager";
-import { makeGlideVariables } from "../../variables/glideVariables";
-import GlideBatch from './glideBatch';
-import GlideDataUrl from './glideDataUrl';
-import { GlideParameters, resolveGlideParameterCompletions } from './glideParameters';
+} from "../../tagManager.js";
+import { makeGlideVariables } from "../../variables/glideVariables.js";
+import GlideBatch from './glideBatch.js';
+import GlideDataUrl from './glideDataUrl.js';
+import { GlideParameters, resolveGlideParameterCompletions } from './glideParameters.js';
 
 const GlideCompletionItems: CompletionItem[] = [
     tagToCompletionItem(GlideBatch),

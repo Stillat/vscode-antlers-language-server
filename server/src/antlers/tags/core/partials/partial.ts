@@ -1,19 +1,19 @@
 import { CompletionItem, CompletionItemKind, InsertTextFormat, MarkupKind, TextEdit, } from "vscode-languageserver";
 import { Range } from "vscode-languageserver-textdocument";
-import { DocumentDetailsManager } from "../../../../idehelper/documentDetailsManager";
-import { IEnvironmentHelper } from "../../../../idehelper/parser";
-import { sessionDocuments } from '../../../../languageService/documents';
-import { IView } from "../../../../projects/views/view";
-import { AntlersNode } from '../../../../runtime/nodes/abstractNode';
-import { ISuggestionRequest } from '../../../../suggestions/suggestionRequest';
-import { tagToCompletionItem } from '../../../documentedLabel';
-import { IAntlersParameter, IAntlersTag, nonExclusiveResult, } from "../../../tagManager";
-import { returnDynamicParameter } from "../../dynamicParameterResolver";
-import PartialExists from './partialExists';
-import PartialIfExists from './partialIfExists';
-import { PartialParameters } from './partialParameters';
-import { getViewName } from './partialUtilities';
-import { resolvePartialParameterCompletions } from './resolvePartialParameterCompletions';
+import { DocumentDetailsManager } from "../../../../idehelper/documentDetailsManager.js";
+import { IEnvironmentHelper } from "../../../../idehelper/parser.js";
+import { sessionDocuments } from '../../../../languageService/documents.js';
+import { IView } from "../../../../projects/views/view.js";
+import { AntlersNode } from '../../../../runtime/nodes/abstractNode.js';
+import { ISuggestionRequest } from '../../../../suggestions/suggestionRequest.js';
+import { tagToCompletionItem } from '../../../documentedLabel.js';
+import { IAntlersParameter, IAntlersTag, nonExclusiveResult, } from "../../../tagManager.js";
+import { returnDynamicParameter } from "../../dynamicParameterResolver.js";
+import PartialExists from './partialExists.js';
+import PartialIfExists from './partialIfExists.js';
+import { PartialParameters } from './partialParameters.js';
+import { getViewName } from './partialUtilities.js';
+import { resolvePartialParameterCompletions } from './resolvePartialParameterCompletions.js';
 
 const PartialCompletionItems: CompletionItem[] = [
     tagToCompletionItem(PartialExists),

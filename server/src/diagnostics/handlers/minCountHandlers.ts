@@ -1,8 +1,8 @@
-import { QueryBuilderInspection } from '../../antlers/variables/queryBuilderInspection';
-import { AntlersError, ErrrorLevel } from '../../runtime/errors/antlersError';
-import { AntlersErrorCodes } from '../../runtime/errors/antlersErrorCodes';
-import { AntlersNode, PathNode, VariableNode } from '../../runtime/nodes/abstractNode';
-import { IDiagnosticsHandler } from '../diagnosticsHandler';
+import { QueryBuilderInspection } from '../../antlers/variables/queryBuilderInspection.js';
+import { AntlersError, ErrorLevel } from '../../runtime/errors/antlersError.js';
+import { AntlersErrorCodes } from '../../runtime/errors/antlersErrorCodes.js';
+import { AntlersNode, PathNode, VariableNode } from '../../runtime/nodes/abstractNode.js';
+import { IDiagnosticsHandler } from '../diagnosticsHandler.js';
 
 const MinCountHandler: IDiagnosticsHandler = {
     checkNode(node: AntlersNode) {
@@ -32,7 +32,7 @@ const MinCountHandler: IDiagnosticsHandler = {
                             AntlersErrorCodes.LINT_INVALID_VARIABLE_ACCESS,
                             node,
                             'Incorrect variable access for field not configured with max_items: 1',
-                            ErrrorLevel.Warning
+                            ErrorLevel.Warning
                         ));
                     }
                 }

@@ -1,7 +1,7 @@
 import * as path from "path";
 import * as fs from "fs";
 import * as YAML from "yaml";
-import { IUserRole, IUserGroup } from '../users/users';
+import { IUserRole, IUserGroup } from '../users/users.js';
 
 export function getUserRoles(path: string): IUserRole[] {
     const roles: IUserRole[] = [],

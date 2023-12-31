@@ -1,5 +1,5 @@
-import { HtmlFragments } from '../runtime/parser/htmlFragments';
-import { assertFalse, assertTrue } from './testUtils/assertions';
+import { HtmlFragments } from '../runtime/parser/htmlFragments.js';
+import { assertFalse, assertTrue } from './testUtils/assertions.js';
 
 suite("HTML Fragments Suite", () => {
     test('it detects HTML end fragments', () => {

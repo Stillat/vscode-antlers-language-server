@@ -1,11 +1,11 @@
-import { KeysResolver } from '../../../projects/structuredFieldTypes/keysResolver';
-import { IArrayFieldType, IProjectFields } from '../../../projects/structuredFieldTypes/types';
-import { AugmentationTypes } from '../augmentationTypes';
-import { EvenOddProvider } from '../providers/evenOddProvider';
-import { ForeachProvider } from '../providers/foreachProvider';
-import { NestedFieldsProvider } from '../providers/nestedFieldsProvider';
-import { OfficialDocumentationLinkProvider } from '../providers/officialDocumentationLinkProvider';
-import { IDocumentationProperty, IDocumentationProvider, IDocumentationResult, IDocumentationSnippet } from '../types';
+import { KeysResolver } from '../../../projects/structuredFieldTypes/keysResolver.js';
+import { IArrayFieldType, IProjectFields } from '../../../projects/structuredFieldTypes/types.js';
+import { AugmentationTypes } from '../augmentationTypes.js';
+import { EvenOddProvider } from '../providers/evenOddProvider.js';
+import { ForeachProvider } from '../providers/foreachProvider.js';
+import { NestedFieldsProvider } from '../providers/nestedFieldsProvider.js';
+import { OfficialDocumentationLinkProvider } from '../providers/officialDocumentationLinkProvider.js';
+import { IDocumentationProperty, IDocumentationProvider, IDocumentationResult, IDocumentationSnippet } from '../types.js';
 
 export class ArrayDocumentationProvider implements IDocumentationProvider {
     resolve(array: IArrayFieldType, currentProject: IProjectFields): IDocumentationResult {

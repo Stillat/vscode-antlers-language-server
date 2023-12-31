@@ -1,5 +1,5 @@
-import { AntlersDocument } from '../document/antlersDocument';
-import { AbstractNode, AntlersNode, ConditionNode, ExecutionBranch, FragmentPosition, LiteralNode, PathNode, VariableReference } from '../nodes/abstractNode';
+import { AntlersDocument } from '../document/antlersDocument.js';
+import { AbstractNode, AntlersNode, ConditionNode, ExecutionBranch, FragmentPosition, LiteralNode, PathNode, VariableReference } from '../nodes/abstractNode.js';
 import * as yaml from 'js-yaml';
 
 export interface ClassSearchResults {

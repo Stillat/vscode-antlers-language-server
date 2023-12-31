@@ -1,6 +1,6 @@
-import { AntlersSettings } from '../antlersSettings';
-import { AntlersError } from '../runtime/errors/antlersError';
-import { AntlersNode } from '../runtime/nodes/abstractNode';
+import { AntlersSettings } from '../antlersSettings.js';
+import { AntlersError } from '../runtime/errors/antlersError.js';
+import { AntlersNode } from '../runtime/nodes/abstractNode.js';
 
 export interface IDiagnosticsHandler {
     /**

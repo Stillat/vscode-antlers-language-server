@@ -1,13 +1,13 @@
-import { CompletionItem } from 'vscode-languageserver';
-import { makeTagDoc } from '../../../documentation/utils';
-import { AntlersNode } from '../../../runtime/nodes/abstractNode';
-import { ISuggestionRequest } from '../../../suggestions/suggestionRequest';
-import { tagToCompletionItem } from '../../documentedLabel';
-import { Scope } from '../../scope/scope';
-import { EmptyCompletionResult, exclusiveResult, IAntlersTag } from "../../tagManager";
-import { makeLocaleVariables } from "../../variables/localeVariables";
-import LocalesCount from './localeCount';
-import { LocaleParameters } from './localeParameters';
+import { CompletionItem } from 'vscode-languageserver';;
+import { makeTagDoc } from '../../../documentation/utils.js';
+import { AntlersNode } from '../../../runtime/nodes/abstractNode.js';
+import { ISuggestionRequest } from '../../../suggestions/suggestionRequest.js';
+import { tagToCompletionItem } from '../../documentedLabel.js';
+import { Scope } from '../../scope/scope.js';
+import { EmptyCompletionResult, exclusiveResult, IAntlersTag } from "../../tagManager.js";
+import { makeLocaleVariables } from "../../variables/localeVariables.js";
+import LocalesCount from './localeCount.js';
+import { LocaleParameters } from './localeParameters.js';
 
 const LocalesCompletionItems: CompletionItem[] = [
     tagToCompletionItem(LocalesCount)

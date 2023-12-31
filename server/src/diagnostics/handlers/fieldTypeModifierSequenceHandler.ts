@@ -1,7 +1,7 @@
-import { AntlersError, ErrrorLevel } from '../../runtime/errors/antlersError';
-import { AntlersErrorCodes } from '../../runtime/errors/antlersErrorCodes';
-import { AntlersNode } from '../../runtime/nodes/abstractNode';
-import { IDiagnosticsHandler } from '../diagnosticsHandler';
+import { AntlersError, ErrorLevel } from '../../runtime/errors/antlersError.js';
+import { AntlersErrorCodes } from '../../runtime/errors/antlersErrorCodes.js';
+import { AntlersNode } from '../../runtime/nodes/abstractNode.js';
+import { IDiagnosticsHandler } from '../diagnosticsHandler.js';
 
 const FieldTypeModifierSequenceHandler: IDiagnosticsHandler = {
     checkNode(node: AntlersNode) {
@@ -32,7 +32,7 @@ const FieldTypeModifierSequenceHandler: IDiagnosticsHandler = {
                     AntlersErrorCodes.LINT_SELECT_FIELD_JOIN_RAW,
                     node,
                     'To join a select field, add the raw modifier: ' + printNodeModifierContent(node, 'join'),
-                    ErrrorLevel.Warning
+                    ErrorLevel.Warning
                 ));
             }
         }

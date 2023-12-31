@@ -1,5 +1,5 @@
-import assert = require("assert");
-import { AntlersNode, LiteralNode, ConditionNode, ExecutionBranch, SemanticGroup, LogicGroup, VariableNode, LogicalOrOperator, EqualCompOperator, StringValueNode } from '../runtime/nodes/abstractNode';
+import assert from 'assert';
+import { AntlersNode, LiteralNode, ConditionNode, ExecutionBranch, SemanticGroup, LogicGroup, VariableNode, LogicalOrOperator, EqualCompOperator, StringValueNode } from '../runtime/nodes/abstractNode.js';
 import {
     assertConditionalChainContainsSteps,
     assertCount,
@@ -8,8 +8,8 @@ import {
     assertNotNull,
     toAntlers,
     toLiteral,
-} from "./testUtils/assertions";
-import { parseNodes, parseRenderNodes } from "./testUtils/parserUtils";
+} from "./testUtils/assertions.js";
+import { parseNodes, parseRenderNodes } from "./testUtils/parserUtils.js";
 
 suite("Conditional Nodes Test", () => {
     test("it doesnt skip surrounding nodes", () => {

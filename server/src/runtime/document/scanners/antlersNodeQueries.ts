@@ -1,6 +1,6 @@
-import TagManager from '../../../antlers/tagManagerInstance';
-import { AbstractNode, ConditionNode, ParserFailNode, AntlersNode } from '../../nodes/abstractNode';
-import { Position } from '../../nodes/position';
+import TagManager from '../../../antlers/tagManagerInstance.js';
+import { AbstractNode, ConditionNode, ParserFailNode, AntlersNode } from '../../nodes/abstractNode.js';
+import { Position } from '../../nodes/position.js';
 
 export class AntlersNodeQueries {
 

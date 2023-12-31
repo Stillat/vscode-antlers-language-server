@@ -1,4 +1,4 @@
-import { IStructure } from '../structures/structure';
+import { IStructure } from '../structures/structure.js';
 
 export interface ICollection {
     handle: string;

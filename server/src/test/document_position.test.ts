@@ -1,7 +1,7 @@
-import assert = require("assert");
-import { AntlersDocument } from "../runtime/document/antlersDocument";
-import { Position } from "../runtime/nodes/position";
-import { assertNotNull, assertNull } from "./testUtils/assertions";
+import assert from 'assert';
+import { AntlersDocument } from "../runtime/document/antlersDocument.js";
+import { Position } from "../runtime/nodes/position.js";
+import { assertNotNull, assertNull } from "./testUtils/assertions.js";
 
 suite("Document Positions Test", () => {
     const template = `<p>Outer Start</p>

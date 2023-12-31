@@ -1,6 +1,6 @@
-import assert = require("assert");
-import { AntlersDocument } from "../runtime/document/antlersDocument";
-import { assertNotNull } from "./testUtils/assertions";
+import assert from 'assert';
+import { AntlersDocument } from "../runtime/document/antlersDocument.js";
+import { assertNotNull } from "./testUtils/assertions.js";
 
 suite("Name Locator", () => {
     test("it resolves names at positions", () => {

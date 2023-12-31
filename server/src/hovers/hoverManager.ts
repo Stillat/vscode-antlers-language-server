@@ -1,13 +1,13 @@
 import { Hover, MarkupKind } from "vscode-languageserver-types";
-import ModifierManager from '../antlers/modifierManager';
-import { IModifier } from '../antlers/modifierTypes';
-import { IScopeVariable } from '../antlers/scope/types';
-import { IAntlersParameter } from "../antlers/tagManager";
-import TagManager from '../antlers/tagManagerInstance';
-import { IBlueprintField } from '../projects/blueprints/fields';
-import { AntlersNode } from '../runtime/nodes/abstractNode';
-import { ISuggestionRequest } from '../suggestions/suggestionRequest';
-import { antlersPositionToVsCode } from '../utils/conversions';
+import ModifierManager from '../antlers/modifierManager.js';
+import { IModifier } from '../antlers/modifierTypes.js';
+import { IScopeVariable } from '../antlers/scope/types.js';
+import { IAntlersParameter } from "../antlers/tagManager.js";
+import TagManager from '../antlers/tagManagerInstance.js';
+import { IBlueprintField } from '../projects/blueprints/fields.js';
+import { AntlersNode } from '../runtime/nodes/abstractNode.js';
+import { ISuggestionRequest } from '../suggestions/suggestionRequest.js';
+import { antlersPositionToVsCode } from '../utils/conversions.js';
 
 export class HoverManager {
     static getTypedHeader(name: string, acceptsTypes: string[]): string {

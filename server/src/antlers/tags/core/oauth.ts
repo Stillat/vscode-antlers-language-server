@@ -1,6 +1,6 @@
-import { makeTagDocWithCodeSample } from '../../../documentation/utils';
-import { ISuggestionRequest } from '../../../suggestions/suggestionRequest';
-import { exclusiveResultList, IAntlersParameter, IAntlersTag } from '../../tagManager';
+import { makeTagDocWithCodeSample } from '../../../documentation/utils.js';
+import { ISuggestionRequest } from '../../../suggestions/suggestionRequest.js';
+import { exclusiveResultList, IAntlersParameter, IAntlersTag } from '../../tagManager.js';
 
 const OAuth: IAntlersTag = {
     tagName: 'oauth',

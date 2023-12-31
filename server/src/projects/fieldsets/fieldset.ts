@@ -1,4 +1,4 @@
-import { ISet } from "../blueprints/fields";
+import { ISet } from "../blueprints/fields.js";
 
 
 export interface IFieldsetField {

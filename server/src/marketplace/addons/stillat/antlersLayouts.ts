@@ -1,4 +1,4 @@
-import { IMarketplaceAddon } from '../../marketplaceTypes';
+import { IMarketplaceAddon } from '../../marketplaceTypes.js';
 
 const AntlersLayouts: IMarketplaceAddon = {
     packageName: 'stillat/antlers-layouts',

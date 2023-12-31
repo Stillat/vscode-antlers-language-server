@@ -1,8 +1,8 @@
 import * as YAML from "yaml";
 import * as fs from "fs";
-import { getFields } from "./blueprints";
-import { IFieldsetField } from '../fieldsets/fieldset';
-import { ISet } from '../blueprints/fields';
+import { getFields } from "./blueprints.js";
+import { IFieldsetField } from '../fieldsets/fieldset.js';
+import { ISet } from '../blueprints/fields.js';
 
 export function getFieldsetFields(fileName: string, fieldsetName: string): IFieldsetField[] {
     const returnFields: IFieldsetField[] = [];

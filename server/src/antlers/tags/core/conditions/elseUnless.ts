@@ -1,7 +1,7 @@
-import { makeTagDoc } from '../../../../documentation/utils';
-import { ISuggestionRequest } from '../../../../suggestions/suggestionRequest';
-import { IAntlersTag } from '../../../tagManager';
-import { returnDynamicParameter } from '../../dynamicParameterResolver';
+import { makeTagDoc } from '../../../../documentation/utils.js';
+import { ISuggestionRequest } from '../../../../suggestions/suggestionRequest.js';
+import { IAntlersTag } from '../../../tagManager.js';
+import { returnDynamicParameter } from '../../dynamicParameterResolver.js';
 
 const ElseUnless: IAntlersTag = {
     tagName: 'elseunless',

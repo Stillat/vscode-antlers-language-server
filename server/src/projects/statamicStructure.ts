@@ -1,14 +1,14 @@
-import { IAntlersTag } from '../antlers/tagManager';
-import { IComposerPackage } from '../composer/composerPackage';
-import { IAssets } from './assets/asset';
-import { IBlueprint, IBlueprintField } from './blueprints/fields';
-import { ICollection } from './collections/collection';
-import { ICollectionScope } from './collections/collectionScope';
-import { IFieldsetField } from './fieldsets/fieldset';
-import { INavigation } from './navigations/navigation';
-import { ITemplate } from './templates';
-import { IUserRole, IUserGroup } from './users/users';
-import { IView } from './views/view';
+import { IAntlersTag } from '../antlers/tagManager.js';
+import { IComposerPackage } from '../composer/composerPackage.js';
+import { IAssets } from './assets/asset.js';
+import { IBlueprint, IBlueprintField } from './blueprints/fields.js';
+import { ICollection } from './collections/collection.js';
+import { ICollectionScope } from './collections/collectionScope.js';
+import { IFieldsetField } from './fieldsets/fieldset.js';
+import { INavigation } from './navigations/navigation.js';
+import { ITemplate } from './templates.js';
+import { IUserRole, IUserGroup } from './users/users.js';
+import { IView } from './views/view.js';
 
 interface IStatamicStructure {
     isMocked: boolean;

@@ -1,7 +1,7 @@
 import { DocumentLink } from "vscode-languageserver-types";
-import ProjectManager from '../projects/projectManager';
-import ReferenceManager from "../references/referenceManager";
-import { antlersPositionToVsCode } from '../utils/conversions';
+import ProjectManager from '../projects/projectManager.js';
+import ReferenceManager from "../references/referenceManager.js";
+import { antlersPositionToVsCode } from '../utils/conversions.js';
 
 export class DocumentLinkManager {
     static getDocumentLinks(docPath: string): DocumentLink[] {

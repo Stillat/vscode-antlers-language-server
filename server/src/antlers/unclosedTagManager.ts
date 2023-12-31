@@ -1,5 +1,5 @@
 import { Position } from "vscode-languageserver-textdocument";
-import { AntlersNode } from '../runtime/nodes/abstractNode';
+import { AntlersNode } from '../runtime/nodes/abstractNode.js';
 
 export class UnclosedTagManager {
     static unclosedNodes: Map<string, AntlersNode[]> = new Map();

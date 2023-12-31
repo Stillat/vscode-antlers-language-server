@@ -1,6 +1,6 @@
-import { IBlueprintField } from '../../projects/blueprints/fields';
-import { AntlersNode } from '../../runtime/nodes/abstractNode';
-import { IScopeVariable } from './types';
+import { IBlueprintField } from '../../projects/blueprints/fields.js';
+import { AntlersNode } from '../../runtime/nodes/abstractNode.js';
+import { IScopeVariable } from './types.js';
 
 
 export function blueprintFieldToScopeVariable(symbol: AntlersNode, field: IBlueprintField): IScopeVariable {

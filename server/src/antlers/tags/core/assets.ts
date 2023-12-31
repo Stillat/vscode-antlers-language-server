@@ -1,10 +1,10 @@
-import { makeTagDocWithCodeSample } from '../../../documentation/utils';
-import { AntlersNode } from '../../../runtime/nodes/abstractNode';
-import { getAllAssetCompletions } from "../../../suggestions/project/assetCompletions";
-import { ISuggestionRequest } from '../../../suggestions/suggestionRequest';
-import { Scope } from '../../scope/scope';
-import { EmptyCompletionResult, exclusiveResult, IAntlersParameter, IAntlersTag } from "../../tagManager";
-import { makeAssetVariables } from "../../variables/assetVariables";
+import { makeTagDocWithCodeSample } from '../../../documentation/utils.js';
+import { AntlersNode } from '../../../runtime/nodes/abstractNode.js';
+import { getAllAssetCompletions } from "../../../suggestions/project/assetCompletions.js";
+import { ISuggestionRequest } from '../../../suggestions/suggestionRequest.js';
+import { Scope } from '../../scope/scope.js';
+import { EmptyCompletionResult, exclusiveResult, IAntlersParameter, IAntlersTag } from "../../tagManager.js";
+import { makeAssetVariables } from "../../variables/assetVariables.js";
 
 const AssetContainerParameters: string[] = ["container", "id", "handle"];
 

@@ -1,5 +1,5 @@
-import { AbstractNode, AntlersNode, EscapedContentNode, LiteralNode } from '../nodes/abstractNode';
-import { StringUtilities } from '../utilities/stringUtilities';
+import { AbstractNode, AntlersNode, EscapedContentNode, LiteralNode } from '../nodes/abstractNode.js';
+import { StringUtilities } from '../utilities/stringUtilities.js';
 
 export class InlineNodeAnalyzer {
     static analyze(nodes: AbstractNode[]) {

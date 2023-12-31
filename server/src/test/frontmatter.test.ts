@@ -1,10 +1,10 @@
-import assert = require("assert");
-import { AntlersDocument } from "../runtime/document/antlersDocument";
+import assert from 'assert';
+import { AntlersDocument } from "../runtime/document/antlersDocument.js";
 import {
     assertCount,
     assertNodePosition,
     assertTrue,
-} from "./testUtils/assertions";
+} from "./testUtils/assertions.js";
 
 suite("Front Matter Parsing", () => {
     const template = `---

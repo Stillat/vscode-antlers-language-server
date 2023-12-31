@@ -1,13 +1,13 @@
-import assert = require("assert");
-import { PathNode, VariableReference } from '../runtime/nodes/abstractNode';
+import assert from 'assert';
+import { PathNode, VariableReference } from '../runtime/nodes/abstractNode.js';
 import {
     assertCount,
     assertFalse,
     assertInstanceOf,
     assertTrue,
     toPath,
-} from "./testUtils/assertions";
-import { parsePath } from "./testUtils/parserUtils";
+} from "./testUtils/assertions.js";
+import { parsePath } from "./testUtils/parserUtils.js";
 
 suite("Path Parser Test", () => {
     test("simple paths are parsed", () => {

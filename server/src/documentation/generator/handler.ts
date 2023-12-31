@@ -1,6 +1,6 @@
-import { GenerateHelpParams } from '../../server';
-import { DocumentationProvider } from './documentationProvider';
-import { IDocumentationResult } from './types';
+import { GenerateHelpParams } from '../../server.js';
+import { DocumentationProvider } from './documentationProvider.js';
+import { IDocumentationResult } from './types.js';
 
 export class DocumentationHandler {
     static handle(params: GenerateHelpParams): IDocumentationResult {

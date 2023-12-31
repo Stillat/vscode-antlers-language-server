@@ -1,7 +1,7 @@
-import assert = require('assert');
-import { AntlersDocument } from '../runtime/document/antlersDocument';
-import { WordScanner } from '../runtime/document/scanners/wordScanner';
-import { assertNotNull } from './testUtils/assertions';
+import assert from 'assert';
+import { AntlersDocument } from '../runtime/document/antlersDocument.js';
+import { WordScanner } from '../runtime/document/scanners/wordScanner.js';
+import { assertNotNull } from './testUtils/assertions.js';
 
 suite('Word Scanner', () => {
     test('left neighbor indexes resolve', () => {

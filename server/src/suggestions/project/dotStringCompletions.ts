@@ -1,4 +1,4 @@
-import { CompletionItemKind } from 'vscode-languageserver';
+import { CompletionItemKind } from 'vscode-languageserver';;
 import { CompletionItem } from 'vscode-languageserver-types';
 
 export function createSuggestionsFromDotStrings(currentValue: string, values: string[]): CompletionItem[] {

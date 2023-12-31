@@ -1,4 +1,4 @@
-import { IMarketplaceAddon } from '../../marketplaceTypes';
+import { IMarketplaceAddon } from '../../marketplaceTypes.js';
 
 const CookieByte:IMarketplaceAddon = {
     packageName: 'ddm-studio/cookie-byte',

@@ -1,11 +1,11 @@
-import { Range, InsertTextFormat, CompletionItemKind, TextEdit } from 'vscode-languageserver';
+import { Range, InsertTextFormat, CompletionItemKind, TextEdit } from 'vscode-languageserver';;
 import { CompletionItem } from "vscode-languageserver-types";
-import { ISuggestionRequest } from '../suggestionRequest';
-import CollectionSnippet from "./antlers/collection";
-import CopyrightYearSnippet from "./antlers/copyrightYear";
-import FormsetSnippet from "./antlers/formset";
-import { GenericLocalesSnippet } from "./antlers/multisite/languagePicker";
-import NavDepthTwoSnippet from "./antlers/navDepthTwo";
+import { ISuggestionRequest } from '../suggestionRequest.js';
+import CollectionSnippet from "./antlers/collection.js";
+import CopyrightYearSnippet from "./antlers/copyrightYear.js";
+import FormsetSnippet from "./antlers/formset.js";
+import { GenericLocalesSnippet } from "./antlers/multisite/languagePicker.js";
+import NavDepthTwoSnippet from "./antlers/navDepthTwo.js";
 
 function makeSnippet(name: string, description: string, content: string, range: Range): CompletionItem {
     return {

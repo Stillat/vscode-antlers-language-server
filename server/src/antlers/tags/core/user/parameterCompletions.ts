@@ -1,7 +1,7 @@
-import { getPermissionSuggestions } from '../../../../suggestions/permissionSuggestions';
-import { getAbsoluteRoot } from '../../../../suggestions/suggestionManager';
-import { ISuggestionRequest } from '../../../../suggestions/suggestionRequest';
-import { exclusiveResult, IAntlersParameter, ICompletionResult } from '../../../tagManager';
+import { getPermissionSuggestions } from '../../../../suggestions/permissionSuggestions.js';
+import { getAbsoluteRoot } from '../../../../suggestions/suggestionManager.js';
+import { ISuggestionRequest } from '../../../../suggestions/suggestionRequest.js';
+import { exclusiveResult, IAntlersParameter, ICompletionResult } from '../../../tagManager.js';
 
 export function resolveUserParameterCompletionItems(parameter: IAntlersParameter, params: ISuggestionRequest): ICompletionResult | null {
     const checkName = getAbsoluteRoot(parameter.name);

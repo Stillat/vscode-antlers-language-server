@@ -1,6 +1,6 @@
-import { AntlersNode, AbstractNode } from '../../nodes/abstractNode';
-import { Position } from '../../nodes/position';
-import { LanguageParser } from '../../parser/languageParser';
+import { AntlersNode, AbstractNode } from '../../nodes/abstractNode.js';
+import { Position } from '../../nodes/position.js';
+import { LanguageParser } from '../../parser/languageParser.js';
 
 export class GeneralContext {
     public isRightOfOperator = false;

@@ -1,4 +1,4 @@
-import { IMarketplaceAddon } from '../../marketplaceTypes';
+import { IMarketplaceAddon } from '../../marketplaceTypes.js';
 
 const StatamicFastSeo: IMarketplaceAddon = {
     packageName: 'parfaitementweb/statamic-fast-seo',

@@ -1,11 +1,11 @@
-import { makeTagDoc } from '../../../../documentation/utils';
-import { ISuggestionRequest } from '../../../../suggestions/suggestionRequest';
-import { IAntlersTag } from '../../../tagManager';
-import { returnDynamicParameter } from '../../dynamicParameterResolver';
-import { augmentTaxonomyScope } from './augmentTaxonomiesScope';
-import TaxonomyParameters from './parameters';
-import { resolveTaxonomyCompletions } from './resolveCompletionItems';
-import { resolveTaxonomyParameterCompletions } from './resolveTaxonomyParameterCompletions';
+import { makeTagDoc } from '../../../../documentation/utils.js';
+import { ISuggestionRequest } from '../../../../suggestions/suggestionRequest.js';
+import { IAntlersTag } from '../../../tagManager.js';
+import { returnDynamicParameter } from '../../dynamicParameterResolver.js';
+import { augmentTaxonomyScope } from './augmentTaxonomiesScope.js';
+import TaxonomyParameters from './parameters.js';
+import { resolveTaxonomyCompletions } from './resolveCompletionItems.js';
+import { resolveTaxonomyParameterCompletions } from './resolveTaxonomyParameterCompletions.js';
 
 const TaxonomyTag: IAntlersTag = {
     tagName: 'taxonomy',

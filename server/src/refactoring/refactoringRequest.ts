@@ -1,6 +1,6 @@
-import { CodeActionParams } from 'vscode-languageserver';
-import { AntlersDocument } from '../runtime/document/antlersDocument';
-import { ISuggestionRequest } from '../suggestions/suggestionRequest';
+import { CodeActionParams } from 'vscode-languageserver';;
+import { AntlersDocument } from '../runtime/document/antlersDocument.js';
+import { ISuggestionRequest } from '../suggestions/suggestionRequest.js';
 
 interface IRefactoringRequest {
     params: ISuggestionRequest,

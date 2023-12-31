@@ -1,6 +1,6 @@
-import ModifierManager from "../../antlers/modifierManager";
-import { IModifier } from '../../antlers/modifierTypes';
-import { AntlersNode } from '../nodes/abstractNode';
+import ModifierManager from "../../antlers/modifierManager.js";
+import { IModifier } from '../../antlers/modifierTypes.js';
+import { AntlersNode } from '../nodes/abstractNode.js';
 
 export class ModifierAnalyzer {
     static analyzeModifierNodeParameters(node: AntlersNode) {

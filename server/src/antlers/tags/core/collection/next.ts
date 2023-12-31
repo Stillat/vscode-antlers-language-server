@@ -1,13 +1,13 @@
-import { makeTagDocWithCodeSample } from '../../../../documentation/utils';
-import { ISuggestionRequest } from '../../../../suggestions/suggestionRequest';
-import { IAntlersTag } from '../../../tagManager';
-import { suggestAlternativeCollectionParams } from './alternateParamSuggestions';
-import { augmentCollectionScope } from './augmentCollectionScope';
-import { collectionParameters } from './parameters';
-import { resolveCollectionCompletions } from './resolveCollectionCompletions';
-import { resolveCollectionScope } from './resolvesCollectionScope';
-import { resolveConditionalParmaters } from './resolvesConditionalParameters';
-import { resolveCollectionParameterCompletiontems } from './resolvesParameterSuggestions';
+import { makeTagDocWithCodeSample } from '../../../../documentation/utils.js';
+import { ISuggestionRequest } from '../../../../suggestions/suggestionRequest.js';
+import { IAntlersTag } from '../../../tagManager.js';
+import { suggestAlternativeCollectionParams } from './alternateParamSuggestions.js';
+import { augmentCollectionScope } from './augmentCollectionScope.js';
+import { collectionParameters } from './parameters.js';
+import { resolveCollectionCompletions } from './resolveCollectionCompletions.js';
+import { resolveCollectionScope } from './resolvesCollectionScope.js';
+import { resolveConditionalParmaters } from './resolvesConditionalParameters.js';
+import { resolveCollectionParameterCompletiontems } from './resolvesParameterSuggestions.js';
 
 const CollectionNext: IAntlersTag = {
     tagName: 'collection:next',

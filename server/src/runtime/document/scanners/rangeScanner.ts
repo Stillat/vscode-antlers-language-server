@@ -1,5 +1,5 @@
-import { AntlersNode, AntlersParserFailNode } from '../../nodes/abstractNode';
-import { AntlersDocument } from '../antlersDocument';
+import { AntlersNode, AntlersParserFailNode } from '../../nodes/abstractNode.js';
+import { AntlersDocument } from '../antlersDocument.js';
 
 export class RangeScanner {
     private doc: AntlersDocument;

@@ -1,8 +1,8 @@
 import * as path from "path";
 import * as fs from "fs";
 import * as YAML from "yaml";
-import { ICollection } from '../collections/collection';
-import { IStructure } from '../structures/structure';
+import { ICollection } from '../collections/collection.js';
+import { IStructure } from '../structures/structure.js';
 
 export function getCollectionDetails(collectionPath: string): ICollection {
     const handle = path

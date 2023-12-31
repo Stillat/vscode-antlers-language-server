@@ -1,10 +1,10 @@
-import { replaceAllInString } from '../../../utils/strings';
-import { AbstractNode, AdditionOperator, AntlersNode, ArgSeparator, DivisionOperator, InlineBranchSeparator, InlineTernarySeparator, LeftAssignmentOperator, LogicalNegationOperator, LogicGroupBegin, LogicGroupEnd, MethodInvocationNode, ModifierNameNode, ModifierSeparator, ModifierValueNode, ModifierValueSeparator, ModulusOperator, MultiplicationOperator, NumberNode, ScopeAssignmentOperator, StatementSeparatorNode, StringValueNode, SubtractionOperator, TupleListStart, VariableNode } from '../../nodes/abstractNode';
-import { LanguageParser } from '../../parser/languageParser';
-import { NodeHelpers } from '../../utilities/nodeHelpers';
-import { AntlersDocument } from '../antlersDocument';
-import { TransformOptions } from '../transformOptions';
-import { NodeBuffer } from './nodeBuffer';
+import { replaceAllInString } from '../../../utils/strings.js';
+import { AbstractNode, AdditionOperator, AntlersNode, ArgSeparator, DivisionOperator, InlineBranchSeparator, InlineTernarySeparator, LeftAssignmentOperator, LogicalNegationOperator, LogicGroupBegin, LogicGroupEnd, MethodInvocationNode, ModifierNameNode, ModifierSeparator, ModifierValueNode, ModifierValueSeparator, ModulusOperator, MultiplicationOperator, NumberNode, ScopeAssignmentOperator, StatementSeparatorNode, StringValueNode, SubtractionOperator, TupleListStart, VariableNode } from '../../nodes/abstractNode.js';
+import { LanguageParser } from '../../parser/languageParser.js';
+import { NodeHelpers } from '../../utilities/nodeHelpers.js';
+import { AntlersDocument } from '../antlersDocument.js';
+import { TransformOptions } from '../transformOptions.js';
+import { NodeBuffer } from './nodeBuffer.js';
 
 export class NodePrinter {
     

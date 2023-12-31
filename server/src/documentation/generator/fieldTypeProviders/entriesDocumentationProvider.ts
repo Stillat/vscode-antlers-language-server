@@ -1,10 +1,10 @@
-import { KeysResolver } from '../../../projects/structuredFieldTypes/keysResolver';
-import { IEntriesFieldType, IFieldDetails, IProjectFields } from '../../../projects/structuredFieldTypes/types';
-import { AugmentationTypes } from '../augmentationTypes';
-import { NestedFieldsProvider } from '../providers/nestedFieldsProvider';
-import { OfficialDocumentationLinkProvider } from '../providers/officialDocumentationLinkProvider';
-import { IDocumentationProperty, IDocumentationProvider, IDocumentationResult, IDocumentationSnippet, IInjectedField } from '../types';
-import { GeneralQueryBuilderDocumentationProvider } from './generalQueryBuilderDocumentationProvider';
+import { KeysResolver } from '../../../projects/structuredFieldTypes/keysResolver.js';
+import { IEntriesFieldType, IFieldDetails, IProjectFields } from '../../../projects/structuredFieldTypes/types.js';
+import { AugmentationTypes } from '../augmentationTypes.js';
+import { NestedFieldsProvider } from '../providers/nestedFieldsProvider.js';
+import { OfficialDocumentationLinkProvider } from '../providers/officialDocumentationLinkProvider.js';
+import { IDocumentationProperty, IDocumentationProvider, IDocumentationResult, IDocumentationSnippet, IInjectedField } from '../types.js';
+import { GeneralQueryBuilderDocumentationProvider } from './generalQueryBuilderDocumentationProvider.js';
 
 export class EntriesDocumentationProvider implements IDocumentationProvider {
     resolve(context: IEntriesFieldType, currentProject: IProjectFields): IDocumentationResult {

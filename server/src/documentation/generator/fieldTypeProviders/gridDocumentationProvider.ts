@@ -1,9 +1,9 @@
-import { KeysResolver } from '../../../projects/structuredFieldTypes/keysResolver';
-import { IGridFieldType, IProjectFields } from '../../../projects/structuredFieldTypes/types';
-import { AugmentationTypes } from '../augmentationTypes';
-import { NestedFieldsProvider } from '../providers/nestedFieldsProvider';
-import { OfficialDocumentationLinkProvider } from '../providers/officialDocumentationLinkProvider';
-import { IDocumentationProperty, IDocumentationProvider, IDocumentationResult, IDocumentationSnippet } from '../types';
+import { KeysResolver } from '../../../projects/structuredFieldTypes/keysResolver.js';
+import { IGridFieldType, IProjectFields } from '../../../projects/structuredFieldTypes/types.js';
+import { AugmentationTypes } from '../augmentationTypes.js';
+import { NestedFieldsProvider } from '../providers/nestedFieldsProvider.js';
+import { OfficialDocumentationLinkProvider } from '../providers/officialDocumentationLinkProvider.js';
+import { IDocumentationProperty, IDocumentationProvider, IDocumentationResult, IDocumentationSnippet } from '../types.js';
 
 export class GridDocumentationProvider implements IDocumentationProvider {
     resolve(grid: IGridFieldType, currentProject: IProjectFields): IDocumentationResult {

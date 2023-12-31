@@ -1,10 +1,10 @@
 import * as prettier from 'prettier';
-import { AntlersSettings } from '../../antlersSettings';
-import { AntlersDocument } from '../../runtime/document/antlersDocument';
-import { PrettierDocumentFormatter } from './prettierDocumentFormatter';
-import { setOptions } from './utils';
+import { AntlersSettings } from '../../antlersSettings.js';
+import { AntlersDocument } from '../../runtime/document/antlersDocument.js';
+import { PrettierDocumentFormatter } from './prettierDocumentFormatter.js';
+import { setOptions } from './utils.js';
 
-let formatterOptions:prettier.ParserOptions;
+let formatterOptions: prettier.ParserOptions;
 const defaultAntlersSettings: AntlersSettings = {
     formatFrontMatter: false,
     showGeneralSnippetCompletions: true,
@@ -18,6 +18,11 @@ const defaultAntlersSettings: AntlersSettings = {
     languageVersion: 'runtime'
 };
 
+interface IFormattedDocument {
+    doc: AntlersDocument,
+    result: string
+}
+
 const plugin: prettier.Plugin = {
     languages: [
         {
@@ -29,13 +34,21 @@ const plugin: prettier.Plugin = {
     ],
     parsers: {
         antlers: {
-            parse: function (text: string, _, options) {
+            parse: async function (text: string, options) {
                 formatterOptions = options;
                 setOptions(options);
 
                 const document = new AntlersDocument();
 
-                return document.loadString(text);
+                document.loadString(text);
+
+                const result = (new PrettierDocumentFormatter(formatterOptions as prettier.ParserOptions))
+                    .formatDocument(document, defaultAntlersSettings);
+
+                return {
+                    doc: document,
+                    result: result
+                };
             },
             locStart: () => 0,
             locEnd: () => 0,
@@ -44,10 +57,10 @@ const plugin: prettier.Plugin = {
     },
     printers: {
         antlers: {
-            print (path: prettier.AstPath) {
-                const doc = path.stack[0] as AntlersDocument;
+            print(path: prettier.AstPath) {
+                const doc = path.stack[0] as IFormattedDocument;
 
-                return (new PrettierDocumentFormatter(formatterOptions as prettier.ParserOptions)).formatDocument(doc, defaultAntlersSettings);
+                return doc.result;
             }
         }
     },
@@ -56,4 +69,4 @@ const plugin: prettier.Plugin = {
     },
 }
 
-export = plugin;
+export default plugin;

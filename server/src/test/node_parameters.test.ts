@@ -1,13 +1,13 @@
-import assert = require("assert");
-import { AntlersNode, ParameterNode } from '../runtime/nodes/abstractNode';
+import assert from 'assert';
+import { AntlersNode, ParameterNode } from '../runtime/nodes/abstractNode.js';
 import {
     assertCount,
     assertFalse,
     assertInstanceOf,
     assertTrue,
     toAntlers,
-} from "./testUtils/assertions";
-import { getParsedRuntimeNodes, parseNodes } from "./testUtils/parserUtils";
+} from "./testUtils/assertions.js";
+import { getParsedRuntimeNodes, parseNodes } from "./testUtils/parserUtils.js";
 
 suite("Node Parameters Test", () => {
     test("it parses basic parameters", () => {

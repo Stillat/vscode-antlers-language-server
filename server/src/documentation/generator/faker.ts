@@ -1,6 +1,6 @@
-import { IArrayFieldType, IDateFieldType, IFieldDetails, IIntegerFieldType, ISlugFieldType, IToggleFieldType } from '../../projects/structuredFieldTypes/types';
-import { ITextField } from './fieldTypeProviders/generalTextDocumentationProvider';
-import { IInjectedField } from './types';
+import { IArrayFieldType, IDateFieldType, IFieldDetails, IIntegerFieldType, ISlugFieldType, IToggleFieldType } from '../../projects/structuredFieldTypes/types.js';
+import { ITextField } from './fieldTypeProviders/generalTextDocumentationProvider.js';
+import { IInjectedField } from './types.js';
 
 export class Faker {
     static getInternalIcon(type: string): string {

@@ -1,8 +1,8 @@
 import { CompletionItem, CompletionItemKind } from 'vscode-languageserver-types';
-import { makeTagDoc } from '../../../../documentation/utils';
-import SectionManager from '../../../../references/sectionManager';
-import { ISuggestionRequest } from '../../../../suggestions/suggestionRequest';
-import { EmptyCompletionResult, IAntlersTag, nonExclusiveResult } from '../../../tagManager';
+import { makeTagDoc } from '../../../../documentation/utils.js';
+import SectionManager from '../../../../references/sectionManager.js';
+import { ISuggestionRequest } from '../../../../suggestions/suggestionRequest.js';
+import { EmptyCompletionResult, IAntlersTag, nonExclusiveResult } from '../../../tagManager.js';
 
 const Section: IAntlersTag = {
     tagName: 'section',

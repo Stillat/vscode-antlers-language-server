@@ -1,9 +1,9 @@
-import { getViewName } from '../../antlers/tags/core/partials/partialUtilities';
-import ProjectManager from '../../projects/projectManager';
-import { AntlersDocument } from '../../runtime/document/antlersDocument';
-import { AntlersError, ErrrorLevel } from '../../runtime/errors/antlersError';
-import { AntlersErrorCodes } from '../../runtime/errors/antlersErrorCodes';
-import { IDocumentDiagnosticsHandler } from '../documentHandler';
+import { getViewName } from '../../antlers/tags/core/partials/partialUtilities.js';
+import ProjectManager from '../../projects/projectManager.js';
+import { AntlersDocument } from '../../runtime/document/antlersDocument.js';
+import { AntlersError, ErrorLevel } from '../../runtime/errors/antlersError.js';
+import { AntlersErrorCodes } from '../../runtime/errors/antlersErrorCodes.js';
+import { IDocumentDiagnosticsHandler } from '../documentHandler.js';
 
 const PartialRecursionHandler: IDocumentDiagnosticsHandler = {
     checkDocument(document: AntlersDocument) {
@@ -27,7 +27,7 @@ const PartialRecursionHandler: IDocumentDiagnosticsHandler = {
                             AntlersErrorCodes.LINT_POSSIBLE_PARTIAL_RECURSION,
                             node,
                             "Possible partial recursion detected",
-                            ErrrorLevel.Warning
+                            ErrorLevel.Warning
                         ));
                     }
                 }

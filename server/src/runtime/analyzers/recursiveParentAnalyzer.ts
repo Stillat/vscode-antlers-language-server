@@ -1,7 +1,7 @@
-import { AntlersError } from '../errors/antlersError';
-import { AntlersErrorCodes } from '../errors/antlersErrorCodes';
-import { AbstractNode, AntlersNode, LiteralNode, RecursiveNode } from '../nodes/abstractNode';
-import { StringUtilities } from '../utilities/stringUtilities';
+import { AntlersError } from '../errors/antlersError.js';
+import { AntlersErrorCodes } from '../errors/antlersErrorCodes.js';
+import { AbstractNode, AntlersNode, LiteralNode, RecursiveNode } from '../nodes/abstractNode.js';
+import { StringUtilities } from '../utilities/stringUtilities.js';
 
 export class RecursiveParentAnalyzer {
     static associateRecursiveParent(nodes: AbstractNode[]) {

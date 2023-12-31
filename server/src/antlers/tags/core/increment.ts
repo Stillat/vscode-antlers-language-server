@@ -1,9 +1,9 @@
-import { CompletionItem } from 'vscode-languageserver';
-import { makeTagDoc } from '../../../documentation/utils';
-import { ISuggestionRequest } from '../../../suggestions/suggestionRequest';
-import { tagToCompletionItem } from '../../documentedLabel';
-import { EmptyCompletionResult, exclusiveResult, IAntlersTag } from '../../tagManager';
-import IncrementReset from './incrementReset';
+import { CompletionItem } from 'vscode-languageserver';;
+import { makeTagDoc } from '../../../documentation/utils.js';
+import { ISuggestionRequest } from '../../../suggestions/suggestionRequest.js';
+import { tagToCompletionItem } from '../../documentedLabel.js';
+import { EmptyCompletionResult, exclusiveResult, IAntlersTag } from '../../tagManager.js';
+import IncrementReset from './incrementReset.js';
 
 const IncrementCompletionItems: CompletionItem[] = [
     tagToCompletionItem(IncrementReset)

@@ -1,4 +1,4 @@
-import { IMarketplaceAddon } from '../../marketplaceTypes';
+import { IMarketplaceAddon } from '../../marketplaceTypes.js';
 
 const StatamicLivewire: IMarketplaceAddon = {
     packageName: 'jonassiewertsen/statamic-livewire',

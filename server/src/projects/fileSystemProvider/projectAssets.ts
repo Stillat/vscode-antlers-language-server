@@ -1,7 +1,7 @@
 import * as path from "path";
 import * as fs from "fs";
 import * as YAML from "yaml";
-import { IAssets } from '../assets/asset';
+import { IAssets } from '../assets/asset.js';
 
 export function getProjectAssets(assetPath: string): IAssets {
     const handle = path.basename(assetPath).split(".").slice(0, -1).join(".");

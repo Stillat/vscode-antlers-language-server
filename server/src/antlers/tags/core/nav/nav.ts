@@ -1,14 +1,14 @@
 import { CompletionItem, CompletionItemKind } from 'vscode-languageserver-types';
-import { makeTagDoc } from '../../../../documentation/utils';
-import { makeFieldSuggest } from '../../../../suggestions/fieldFormatter';
-import { ISuggestionRequest } from '../../../../suggestions/suggestionRequest';
-import { tagToCompletionItem } from '../../../documentedLabel';
-import { EmptyCompletionResult, IAntlersTag, nonExclusiveResult } from '../../../tagManager';
-import { createDefinitionAlias } from '../../alias';
-import { augmentNavScope } from './augmentScope';
-import NavBreadcrumbs from './breadcrumbs';
-import { resolveNavParameterCompletions } from './parameterCompletions';
-import NavParameters from './parameters';
+import { makeTagDoc } from '../../../../documentation/utils.js';
+import { makeFieldSuggest } from '../../../../suggestions/fieldFormatter.js';
+import { ISuggestionRequest } from '../../../../suggestions/suggestionRequest.js';
+import { tagToCompletionItem } from '../../../documentedLabel.js';
+import { EmptyCompletionResult, IAntlersTag, nonExclusiveResult } from '../../../tagManager.js';
+import { createDefinitionAlias } from '../../alias.js';
+import { augmentNavScope } from './augmentScope.js';
+import NavBreadcrumbs from './breadcrumbs.js';
+import { resolveNavParameterCompletions } from './parameterCompletions.js';
+import NavParameters from './parameters.js';
 
 const StructureTag: IAntlersTag = {
     tagName: 'structure',

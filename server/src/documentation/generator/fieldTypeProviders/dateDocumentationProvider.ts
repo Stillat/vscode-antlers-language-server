@@ -1,9 +1,9 @@
-import { IDateFieldType, IProjectFields } from '../../../projects/structuredFieldTypes/types';
-import { StringUtilities } from '../../../runtime/utilities/stringUtilities';
-import { AugmentationTypes } from '../augmentationTypes';
-import { DateTimeSnippetProvider } from '../snippets/dateTimeSnippetProvider';
-import { IDocumentationProvider, IDocumentationResult } from '../types';
-import { GeneralTextDocumentationProvider } from './generalTextDocumentationProvider';
+import { IDateFieldType, IProjectFields } from '../../../projects/structuredFieldTypes/types.js';
+import { StringUtilities } from '../../../runtime/utilities/stringUtilities.js';
+import { AugmentationTypes } from '../augmentationTypes.js';
+import { DateTimeSnippetProvider } from '../snippets/dateTimeSnippetProvider.js';
+import { IDocumentationProvider, IDocumentationResult } from '../types.js';
+import { GeneralTextDocumentationProvider } from './generalTextDocumentationProvider.js';
 
 export class DateDocumentationProvider implements IDocumentationProvider {
     resolve(context: IDateFieldType, currentProject: IProjectFields): IDocumentationResult {

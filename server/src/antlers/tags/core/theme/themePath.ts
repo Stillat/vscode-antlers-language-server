@@ -1,8 +1,8 @@
-import { makeTagDoc } from '../../../../documentation/utils';
-import { ISuggestionRequest } from '../../../../suggestions/suggestionRequest';
-import { IAntlersTag } from '../../../tagManager';
-import { createDefinitionAlias } from '../../alias';
-import { ThemePathParameters } from './themeParameters';
+import { makeTagDoc } from '../../../../documentation/utils.js';
+import { ISuggestionRequest } from '../../../../suggestions/suggestionRequest.js';
+import { IAntlersTag } from '../../../tagManager.js';
+import { createDefinitionAlias } from '../../alias.js';
+import { ThemePathParameters } from './themeParameters.js';
 
 const ThemePath: IAntlersTag = {
     tagName: 'theme:path',

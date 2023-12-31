@@ -1,10 +1,10 @@
-import assert = require('assert');
-import { formatStringWithPrettier } from '../formatting/prettier/utils';
+import assert from 'assert';
+import { formatStringWithPrettier } from '../formatting/prettier/utils.js';
 
 suite('Formatter Prettier Conditional Elements', () => {
-    test('it can indent dynamic element echo', () => {
+    test('it can indent dynamic element echo', async () => {
         assert.strictEqual(
-            formatStringWithPrettier(`
+            (await formatStringWithPrettier(`
 
             <div>
                     <{{ as or 'a' }}
@@ -13,7 +13,7 @@ suite('Formatter Prettier Conditional Elements', () => {
                     </{{ as or 'a' }}>
                     </div>
             
-            `).trim(),
+            `)).trim(),
             `<div>
     <{{ as or 'a' }} class="something">
         <p>Hello {{ as or 'a' }} world.</p>
@@ -22,7 +22,7 @@ suite('Formatter Prettier Conditional Elements', () => {
         );
     });
 
-    test('it can indent dynamic condition elements', () => {
+    test('it can indent dynamic condition elements', async () => {
         const template = `
 
 <div>
@@ -44,11 +44,11 @@ suite('Formatter Prettier Conditional Elements', () => {
         {{ /if }}
     </{{ if something }}img{{ else }}a{{ /if }}>
 </div>`;
-        assert.strictEqual(formatStringWithPrettier(template).trim(), expected);
-        assert.strictEqual(formatStringWithPrettier(expected).trim(), expected);
+        assert.strictEqual((await formatStringWithPrettier(template)).trim(), expected);
+        assert.strictEqual((await formatStringWithPrettier(expected)).trim(), expected);
     });
 
-    test('it can indent dynamic unless elements', () => {
+    test('it can indent dynamic unless elements', async () => {
         const template = `
 
         <div>
@@ -70,11 +70,11 @@ suite('Formatter Prettier Conditional Elements', () => {
         {{ /unless }}
     </{{ unless something }}img{{ else }}a{{ /unless }}>
 </div>`;
-        assert.strictEqual(formatStringWithPrettier(template).trim(), expected);
-        assert.strictEqual(formatStringWithPrettier(expected).trim(), expected);
+        assert.strictEqual((await formatStringWithPrettier(template)).trim(), expected);
+        assert.strictEqual((await formatStringWithPrettier(expected)).trim(), expected);
     });
 
-    test('it can indent dynamic pair elements', () => {
+    test('it can indent dynamic pair elements', async () => {
         const template = `
 
 <div>
@@ -96,11 +96,11 @@ suite('Formatter Prettier Conditional Elements', () => {
         {{ /collection:articles }}
     </{{ collection:articles }}title{{ /collection:articles }}>
 </div>`;
-        assert.strictEqual(formatStringWithPrettier(template).trim(), expected);
-        assert.strictEqual(formatStringWithPrettier(expected).trim(), expected);
+        assert.strictEqual((await formatStringWithPrettier(template)).trim(), expected);
+        assert.strictEqual((await formatStringWithPrettier(expected)).trim(), expected);
     });
 
-    test('nested nodes within conditions do not get corrupted', () => {
+    test('nested nodes within conditions do not get corrupted', async () => {
         const input = `<!DOCTYPE html>
         <html>
             <head>
@@ -122,16 +122,16 @@ suite('Formatter Prettier Conditional Elements', () => {
         </title>
     </head>
 </html>`;
-        assert.strictEqual(formatStringWithPrettier(input).trim(), output);
+        assert.strictEqual((await formatStringWithPrettier(input)).trim(), output);
     });
 
-    test('it doesnt wrap inline ternary', () => {
+    test('it doesnt wrap inline ternary', async () => {
         const input = `
             <div class="{{ index % 2 == 0 ? 'order-2' : 'order-1' }} relative"><p>Test</p></div>
             `;
         const expected = `<div class="{{ index % 2 == 0 ? 'order-2' : 'order-1' }} relative">
     <p>Test</p>
 </div>`;
-        assert.strictEqual(formatStringWithPrettier(input).trim(), expected);
+        assert.strictEqual((await formatStringWithPrettier(input)).trim(), expected);
     });
 });

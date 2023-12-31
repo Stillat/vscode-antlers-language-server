@@ -1,9 +1,9 @@
 import { CompletionItem } from 'vscode-languageserver-types';
-import { makeTagDoc } from '../../../documentation/utils';
-import { ISuggestionRequest } from '../../../suggestions/suggestionRequest';
-import { tagToCompletionItem } from '../../documentedLabel';
-import { EmptyCompletionResult, exclusiveResult, IAntlersTag } from '../../tagManager';
-import MarkdownIndent from './markdownIndent';
+import { makeTagDoc } from '../../../documentation/utils.js';
+import { ISuggestionRequest } from '../../../suggestions/suggestionRequest.js';
+import { tagToCompletionItem } from '../../documentedLabel.js';
+import { EmptyCompletionResult, exclusiveResult, IAntlersTag } from '../../tagManager.js';
+import MarkdownIndent from './markdownIndent.js';
 
 const MarkdownCompletionItems: CompletionItem[] = [
     tagToCompletionItem(MarkdownIndent)

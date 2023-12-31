@@ -1,10 +1,10 @@
-import { EmptyDocumentationResult, IDocumentationModifier, IDocumentationProvider, IDocumentationResult, IFieldtypeDocumentationOverview } from './types';
-import * as providers from './fieldTypeProviders/providers';
-import ModifierManager from './../../antlers/modifierManager';
-import { IModifier } from '../../antlers/modifierTypes';
-import { StringUtilities } from '../../runtime/utilities/stringUtilities';
-import { AugmentationTypes } from './augmentationTypes';
-import { IProjectFields } from '../../projects/structuredFieldTypes/types';
+import { EmptyDocumentationResult, IDocumentationModifier, IDocumentationProvider, IDocumentationResult, IFieldtypeDocumentationOverview } from './types.js';
+import * as providers from './fieldTypeProviders/providers.js';
+import ModifierManager from './../../antlers/modifierManager.js';
+import { IModifier } from '../../antlers/modifierTypes.js';
+import { StringUtilities } from '../../runtime/utilities/stringUtilities.js';
+import { AugmentationTypes } from './augmentationTypes.js';
+import { IProjectFields } from '../../projects/structuredFieldTypes/types.js';
 
 let currentDetails: IProjectFields | null = null;
 

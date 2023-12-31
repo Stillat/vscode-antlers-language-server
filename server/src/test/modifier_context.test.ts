@@ -1,8 +1,8 @@
-import assert = require("assert");
-import { AntlersDocument } from "../runtime/document/antlersDocument";
-import { ModifierContext } from "../runtime/document/contexts/modifierContext";
-import { CursorContext } from "../runtime/document/contexts/positionContext";
-import { assertFalse, assertNotNull, assertTrue } from "./testUtils/assertions";
+import assert from 'assert';
+import { AntlersDocument } from "../runtime/document/antlersDocument.js";
+import { ModifierContext } from "../runtime/document/contexts/modifierContext.js";
+import { CursorContext } from "../runtime/document/contexts/positionContext.js";
+import { assertFalse, assertNotNull, assertTrue } from "./testUtils/assertions.js";
 
 suite("Modifier Contexts", () => {
     test("it resolves modifier contexts", () => {

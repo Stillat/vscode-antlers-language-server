@@ -1,9 +1,9 @@
-import { IBlueprintField } from '../../projects/blueprints/fields';
-import { IProjectDetailsProvider } from '../../projects/projectDetailsProvider';
-import { IPristineSnapshot, IScopeVariable } from './types';
-import { valuesToDataMap } from './scopeUtilities';
-import { AntlersNode } from '../../runtime/nodes/abstractNode';
-import { getId } from '../../utils/simpleIds';
+import { IBlueprintField } from '../../projects/blueprints/fields.js';
+import { IProjectDetailsProvider } from '../../projects/projectDetailsProvider.js';
+import { IPristineSnapshot, IScopeVariable } from './types.js';
+import { valuesToDataMap } from './scopeUtilities.js';
+import { AntlersNode } from '../../runtime/nodes/abstractNode.js';
+import { getId } from '../../utils/simpleIds.js';
 
 export class Scope {
     static generationCounter = 0;

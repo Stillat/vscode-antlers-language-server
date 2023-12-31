@@ -1,6 +1,6 @@
-import { IColorFieldType, IProjectFields } from '../../../projects/structuredFieldTypes/types';
-import { IDocumentationProvider, IDocumentationResult } from '../types';
-import { GeneralTextDocumentationProvider } from './generalTextDocumentationProvider';
+import { IColorFieldType, IProjectFields } from '../../../projects/structuredFieldTypes/types.js';
+import { IDocumentationProvider, IDocumentationResult } from '../types.js';
+import { GeneralTextDocumentationProvider } from './generalTextDocumentationProvider.js';
 
 export class ColorDocumentationProvider implements IDocumentationProvider {
     resolve(context: IColorFieldType, currentProject: IProjectFields): IDocumentationResult {

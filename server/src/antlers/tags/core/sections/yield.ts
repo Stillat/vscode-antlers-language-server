@@ -1,8 +1,8 @@
-import { makeTagDoc } from '../../../../documentation/utils';
-import { IProjectDetailsProvider } from '../../../../projects/projectDetailsProvider';
-import { AntlersNode } from '../../../../runtime/nodes/abstractNode';
-import { ISuggestionRequest } from '../../../../suggestions/suggestionRequest';
-import { IAntlersTag } from "../../../tagManager";
+import { makeTagDoc } from '../../../../documentation/utils.js';
+import { IProjectDetailsProvider } from '../../../../projects/projectDetailsProvider.js';
+import { AntlersNode } from '../../../../runtime/nodes/abstractNode.js';
+import { ISuggestionRequest } from '../../../../suggestions/suggestionRequest.js';
+import { IAntlersTag } from "../../../tagManager.js";
 
 export class YieldContext {
     node: AntlersNode;

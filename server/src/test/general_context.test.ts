@@ -1,12 +1,12 @@
-import assert = require("assert");
-import { AntlersDocument } from "../runtime/document/antlersDocument";
-import { CursorContext } from "../runtime/document/contexts/positionContext";
+import assert from 'assert';
+import { AntlersDocument } from "../runtime/document/antlersDocument.js";
+import { CursorContext } from "../runtime/document/contexts/positionContext.js";
 import {
     assertFalse,
     assertNotNull,
     assertNull,
     assertTrue,
-} from "./testUtils/assertions";
+} from "./testUtils/assertions.js";
 
 suite("General Context", () => {
     test("it resolves general contexts", () => {

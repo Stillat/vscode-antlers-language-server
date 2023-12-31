@@ -1,12 +1,12 @@
-import { makeTagDoc } from '../../../documentation/utils';
-import { AntlersNode } from '../../../runtime/nodes/abstractNode';
-import { ISuggestionRequest } from '../../../suggestions/suggestionRequest';
-import { Scope } from '../../scope/scope';
-import { blueprintFieldsToScopeVariables } from '../../scope/scopeUtilities';
-import { IAntlersTag } from '../../tagManager';
-import { makeFieldsVariables } from '../../variables/forms/fieldsVariables';
-import { createDefinitionAlias } from '../alias';
-import { returnDynamicParameter } from '../dynamicParameterResolver';
+import { makeTagDoc } from '../../../documentation/utils.js';
+import { AntlersNode } from '../../../runtime/nodes/abstractNode.js';
+import { ISuggestionRequest } from '../../../suggestions/suggestionRequest.js';
+import { Scope } from '../../scope/scope.js';
+import { blueprintFieldsToScopeVariables } from '../../scope/scopeUtilities.js';
+import { IAntlersTag } from '../../tagManager.js';
+import { makeFieldsVariables } from '../../variables/forms/fieldsVariables.js';
+import { createDefinitionAlias } from '../alias.js';
+import { returnDynamicParameter } from '../dynamicParameterResolver.js';
 
 const UserRegister: IAntlersTag = {
     tagName: 'user:register_form',

@@ -1,5 +1,5 @@
-import { IScopeVariable } from '../../antlers/scope/types';
-import { IFieldsetField } from "../fieldsets/fieldset";
+import { IScopeVariable } from '../../antlers/scope/types.js';
+import { IFieldsetField } from "../fieldsets/fieldset.js";
 
 export interface IBlueprint {
     handle: string;

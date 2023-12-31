@@ -1,7 +1,7 @@
-import { BooleanCompletionItems } from '../../../../suggestions/defaults/booleanItems';
-import FormHttpVerbCompletions from '../../../../suggestions/defaults/httpVerbItems';
-import { ISuggestionRequest } from '../../../../suggestions/suggestionRequest';
-import { exclusiveResult, exclusiveResultList, IAntlersParameter, ICompletionResult } from '../../../tagManager';
+import { BooleanCompletionItems } from '../../../../suggestions/defaults/booleanItems.js';
+import FormHttpVerbCompletions from '../../../../suggestions/defaults/httpVerbItems.js';
+import { ISuggestionRequest } from '../../../../suggestions/suggestionRequest.js';
+import { exclusiveResult, exclusiveResultList, IAntlersParameter, ICompletionResult } from '../../../tagManager.js';
 
 const HandleParams: string[] = [
     'in', 'handle', 'is', 'form', 'formset'

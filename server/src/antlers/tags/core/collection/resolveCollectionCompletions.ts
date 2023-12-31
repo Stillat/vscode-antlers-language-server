@@ -1,15 +1,15 @@
 import { CompletionItemKind } from 'vscode-languageserver';
 import { CompletionItem } from 'vscode-languageserver-types';
-import { getConditionCompletionItems } from '../../../../suggestions/defaults/conditionItems';
-import { getRoot } from '../../../../suggestions/suggestionManager';
-import { ISuggestionRequest } from '../../../../suggestions/suggestionRequest';
-import { tagToCompletionItem } from '../../../documentedLabel';
-import { exclusiveResult, nonExclusiveResult, EmptyCompletionResult, ICompletionResult } from '../../../tagManager';
-import { CollectionNewer, CollectionOlder } from './ageDirectional';
-import CollectionCount from './count';
-import CollectionNext from './next';
-import CollectionPrevious from './previous';
-import { getCollectionBlueprintFields, getTaxonomyCompletionItems } from './utils';
+import { getConditionCompletionItems } from '../../../../suggestions/defaults/conditionItems.js';
+import { getRoot } from '../../../../suggestions/suggestionManager.js';
+import { ISuggestionRequest } from '../../../../suggestions/suggestionRequest.js';
+import { tagToCompletionItem } from '../../../documentedLabel.js';
+import { exclusiveResult, nonExclusiveResult, EmptyCompletionResult, ICompletionResult } from '../../../tagManager.js';
+import { CollectionNewer, CollectionOlder } from './ageDirectional.js';
+import CollectionCount from './count.js';
+import CollectionNext from './next.js';
+import CollectionPrevious from './previous.js';
+import { getCollectionBlueprintFields, getTaxonomyCompletionItems } from './utils.js';
 
 export function resolveCollectionCompletions(params: ISuggestionRequest): ICompletionResult {
     let items: CompletionItem[] = [];

@@ -1,4 +1,4 @@
-import { GeneralNumberDocumentationProvider } from './generalNumberDocumentationProvider';
+import { GeneralNumberDocumentationProvider } from './generalNumberDocumentationProvider.js';
 
 export class IntegerDocumentationProvider extends GeneralNumberDocumentationProvider {
     

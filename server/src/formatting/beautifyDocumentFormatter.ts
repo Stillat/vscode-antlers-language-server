@@ -1,9 +1,8 @@
-// eslint-disable-next-line @typescript-eslint/no-var-requires
-const beautify = require("js-beautify").html;
-import { AntlersFormattingOptions } from './antlersFormattingOptions';
-import { DocumentFormatter } from './documentFormatter';
-import { FrontMatterFormatter } from './frontMatterFormatter';
-import { getFormatOption, getTagsFormatOption } from './htmlCompat';
+import beautify from 'js-beautify';
+import { AntlersFormattingOptions } from './antlersFormattingOptions.js';
+import { DocumentFormatter } from './documentFormatter.js';
+import { FrontMatterFormatter } from './frontMatterFormatter.js';
+import { getFormatOption, getTagsFormatOption } from './htmlCompat.js';
 
 export class BeautifyDocumentFormatter extends DocumentFormatter {
     private options: AntlersFormattingOptions;
@@ -23,7 +22,7 @@ export class BeautifyDocumentFormatter extends DocumentFormatter {
     }
 
     formatHtml(input: string): string {
-        return beautify(input, {
+        return beautify.html(input, {
             indent_size: this.options.tabSize,
             indent_char: this.options.insertSpaces ? " " : "\t",
             indent_empty_lines: getFormatOption(this.options.htmlOptions, "indentEmptyLines", false),

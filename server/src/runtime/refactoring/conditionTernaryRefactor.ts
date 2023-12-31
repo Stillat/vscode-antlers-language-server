@@ -1,6 +1,6 @@
-import { replaceAllInString } from '../../utils/strings';
-import ConditionAnalyzer from '../analyzers/conditionAnalyzer';
-import { AntlersNode, ConditionNode, LiteralNode } from '../nodes/abstractNode';
+import { replaceAllInString } from '../../utils/strings.js';
+import ConditionAnalyzer from '../analyzers/conditionAnalyzer.js';
+import { AntlersNode, ConditionNode, LiteralNode } from '../nodes/abstractNode.js';
 
 export enum TernaryRefactorMode {
     Ternary,

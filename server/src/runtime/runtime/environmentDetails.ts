@@ -1,5 +1,5 @@
-import ModifierManager from "../../antlers/modifierManager";
-import TagManager from "../../antlers/tagManagerInstance";
+import ModifierManager from "../../antlers/modifierManager.js";
+import TagManager from "../../antlers/tagManagerInstance.js";
 
 export default class EnvironmentDetails {
     private tagNames: string[] = [];

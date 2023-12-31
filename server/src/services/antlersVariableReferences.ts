@@ -1,8 +1,8 @@
-import { Location, ReferenceParams } from 'vscode-languageserver';
-import { sessionDocuments } from '../languageService/documents';
-import ProjectManager from '../projects/projectManager';
-import { makeProviderRequest } from '../providers/providerParameters';
-import { VariableReferenceManager } from '../references/variableReferenceManager';
+import { Location, ReferenceParams } from 'vscode-languageserver';;
+import { sessionDocuments } from '../languageService/documents.js';
+import ProjectManager from '../projects/projectManager.js';
+import { makeProviderRequest } from '../providers/providerParameters.js';
+import { VariableReferenceManager } from '../references/variableReferenceManager.js';
 
 export function handleReferences(_params: ReferenceParams): Location[] | null {
     if (ProjectManager.instance?.hasStructure() == false) {

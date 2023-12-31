@@ -1,7 +1,7 @@
-import { makeTagDoc } from '../../../documentation/utils';
-import { RedirectStatusCodes } from '../../../suggestions/defaults/httpStatusCodes';
-import { ISuggestionRequest } from '../../../suggestions/suggestionRequest';
-import { EmptyCompletionResult, exclusiveResult, IAntlersParameter, IAntlersTag } from '../../tagManager';
+import { makeTagDoc } from '../../../documentation/utils.js';
+import { RedirectStatusCodes } from '../../../suggestions/defaults/httpStatusCodes.js';
+import { ISuggestionRequest } from '../../../suggestions/suggestionRequest.js';
+import { EmptyCompletionResult, exclusiveResult, IAntlersParameter, IAntlersTag } from '../../tagManager.js';
 
 const Redirect: IAntlersTag = {
     tagName: 'redirect',

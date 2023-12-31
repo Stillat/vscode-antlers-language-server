@@ -1,4 +1,4 @@
-import { GeneralBooleanDocumentationProvider } from './generalBooleanDocumentationProvider';
+import { GeneralBooleanDocumentationProvider } from './generalBooleanDocumentationProvider.js';
 
 export class ToggleDocumentationProvider extends GeneralBooleanDocumentationProvider {
     

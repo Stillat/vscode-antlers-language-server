@@ -1,4 +1,4 @@
-import { IMarketplaceAddon } from '../../marketplaceTypes';
+import { IMarketplaceAddon } from '../../marketplaceTypes.js';
 
 const SeoPro: IMarketplaceAddon = {
     packageName: 'statamic/seo-pro',

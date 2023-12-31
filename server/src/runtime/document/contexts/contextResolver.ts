@@ -1,13 +1,13 @@
-import { AntlersNode, AbstractNode, ParserFailNode, VariableNode } from '../../nodes/abstractNode';
-import { Position } from '../../nodes/position';
-import { AntlersDocument } from '../antlersDocument';
-import { FeatureContextResolver } from '../featureContextResolver';
-import { GeneralContext } from './generalContext';
-import { IdentifierContext } from './identifierContext';
-import { ModifierContext } from './modifierContext';
-import { ParameterContext } from './parameterContext';
-import { CursorContext, PositionContext } from './positionContext';
-import { VariableContext } from './variableContext';
+import { AntlersNode, AbstractNode, ParserFailNode, VariableNode } from '../../nodes/abstractNode.js';
+import { Position } from '../../nodes/position.js';
+import { AntlersDocument } from '../antlersDocument.js';
+import { FeatureContextResolver } from '../featureContextResolver.js';
+import { GeneralContext } from './generalContext.js';
+import { IdentifierContext } from './identifierContext.js';
+import { ModifierContext } from './modifierContext.js';
+import { ParameterContext } from './parameterContext.js';
+import { CursorContext, PositionContext } from './positionContext.js';
+import { VariableContext } from './variableContext.js';
 
 export class ContextResolver {
 

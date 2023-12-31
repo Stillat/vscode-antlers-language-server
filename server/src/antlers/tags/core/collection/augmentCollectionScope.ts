@@ -1,9 +1,9 @@
-import { AntlersNode } from '../../../../runtime/nodes/abstractNode';
-import { checkSymbolForScopeAndAlias } from "../../../scope/factories/listFactory";
-import { Scope } from '../../../scope/scope';
-import { ICollectionContext } from '../../../types';
-import { makeCollectionVariables } from "../../../variables/collectionVariables";
-import { getCollectionBlueprintFields } from "./utils";
+import { AntlersNode } from '../../../../runtime/nodes/abstractNode.js';
+import { checkSymbolForScopeAndAlias } from "../../../scope/factories/listFactory.js";
+import { Scope } from '../../../scope/scope.js';
+import { ICollectionContext } from '../../../types.js';
+import { makeCollectionVariables } from "../../../variables/collectionVariables.js";
+import { getCollectionBlueprintFields } from "./utils.js";
 
 export function augmentCollectionScope(node: AntlersNode, scope: Scope): Scope {
     if (node.isClosingTag) {

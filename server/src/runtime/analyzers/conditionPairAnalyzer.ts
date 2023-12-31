@@ -1,7 +1,7 @@
-import { AntlersError } from '../errors/antlersError';
-import { AntlersErrorCodes } from '../errors/antlersErrorCodes';
-import { AntlersNode, AbstractNode } from '../nodes/abstractNode';
-import { NodeHelpers } from '../utilities/nodeHelpers';
+import { AntlersError } from '../errors/antlersError.js';
+import { AntlersErrorCodes } from '../errors/antlersErrorCodes.js';
+import { AntlersNode, AbstractNode } from '../nodes/abstractNode.js';
+import { NodeHelpers } from '../utilities/nodeHelpers.js';
 
 export class ConditionPairAnalyzer {
 

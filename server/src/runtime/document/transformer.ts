@@ -1,14 +1,14 @@
-import { HTMLFormatter, PHPFormatter, YAMLFormatter } from '../../formatting/formatters';
-import { replaceAllInString } from '../../utils/strings';
-import { ConditionPairAnalyzer } from '../analyzers/conditionPairAnalyzer';
-import { AbstractNode, AntlersNode, ConditionNode, EscapedContentNode, ExecutionBranch, FragmentPosition, LiteralNode, StructuralFragment } from '../nodes/abstractNode';
-import { StringUtilities } from '../utilities/stringUtilities';
-import { AntlersDocument } from './antlersDocument';
-import { InlineFormatter } from './inlineFormatter';
-import { CommentPrinter } from './printers/commentPrinter';
-import { IndentLevel } from './printers/indentLevel';
-import { NodePrinter } from './printers/nodePrinter';
-import { TransformOptions } from './transformOptions';
+import { AsyncHTMLFormatter, AsyncPHPFormatter, HTMLFormatter, PHPFormatter, YAMLFormatter } from '../../formatting/formatters.js';
+import { replaceAllInString } from '../../utils/strings.js';
+import { ConditionPairAnalyzer } from '../analyzers/conditionPairAnalyzer.js';
+import { AbstractNode, AntlersNode, ConditionNode, EscapedContentNode, ExecutionBranch, FragmentPosition, LiteralNode, StructuralFragment } from '../nodes/abstractNode.js';
+import { StringUtilities } from '../utilities/stringUtilities.js';
+import { AntlersDocument } from './antlersDocument.js';
+import { InlineFormatter } from './inlineFormatter.js';
+import { CommentPrinter } from './printers/commentPrinter.js';
+import { IndentLevel } from './printers/indentLevel.js';
+import { NodePrinter } from './printers/nodePrinter.js';
+import { TransformOptions } from './transformOptions.js';
 
 interface TransformedLogicBranch {
     branch: ExecutionBranch,
@@ -58,8 +58,10 @@ export class Transformer {
     private formatIgnoreStart = 'format-ignore-start';
     private formatIgnoreEnd = 'format-ignore-end';
     private htmlFormatter: HTMLFormatter | null = null;
+    private asyncHtmlFormatter: AsyncHTMLFormatter | null = null;
     private yamlFormatter: YAMLFormatter | null = null;
     private phpFormatter: PHPFormatter | null = null;
+    private asyncPhpFormatter: AsyncPHPFormatter | null = null;
 
     private slugs: string[] = [];
     private removeLines: string[] = [];
@@ -119,6 +121,12 @@ export class Transformer {
         return this;
     }
 
+    withAsyncHtmlFormatter(formatter: AsyncHTMLFormatter | null) {
+        this.asyncHtmlFormatter = formatter;
+
+        return this;
+    }
+
     withYamlFormatter(formatter: YAMLFormatter | null) {
         this.yamlFormatter = formatter;
 
@@ -127,6 +135,12 @@ export class Transformer {
 
     withPhpFormatter(formatter: PHPFormatter | null) {
         this.phpFormatter = formatter;
+
+        return this;
+    }
+
+    withAsyncPhpFormatter(formatter: AsyncPHPFormatter | null) {
+        this.asyncPhpFormatter = formatter;
 
         return this;
     }
@@ -313,7 +327,7 @@ export class Transformer {
             if (printNode.runtimeName() == 'endunless') {
                 return `{{ /unless }}`;
             }
-            
+
             return `{{ ${printNode.sourceContent.trim()} }}`;
         }
 
@@ -1011,14 +1025,14 @@ export class Transformer {
         return newLines.join("\n");
     }
 
-    public applyFragmentReplacements(content: string, fragments:Map<string, StructuralFragment>, tabSize:number): string {
+    public applyFragmentReplacements(content: string, fragments: Map<string, StructuralFragment>, tabSize: number): string {
         let value = content;
 
         fragments.forEach((fragment, slug) => {
             const targetIndent = this.indentLevel(slug);
-            
+
             let fragmentContent = fragment.outerContent;
-            
+
             if (targetIndent > 0) {
                 let lDiff = fragmentContent.length - fragmentContent.trimStart().length;
 
@@ -1144,6 +1158,53 @@ export class Transformer {
         }
 
         return newLines.join("\n");
+    }
+
+    async fromStructureAsync(structure: string): Promise<string> {
+        const reflowedContent = this.reflowSlugs(structure);
+
+        this.structureLines = StringUtilities.breakByNewLine(reflowedContent);
+        let results = this.transformInlineConditions(reflowedContent);
+        results = this.transformConditions(results);
+        results = this.transformInlineAntlers(results);
+        results = this.transformComments(results);
+        results = this.transformVirtualStructures(results);
+        results = this.transformDynamicAntlers(results);
+        results = this.transformPairedAntlers(results);
+        results = this.cleanVirtualStructures(results);
+        results = this.cleanLines(results);
+        //results = this.removeVirtualStructures(results);
+
+        // results = this.cleanStructuralNewLines(results);
+
+        if (this.doc.hasFrontMatter()) {
+            let frontMatter = this.doc.getFrontMatter();
+
+            const frontMatterDoc = this.doc.getFrontMatterDoc();
+
+            if (frontMatterDoc != null && frontMatterDoc.isValid && this.yamlFormatter != null) {
+                frontMatter = this.yamlFormatter(frontMatter);
+            }
+
+            const insertFrontMatter = `---\n${frontMatter}\n---\n` + "\n".repeat(this.options.newlinesAfterFrontMatter);
+
+            results = insertFrontMatter + results.trimLeft();
+        }
+
+        results = results.trimRight();
+
+        this.ignoredLiteralBlocks.forEach((nodes, slug) => {
+            const replace = this.selfClosing(slug),
+                startIndent = this.indentLevel(replace);
+
+            results = results.replace(replace, this.dumpPreservedNodes(nodes, startIndent));
+        });
+
+        if (this.options.endNewline) {
+            results += "\n";
+        }
+
+        return results;
     }
 
     fromStructure(structure: string): string {

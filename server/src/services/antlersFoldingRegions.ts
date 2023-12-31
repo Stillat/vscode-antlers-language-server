@@ -2,8 +2,8 @@ import {
     FoldingRange,
     FoldingRangeParams,
 } from "vscode-languageserver-protocol";
-import { FoldingRangeKind } from 'vscode-languageserver-protocol/lib/common/protocol.foldingRange';
-import { sessionDocuments } from '../languageService/documents';
+import { FoldingRangeKind } from 'vscode-languageserver-protocol/lib/common/protocol.foldingRange.js';
+import { sessionDocuments } from '../languageService/documents.js';
 import {
     multilineCommentToFoldingRange,
     nodePairToFoldingRange,

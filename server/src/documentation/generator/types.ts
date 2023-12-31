@@ -1,6 +1,6 @@
-import { fetchDynamic, IFieldDetails, IProjectFields } from '../../projects/structuredFieldTypes/types'
-import { AugmentationTypes } from './augmentationTypes'
-import { OfficialDocumentationLinkProvider } from './providers/officialDocumentationLinkProvider'
+import { fetchDynamic, IFieldDetails, IProjectFields } from '../../projects/structuredFieldTypes/types.js'
+import { AugmentationTypes } from './augmentationTypes.js'
+import { OfficialDocumentationLinkProvider } from './providers/officialDocumentationLinkProvider.js'
 
 export interface IDocumentationSnippet {
     overview: string,

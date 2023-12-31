@@ -1,6 +1,6 @@
-import { makeTagDocWithCodeSample } from '../../../documentation/utils';
-import { ISuggestionRequest } from '../../../suggestions/suggestionRequest';
-import { IAntlersTag } from '../../tagManager';
+import { makeTagDocWithCodeSample } from '../../../documentation/utils.js';
+import { ISuggestionRequest } from '../../../suggestions/suggestionRequest.js';
+import { IAntlersTag } from '../../tagManager.js';
 
 const NoCache: IAntlersTag = {
     tagName: 'nocache',

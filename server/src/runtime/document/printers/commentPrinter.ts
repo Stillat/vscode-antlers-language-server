@@ -1,6 +1,6 @@
-import { AntlersNode } from '../../nodes/abstractNode';
-import { StringUtilities } from '../../utilities/stringUtilities';
-import { InlineFormatter } from '../inlineFormatter';
+import { AntlersNode } from '../../nodes/abstractNode.js';
+import { StringUtilities } from '../../utilities/stringUtilities.js';
+import { InlineFormatter } from '../inlineFormatter.js';
 
 export class CommentPrinter {
 

@@ -1,4 +1,4 @@
-import { YieldContext } from "../antlers/tags/core/sections/yield";
+import { YieldContext } from "../antlers/tags/core/sections/yield.js";
 
 class SectionManager {
     private knownSections: Map<string, Map<string, YieldContext>> = new Map();

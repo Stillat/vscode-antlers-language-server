@@ -1,7 +1,7 @@
-import ModifierManager from '../../../antlers/modifierManager';
-import { IModifier } from "../../../antlers/modifierTypes";
-import { AbstractNode, ParameterNode, AntlersNode } from '../abstractNode';
-import { Range } from '../position';
+import ModifierManager from '../../../antlers/modifierManager.js';
+import { IModifier } from "../../../antlers/modifierTypes.js";
+import { AbstractNode, ParameterNode, AntlersNode } from '../abstractNode.js';
+import { Range } from '../position.js';
 
 export class NodeVirtualModifiers {
     private node: AbstractNode;

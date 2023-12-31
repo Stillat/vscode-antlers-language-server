@@ -1,11 +1,11 @@
-import { CodeAction, CodeActionKind, TextEdit } from 'vscode-languageserver';
-import ConditionAnalyzer from '../../runtime/analyzers/conditionAnalyzer';
-import { ConditionPairAnalyzer } from '../../runtime/analyzers/conditionPairAnalyzer';
-import { TagPairAnalyzer } from '../../runtime/analyzers/tagPairAnalyzer';
-import { ConditionNode } from '../../runtime/nodes/abstractNode';
-import ConditionTernaryRefactor, { TernaryRefactorMode } from '../../runtime/refactoring/conditionTernaryRefactor';
-import IRefactorHandler from '../refactorHandler';
-import IRefactoringRequest from '../refactoringRequest';
+import { CodeAction, CodeActionKind, TextEdit } from 'vscode-languageserver';;
+import ConditionAnalyzer from '../../runtime/analyzers/conditionAnalyzer.js';
+import { ConditionPairAnalyzer } from '../../runtime/analyzers/conditionPairAnalyzer.js';
+import { TagPairAnalyzer } from '../../runtime/analyzers/tagPairAnalyzer.js';
+import { ConditionNode } from '../../runtime/nodes/abstractNode.js';
+import ConditionTernaryRefactor, { TernaryRefactorMode } from '../../runtime/refactoring/conditionTernaryRefactor.js';
+import IRefactorHandler from '../refactorHandler.js';
+import IRefactoringRequest from '../refactoringRequest.js';
 
 class TernaryHandler implements IRefactorHandler {
     private condition: ConditionNode | null = null;

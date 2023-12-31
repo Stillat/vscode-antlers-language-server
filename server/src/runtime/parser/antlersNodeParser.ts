@@ -1,14 +1,14 @@
-import { ConditionPairAnalyzer } from '../analyzers/conditionPairAnalyzer';
-import NodeTypeAnalyzer from '../analyzers/nodeTypeAnalyzer';
-import { TagIdentifierAnalyzer } from '../analyzers/tagIdentifierAnalyzer';
-import { AntlersError } from '../errors/antlersError';
-import { AntlersErrorCodes } from '../errors/antlersErrorCodes';
-import { AntlersLexer } from '../lexer/antlersLexer';
-import { AbstractNode, AntlersNode, ParameterNode, RecursiveNode } from '../nodes/abstractNode';
-import { TagIdentifier } from '../nodes/tagIdentifier';
-import { StringUtilities } from '../utilities/stringUtilities';
-import { DocumentParser } from './documentParser';
-import { PathParser } from './pathParser';
+import { ConditionPairAnalyzer } from '../analyzers/conditionPairAnalyzer.js';
+import NodeTypeAnalyzer from '../analyzers/nodeTypeAnalyzer.js';
+import { TagIdentifierAnalyzer } from '../analyzers/tagIdentifierAnalyzer.js';
+import { AntlersError } from '../errors/antlersError.js';
+import { AntlersErrorCodes } from '../errors/antlersErrorCodes.js';
+import { AntlersLexer } from '../lexer/antlersLexer.js';
+import { AbstractNode, AntlersNode, ParameterNode, RecursiveNode } from '../nodes/abstractNode.js';
+import { TagIdentifier } from '../nodes/tagIdentifier.js';
+import { StringUtilities } from '../utilities/stringUtilities.js';
+import { DocumentParser } from './documentParser.js';
+import { PathParser } from './pathParser.js';
 
 export class AntlersNodeParser {
 

@@ -1,4 +1,4 @@
-import { AntlersNode } from '../nodes/abstractNode';
+import { AntlersNode } from '../nodes/abstractNode.js';
 
 export class GlobalRuntimeState {
     static globalTagEnterStack: AntlersNode[] = [];

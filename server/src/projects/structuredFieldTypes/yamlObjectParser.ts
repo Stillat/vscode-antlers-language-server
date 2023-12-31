@@ -1,6 +1,6 @@
 import * as yaml from 'yaml';
-import { Faker } from '../../documentation/generator/faker';
-import { IFieldDetails } from './types';
+import { Faker } from '../../documentation/generator/faker.js';
+import { IFieldDetails } from './types.js';
 
 export class ParsedYamlObject {
     public varName: string = '';

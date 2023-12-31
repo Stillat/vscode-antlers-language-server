@@ -4,9 +4,9 @@ import {
     SignatureHelp,
     SignatureHelpParams
 } from "vscode-languageserver-protocol";
-import ModifierManager from '../antlers/modifierManager';
-import { IModifier } from '../antlers/modifierTypes';
-import { makeProviderRequest } from "../providers/providerParameters";
+import ModifierManager from '../antlers/modifierManager.js';
+import { IModifier } from '../antlers/modifierTypes.js';
+import { makeProviderRequest } from "../providers/providerParameters.js";
 
 const EmptySignatureHelp: SignatureHelp = {
     activeSignature: null,

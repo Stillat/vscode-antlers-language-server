@@ -1,7 +1,7 @@
 import { CompletionItem, CompletionItemKind } from 'vscode-languageserver-types';
-import { ISuggestionRequest } from '../../../../suggestions/suggestionRequest';
-import { EmptyCompletionResult, exclusiveResult, IAntlersParameter, IAntlersTag } from '../../../tagManager';
-import { ThemePathParameters } from './themeParameters';
+import { ISuggestionRequest } from '../../../../suggestions/suggestionRequest.js';
+import { EmptyCompletionResult, exclusiveResult, IAntlersParameter, IAntlersTag } from '../../../tagManager.js';
+import { ThemePathParameters } from './themeParameters.js';
 
 const ThemeTagCompletionItems: CompletionItem[] = [
     { label: 'asset', kind: CompletionItemKind.Text },

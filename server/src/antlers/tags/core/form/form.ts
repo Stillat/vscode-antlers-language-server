@@ -1,14 +1,14 @@
 import { CompletionItem, CompletionItemKind, } from "vscode-languageserver-types";
-import { ISuggestionRequest } from '../../../../suggestions/suggestionRequest';
-import { tagToCompletionItem } from '../../../documentedLabel';
-import { EmptyCompletionResult, IAntlersTag, nonExclusiveResult, } from "../../../tagManager";
-import FormCreate from './formCreate';
-import FormErrors from './formErrors';
-import FormSetTag from './formSet';
-import FormSubmission from './formSubmission';
-import FormSubmissions from './formSubmissions';
-import FormSuccess from './formSuccess';
-import { resolveFormParameterCompletions } from "./parameterCompletions";
+import { ISuggestionRequest } from '../../../../suggestions/suggestionRequest.js';
+import { tagToCompletionItem } from '../../../documentedLabel.js';
+import { EmptyCompletionResult, IAntlersTag, nonExclusiveResult, } from "../../../tagManager.js";
+import FormCreate from './formCreate.js';
+import FormErrors from './formErrors.js';
+import FormSetTag from './formSet.js';
+import FormSubmission from './formSubmission.js';
+import FormSubmissions from './formSubmissions.js';
+import FormSuccess from './formSuccess.js';
+import { resolveFormParameterCompletions } from "./parameterCompletions.js";
 
 const FormCompletions: CompletionItem[] = [
     tagToCompletionItem(FormSetTag),

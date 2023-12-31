@@ -1,5 +1,5 @@
-import { IMarketplaceAddon } from './marketplaceTypes';
-import { KnownPackages } from './packageRegistry';
+import { IMarketplaceAddon } from './marketplaceTypes.js';
+import { KnownPackages } from './packageRegistry.js';
 
 class PackageManager {
     public static instance: PackageManager | null = null;

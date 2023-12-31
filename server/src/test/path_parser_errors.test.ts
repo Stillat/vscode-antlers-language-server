@@ -1,8 +1,8 @@
-import assert = require("assert");
-import { AntlersErrorCodes } from "../runtime/errors/antlersErrorCodes";
-import { AntlersNode } from '../runtime/nodes/abstractNode';
-import { assertCount, assertInstanceOf } from "./testUtils/assertions";
-import { parseRenderNodes } from "./testUtils/parserUtils";
+import assert from 'assert';
+import { AntlersErrorCodes } from "../runtime/errors/antlersErrorCodes.js";
+import { AntlersNode } from '../runtime/nodes/abstractNode.js';
+import { assertCount, assertInstanceOf } from "./testUtils/assertions.js";
+import { parseRenderNodes } from "./testUtils/parserUtils.js";
 
 suite("Path Parser Errors Test", () => {
     test("parser can prevent infinite recusion parsing unbalanced accessors", () => {

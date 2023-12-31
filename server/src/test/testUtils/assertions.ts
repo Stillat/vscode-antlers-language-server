@@ -1,5 +1,5 @@
-import assert = require('assert');
-import { LiteralNode, AntlersNode, PathNode, VariableReference, ConditionNode, ExecutionBranch, AbstractNode } from '../../runtime/nodes/abstractNode';
+import assert from 'assert';
+import { LiteralNode, AntlersNode, PathNode, VariableReference, ConditionNode, ExecutionBranch, AbstractNode } from '../../runtime/nodes/abstractNode.js';
 
 export function toLiteral(value: any): LiteralNode {
     return value as LiteralNode;

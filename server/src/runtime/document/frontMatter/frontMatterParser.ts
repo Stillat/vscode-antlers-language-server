@@ -1,7 +1,7 @@
 import * as YAML from "yaml";
-import { Pair, Node, YAMLMap, Scalar, YAMLSeq } from 'yaml/types';
-import { Scope } from '../../../antlers/scope/scope';
-import { IProjectDetailsProvider } from '../../../projects/projectDetailsProvider';
+import { Scope } from '../../../antlers/scope/scope.js';
+import { IProjectDetailsProvider } from '../../../projects/projectDetailsProvider.js';
+import { Node, Pair, Scalar, YAMLMap, YAMLSeq } from 'yaml/types';
 
 export class FrontMatterParser {
     private readonly project: IProjectDetailsProvider;

@@ -1,4 +1,4 @@
-import { AntlersNode } from "../runtime/nodes/abstractNode";
+import { AntlersNode } from "../runtime/nodes/abstractNode.js";
 
 class ReferenceManager {
     private partialReferences: Map<string, AntlersNode[]> = new Map();

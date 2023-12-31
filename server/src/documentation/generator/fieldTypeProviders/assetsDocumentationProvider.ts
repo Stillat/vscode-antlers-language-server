@@ -1,11 +1,11 @@
-import { KeysResolver } from '../../../projects/structuredFieldTypes/keysResolver';
-import { IAssetsFieldType, IParsedBlueprint, IProjectFields } from '../../../projects/structuredFieldTypes/types';
-import { AugmentationTypes } from '../augmentationTypes';
-import { Faker } from '../faker';
-import { NestedFieldsProvider } from '../providers/nestedFieldsProvider';
-import { OfficialDocumentationLinkProvider } from '../providers/officialDocumentationLinkProvider';
-import { IDocumentationProperty, IDocumentationProvider, IDocumentationResult, IDocumentationSnippet, IInjectedField } from '../types';
-import { GeneralQueryBuilderDocumentationProvider } from './generalQueryBuilderDocumentationProvider';
+import { KeysResolver } from '../../../projects/structuredFieldTypes/keysResolver.js';
+import { IAssetsFieldType, IParsedBlueprint, IProjectFields } from '../../../projects/structuredFieldTypes/types.js';
+import { AugmentationTypes } from '../augmentationTypes.js';
+import { Faker } from '../faker.js';
+import { NestedFieldsProvider } from '../providers/nestedFieldsProvider.js';
+import { OfficialDocumentationLinkProvider } from '../providers/officialDocumentationLinkProvider.js';
+import { IDocumentationProperty, IDocumentationProvider, IDocumentationResult, IDocumentationSnippet, IInjectedField } from '../types.js';
+import { GeneralQueryBuilderDocumentationProvider } from './generalQueryBuilderDocumentationProvider.js';
 
 const AssetInjections: IInjectedField[] = [
     Faker.injectedTextField('id', 'The asset\'s ID'),

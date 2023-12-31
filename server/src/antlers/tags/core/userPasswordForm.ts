@@ -1,9 +1,9 @@
-import { AntlersNode } from '../../../runtime/nodes/abstractNode';
-import { Scope } from '../../scope/scope';
-import { IScopeVariable } from '../../scope/types';
-import { IAntlersTag } from '../../tagManager';
-import { makeFieldsVariables } from '../../variables/forms/fieldsVariables';
-import { makeStandardFormVariables } from '../../variables/forms/standardFormVariables';
+import { AntlersNode } from '../../../runtime/nodes/abstractNode.js';
+import { Scope } from '../../scope/scope.js';
+import { IScopeVariable } from '../../scope/types.js';
+import { IAntlersTag } from '../../tagManager.js';
+import { makeFieldsVariables } from '../../variables/forms/fieldsVariables.js';
+import { makeStandardFormVariables } from '../../variables/forms/standardFormVariables.js';
 
 function makePasswordFormVariables(symbol: AntlersNode): IScopeVariable[] {
     return [

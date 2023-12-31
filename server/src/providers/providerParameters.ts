@@ -1,9 +1,9 @@
 import { Position } from "vscode-languageserver-textdocument";
-import { sessionDocuments } from '../languageService/documents';
-import ProjectManager from '../projects/projectManager';
-import { AntlersNode } from '../runtime/nodes/abstractNode';
-import { ISuggestionRequest } from '../suggestions/suggestionRequest';
-import * as antlr from '../runtime/nodes/position';
+import { sessionDocuments } from '../languageService/documents.js';
+import ProjectManager from '../projects/projectManager.js';
+import { AntlersNode } from '../runtime/nodes/abstractNode.js';
+import { ISuggestionRequest } from '../suggestions/suggestionRequest.js';
+import * as antlr from '../runtime/nodes/position.js';
 
 function getInterpolatedAncestors(node: AntlersNode, startPosition: antlr.Position): AntlersNode[] {
     let nodesToReturn: AntlersNode[] = [];

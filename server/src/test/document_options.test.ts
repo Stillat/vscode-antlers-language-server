@@ -1,6 +1,6 @@
-import assert = require('assert');
-import { AntlersDocument } from '../runtime/document/antlersDocument';
-import { assertFalse, assertTrue } from './testUtils/assertions';
+import assert from 'assert';
+import { AntlersDocument } from '../runtime/document/antlersDocument.js';
+import { assertFalse, assertTrue } from './testUtils/assertions.js';
 
 suite("Document Options Test", () => {
     test('formatter is enabled by default', () => {

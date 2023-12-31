@@ -4,10 +4,10 @@
 const yargs = require('yargs'), path = require('path');
 
 import * as fs from 'fs';
-import { AntlersSettings } from '../../antlersSettings';
-import { AntlersDocument } from '../../runtime/document/antlersDocument';
-import { AntlersFormattingOptions } from '../antlersFormattingOptions';
-import { BeautifyDocumentFormatter } from '../beautifyDocumentFormatter';
+import { AntlersSettings } from '../../antlersSettings.js';
+import { AntlersDocument } from '../../runtime/document/antlersDocument.js';
+import { AntlersFormattingOptions } from '../antlersFormattingOptions.js';
+import { BeautifyDocumentFormatter } from '../beautifyDocumentFormatter.js';
 
 const defaultAntlersSettings: AntlersSettings = {
     formatFrontMatter: false,

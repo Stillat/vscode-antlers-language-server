@@ -2,14 +2,14 @@ import {
     CompletionItem,
     CompletionItemKind,
 } from "vscode-languageserver-types";
-import { IBlueprintField } from '../projects/blueprints/fields';
-import { IProjectDetailsProvider } from '../projects/projectDetailsProvider';
-import { AntlersNode, ParameterNode } from '../runtime/nodes/abstractNode';
-import { ISuggestionRequest } from '../suggestions/suggestionRequest';
-import { HtmlClassParameter, HtmlStyleParameter } from './htmlCompat/parameters';
-import { IModifier } from './modifierTypes';
-import { Scope } from './scope/scope';
-import { IReportableError, ISpecialResolverResults } from "./types";
+import { IBlueprintField } from '../projects/blueprints/fields.js';
+import { IProjectDetailsProvider } from '../projects/projectDetailsProvider.js';
+import { AntlersNode, ParameterNode } from '../runtime/nodes/abstractNode.js';
+import { ISuggestionRequest } from '../suggestions/suggestionRequest.js';
+import { HtmlClassParameter, HtmlStyleParameter } from './htmlCompat/parameters.js';
+import { IModifier } from './modifierTypes.js';
+import { Scope } from './scope/scope.js';
+import { IReportableError, ISpecialResolverResults } from "./types.js";
 
 interface IParameterAttribute {
     /**

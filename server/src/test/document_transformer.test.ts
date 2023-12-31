@@ -1,5 +1,5 @@
-import assert = require('assert');
-import DocumentTransformer from '../runtime/parser/documentTransformer';
+import assert from 'assert';
+import DocumentTransformer from '../runtime/parser/documentTransformer.js';
 
 suite('Document Transformer Test', () => {
     test('document transformer does not skip things', () => {

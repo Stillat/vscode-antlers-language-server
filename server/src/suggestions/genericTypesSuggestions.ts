@@ -5,9 +5,9 @@ import {
     Range,
 } from "vscode-languageserver";
 import { CompletionItem, MarkupKind } from "vscode-languageserver-types";
-import ModifierManager from '../antlers/modifierManager';
-import { IScopeVariable } from '../antlers/scope/types';
-import { ISuggestionRequest } from './suggestionRequest';
+import ModifierManager from '../antlers/modifierManager.js';
+import { IScopeVariable } from '../antlers/scope/types.js';
+import { ISuggestionRequest } from './suggestionRequest.js';
 
 export class GenericTypesSuggestions {
     static getCompletions(

@@ -1,6 +1,6 @@
-import { IProjectFields } from '../../../projects/structuredFieldTypes/types';
-import { IDocumentationResult } from '../types';
-import { GeneralTextDocumentationProvider, ITextField } from './generalTextDocumentationProvider';
+import { IProjectFields } from '../../../projects/structuredFieldTypes/types.js';
+import { IDocumentationResult } from '../types.js';
+import { GeneralTextDocumentationProvider, ITextField } from './generalTextDocumentationProvider.js';
 
 export class MarkdownDocumentationProvider extends GeneralTextDocumentationProvider {
 

@@ -1,4 +1,4 @@
-import { ArrayDocumentationProvider } from './arrayDocumentationProvider';
+import { ArrayDocumentationProvider } from './arrayDocumentationProvider.js';
 
 export class TaggableDocumentationProvider extends ArrayDocumentationProvider {
 }

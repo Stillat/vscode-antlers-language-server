@@ -2,12 +2,12 @@ import {
     CompletionItem,
     CompletionItemKind,
 } from "vscode-languageserver-types";
-import { IProjectDetailsProvider } from '../../../../projects/projectDetailsProvider';
-import { AntlersNode } from '../../../../runtime/nodes/abstractNode';
+import { IProjectDetailsProvider } from '../../../../projects/projectDetailsProvider.js';
+import { AntlersNode } from '../../../../runtime/nodes/abstractNode.js';
 import {
     ExcludeTaxonomyParams,
     SourceTaxonomyParams,
-} from "./resolveTaxonomyParameterCompletions";
+} from "./resolveTaxonomyParameterCompletions.js";
 
 export function getTaxonomyNames(symbol: AntlersNode, statamicProject: IProjectDetailsProvider): string[] {
     let taxonomyNames: string[] = [];

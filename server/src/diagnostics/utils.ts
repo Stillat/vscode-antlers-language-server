@@ -1,6 +1,6 @@
 import { DiagnosticSeverity } from "vscode-languageserver-types";
-import { IReportableError } from "../antlers/types";
-import { AntlersNode, ParameterNode } from '../runtime/nodes/abstractNode';
+import { IReportableError } from "../antlers/types.js";
+import { AntlersNode, ParameterNode } from '../runtime/nodes/abstractNode.js';
 
 export function parameterError(message: string, symbol: AntlersNode, parameter: ParameterNode): IReportableError {
     return {

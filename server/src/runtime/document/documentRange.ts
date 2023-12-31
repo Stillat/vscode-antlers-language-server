@@ -1,4 +1,4 @@
-import { Position } from '../nodes/position';
+import { Position } from '../nodes/position.js';
 
 export class DocumentRange {
     public start: Position | null = null;

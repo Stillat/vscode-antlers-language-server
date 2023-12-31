@@ -1,5 +1,5 @@
-import assert = require("assert");
-import { AntlersNode, AntlersParserFailNode, CommentParserFailNode, LiteralNode } from '../runtime/nodes/abstractNode';
+import assert from 'assert';
+import { AntlersNode, AntlersParserFailNode, CommentParserFailNode, LiteralNode } from '../runtime/nodes/abstractNode.js';
 import {
     assertCount,
     assertFalse,
@@ -7,8 +7,8 @@ import {
     assertNotNull,
     assertTrue,
     toAntlers,
-} from "./testUtils/assertions";
-import { parseNodes, parseRenderNodes } from "./testUtils/parserUtils";
+} from "./testUtils/assertions.js";
+import { parseNodes, parseRenderNodes } from "./testUtils/parserUtils.js";
 
 suite("Failed Node Tag Pairing", () => {
     test("it can pair incomplete nodes", () => {

@@ -3,9 +3,9 @@ import {
     DocumentSymbolParams,
     SymbolKind,
 } from "vscode-languageserver";
-import { sessionDocuments } from '../languageService/documents';
-import { AntlersNode } from '../runtime/nodes/abstractNode';
-import { nodeToRange } from "../utils/conversions";
+import { sessionDocuments } from '../languageService/documents.js';
+import { AntlersNode } from '../runtime/nodes/abstractNode.js';
+import { nodeToRange } from "../utils/conversions.js";
 
 function convertNodesToSymbols(nodes: AntlersNode[]): DocumentSymbol[] {
     const symbols: DocumentSymbol[] = [];

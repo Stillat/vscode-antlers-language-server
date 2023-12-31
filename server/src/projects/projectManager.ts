@@ -1,6 +1,6 @@
-import { ThemePath } from '../antlers/tags/core/theme/themePath';
-import { IProjectDetailsProvider } from './projectDetailsProvider';
-import { IFieldDetails, IParsedBlueprint, IProjectFields } from './structuredFieldTypes/types';
+import { ThemePath } from '../antlers/tags/core/theme/themePath.js';
+import { IProjectDetailsProvider } from './projectDetailsProvider.js';
+import { IFieldDetails, IParsedBlueprint, IProjectFields } from './structuredFieldTypes/types.js';
 
 class ProjectManager {
     public static instance: ProjectManager | null = null;

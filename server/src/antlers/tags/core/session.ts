@@ -1,17 +1,17 @@
 import { CompletionItem, CompletionItemKind } from "vscode-languageserver-types";
-import SessionVariableManager from "../../../references/sessionVariableManager";
-import { AntlersNode } from '../../../runtime/nodes/abstractNode';
-import { ISuggestionRequest } from '../../../suggestions/suggestionRequest';
-import { tagToCompletionItem } from '../../documentedLabel';
-import { Scope } from '../../scope/scope';
-import { IScopeVariable } from '../../scope/types';
-import { EmptyCompletionResult, exclusiveResult, IAntlersTag } from "../../tagManager";
-import SessionDump from './sessionDump';
-import SessionFlash from './sessionFlash';
-import SessionFlush from './sessionFlush';
-import SessionForget from './sessionForget';
-import SessionHas from './sessionHas';
-import SessionSet from './sessionSet';
+import SessionVariableManager from "../../../references/sessionVariableManager.js";
+import { AntlersNode } from '../../../runtime/nodes/abstractNode.js';
+import { ISuggestionRequest } from '../../../suggestions/suggestionRequest.js';
+import { tagToCompletionItem } from '../../documentedLabel.js';
+import { Scope } from '../../scope/scope.js';
+import { IScopeVariable } from '../../scope/types.js';
+import { EmptyCompletionResult, exclusiveResult, IAntlersTag } from "../../tagManager.js";
+import SessionDump from './sessionDump.js';
+import SessionFlash from './sessionFlash.js';
+import SessionFlush from './sessionFlush.js';
+import SessionForget from './sessionForget.js';
+import SessionHas from './sessionHas.js';
+import SessionSet from './sessionSet.js';
 
 const SessionTagCompletionItems: CompletionItem[] = [
     tagToCompletionItem(SessionSet),

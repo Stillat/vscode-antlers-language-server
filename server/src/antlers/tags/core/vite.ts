@@ -1,9 +1,9 @@
-import { CompletionItem } from 'vscode-languageserver';
-import { makeTagDocWithCodeSample } from '../../../documentation/utils';
-import { ISuggestionRequest } from '../../../suggestions/suggestionRequest';
-import { EmptyCompletionResult, IAntlersTag, exclusiveResult } from '../../tagManager';
-import { tagToCompletionItem } from '../../documentedLabel';
-import ViteAsset from './vite/viteAsset';
+import { CompletionItem } from 'vscode-languageserver';;
+import { makeTagDocWithCodeSample } from '../../../documentation/utils.js';
+import { ISuggestionRequest } from '../../../suggestions/suggestionRequest.js';
+import { EmptyCompletionResult, IAntlersTag, exclusiveResult } from '../../tagManager.js';
+import { tagToCompletionItem } from '../../documentedLabel.js';
+import ViteAsset from './vite/viteAsset.js';
 
 const ViteTagCompletionItems: CompletionItem[] = [
     tagToCompletionItem(ViteAsset)

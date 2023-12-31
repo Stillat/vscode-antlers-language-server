@@ -1,4 +1,4 @@
-import { TagIdentifier } from '../nodes/tagIdentifier';
+import { TagIdentifier } from '../nodes/tagIdentifier.js';
 
 export class TagIdentifierAnalyzer {
     static getIdentifier(input: string) {

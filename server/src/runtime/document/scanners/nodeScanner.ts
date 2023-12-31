@@ -1,8 +1,8 @@
-import { AbstractNode, AntlersNode, ConditionNode, EscapedContentNode, LiteralNode, ParameterNode, ParserFailNode } from '../../nodes/abstractNode';
-import { Position } from '../../nodes/position';
-import { AntlersDocument } from '../antlersDocument';
-import { AntlersNodeQueries } from './antlersNodeQueries';
-import { NodeQueries } from './nodeQueries';
+import { AbstractNode, AntlersNode, ConditionNode, EscapedContentNode, LiteralNode, ParameterNode, ParserFailNode } from '../../nodes/abstractNode.js';
+import { Position } from '../../nodes/position.js';
+import { AntlersDocument } from '../antlersDocument.js';
+import { AntlersNodeQueries } from './antlersNodeQueries.js';
+import { NodeQueries } from './nodeQueries.js';
 
 export class NodeScanner {
     private doc: AntlersDocument;

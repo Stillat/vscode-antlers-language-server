@@ -1,6 +1,6 @@
-import { IBlueprintField } from '../../projects/blueprints/fields';
-import { AntlersNode } from '../../runtime/nodes/abstractNode';
-import { Scope } from './scope';
+import { IBlueprintField } from '../../projects/blueprints/fields.js';
+import { AntlersNode } from '../../runtime/nodes/abstractNode.js';
+import { Scope } from './scope.js';
 
 export interface IPristineSnapshot {
     introducedScope: string,

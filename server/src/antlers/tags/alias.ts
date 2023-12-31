@@ -1,4 +1,4 @@
-import { IAntlersTag } from '../tagManager';
+import { IAntlersTag } from '../tagManager.js';
 
 export function createDefinitionAlias(tag: IAntlersTag, alias: string): IAntlersTag {
     const tagCopy = copyTagDefinition(tag);

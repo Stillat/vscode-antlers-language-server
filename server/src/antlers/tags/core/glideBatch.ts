@@ -1,10 +1,10 @@
-import { makeTagDoc } from '../../../documentation/utils';
-import { AntlersNode } from '../../../runtime/nodes/abstractNode';
-import { ISuggestionRequest } from '../../../suggestions/suggestionRequest';
-import { Scope } from '../../scope/scope';
-import { IAntlersTag } from '../../tagManager';
-import { makeGlideVariables } from '../../variables/glideVariables';
-import { GlideParameters, resolveGlideParameterCompletions } from './glideParameters';
+import { makeTagDoc } from '../../../documentation/utils.js';
+import { AntlersNode } from '../../../runtime/nodes/abstractNode.js';
+import { ISuggestionRequest } from '../../../suggestions/suggestionRequest.js';
+import { Scope } from '../../scope/scope.js';
+import { IAntlersTag } from '../../tagManager.js';
+import { makeGlideVariables } from '../../variables/glideVariables.js';
+import { GlideParameters, resolveGlideParameterCompletions } from './glideParameters.js';
 
 const GlideBatch: IAntlersTag = {
     tagName: 'glide:batch',

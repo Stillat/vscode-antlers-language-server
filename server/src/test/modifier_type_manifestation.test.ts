@@ -1,5 +1,5 @@
-import assert = require('assert');
-import { AntlersDocument } from '../runtime/document/antlersDocument';
+import assert from 'assert';
+import { AntlersDocument } from '../runtime/document/antlersDocument.js';
 
 suite('Modifier Runtime Type Manifestation', () => {
     test('it deduces string types', () => {

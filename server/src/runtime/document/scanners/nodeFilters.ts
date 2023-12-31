@@ -1,4 +1,4 @@
-import { AbstractNode, AntlersNode, ConditionNode } from '../../nodes/abstractNode';
+import { AbstractNode, AntlersNode, ConditionNode } from '../../nodes/abstractNode.js';
 
 /**
  * Filters an array of AbstractNode and returns

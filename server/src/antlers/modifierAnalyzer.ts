@@ -1,7 +1,7 @@
 /* eslint-disable no-cond-assign */
 import { Position } from "vscode-languageserver-textdocument";
-import { IModifier } from "./modifierTypes";
-import { IScopeVariable } from "./scope/types";
+import { IModifier } from "./modifierTypes.js";
+import { IScopeVariable } from "./scope/types.js";
 
 interface ISymbolModifier {
     /**

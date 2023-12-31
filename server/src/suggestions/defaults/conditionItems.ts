@@ -1,7 +1,7 @@
 import { Range } from 'vscode-languageserver-textdocument';
 import { CompletionItem, CompletionItemKind, InsertTextFormat, TextEdit } from 'vscode-languageserver-types';
-import { ISuggestionRequest } from '../suggestionRequest';
-import { StringConditionItems } from './stringConditions';
+import { ISuggestionRequest } from '../suggestionRequest.js';
+import { StringConditionItems } from './stringConditions.js';
 
 export interface ICompletionCondition {
     name: string,

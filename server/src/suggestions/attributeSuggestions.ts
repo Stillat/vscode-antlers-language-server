@@ -5,8 +5,8 @@ import {
     InsertTextFormat,
     TextEdit,
 } from "vscode-languageserver-types";
-import { IAntlersParameter } from "../antlers/tagManager";
-import { ISuggestionRequest } from './suggestionRequest';
+import { IAntlersParameter } from "../antlers/tagManager.js";
+import { ISuggestionRequest } from './suggestionRequest.js';
 
 export function makeTagParameterSuggestions(
     request: ISuggestionRequest,

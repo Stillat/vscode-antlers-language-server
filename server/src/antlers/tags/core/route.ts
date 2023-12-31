@@ -1,9 +1,9 @@
-import { makeTagDoc } from '../../../documentation/utils';
-import { getRouteCompletions } from '../../../suggestions/project/routeCompletions';
-import { getCurrentSymbolMethodNameValue } from '../../../suggestions/suggestionManager';
-import { ISuggestionRequest } from '../../../suggestions/suggestionRequest';
-import { EmptyCompletionResult, exclusiveResult, IAntlersTag, ICompletionResult } from '../../tagManager';
-import { returnDynamicParameter } from '../dynamicParameterResolver';
+import { makeTagDoc } from '../../../documentation/utils.js';
+import { getRouteCompletions } from '../../../suggestions/project/routeCompletions.js';
+import { getCurrentSymbolMethodNameValue } from '../../../suggestions/suggestionManager.js';
+import { ISuggestionRequest } from '../../../suggestions/suggestionRequest.js';
+import { EmptyCompletionResult, exclusiveResult, IAntlersTag, ICompletionResult } from '../../tagManager.js';
+import { returnDynamicParameter } from '../dynamicParameterResolver.js';
 
 const Route: IAntlersTag = {
     tagName: 'route',

@@ -1,4 +1,4 @@
-import { IModifier } from '../modifierTypes';
+import { IModifier } from '../modifierTypes.js';
 
 const stringModifiers: IModifier[] = [
     {

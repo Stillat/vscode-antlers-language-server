@@ -1,9 +1,9 @@
-import { AntlersDocument } from '../../runtime/document/antlersDocument';
-import { AntlersError, ErrrorLevel } from '../../runtime/errors/antlersError';
-import { AntlersErrorCodes } from '../../runtime/errors/antlersErrorCodes';
-import { IDocumentDiagnosticsHandler } from '../documentHandler';
+import { AntlersDocument } from '../../runtime/document/antlersDocument.js';
+import { AntlersError, ErrorLevel } from '../../runtime/errors/antlersError.js';
+import { AntlersErrorCodes } from '../../runtime/errors/antlersErrorCodes.js';
+import { IDocumentDiagnosticsHandler } from '../documentHandler.js';
 import * as yaml from 'js-yaml';
-import { Position, Range } from '../../runtime/nodes/position';
+import { Position, Range } from '../../runtime/nodes/position.js';
 
 function reformatMessage(text: string) {
     const parts = text.split(/\r?\n/),
@@ -59,7 +59,7 @@ const FrontMatterHandler: IDocumentDiagnosticsHandler = {
 
                         const error = new AntlersError();
                         error.errorCode = AntlersErrorCodes.LINT_INVALID_FRONT_MATTER;
-                        error.level = ErrrorLevel.Warning;
+                        error.level = ErrorLevel.Warning;
                         error.message = reformatMessage(err.message);
                         error.range = range;
 
@@ -83,7 +83,7 @@ const FrontMatterHandler: IDocumentDiagnosticsHandler = {
 
                     const error = new AntlersError();
                     error.errorCode = AntlersErrorCodes.LINT_INVALID_FRONT_MATTER;
-                    error.level = ErrrorLevel.Error;
+                    error.level = ErrorLevel.Error;
                     error.message = reformatMessage(err.message);
                     error.range = range;
 

@@ -1,6 +1,6 @@
-import { IProjectFields, IVideoFieldType } from '../../../projects/structuredFieldTypes/types';
-import { TextSnippetProvider } from '../snippets/textSnippetProvider';
-import { IDocumentationProperty, IDocumentationProvider, IDocumentationResult, IDocumentationSnippet, stringDocumentationResult } from '../types';
+import { IProjectFields, IVideoFieldType } from '../../../projects/structuredFieldTypes/types.js';
+import { TextSnippetProvider } from '../snippets/textSnippetProvider.js';
+import { IDocumentationProperty, IDocumentationProvider, IDocumentationResult, IDocumentationSnippet, stringDocumentationResult } from '../types.js';
 
 export class VideoDocumentationProvider implements IDocumentationProvider {
     resolve(context: IVideoFieldType, currentProject: IProjectFields): IDocumentationResult {

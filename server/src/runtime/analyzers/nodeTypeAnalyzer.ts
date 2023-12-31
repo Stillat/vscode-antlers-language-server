@@ -1,5 +1,5 @@
-import { AbstractNode, AntlersNode } from '../nodes/abstractNode';
-import EnvironmentDetails from "../runtime/environmentDetails";
+import { AbstractNode, AntlersNode } from '../nodes/abstractNode.js';
+import EnvironmentDetails from "../runtime/environmentDetails.js";
 
 class NodeTypeAnalyzer {
     static environmentDetails: EnvironmentDetails | null = null;

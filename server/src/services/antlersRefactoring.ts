@@ -1,16 +1,16 @@
-import { CodeAction, CodeActionKind, CodeActionParams, Diagnostic, Range, TextEdit } from 'vscode-languageserver';
+import { CodeAction, CodeActionKind, CodeActionParams, Diagnostic, Range, TextEdit } from 'vscode-languageserver';;
 import { TextDocument } from 'vscode-languageserver-textdocument';
-import DiagnosticsManager from '../diagnostics/diagnosticsManager';
-import { documentMap, sessionDocuments } from '../languageService/documents';
-import ProjectManager from '../projects/projectManager';
-import { makeProviderRequest } from '../providers/providerParameters';
-import RefactoringManager from '../refactoring/refactoringManager';
-import IRefactoringRequest from '../refactoring/refactoringRequest';
-import { ClassSearchResults } from '../runtime/analyzers/dynamicClassAnalyzer';
-import { AntlersDocument } from '../runtime/document/antlersDocument';
-import { AntlersErrorCodes } from '../runtime/errors/antlersErrorCodes';
-import { ConditionNode } from '../runtime/nodes/abstractNode';
-import { globalSettings } from '../server';
+import DiagnosticsManager from '../diagnostics/diagnosticsManager.js';
+import { documentMap, sessionDocuments } from '../languageService/documents.js';
+import ProjectManager from '../projects/projectManager.js';
+import { makeProviderRequest } from '../providers/providerParameters.js';
+import RefactoringManager from '../refactoring/refactoringManager.js';
+import IRefactoringRequest from '../refactoring/refactoringRequest.js';
+import { ClassSearchResults } from '../runtime/analyzers/dynamicClassAnalyzer.js';
+import { AntlersDocument } from '../runtime/document/antlersDocument.js';
+import { AntlersErrorCodes } from '../runtime/errors/antlersErrorCodes.js';
+import { ConditionNode } from '../runtime/nodes/abstractNode.js';
+import { globalSettings } from '../server.js';
 
 let currentDiagnostics: Diagnostic[] = [];
 

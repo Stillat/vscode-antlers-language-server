@@ -1,5 +1,5 @@
-import { ISuggestionRequest } from '../../../../suggestions/suggestionRequest';
-import { exclusiveResultList, IAntlersParameter, ICompletionResult } from '../../../tagManager';
+import { ISuggestionRequest } from '../../../../suggestions/suggestionRequest.js';
+import { exclusiveResultList, IAntlersParameter, ICompletionResult } from '../../../tagManager.js';
 
 export function resolveNavParameterCompletions(parameter: IAntlersParameter, params: ISuggestionRequest): ICompletionResult | null {
     if (parameter.name == 'handle') {

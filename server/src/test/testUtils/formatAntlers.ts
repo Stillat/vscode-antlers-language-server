@@ -1,8 +1,8 @@
-import { AntlersSettings } from '../../antlersSettings';
-import { AntlersFormattingOptions } from '../../formatting/antlersFormattingOptions';
-import { BeautifyDocumentFormatter } from '../../formatting/beautifyDocumentFormatter';
-import { IHTMLFormatConfiguration } from '../../formatting/htmlCompat';
-import { AntlersDocument } from '../../runtime/document/antlersDocument';
+import { AntlersSettings } from '../../antlersSettings.js';
+import { AntlersFormattingOptions } from '../../formatting/antlersFormattingOptions.js';
+import { BeautifyDocumentFormatter } from '../../formatting/beautifyDocumentFormatter.js';
+import { IHTMLFormatConfiguration } from '../../formatting/htmlCompat.js';
+import { AntlersDocument } from '../../runtime/document/antlersDocument.js';
 
 const defaultAntlersSettings: AntlersSettings = {
     formatFrontMatter: false,

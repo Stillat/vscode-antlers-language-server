@@ -1,9 +1,9 @@
-import TagManager from '../../antlers/tagManagerInstance';
-import ProjectManager from '../../projects/projectManager';
-import { AntlersError, ErrrorLevel } from '../../runtime/errors/antlersError';
-import { AntlersErrorCodes } from '../../runtime/errors/antlersErrorCodes';
-import { AntlersNode } from '../../runtime/nodes/abstractNode';
-import { IDiagnosticsHandler } from '../diagnosticsHandler';
+import TagManager from '../../antlers/tagManagerInstance.js';
+import ProjectManager from '../../projects/projectManager.js';
+import { AntlersError, ErrorLevel } from '../../runtime/errors/antlersError.js';
+import { AntlersErrorCodes } from '../../runtime/errors/antlersErrorCodes.js';
+import { AntlersNode } from '../../runtime/nodes/abstractNode.js';
+import { IDiagnosticsHandler } from '../diagnosticsHandler.js';
 import * as semver from 'semver';
 
 const StatamicVersionHandler: IDiagnosticsHandler = {
@@ -30,7 +30,7 @@ const StatamicVersionHandler: IDiagnosticsHandler = {
                     AntlersErrorCodes.LINT_VERSION_NOT_COMPATIBLE,
                     node,
                     node.runtimeName() + ' requires at least Statamic ' + tagRef.introducedIn + '. Current project version: ' + currentVersion,
-                    ErrrorLevel.Warning
+                    ErrorLevel.Warning
                 ));
             }
         } catch (err) {

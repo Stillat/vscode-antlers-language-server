@@ -1,4 +1,4 @@
-import { IStatamicStructure } from './statamicStructure';
+import { IStatamicStructure } from './statamicStructure.js';
 
 export class ProjectEncoder {
     static encode(structure: IStatamicStructure): string {

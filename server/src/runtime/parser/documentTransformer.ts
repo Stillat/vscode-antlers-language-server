@@ -1,5 +1,5 @@
-import { AntlersDocument } from '../document/antlersDocument';
-import { AbstractNode, AntlersNode } from '../nodes/abstractNode';
+import { AntlersDocument } from '../document/antlersDocument.js';
+import { AbstractNode, AntlersNode } from '../nodes/abstractNode.js';
 
 class DocumentTransformer {
 

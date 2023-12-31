@@ -1,5 +1,5 @@
-import { AntlersError } from '../errors/antlersError';
-import { AntlersDocument } from './antlersDocument';
+import { AntlersError } from '../errors/antlersError.js';
+import { AntlersDocument } from './antlersDocument.js';
 
 export class DocumentErrors {
     private doc: AntlersDocument;

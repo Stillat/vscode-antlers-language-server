@@ -1,6 +1,6 @@
-import { AntlersNode } from '../../runtime/nodes/abstractNode';
-import { IScopeVariable } from '../scope/types';
-import { makeContentVariables } from './contentVariables';
+import { AntlersNode } from '../../runtime/nodes/abstractNode.js';
+import { IScopeVariable } from '../scope/types.js';
+import { makeContentVariables } from './contentVariables.js';
 
 export function makeTermVariables(symbol: AntlersNode): IScopeVariable[] {
     return makeContentVariables(symbol).concat([

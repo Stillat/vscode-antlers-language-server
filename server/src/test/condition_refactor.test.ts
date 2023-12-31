@@ -1,8 +1,8 @@
-import assert = require('assert');
-import { TagPairAnalyzer } from '../runtime/analyzers/tagPairAnalyzer';
-import { AntlersDocument } from '../runtime/document/antlersDocument';
-import { ConditionNode } from '../runtime/nodes/abstractNode';
-import ConditionTernaryRefactor from '../runtime/refactoring/conditionTernaryRefactor';
+import assert from 'assert';
+import { TagPairAnalyzer } from '../runtime/analyzers/tagPairAnalyzer.js';
+import { AntlersDocument } from '../runtime/document/antlersDocument.js';
+import { ConditionNode } from '../runtime/nodes/abstractNode.js';
+import ConditionTernaryRefactor from '../runtime/refactoring/conditionTernaryRefactor.js';
 
 function refactor(template: string, isInterpolation = false, isNested = false) {
     const refactor = new ConditionTernaryRefactor({

@@ -1,8 +1,8 @@
-import assert = require('assert');
-import { formatStringWithPrettier } from '../formatting/prettier/utils';
+import assert from 'assert';
+import { formatStringWithPrettier } from '../formatting/prettier/utils.js';
 
 suite('Formatter Prettier Front Matter', () => {
-    test('formatting can be disabled', () => {
+    test('formatting can be disabled', async () => {
         const input = `<div><div><div>
 {{# format-ignore-start #}}
 <div class="dont format me"
@@ -63,10 +63,10 @@ one
         </div>
     </div>
 </div>`;
-        assert.strictEqual(formatStringWithPrettier(input).trim(), output);
+        assert.strictEqual((await formatStringWithPrettier(input)).trim(), output);
     });
 
-    test('repeated formatting of disabled regions does not add extra whitespace', () => {
+    test('repeated formatting of disabled regions does not add extra whitespace', async () => {
         const input = `<div><div><div>
 {{# format-ignore-start #}}
 <div class="dont format me"
@@ -127,12 +127,12 @@ one
         </div>
     </div>
 </div>`;
-        let formatted = formatStringWithPrettier(input).trim();
+        let formatted = (await formatStringWithPrettier(input)).trim();
 
         assert.strictEqual(formatted, output);
 
         for (let i = 0; i < 5; i++) {
-            formatted = formatStringWithPrettier(formatted);
+            formatted = await formatStringWithPrettier(formatted);
 
             assert.strictEqual(formatted, output);
         }

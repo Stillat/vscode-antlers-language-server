@@ -1,8 +1,8 @@
-import { CodeAction } from 'vscode-languageserver';
-import ExtractPartialHandler from './core/extractPartialHandler';
-import TernaryHandler from './core/ternaryHandler';
-import IRefactorHandler from './refactorHandler';
-import IRefactoringRequest from './refactoringRequest';
+import { CodeAction } from 'vscode-languageserver';;
+import ExtractPartialHandler from './core/extractPartialHandler.js';
+import TernaryHandler from './core/ternaryHandler.js';
+import IRefactorHandler from './refactorHandler.js';
+import IRefactoringRequest from './refactoringRequest.js';
 
 class RefactoringManager {
 

@@ -1,15 +1,15 @@
-import { makeTagDoc } from '../../../documentation/utils';
-import { AntlersNode } from '../../../runtime/nodes/abstractNode';
-import { formatSuggestionList } from "../../../suggestions/fieldFormatter";
-import { ISuggestionRequest } from '../../../suggestions/suggestionRequest';
-import { Scope } from '../../scope/scope';
+import { makeTagDoc } from '../../../documentation/utils.js';
+import { AntlersNode } from '../../../runtime/nodes/abstractNode.js';
+import { formatSuggestionList } from "../../../suggestions/fieldFormatter.js";
+import { ISuggestionRequest } from '../../../suggestions/suggestionRequest.js';
+import { Scope } from '../../scope/scope.js';
 import {
     EmptyCompletionResult,
     exclusiveResult,
     IAntlersParameter,
     IAntlersTag,
-} from "../../tagManager";
-import { UserProfileParameters } from './userProfileParameters';
+} from "../../tagManager.js";
+import { UserProfileParameters } from './userProfileParameters.js';
 
 const UserProfile: IAntlersTag = {
     tagName: "user:profile",

@@ -5,8 +5,8 @@ import {
 import {
     exclusiveResult,
     ICompletionResult,
-} from "../antlers/tagManager";
-import { ParameterNode } from '../runtime/nodes/abstractNode';
+} from "../antlers/tagManager.js";
+import { ParameterNode } from '../runtime/nodes/abstractNode.js';
 
 export function getUniqueParameterArrayValuesSuggestions(paramAttribute: ParameterNode, allValues: string[]): ICompletionResult {
     const items: CompletionItem[] = [],

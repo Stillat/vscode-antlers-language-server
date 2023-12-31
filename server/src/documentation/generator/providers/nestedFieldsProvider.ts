@@ -1,6 +1,6 @@
-import { Faker } from '../faker';
-import { SnippetBuffer } from '../snippetBuffer';
-import { IDocumentationSnippet, IInjectedField } from '../types';
+import { Faker } from '../faker.js';
+import { SnippetBuffer } from '../snippetBuffer.js';
+import { IDocumentationSnippet, IInjectedField } from '../types.js';
 
 function isArrayLike(fieldType: string): boolean {
     if (fieldType === 'array' || fieldType == 'entry' || fieldType == 'builder' || fieldType == 'entries') {

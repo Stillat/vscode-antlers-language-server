@@ -1,6 +1,6 @@
-import { AbstractNode, AntlersNode, ConditionNode, ExecutionBranch, LiteralNode } from '../nodes/abstractNode';
-import { ConditionPairAnalyzer } from './conditionPairAnalyzer';
-import IFlattenedCondition from './structures/flattenedCondition';
+import { AbstractNode, AntlersNode, ConditionNode, ExecutionBranch, LiteralNode } from '../nodes/abstractNode.js';
+import { ConditionPairAnalyzer } from './conditionPairAnalyzer.js';
+import IFlattenedCondition from './structures/flattenedCondition.js';
 
 class ConditionAnalyzer {
 

@@ -1,8 +1,8 @@
-import ModifierManager from '../../../antlers/modifierManager';
-import { ModifierChainNode, ModifierNode, AbstractNode, AntlersNode, ModifierNameNode } from '../../nodes/abstractNode';
-import { Position } from '../../nodes/position';
-import { DocumentParser } from '../../parser/documentParser';
-import { AntlersDocument } from '../antlersDocument';
+import ModifierManager from '../../../antlers/modifierManager.js';
+import { ModifierChainNode, ModifierNode, AbstractNode, AntlersNode, ModifierNameNode } from '../../nodes/abstractNode.js';
+import { Position } from '../../nodes/position.js';
+import { DocumentParser } from '../../parser/documentParser.js';
+import { AntlersDocument } from '../antlersDocument.js';
 
 export class ModifierContext {
     public modifierChain: ModifierChainNode | null = null;

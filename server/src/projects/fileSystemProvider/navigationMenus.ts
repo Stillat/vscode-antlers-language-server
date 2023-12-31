@@ -1,7 +1,7 @@
 import * as path from "path";
 import * as fs from "fs";
 import * as YAML from "yaml";
-import { INavigation } from '../navigations/navigation';
+import { INavigation } from '../navigations/navigation.js';
 
 export function getNavigationMenu(navPath: string): INavigation {
     const navHandle = path.basename(navPath).split(".").slice(0, -1).join(".");

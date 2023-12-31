@@ -1,32 +1,32 @@
-import assert = require('assert');
-import { formatStringWithPrettier } from '../formatting/prettier/utils';
+import assert from 'assert';
+import { formatStringWithPrettier } from '../formatting/prettier/utils.js';
 
 suite('Prettier Formatter Basic Nodes', () => {
-    test('it doesnt remove variable parts with neighboring numeric nodes', () => {
-        assert.strictEqual(formatStringWithPrettier('{{ assets:0 }}').trim(), '{{ assets:0 }}');
-        assert.strictEqual(formatStringWithPrettier('{{ assets:0:0 }}').trim(), '{{ assets:0:0 }}');
-        assert.strictEqual(formatStringWithPrettier('{{ assets:0:0:test }}').trim(), '{{ assets:0:0:test }}');
-        assert.strictEqual(formatStringWithPrettier('{{ assets.0:0:test }}').trim(), '{{ assets.0:0:test }}');
-        assert.strictEqual(formatStringWithPrettier('{{ assets.0:0.test }}').trim(), '{{ assets.0:0.test }}');
+    test('it doesnt remove variable parts with neighboring numeric nodes', async () => {
+        assert.strictEqual((await formatStringWithPrettier('{{ assets:0 }}')).trim(), '{{ assets:0 }}');
+        assert.strictEqual((await formatStringWithPrettier('{{ assets:0:0 }}')).trim(), '{{ assets:0:0 }}');
+        assert.strictEqual((await formatStringWithPrettier('{{ assets:0:0:test }}')).trim(), '{{ assets:0:0:test }}');
+        assert.strictEqual((await formatStringWithPrettier('{{ assets.0:0:test }}')).trim(), '{{ assets.0:0:test }}');
+        assert.strictEqual((await formatStringWithPrettier('{{ assets.0:0.test }}')).trim(), '{{ assets.0:0.test }}');
     });
 
-    test('it preserves hyphens in variables', () => {
+    test('it preserves hyphens in variables', async () => {
         const input = `{{ tag:test-hyphens 
         
 }} {{ 5-5 }} {{ test-var - another-var }}`;
         const output = "{{ tag:test-hyphens }} {{ 5 - 5 }} {{ test-var - another-var }}";
-        assert.strictEqual(formatStringWithPrettier(input).trim(), output);
+        assert.strictEqual((await formatStringWithPrettier(input)).trim(), output);
     });
 
-    test('it preserves hyphens in tags', () => {
+    test('it preserves hyphens in tags', async () => {
         const input = `{{ tag:test-hyphens 
         
         }} {{ 5-5 }}`;
 
-        assert.strictEqual(formatStringWithPrettier(input).trim(), "{{ tag:test-hyphens }} {{ 5 - 5 }}");
+        assert.strictEqual((await formatStringWithPrettier(input)).trim(), "{{ tag:test-hyphens }} {{ 5 - 5 }}");
     });
 
-    test('it does not double up', () => {
+    test('it does not double up', async () => {
         const initial = `{{# Page title #}}
         <title>
             {{ yield:seo_title }}
@@ -88,13 +88,13 @@ suite('Prettier Formatter Basic Nodes', () => {
         content="{{ partial:snippets/fallback_description }}"
     />
 {{ /if }}`;
-        assert.strictEqual(formatStringWithPrettier(initial).trim(), output);
+        assert.strictEqual((await formatStringWithPrettier(initial)).trim(), output);
         for (let i = 0; i <= 10; i++) {
-            assert.strictEqual(formatStringWithPrettier(output).trim(), output);
+            assert.strictEqual((await formatStringWithPrettier(output)).trim(), output);
         }
     });
 
-    test('it indents nested pairs nicely', () => {
+    test('it indents nested pairs nicely', async () => {
         const expected = `{{ fields }}
     {{ if something }}
         <div>
@@ -103,25 +103,25 @@ suite('Prettier Formatter Basic Nodes', () => {
     {{ /if }}
 {{ /fields }}`;
 
-        assert.strictEqual(formatStringWithPrettier(`{{ fields }}
+        assert.strictEqual((await formatStringWithPrettier(`{{ fields }}
         {{ if something }}
         <div>
         <label></label>
     </div>
         {{ /if}}
-    {{ /fields }}`).trim(), expected);
+    {{ /fields }}`)).trim(), expected);
     });
 
-    test('template test 13', () => {
+    test('template test 13', async () => {
         const template = `{{ items limit="2" }}<{{ value }} />{{ /items }}{{ items | count }}`;
         const output = `{{ items limit="2" }}
     <{{ value }} />
 {{ /items }}
 {{ items | count }}`;
-        assert.strictEqual(formatStringWithPrettier(template).trim(), output);
+        assert.strictEqual((await formatStringWithPrettier(template)).trim(), output);
     });
 
-    test('smart line breaking', () => {
+    test('smart line breaking', async () => {
         const template = `{{ tag:array }}{{ noparse }}{{ string }}{{ /noparse }}{{ /tag:array }}
         {{ tag:loop }} <p>{{ index }} {{ noparse }}{{ string }}{{ /noparse }} {{ string }}</p> {{ /tag:loop }}
         
@@ -140,10 +140,10 @@ suite('Prettier Formatter Basic Nodes', () => {
 {{ items limit="2" }}
     <{{ value }} />
 {{ /items }}`;
-        assert.strictEqual(formatStringWithPrettier(template).trim(), output);
+        assert.strictEqual((await formatStringWithPrettier(template)).trim(), output);
     });
 
-    test('it indents at nested levels', () => {
+    test('it indents at nested levels', async () => {
         const input = `<nav
 class="bg-blue mx-auto flex max-w-5xl flex-wrap items-center justify-between py-10 lg:justify-start"
 >    <div class="text-md font-medium antialiased">
@@ -171,13 +171,13 @@ class="bg-blue mx-auto flex max-w-5xl flex-wrap items-center justify-between py-
     </div>
 </nav>`;
         assert.strictEqual(
-            formatStringWithPrettier(input).trim(),
+            (await formatStringWithPrettier(input)).trim(),
             output
         );
     });
 
 
-    test('it doesnt break up tags and preserves line breaks', () => {
+    test('it doesnt break up tags and preserves line breaks', async () => {
         const input = `<!DOCTYPE html>
         <html lang="{{ site:short_locale }}">
           <head>
@@ -247,17 +247,17 @@ class="bg-blue mx-auto flex max-w-5xl flex-wrap items-center justify-between py-
     </body>
 </html>`;
         assert.strictEqual(
-            formatStringWithPrettier(input).trim(),
+            (await formatStringWithPrettier(input)).trim(),
             output
         );
     });
 
-    test('it formats strings inside unless', () => {
+    test('it formats strings inside unless', async () => {
         const input = `{{ unless type == 'section' }}{{ /unless }}`;
         const output = `{{ unless type == 'section' }}
 {{ /unless }}`;
         assert.strictEqual(
-            formatStringWithPrettier(input).trim(),
+            (await formatStringWithPrettier(input)).trim(),
             output
         );
     });

@@ -1,8 +1,8 @@
-import { AntlersError } from '../errors/antlersError';
-import { AntlersErrorCodes } from '../errors/antlersErrorCodes';
-import { VariableReference, PathNode, AccessorNode } from '../nodes/abstractNode';
-import { StringUtilities } from '../utilities/stringUtilities';
-import { DocumentParser } from './documentParser';
+import { AntlersError } from '../errors/antlersError.js';
+import { AntlersErrorCodes } from '../errors/antlersErrorCodes.js';
+import { VariableReference, PathNode, AccessorNode } from '../nodes/abstractNode.js';
+import { StringUtilities } from '../utilities/stringUtilities.js';
+import { DocumentParser } from './documentParser.js';
 
 export class PathParser {
     static readonly ColonSeparator = ':';

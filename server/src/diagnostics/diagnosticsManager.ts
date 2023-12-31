@@ -1,11 +1,11 @@
-import { AntlersDocument } from '../runtime/document/antlersDocument';
-import { AntlersError } from '../runtime/errors/antlersError';
-import { AntlersNode } from '../runtime/nodes/abstractNode';
-import { getAntlersSettings } from '../server';
-import { IDiagnosticsHandler } from "./diagnosticsHandler";
-import { IDocumentDiagnosticsHandler } from './documentHandler';
-import { CoreDocumentHandlers } from './documentHandlers/coreDocHandlers';
-import CoreHandlers from "./handlers/coreHandlers";
+import { AntlersDocument } from '../runtime/document/antlersDocument.js';
+import { AntlersError } from '../runtime/errors/antlersError.js';
+import { AntlersNode } from '../runtime/nodes/abstractNode.js';
+import { getAntlersSettings } from '../server.js';
+import { IDiagnosticsHandler } from "./diagnosticsHandler.js";
+import { IDocumentDiagnosticsHandler } from './documentHandler.js';
+import { CoreDocumentHandlers } from './documentHandlers/coreDocHandlers.js';
+import CoreHandlers from "./handlers/coreHandlers.js";
 
 class DiagnosticsManager {
     private fileDiagnostics: Map<string, AntlersError[]> = new Map();

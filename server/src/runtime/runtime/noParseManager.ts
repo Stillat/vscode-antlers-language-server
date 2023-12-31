@@ -1,4 +1,4 @@
-import { Md5 } from 'ts-md5/dist/md5';
+import { Md5 } from 'ts-md5/dist/md5.js';
 
 export class NoParseManager {
     protected static noParseRegions: Map<string, string> = new Map();

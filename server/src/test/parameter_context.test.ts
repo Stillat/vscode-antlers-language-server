@@ -1,15 +1,15 @@
-import assert = require("assert");
-import { AntlersDocument } from "../runtime/document/antlersDocument";
-import { ParameterContext } from '../runtime/document/contexts/parameterContext';
-import { CursorContext } from '../runtime/document/contexts/positionContext';
-import { ParameterNode } from '../runtime/nodes/abstractNode';
+import assert from 'assert';
+import { AntlersDocument } from "../runtime/document/antlersDocument.js";
+import { ParameterContext } from '../runtime/document/contexts/parameterContext.js';
+import { CursorContext } from '../runtime/document/contexts/positionContext.js';
+import { ParameterNode } from '../runtime/nodes/abstractNode.js';
 import {
     assertFalse,
     assertInstanceOf,
     assertNotNull,
     assertNull,
     assertTrue,
-} from "./testUtils/assertions";
+} from "./testUtils/assertions.js";
 
 suite("Parameter Context", () => {
     test("it resolve parameter contexts", () => {

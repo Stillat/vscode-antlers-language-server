@@ -1,5 +1,5 @@
-import { ParameterNode } from '../../nodes/abstractNode';
-import { Position } from '../../nodes/position';
+import { ParameterNode } from '../../nodes/abstractNode.js';
+import { Position } from '../../nodes/position.js';
 
 export class ParameterContext {
     public parameter: ParameterNode | null = null;

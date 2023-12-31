@@ -1,12 +1,12 @@
 import { Range } from 'vscode-languageserver-textdocument';
 import { CompletionItem, CompletionItemKind, InsertTextFormat, TextEdit } from 'vscode-languageserver-types';
-import { IBlueprintField } from '../../../../projects/blueprints/fields';
-import { IProjectDetailsProvider } from '../../../../projects/projectDetailsProvider';
-import { AntlersNode } from '../../../../runtime/nodes/abstractNode';
-import { ISuggestionRequest } from '../../../../suggestions/suggestionRequest';
-import { Scope } from '../../../scope/scope';
-import { ICollectionContext } from '../../../types';
-import { EntryStatuses } from './parameters';
+import { IBlueprintField } from '../../../../projects/blueprints/fields.js';
+import { IProjectDetailsProvider } from '../../../../projects/projectDetailsProvider.js';
+import { AntlersNode } from '../../../../runtime/nodes/abstractNode.js';
+import { ISuggestionRequest } from '../../../../suggestions/suggestionRequest.js';
+import { Scope } from '../../../scope/scope.js';
+import { ICollectionContext } from '../../../types.js';
+import { EntryStatuses } from './parameters.js';
 
 export function getTaxonomyCompletionItems(request: ISuggestionRequest): CompletionItem[] {
     const items: CompletionItem[] = [];

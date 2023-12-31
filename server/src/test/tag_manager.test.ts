@@ -1,5 +1,5 @@
-import { AntlersDocument } from '../runtime/document/antlersDocument';
-import { assertCount, assertFalse, assertTrue } from './testUtils/assertions';
+import { AntlersDocument } from '../runtime/document/antlersDocument.js';
+import { assertCount, assertFalse, assertTrue } from './testUtils/assertions.js';
 
 suite("Tag Manager Tests", () => {
     test("it categorizes nodes", () => {

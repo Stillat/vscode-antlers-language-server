@@ -1,4 +1,4 @@
-import { AntlersError } from '../../errors/antlersError';
+import { AntlersError } from '../../errors/antlersError.js';
 
 export class ErrorPrinter {
     static printError(error: AntlersError, lines: Map<number, string>): string {

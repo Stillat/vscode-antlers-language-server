@@ -1,5 +1,5 @@
-import { AbstractNode, AntlersNode, VariableNode, PathNode } from '../nodes/abstractNode';
-import { StringUtilities } from './stringUtilities';
+import { AbstractNode, AntlersNode, VariableNode, PathNode } from '../nodes/abstractNode.js';
+import { StringUtilities } from './stringUtilities.js';
 
 export class NodeHelpers {
     static readonly DistMax = 65000;

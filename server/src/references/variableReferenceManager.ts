@@ -1,8 +1,8 @@
-import { Location } from 'vscode-languageserver';
-import { sessionDocuments } from '../languageService/documents';
-import { AbstractNode, VariableNode } from '../runtime/nodes/abstractNode';
-import { ISuggestionRequest } from '../suggestions/suggestionRequest';
-import { nodeToRange } from '../utils/conversions';
+import { Location } from 'vscode-languageserver';;
+import { sessionDocuments } from '../languageService/documents.js';
+import { AbstractNode, VariableNode } from '../runtime/nodes/abstractNode.js';
+import { ISuggestionRequest } from '../suggestions/suggestionRequest.js';
+import { nodeToRange } from '../utils/conversions.js';
 
 export class VariableReferenceManager {
     static getReferences(params: ISuggestionRequest | null): Location[] | null {

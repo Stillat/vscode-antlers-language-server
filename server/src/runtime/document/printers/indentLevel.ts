@@ -1,4 +1,4 @@
-import { StringUtilities } from '../../utilities/stringUtilities';
+import { StringUtilities } from '../../utilities/stringUtilities.js';
 
 export class IndentLevel {
     static indentRelative(value: string, targetIndent: number): string {

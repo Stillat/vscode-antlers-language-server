@@ -1,7 +1,7 @@
-import { makeTagDoc } from '../../../documentation/utils';
-import { ISuggestionRequest } from '../../../suggestions/suggestionRequest';
-import { EmptyCompletionResult, exclusiveResult, IAntlersParameter, IAntlersTag, ICompletionResult } from '../../tagManager';
-import { getAllGroupSuggestionsn, makeUserGroupSuggestions } from './user/permissionUtils';
+import { makeTagDoc } from '../../../documentation/utils.js';
+import { ISuggestionRequest } from '../../../suggestions/suggestionRequest.js';
+import { EmptyCompletionResult, exclusiveResult, IAntlersParameter, IAntlersTag, ICompletionResult } from '../../tagManager.js';
+import { getAllGroupSuggestionsn, makeUserGroupSuggestions } from './user/permissionUtils.js';
 
 const In: IAntlersTag = {
     tagName: 'in',

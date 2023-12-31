@@ -1,5 +1,5 @@
-import { IFieldDetails } from '../../../projects/structuredFieldTypes/types';
-import { IDocumentationSnippet } from '../types';
+import { IFieldDetails } from '../../../projects/structuredFieldTypes/types.js';
+import { IDocumentationSnippet } from '../types.js';
 
 export class DateTimeSnippetProvider {
     static generate(field:IFieldDetails):IDocumentationSnippet[] {

@@ -1,21 +1,21 @@
-import { IFieldtypeInjection } from '../../../projects/fieldsets/fieldtypeInjection';
-import ArrayFieldType from './arrayFieldType';
-import AssetsFieldType from './assetsFieldType';
-import BardFieldType from './bardFieldType';
-import FormMultipleFieldtype from './formMultiple';
-import ListFieldtype from './listFieldType';
-import ReplicatorFieldtype from './replicatorFieldType';
-import SelectMultipleFieldtype from './selectMultiple';
-import SitesMultiple from './sitesMultiple';
-import StructuresMultipleFieldtype from './structuresMultiple';
-import TableFieldtype from './table';
-import TagsFieldtype from './tagsFieldType';
-import TaxonomiesMultipleFieldtype from './taxonomiesMultiple';
-import TermsMultipleFieldtype from './termsMultiple';
-import UserGroupsMultipleFieldtype from './userGroupsMultiple';
-import UserRolesMultipleFieldtype from './userRolesMultiple';
-import UsersMultipleFieldtype from './usersMultiple';
-import YamlFieldtype from './yamlFieldType';
+import { IFieldtypeInjection } from '../../../projects/fieldsets/fieldtypeInjection.js';
+import ArrayFieldType from './arrayFieldType.js';
+import AssetsFieldType from './assetsFieldType.js';
+import BardFieldType from './bardFieldType.js';
+import FormMultipleFieldtype from './formMultiple.js';
+import ListFieldtype from './listFieldType.js';
+import ReplicatorFieldtype from './replicatorFieldType.js';
+import SelectMultipleFieldtype from './selectMultiple.js';
+import SitesMultiple from './sitesMultiple.js';
+import StructuresMultipleFieldtype from './structuresMultiple.js';
+import TableFieldtype from './table.js';
+import TagsFieldtype from './tagsFieldType.js';
+import TaxonomiesMultipleFieldtype from './taxonomiesMultiple.js';
+import TermsMultipleFieldtype from './termsMultiple.js';
+import UserGroupsMultipleFieldtype from './userGroupsMultiple.js';
+import UserRolesMultipleFieldtype from './userRolesMultiple.js';
+import UsersMultipleFieldtype from './usersMultiple.js';
+import YamlFieldtype from './yamlFieldType.js';
 
 const CoreFieldtypes: IFieldtypeInjection[] = [
     ArrayFieldType,

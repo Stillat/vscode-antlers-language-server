@@ -1,9 +1,9 @@
 import { CompletionItem, CompletionItemKind } from 'vscode-languageserver-types';
-import { getConditionCompletionItems } from '../../../../suggestions/defaults/conditionItems';
-import { getRoot } from '../../../../suggestions/suggestionManager';
-import { ISuggestionRequest } from '../../../../suggestions/suggestionRequest';
-import { EmptyCompletionResult, exclusiveResult, ICompletionResult, nonExclusiveResult } from '../../../tagManager';
-import { getTaxonomyNames } from './utils';
+import { getConditionCompletionItems } from '../../../../suggestions/defaults/conditionItems.js';
+import { getRoot } from '../../../../suggestions/suggestionManager.js';
+import { ISuggestionRequest } from '../../../../suggestions/suggestionRequest.js';
+import { EmptyCompletionResult, exclusiveResult, ICompletionResult, nonExclusiveResult } from '../../../tagManager.js';
+import { getTaxonomyNames } from './utils.js';
 
 export function resolveTaxonomyCompletions(params: ISuggestionRequest): ICompletionResult {
     const items: CompletionItem[] = [];

@@ -1,6 +1,6 @@
-import { IFieldtypeInjection } from '../../../projects/fieldsets/fieldtypeInjection';
-import { AntlersNode } from '../../../runtime/nodes/abstractNode';
-import { Scope } from '../../scope/scope';
+import { IFieldtypeInjection } from '../../../projects/fieldsets/fieldtypeInjection.js';
+import { AntlersNode } from '../../../runtime/nodes/abstractNode.js';
+import { Scope } from '../../scope/scope.js';
 
 const TableFieldtype: IFieldtypeInjection = {
     name: 'table',

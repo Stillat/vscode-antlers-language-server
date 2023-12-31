@@ -1,4 +1,4 @@
-import { IHTMLFormatConfiguration } from './htmlCompat';
+import { IHTMLFormatConfiguration } from './htmlCompat.js';
 
 export interface AntlersFormattingOptions {
     htmlOptions: IHTMLFormatConfiguration,

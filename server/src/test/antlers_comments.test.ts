@@ -1,12 +1,12 @@
-import assert = require("assert");
-import { AntlersNode, LiteralNode } from '../runtime/nodes/abstractNode';
+import assert from 'assert';
+import { AntlersNode, LiteralNode } from '../runtime/nodes/abstractNode.js';
 import {
     assertCount,
     assertInstanceOf,
     assertNotNull,
     assertTrue,
-} from "./testUtils/assertions";
-import { parseRenderNodes } from "./testUtils/parserUtils";
+} from "./testUtils/assertions.js";
+import { parseRenderNodes } from "./testUtils/parserUtils.js";
 
 suite("Antlers Comments", () => {
     test("single line comments", () => {

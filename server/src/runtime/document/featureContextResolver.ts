@@ -1,6 +1,6 @@
-import { AbstractNode, LogicGroupBegin, LogicGroupEnd, ModifierNameNode, ModifierSeparator } from '../nodes/abstractNode';
-import { Position } from '../nodes/position';
-import { NodeQueries } from './scanners/nodeQueries';
+import { AbstractNode, LogicGroupBegin, LogicGroupEnd, ModifierNameNode, ModifierSeparator } from '../nodes/abstractNode.js';
+import { Position } from '../nodes/position.js';
+import { NodeQueries } from './scanners/nodeQueries.js';
 
 export class FeatureContextResolver {
     static isModifierLeftOf(node: AbstractNode, nodes: AbstractNode[]) {

@@ -1,7 +1,7 @@
-import { AntlersSettings } from '../../antlersSettings';
-import { ParameterValidator } from '../../runtime/analyzers/parameterValidator';
-import { AntlersNode } from '../../runtime/nodes/abstractNode';
-import { IDiagnosticsHandler } from '../diagnosticsHandler';
+import { AntlersSettings } from '../../antlersSettings.js';
+import { ParameterValidator } from '../../runtime/analyzers/parameterValidator.js';
+import { AntlersNode } from '../../runtime/nodes/abstractNode.js';
+import { IDiagnosticsHandler } from '../diagnosticsHandler.js';
 
 const ParameterValidatorHandler: IDiagnosticsHandler = {
     checkNode(node: AntlersNode, settings: AntlersSettings) {

@@ -2,8 +2,8 @@ import {
     CompletionItem,
     CompletionItemKind,
 } from "vscode-languageserver-types";
-import PermissionsManager from "../antlers/permissions/permissionManager";
-import { ISuggestionRequest } from './suggestionRequest';
+import PermissionsManager from "../antlers/permissions/permissionManager.js";
+import { ISuggestionRequest } from './suggestionRequest.js';
 
 export function getPermissionSuggestions(
     currentValue: string,

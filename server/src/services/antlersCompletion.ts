@@ -2,12 +2,12 @@ import {
     CompletionItem,
     TextDocumentPositionParams,
 } from "vscode-languageserver-protocol";
-import { sessionDocuments } from '../languageService/documents';
-import ProjectManager from '../projects/projectManager';
-import { makeProviderRequest } from "../providers/providerParameters";
-import { globalSettings } from '../server';
-import SnippetsManager from "../suggestions/snippets/snippetsManager";
-import { SuggestionManager } from "../suggestions/suggestionManager";
+import { sessionDocuments } from '../languageService/documents.js';
+import ProjectManager from '../projects/projectManager.js';
+import { makeProviderRequest } from "../providers/providerParameters.js";
+import { globalSettings } from '../server.js';
+import SnippetsManager from "../suggestions/snippets/snippetsManager.js";
+import { SuggestionManager } from "../suggestions/suggestionManager.js";
 
 interface ICompletionDetail {
     detail: string;

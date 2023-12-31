@@ -1,10 +1,10 @@
-import { AntlersError } from '../errors/antlersError';
-import { AntlersErrorCodes } from '../errors/antlersErrorCodes';
-import { TypeLabeler } from '../errors/typeLabeler';
-import { AbstractNode, AdditionAssignmentOperator, AdditionOperator, AntlersNode, ArgSeparator, ConditionalVariableFallbackOperator, DivisionAssignmentOperator, DivisionOperator, EqualCompOperator, ExponentiationOperator, FalseConstant, GreaterThanCompOperator, InlineBranchSeparator, InlineTernarySeparator, LeftAssignmentOperator, LessThanCompOperator, LessThanEqualCompOperator, LogicalAndOperator, LogicalNegationOperator, LogicalOrOperator, LogicalXorOperator, LogicGroupBegin, LogicGroupEnd, MethodInvocationNode, ModifierNameNode, ModifierSeparator, ModifierValueNode, ModifierValueSeparator, ModulusAssignmentOperator, ModulusOperator, MultiplicationAssignmentOperator, MultiplicationOperator, NotEqualCompOperator, NotStrictEqualCompOperator, NullCoalesceOperator, NullConstant, NumberNode, ScopeAssignmentOperator, SpaceshipCompOperator, StatementSeparatorNode, StrictEqualCompOperator, StringConcatenationOperator, StringValueNode, SubtractionAssignmentOperator, SubtractionOperator, TrueConstant, TupleListStart, VariableNode } from '../nodes/abstractNode';
-import { DocumentParser } from '../parser/documentParser';
-import { LanguageKeywords } from '../parser/languageKeywords';
-import { StringUtilities } from '../utilities/stringUtilities';
+import { AntlersError } from '../errors/antlersError.js';
+import { AntlersErrorCodes } from '../errors/antlersErrorCodes.js';
+import { TypeLabeler } from '../errors/typeLabeler.js';
+import { AbstractNode, AdditionAssignmentOperator, AdditionOperator, AntlersNode, ArgSeparator, ConditionalVariableFallbackOperator, DivisionAssignmentOperator, DivisionOperator, EqualCompOperator, ExponentiationOperator, FalseConstant, GreaterThanCompOperator, InlineBranchSeparator, InlineTernarySeparator, LeftAssignmentOperator, LessThanCompOperator, LessThanEqualCompOperator, LogicalAndOperator, LogicalNegationOperator, LogicalOrOperator, LogicalXorOperator, LogicGroupBegin, LogicGroupEnd, MethodInvocationNode, ModifierNameNode, ModifierSeparator, ModifierValueNode, ModifierValueSeparator, ModulusAssignmentOperator, ModulusOperator, MultiplicationAssignmentOperator, MultiplicationOperator, NotEqualCompOperator, NotStrictEqualCompOperator, NullCoalesceOperator, NullConstant, NumberNode, ScopeAssignmentOperator, SpaceshipCompOperator, StatementSeparatorNode, StrictEqualCompOperator, StringConcatenationOperator, StringValueNode, SubtractionAssignmentOperator, SubtractionOperator, TrueConstant, TupleListStart, VariableNode } from '../nodes/abstractNode.js';
+import { DocumentParser } from '../parser/documentParser.js';
+import { LanguageKeywords } from '../parser/languageKeywords.js';
+import { StringUtilities } from '../utilities/stringUtilities.js';
 
 export class AntlersLexer {
     private chars: string[] = [];

@@ -1,4 +1,4 @@
-import { IAntlersTag } from '../../../tagManager';
+import { IAntlersTag } from '../../../tagManager.js';
 
 const CookieSet: IAntlersTag = {
     tagName: 'cookie:set',

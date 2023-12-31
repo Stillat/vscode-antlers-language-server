@@ -1,9 +1,9 @@
 import * as YAML from 'yaml';
 import { Pair, Scalar, YAMLMap, YAMLSeq } from 'yaml/types';
-import { Position } from '../nodes/position';
-import { DocumentOffset } from '../parser/documentOffset';
-import { LineOffset } from '../parser/lineOffset';
-import { StringUtilities } from '../utilities/stringUtilities';
+import { Position } from '../nodes/position.js';
+import { DocumentOffset } from '../parser/documentOffset.js';
+import { LineOffset } from '../parser/lineOffset.js';
+import { StringUtilities } from '../utilities/stringUtilities.js';
 
 export class YamlDocument {
     private content = '';

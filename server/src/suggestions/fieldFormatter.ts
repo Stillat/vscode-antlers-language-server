@@ -3,8 +3,8 @@ import {
     CompletionItemKind,
     MarkupKind,
 } from "vscode-languageserver-types";
-import { IModifier } from '../antlers/modifierTypes';
-import { IBlueprintField } from '../projects/blueprints/fields';
+import { IModifier } from '../antlers/modifierTypes.js';
+import { IBlueprintField } from '../projects/blueprints/fields.js';
 
 export function makeFieldSuggest(name: string, description: string, valueType: string): CompletionItem {
     const item: CompletionItem = {

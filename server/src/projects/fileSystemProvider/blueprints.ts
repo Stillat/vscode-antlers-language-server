@@ -1,7 +1,7 @@
 import * as YAML from "yaml";
 import * as fs from "fs";
-import { IBlueprintField, ISet, blueprintFieldFromFieldSet, adjustFieldType, SetFieldTypes, IBlueprint } from '../blueprints/fields';
-import {IFieldsetField } from '../fieldsets/fieldset';
+import { IBlueprintField, ISet, blueprintFieldFromFieldSet, adjustFieldType, SetFieldTypes, IBlueprint } from '../blueprints/fields.js';
+import {IFieldsetField } from '../fieldsets/fieldset.js';
 
 export function getFields(container: any, outerblueprintName: string, fieldSetName: string, path: string, fieldsets: Map<string, IFieldsetField[]>): IBlueprintField[] {
     const foundFields: IBlueprintField[] = [];

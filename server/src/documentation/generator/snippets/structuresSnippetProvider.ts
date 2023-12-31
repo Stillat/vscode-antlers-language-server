@@ -1,5 +1,5 @@
-import { IStructuresFieldType } from '../../../projects/structuredFieldTypes/types';
-import { IDocumentationSnippet } from '../types';
+import { IStructuresFieldType } from '../../../projects/structuredFieldTypes/types.js';
+import { IDocumentationSnippet } from '../types.js';
 
 export default class StructuresSnippetProvider {
     static getSnippets(field: IStructuresFieldType): IDocumentationSnippet[] {

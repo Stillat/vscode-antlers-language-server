@@ -1,14 +1,14 @@
-import { FragmentNode, FragmentParameterNode, StructuralFragment } from '../nodes/abstractNode';
-import { Position } from '../nodes/position';
-import { StringUtilities } from '../utilities/stringUtilities';
-import { DocumentOffset } from './documentOffset';
-import { DocumentParser } from './documentParser';
-import { IndexRange } from './indexRange';
-import { isStartOfString } from './scanners/isStartOfString';
-import { skipToEndOfLine } from './scanners/skipToEndOfLine';
-import { skipToEndOfMultilineComment } from './scanners/skipToEndOfMultilineComment';
-import { skipToEndOfString } from './scanners/skipToEndOfString';
-import { StringIterator } from './stringIterator';
+import { FragmentNode, FragmentParameterNode, StructuralFragment } from '../nodes/abstractNode.js';
+import { Position } from '../nodes/position.js';
+import { StringUtilities } from '../utilities/stringUtilities.js';
+import { DocumentOffset } from './documentOffset.js';
+import { DocumentParser } from './documentParser.js';
+import { IndexRange } from './indexRange.js';
+import { isStartOfString } from './scanners/isStartOfString.js';
+import { skipToEndOfLine } from './scanners/skipToEndOfLine.js';
+import { skipToEndOfMultilineComment } from './scanners/skipToEndOfMultilineComment.js';
+import { skipToEndOfString } from './scanners/skipToEndOfString.js';
+import { StringIterator } from './stringIterator.js';
 
 export class FragmentsParser implements StringIterator {
     private content = '';

@@ -1,6 +1,6 @@
-import { AntlersNode } from '../../../../runtime/nodes/abstractNode';
-import { trimLeft } from '../../../../utils/strings';
-import { dynamicParameter, IAntlersParameter } from '../../../tagManager';
+import { AntlersNode } from '../../../../runtime/nodes/abstractNode.js';
+import { trimLeft } from '../../../../utils/strings.js';
+import { dynamicParameter, IAntlersParameter } from '../../../tagManager.js';
 
 export function resolveConditionalParmaters(symbol: AntlersNode, paramName: string): IAntlersParameter | null {
     if (symbol == null) {

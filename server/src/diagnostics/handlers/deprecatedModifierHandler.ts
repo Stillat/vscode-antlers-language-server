@@ -1,8 +1,8 @@
-import { IModifier } from '../../antlers/modifierTypes';
-import { AntlersError, ErrrorLevel } from '../../runtime/errors/antlersError';
-import { AntlersErrorCodes } from '../../runtime/errors/antlersErrorCodes';
-import { AbstractNode, AntlersNode, ModifierNode, ParameterNode } from '../../runtime/nodes/abstractNode';
-import { IDiagnosticsHandler } from '../diagnosticsHandler';
+import { IModifier } from '../../antlers/modifierTypes.js';
+import { AntlersError, ErrorLevel } from '../../runtime/errors/antlersError.js';
+import { AntlersErrorCodes } from '../../runtime/errors/antlersErrorCodes.js';
+import { AbstractNode, AntlersNode, ModifierNode, ParameterNode } from '../../runtime/nodes/abstractNode.js';
+import { IDiagnosticsHandler } from '../diagnosticsHandler.js';
 
 const DeprecatedModifierHandler: IDiagnosticsHandler = {
     checkNode(node: AntlersNode) {
@@ -21,7 +21,7 @@ const DeprecatedModifierHandler: IDiagnosticsHandler = {
                         AntlersErrorCodes.LINT_DEPRECATED_MODIFIER,
                         node.modifiers.parameterModifiers[i],
                         getDeprecatedMessage(thisModifier.modifier),
-                        ErrrorLevel.Warning
+                        ErrorLevel.Warning
                     ));
                     reportedNodes.push(thisModifier.refId);
                 }
@@ -38,7 +38,7 @@ const DeprecatedModifierHandler: IDiagnosticsHandler = {
                         AntlersErrorCodes.LINT_DEPRECATED_MODIFIER,
                         thisModifier,
                         getDeprecatedMessage(thisModifier.modifier),
-                        ErrrorLevel.Warning
+                        ErrorLevel.Warning
                     ));
                     reportedNodes.push(thisModifier.refId);
                 }
@@ -61,7 +61,7 @@ const DeprecatedModifierHandler: IDiagnosticsHandler = {
                             AntlersErrorCodes.LINT_DEPRECATED_MODIFIER,
                             thisModifier,
                             getDeprecatedMessage(thisModifier.modifier),
-                            ErrrorLevel.Warning
+                            ErrorLevel.Warning
                         ));
                         reportedNodes.push(thisModifier.refId);
                     }

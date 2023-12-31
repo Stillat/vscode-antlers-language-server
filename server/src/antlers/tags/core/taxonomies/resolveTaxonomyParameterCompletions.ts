@@ -1,9 +1,9 @@
-import { getConditionCompletionItems } from '../../../../suggestions/defaults/conditionItems';
-import { getRoot } from '../../../../suggestions/suggestionManager';
-import { ISuggestionRequest } from '../../../../suggestions/suggestionRequest';
-import { exclusiveResult, IAntlersParameter, ICompletionResult } from '../../../tagManager';
-import { makeCollectionNameSuggestions, makeQueryScopeSuggestions } from '../collection/utils';
-import { getTaxonomyNames, makeTaxonomyNameSuggestions } from './utils';
+import { getConditionCompletionItems } from '../../../../suggestions/defaults/conditionItems.js';
+import { getRoot } from '../../../../suggestions/suggestionManager.js';
+import { ISuggestionRequest } from '../../../../suggestions/suggestionRequest.js';
+import { exclusiveResult, IAntlersParameter, ICompletionResult } from '../../../tagManager.js';
+import { makeCollectionNameSuggestions, makeQueryScopeSuggestions } from '../collection/utils.js';
+import { getTaxonomyNames, makeTaxonomyNameSuggestions } from './utils.js';
 
 const SourceTaxonomyParams: string[] = ['from', 'taxonomy', 'is', 'use', 'folder'];
 const ExcludeTaxonomyParams: string[] = ['not_from', 'not_in', 'dont_use', 'not_taxonomy'];

@@ -1,6 +1,6 @@
-import assert = require('assert');
-import { AntlersDocument } from '../runtime/document/antlersDocument';
-import { ErrorPrinter } from '../runtime/document/printers/errorPrinter';
+import assert from 'assert';
+import { AntlersDocument } from '../runtime/document/antlersDocument.js';
+import { ErrorPrinter } from '../runtime/document/printers/errorPrinter.js';
 
 suite('Error Printer', () => {
     test('it can pretty print errors', () => {

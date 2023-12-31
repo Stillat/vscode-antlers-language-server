@@ -1,7 +1,7 @@
-import { AntlersError, ErrrorLevel } from '../../runtime/errors/antlersError';
-import { AntlersErrorCodes } from '../../runtime/errors/antlersErrorCodes';
-import { AntlersNode, ParameterNode, ModifierNode, AbstractNode } from '../../runtime/nodes/abstractNode';
-import { IDiagnosticsHandler } from "../diagnosticsHandler";
+import { AntlersError, ErrorLevel } from '../../runtime/errors/antlersError.js';
+import { AntlersErrorCodes } from '../../runtime/errors/antlersErrorCodes.js';
+import { AntlersNode, ParameterNode, ModifierNode, AbstractNode } from '../../runtime/nodes/abstractNode.js';
+import { IDiagnosticsHandler } from "../diagnosticsHandler.js";
 
 const ModifierRuntimeTypeHandler: IDiagnosticsHandler = {
     checkNode(node: AntlersNode) {
@@ -53,7 +53,7 @@ const ModifierRuntimeTypeHandler: IDiagnosticsHandler = {
                                 AntlersErrorCodes.LINT_MODIFIER_UNEXPECTED_TYPE,
                                 thisModifier,
                                 "Unexpected type supplied to modifier " + thisModifier.name + ". Expected " + expectedGuess + " got " + recievedGuess + ".",
-                                ErrrorLevel.Warning
+                                ErrorLevel.Warning
                             ));
                             break;
                         }
@@ -109,7 +109,7 @@ const ModifierRuntimeTypeHandler: IDiagnosticsHandler = {
                                     AntlersErrorCodes.LINT_MODIFIER_UNEXPECTED_TYPE,
                                     thisModifier,
                                     "Unexpected type supplied to modifier " + thisModifier.name + ". Expected " + expectedGuess + " got " + recievedGuess + ".",
-                                    ErrrorLevel.Warning
+                                    ErrorLevel.Warning
                                 ));
                                 reportedNodes.push(thisModifier.refId);
                             }
@@ -175,7 +175,7 @@ const ModifierRuntimeTypeHandler: IDiagnosticsHandler = {
                                             AntlersErrorCodes.LINT_MODIFIER_UNEXPECTED_TYPE,
                                             thisModifier,
                                             "Unexpected type supplied to modifier " + thisModifier.name + ". Expected " + expectedGuess + " got " + recievedGuess + ".",
-                                            ErrrorLevel.Warning
+                                            ErrorLevel.Warning
                                         ));
                                         reportedNodes.push(thisModifier.refId);
                                     }

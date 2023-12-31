@@ -1,6 +1,6 @@
-import { AbstractNode, EscapedContentNode, LiteralNode } from '../../nodes/abstractNode';
-import { Position } from '../../nodes/position';
-import { LanguageParser } from '../../parser/languageParser';
+import { AbstractNode, EscapedContentNode, LiteralNode } from '../../nodes/abstractNode.js';
+import { Position } from '../../nodes/position.js';
+import { LanguageParser } from '../../parser/languageParser.js';
 
 export class NodeQueries {
 

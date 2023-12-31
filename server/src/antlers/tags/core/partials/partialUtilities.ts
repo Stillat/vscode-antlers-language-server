@@ -1,4 +1,4 @@
-import { AntlersNode } from '../../../../runtime/nodes/abstractNode';
+import { AntlersNode } from '../../../../runtime/nodes/abstractNode.js';
 
 export function getViewName(node: AntlersNode) {
     if (node.getTagName() != "partial") {

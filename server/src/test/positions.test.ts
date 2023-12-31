@@ -1,7 +1,7 @@
-import assert = require('assert');
-import { AntlersDocument } from '../runtime/document/antlersDocument';
-import { LiteralNode, AntlersNode } from '../runtime/nodes/abstractNode';
-import { assertCount, assertInstanceOf, assertNodePosition } from './testUtils/assertions';
+import assert from 'assert';
+import { AntlersDocument } from '../runtime/document/antlersDocument.js';
+import { LiteralNode, AntlersNode } from '../runtime/nodes/abstractNode.js';
+import { assertCount, assertInstanceOf, assertNodePosition } from './testUtils/assertions.js';
 
 suite('Positions Tests', () => {
     test('it resolves simple positions', () => {

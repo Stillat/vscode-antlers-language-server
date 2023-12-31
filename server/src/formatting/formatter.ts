@@ -1,12 +1,12 @@
 import { DocumentFormattingParams, Position, } from "vscode-languageserver-protocol";
 import { Range, TextDocument, TextEdit, } from "vscode-languageserver-textdocument";
-import { documentMap, sessionDocuments } from '../languageService/documents';
-import { htmlFormatterSettings } from '../languageService/htmlFormatterSettings';
-import { AntlersDocument } from '../runtime/document/antlersDocument';
-import { getAntlersSettings } from '../server';
-import { AntlersFormattingOptions } from './antlersFormattingOptions';
-import { BeautifyDocumentFormatter } from './beautifyDocumentFormatter';
-import { IHTMLFormatConfiguration } from "./htmlCompat";
+import { documentMap, sessionDocuments } from '../languageService/documents.js';
+import { htmlFormatterSettings } from '../languageService/htmlFormatterSettings.js';
+import { AntlersDocument } from '../runtime/document/antlersDocument.js';
+import { getAntlersSettings } from '../server.js';
+import { AntlersFormattingOptions } from './antlersFormattingOptions.js';
+import { BeautifyDocumentFormatter } from './beautifyDocumentFormatter.js';
+import { IHTMLFormatConfiguration } from "./htmlCompat.js";
 
 export function formatAntlersDocument(params: DocumentFormattingParams): TextEdit[] | null {
     const settings = getAntlersSettings();

@@ -1,5 +1,5 @@
-import { ISuggestionRequest } from '../../../../suggestions/suggestionRequest';
-import { IAntlersParameter } from '../../../tagManager';
+import { ISuggestionRequest } from '../../../../suggestions/suggestionRequest.js';
+import { IAntlersParameter } from '../../../tagManager.js';
 
 const collectionParameters: IAntlersParameter[] = [
     {

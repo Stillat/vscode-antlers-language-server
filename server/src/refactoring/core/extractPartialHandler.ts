@@ -1,11 +1,11 @@
-import { CodeAction, CodeActionKind, Command, TextEdit, WorkspaceEdit } from 'vscode-languageserver';
-import ProjectManager from '../../projects/projectManager';
-import { normalizePath } from '../../utils/uris';
-import IRefactorHandler from '../refactorHandler';
-import IRefactoringRequest from '../refactoringRequest';
+import { CodeAction, CodeActionKind, Command, TextEdit, WorkspaceEdit } from 'vscode-languageserver';;
+import ProjectManager from '../../projects/projectManager.js';
+import { normalizePath } from '../../utils/uris.js';
+import IRefactorHandler from '../refactorHandler.js';
+import IRefactoringRequest from '../refactoringRequest.js';
 import * as fs from 'fs';
 import * as path from "path";
-import { requestEdits } from '../../server';
+import { requestEdits } from '../../server.js';
 
 interface IExtractedPartaialTargetFile {
     path: string,

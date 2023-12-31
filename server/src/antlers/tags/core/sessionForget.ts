@@ -1,8 +1,8 @@
-import { makeTagDoc } from '../../../documentation/utils';
-import SessionVariableManager from '../../../references/sessionVariableManager';
-import { ISuggestionRequest } from '../../../suggestions/suggestionRequest';
-import { getUniqueParameterArrayValuesSuggestions } from '../../../suggestions/uniqueParameterArraySuggestions';
-import { IAntlersParameter, IAntlersTag } from '../../tagManager';
+import { makeTagDoc } from '../../../documentation/utils.js';
+import SessionVariableManager from '../../../references/sessionVariableManager.js';
+import { ISuggestionRequest } from '../../../suggestions/suggestionRequest.js';
+import { getUniqueParameterArrayValuesSuggestions } from '../../../suggestions/uniqueParameterArraySuggestions.js';
+import { IAntlersParameter, IAntlersTag } from '../../tagManager.js';
 
 const SessionForget: IAntlersTag = {
     tagName: 'session:forget',

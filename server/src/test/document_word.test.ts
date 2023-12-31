@@ -1,5 +1,5 @@
-import assert = require("assert");
-import { AntlersDocument } from "../runtime/document/antlersDocument";
+import assert from 'assert';
+import { AntlersDocument } from "../runtime/document/antlersDocument.js";
 
 suite("Document Word Test", () => {
     const template = `{{ collection:articles from="" }}

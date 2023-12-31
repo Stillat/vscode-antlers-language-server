@@ -1,4 +1,4 @@
-import { AntlersNode } from '../abstractNode';
+import { AntlersNode } from '../abstractNode.js';
 
 export class NodeVirtualHierarchy {
     private node: AntlersNode;

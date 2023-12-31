@@ -1,7 +1,7 @@
-import { makeTagDoc } from '../../../documentation/utils';
-import { ISuggestionRequest } from '../../../suggestions/suggestionRequest';
-import { IAntlersTag } from '../../tagManager';
-import { LocaleParameters } from './localeParameters';
+import { makeTagDoc } from '../../../documentation/utils.js';
+import { ISuggestionRequest } from '../../../suggestions/suggestionRequest.js';
+import { IAntlersTag } from '../../tagManager.js';
+import { LocaleParameters } from './localeParameters.js';
 
 const LocalesCount: IAntlersTag = {
     tagName: "locales:count",

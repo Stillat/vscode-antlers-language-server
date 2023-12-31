@@ -1,6 +1,6 @@
-import { IProjectDetailsProvider } from '../../projects/projectDetailsProvider';
-import { Scope } from '../scope/scope';
-import { IScopeVariable } from '../scope/types';
+import { IProjectDetailsProvider } from '../../projects/projectDetailsProvider.js';
+import { Scope } from '../scope/scope.js';
+import { IScopeVariable } from '../scope/types.js';
 
 export function getSiteData(project: IProjectDetailsProvider): Scope {
     const siteScope = new Scope(project);

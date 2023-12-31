@@ -1,5 +1,5 @@
-import assert = require('assert');
-import { formatAntlers } from './testUtils/formatAntlers';
+import assert from 'assert';
+import { formatAntlers } from './testUtils/formatAntlers.js';
 
 suite('Formatting Peak Samples', () => {
     test('peak sample 1', () => {

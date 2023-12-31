@@ -1,5 +1,5 @@
-import { IAntlersParameter } from '../../antlers/tagManager';
-import { AntlersDocument } from '../../runtime/document/antlersDocument';
+import { IAntlersParameter } from '../../antlers/tagManager.js';
+import { AntlersDocument } from '../../runtime/document/antlersDocument.js';
 
 export interface IView {
     /**

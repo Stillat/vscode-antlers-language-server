@@ -1,6 +1,7 @@
 import * as prettier from 'prettier';
-import * as plugin from './plugin';
+import * as plugin from './plugin.js';
 
+// eslint-disable-next-line @typescript-eslint/ban-ts-comment
 // @ts-ignore
 import php from "@prettier/plugin-php/standalone";
 
@@ -44,8 +45,8 @@ export function getHtmlOptions(): prettier.ParserOptions {
     return htmlOptions as prettier.ParserOptions;
 }
 
-export function formatPhp(text: string) {
-    let result = prettier.format('<?php ' + text, phpOptions).trim();
+export async function formatPhp(text: string): Promise<string> {
+    let result = (await prettier.format('<?php ' + text, phpOptions)).trim();
 
     result = result.substring(5);
 

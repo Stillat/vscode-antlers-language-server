@@ -1,9 +1,9 @@
-import { AntlersError, ErrrorLevel } from '../../runtime/errors/antlersError';
-import { AntlersErrorCodes } from '../../runtime/errors/antlersErrorCodes';
-import { AntlersNode } from '../../runtime/nodes/abstractNode';
-import { intersect } from '../../runtime/utilities/arrayHelpers';
-import { IDiagnosticsHandler } from '../diagnosticsHandler';
-import ModifierManager from '../../antlers/modifierManager';
+import { AntlersError, ErrorLevel } from '../../runtime/errors/antlersError.js';
+import { AntlersErrorCodes } from '../../runtime/errors/antlersErrorCodes.js';
+import { AntlersNode } from '../../runtime/nodes/abstractNode.js';
+import { intersect } from '../../runtime/utilities/arrayHelpers.js';
+import { IDiagnosticsHandler } from '../diagnosticsHandler.js';
+import ModifierManager from '../../antlers/modifierManager.js';
 
 const UrlInputHandler: IDiagnosticsHandler = {
     checkNode(node: AntlersNode) {
@@ -46,7 +46,7 @@ const UrlInputHandler: IDiagnosticsHandler = {
                     AntlersErrorCodes.LINT_URL_VARIABLE_WITHOUT_SANITIZE,
                     node,
                     'Request variables can be controlled by the end user, and should be sanitized',
-                    ErrrorLevel.Warning
+                    ErrorLevel.Warning
                 ));
             }
         }

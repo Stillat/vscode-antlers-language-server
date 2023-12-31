@@ -1,8 +1,8 @@
 import {
     CompletionItem
 } from "vscode-languageserver-types";
-import { IAntlersParameter } from "../antlers/tagManager";
-import { BooleanCompletionItems } from "./defaults/booleanItems";
+import { IAntlersParameter } from "../antlers/tagManager.js";
+import { BooleanCompletionItems } from "./defaults/booleanItems.js";
 
 export function getParameterCompletionItems(parameter: IAntlersParameter): CompletionItem[] {
     let itemsToReturn: CompletionItem[] = [];

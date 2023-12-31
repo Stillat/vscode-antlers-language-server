@@ -1,15 +1,15 @@
-import { makeTagDoc, makeTagDocWithCodeSample } from '../../../documentation/utils';
-import { ISuggestionRequest } from '../../../suggestions/suggestionRequest';
-import { createDefinitionAlias } from '../alias';
-import User from './user';
-import UserCan from './userCan';
-import UserIn from './userIn';
-import UserIs from './userIs';
-import UserIsnt from './userIsnt';
-import UserLogout from './userLogout';
-import UserLogoutUrl from './userLogoutUrl';
-import UserNotIn from './userNotIn';
-import UserProfile from './userProfile';
+import { makeTagDoc, makeTagDocWithCodeSample } from '../../../documentation/utils.js';
+import { ISuggestionRequest } from '../../../suggestions/suggestionRequest.js';
+import { createDefinitionAlias } from '../alias.js';
+import User from './user.js';
+import UserCan from './userCan.js';
+import UserIn from './userIn.js';
+import UserIs from './userIs.js';
+import UserIsnt from './userIsnt.js';
+import UserLogout from './userLogout.js';
+import UserLogoutUrl from './userLogoutUrl.js';
+import UserNotIn from './userNotIn.js';
+import UserProfile from './userProfile.js';
 
 const MemberTag = createDefinitionAlias(User, 'member'),
     MemberIs = createDefinitionAlias(UserIs, 'member:is'),

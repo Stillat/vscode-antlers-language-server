@@ -1,9 +1,9 @@
-import { makeTagDoc } from '../../../../documentation/utils';
-import { ISuggestionRequest } from '../../../../suggestions/suggestionRequest';
-import { exclusiveResultList, IAntlersParameter, IAntlersTag } from '../../../tagManager';
-import FormHandleParam from './formHandleParam';
-import { HandleParams } from './parameterCompletions';
-import { resolveFormSetReference } from './resolveFormSetReference';
+import { makeTagDoc } from '../../../../documentation/utils.js';
+import { ISuggestionRequest } from '../../../../suggestions/suggestionRequest.js';
+import { exclusiveResultList, IAntlersParameter, IAntlersTag } from '../../../tagManager.js';
+import FormHandleParam from './formHandleParam.js';
+import { HandleParams } from './parameterCompletions.js';
+import { resolveFormSetReference } from './resolveFormSetReference.js';
 
 const FormSuccess: IAntlersTag = {
     tagName: 'form:success',

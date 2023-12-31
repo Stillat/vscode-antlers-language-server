@@ -1,7 +1,7 @@
 import * as ls from 'vscode-languageserver-types';
-import { AntlersError, ErrrorLevel } from '../runtime/errors/antlersError';
-import { AbstractNode, ParameterNode, AntlersNode, ConditionNode } from '../runtime/nodes/abstractNode';
-import { Position } from '../runtime/nodes/position';
+import { AntlersError, ErrorLevel } from '../runtime/errors/antlersError.js';
+import { AbstractNode, ParameterNode, AntlersNode, ConditionNode } from '../runtime/nodes/abstractNode.js';
+import { Position } from '../runtime/nodes/position.js';
 
 export function anltersErrorsToDiagnostics(errors: AntlersError[]): ls.Diagnostic[] {
     const diagnostics: ls.Diagnostic[] = [];
@@ -29,7 +29,7 @@ export function anltersErrorsToDiagnostics(errors: AntlersError[]): ls.Diagnosti
 
         let severity: ls.DiagnosticSeverity = 1;
 
-        if (error.level == ErrrorLevel.Warning) {
+        if (error.level == ErrorLevel.Warning) {
             severity = 2;
         }
 

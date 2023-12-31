@@ -1,5 +1,5 @@
-import { AntlersNode } from '../../../../runtime/nodes/abstractNode';
-import { HandleParams } from "./parameterCompletions";
+import { AntlersNode } from '../../../../runtime/nodes/abstractNode.js';
+import { HandleParams } from "./parameterCompletions.js";
 
 const IgnoreFormTagParts: string[] = [
     "set",

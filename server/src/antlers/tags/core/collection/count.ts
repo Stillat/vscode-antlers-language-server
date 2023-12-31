@@ -1,9 +1,9 @@
-import { makeTagDocWithCodeSample } from '../../../../documentation/utils';
-import { ISuggestionRequest } from '../../../../suggestions/suggestionRequest';
-import { IAntlersTag } from '../../../tagManager';
-import { collectionParameters } from './parameters';
-import { resolveCollectionScope } from './resolvesCollectionScope';
-import { resolveCollectionParameterCompletiontems } from './resolvesParameterSuggestions';
+import { makeTagDocWithCodeSample } from '../../../../documentation/utils.js';
+import { ISuggestionRequest } from '../../../../suggestions/suggestionRequest.js';
+import { IAntlersTag } from '../../../tagManager.js';
+import { collectionParameters } from './parameters.js';
+import { resolveCollectionScope } from './resolvesCollectionScope.js';
+import { resolveCollectionParameterCompletiontems } from './resolvesParameterSuggestions.js';
 
 const CollectionCount: IAntlersTag = {
     tagName: 'collection:count',

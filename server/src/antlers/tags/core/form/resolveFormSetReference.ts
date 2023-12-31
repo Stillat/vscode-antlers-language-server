@@ -1,6 +1,6 @@
-import { IProjectDetailsProvider } from '../../../../projects/projectDetailsProvider';
-import { AntlersNode } from '../../../../runtime/nodes/abstractNode';
-import { ISpecialResolverResults } from '../../../types';
+import { IProjectDetailsProvider } from '../../../../projects/projectDetailsProvider.js';
+import { AntlersNode } from '../../../../runtime/nodes/abstractNode.js';
+import { ISpecialResolverResults } from '../../../types.js';
 
 export function resolveFormSetReference(context: AntlersNode, project: IProjectDetailsProvider): ISpecialResolverResults {
     const parentFormSet = context.structure.findParentWithName('form:set');

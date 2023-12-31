@@ -1,7 +1,7 @@
-import { makeTagDoc } from '../../../../documentation/utils';
-import { ISuggestionRequest } from '../../../../suggestions/suggestionRequest';
-import { IAntlersTag } from '../../../tagManager';
-import { resolveFormParameterCompletions } from './parameterCompletions';
+import { makeTagDoc } from '../../../../documentation/utils.js';
+import { ISuggestionRequest } from '../../../../suggestions/suggestionRequest.js';
+import { IAntlersTag } from '../../../tagManager.js';
+import { resolveFormParameterCompletions } from './parameterCompletions.js';
 
 const FormSetTag: IAntlersTag = {
     tagName: 'form:set',

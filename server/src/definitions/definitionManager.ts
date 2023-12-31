@@ -1,7 +1,7 @@
 import { DefinitionParams } from "vscode-languageserver-protocol";
 import { Location, LocationLink } from "vscode-languageserver-types";
-import { ISuggestionRequest } from '../suggestions/suggestionRequest';
-import { antlersPositionToVsCode } from '../utils/conversions';
+import { ISuggestionRequest } from '../suggestions/suggestionRequest.js';
+import { antlersPositionToVsCode } from '../utils/conversions.js';
 
 export class DefinitionManager {
     static findLocations(

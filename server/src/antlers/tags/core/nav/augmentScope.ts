@@ -1,7 +1,7 @@
-import { IBlueprintField, variablesToBlueprintFields } from '../../../../projects/blueprints/fields';
-import { AntlersNode } from '../../../../runtime/nodes/abstractNode';
-import { Scope } from '../../../scope/scope';
-import { makeRoutableVariables } from "../../../variables/routeableVariables";
+import { IBlueprintField, variablesToBlueprintFields } from '../../../../projects/blueprints/fields.js';
+import { AntlersNode } from '../../../../runtime/nodes/abstractNode.js';
+import { Scope } from '../../../scope/scope.js';
+import { makeRoutableVariables } from "../../../variables/routeableVariables.js";
 
 export function augmentNavScope(node: AntlersNode, scope: Scope): Scope {
     scope.addVariables([

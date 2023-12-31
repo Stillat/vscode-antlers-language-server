@@ -1,5 +1,5 @@
 import { DiagnosticSeverity } from "vscode-languageserver";
-import { AntlersError } from '../runtime/errors/antlersError';
+import { AntlersError } from '../runtime/errors/antlersError.js';
 
 export interface ISpecialResolverResults {
     context: any;

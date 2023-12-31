@@ -1,11 +1,11 @@
 import { CodeAction, Diagnostic, _Connection } from "vscode-languageserver";
 import { TextDocument } from "vscode-languageserver-textdocument";
-import DiagnosticsManager from '../diagnostics/diagnosticsManager';
-import { documentMap, sessionDocuments } from '../languageService/documents';
-import ProjectManager from '../projects/projectManager';
-import { getAntlersSettings } from '../server';
-import { anltersErrorsToDiagnostics } from "../utils/conversions";
-import { setCurDiagnostics } from './antlersRefactoring';
+import DiagnosticsManager from '../diagnostics/diagnosticsManager.js';
+import { documentMap, sessionDocuments } from '../languageService/documents.js';
+import ProjectManager from '../projects/projectManager.js';
+import { getAntlersSettings } from '../server.js';
+import { anltersErrorsToDiagnostics } from "../utils/conversions.js";
+import { setCurDiagnostics } from './antlersRefactoring.js';
 
 export function parseDocumentText(uri: string, text: string) {
     const documentPath = decodeURIComponent(uri);

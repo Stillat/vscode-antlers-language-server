@@ -1,6 +1,6 @@
-import { DocumentParser } from '../../runtime/parser/documentParser';
-import { PathParser } from '../../runtime/parser/pathParser';
-import { toAntlers } from './assertions';
+import { DocumentParser } from '../../runtime/parser/documentParser.js';
+import { PathParser } from '../../runtime/parser/pathParser.js';
+import { toAntlers } from './assertions.js';
 
 export function parseNodes(text: string) {
     const documentParser = new DocumentParser();

@@ -1,5 +1,5 @@
-import { Faker } from '../../documentation/generator/faker';
-import { IFieldDetails, IParsedBlueprint } from './types';
+import { Faker } from '../../documentation/generator/faker.js';
+import { IFieldDetails, IParsedBlueprint } from './types.js';
 
 export class EnsureFields {
     static ensureCollectionFields(blueprint: IParsedBlueprint) {

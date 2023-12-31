@@ -1,15 +1,15 @@
-import { AntlersError } from '../errors/antlersError';
-import { AntlersErrorCodes } from '../errors/antlersErrorCodes';
-import { LineRetriever } from '../errors/lineRetriever';
-import { TypeLabeler } from '../errors/typeLabeler';
-import { AbstractNode, AdditionAssignmentOperator, AdditionOperator, AliasedScopeLogicGroup, AntlersNode, ArgSeparator, ArgumentGroup, ArrayNode, ConditionalVariableFallbackOperator, DirectionGroup, DivisionAssignmentOperator, DivisionOperator, EqualCompOperator, ExponentiationOperator, FactorialOperator, FalseConstant, GreaterThanCompOperator, GreaterThanEqualCompOperator, InlineBranchSeparator, InlineTernarySeparator, LanguageOperatorConstruct, LeftAssignmentOperator, LessThanCompOperator, LessThanEqualCompOperator, LibraryInvocationConstruct, ListValueNode, LogicalAndOperator, LogicalNegationOperator, LogicalOrOperator, LogicalXorOperator, LogicGroup, LogicGroupBegin, LogicGroupEnd, MethodInvocationNode, ModifierChainNode, ModifierNameNode, ModifierNode, ModifierSeparator, ModifierValueNode, ModifierValueSeparator, ModulusAssignmentOperator, ModulusOperator, MultiplicationAssignmentOperator, MultiplicationOperator, NamedArgumentNode, NameValueNode, NotEqualCompOperator, NotStrictEqualCompOperator, NullCoalescenceGroup, NullCoalesceOperator, NullConstant, NumberNode, PathNode, ScopeAssignmentOperator, ScopedLogicGroup, SemanticGroup, SpaceshipCompOperator, StatementSeparatorNode, StaticTracedAssignment, StrictEqualCompOperator, StringConcatenationOperator, StringValueNode, SubtractionAssignmentOperator, SubtractionOperator, SwitchCase, SwitchGroup, TernaryCondition, TrueConstant, TupleList, TupleListStart, TupleScopedLogicGroup, ValueDirectionNode, VariableNode } from '../nodes/abstractNode';
-import { LibraryManager } from '../runtime/libraries/libraryManager';
-import { LanguageOperatorRegistry } from '../runtime/sandbox/languageOperatorRegistry';
-import { NodeHelpers } from '../utilities/nodeHelpers';
-import { StringUtilities } from '../utilities/stringUtilities';
-import { DocumentParser } from './documentParser';
-import { LanguageKeywords } from './languageKeywords';
-import { PathParser } from './pathParser';
+import { AntlersError } from '../errors/antlersError.js';
+import { AntlersErrorCodes } from '../errors/antlersErrorCodes.js';
+import { LineRetriever } from '../errors/lineRetriever.js';
+import { TypeLabeler } from '../errors/typeLabeler.js';
+import { AbstractNode, AdditionAssignmentOperator, AdditionOperator, AliasedScopeLogicGroup, AntlersNode, ArgSeparator, ArgumentGroup, ArrayNode, ConditionalVariableFallbackOperator, DirectionGroup, DivisionAssignmentOperator, DivisionOperator, EqualCompOperator, ExponentiationOperator, FactorialOperator, FalseConstant, GreaterThanCompOperator, GreaterThanEqualCompOperator, InlineBranchSeparator, InlineTernarySeparator, LanguageOperatorConstruct, LeftAssignmentOperator, LessThanCompOperator, LessThanEqualCompOperator, LibraryInvocationConstruct, ListValueNode, LogicalAndOperator, LogicalNegationOperator, LogicalOrOperator, LogicalXorOperator, LogicGroup, LogicGroupBegin, LogicGroupEnd, MethodInvocationNode, ModifierChainNode, ModifierNameNode, ModifierNode, ModifierSeparator, ModifierValueNode, ModifierValueSeparator, ModulusAssignmentOperator, ModulusOperator, MultiplicationAssignmentOperator, MultiplicationOperator, NamedArgumentNode, NameValueNode, NotEqualCompOperator, NotStrictEqualCompOperator, NullCoalescenceGroup, NullCoalesceOperator, NullConstant, NumberNode, PathNode, ScopeAssignmentOperator, ScopedLogicGroup, SemanticGroup, SpaceshipCompOperator, StatementSeparatorNode, StaticTracedAssignment, StrictEqualCompOperator, StringConcatenationOperator, StringValueNode, SubtractionAssignmentOperator, SubtractionOperator, SwitchCase, SwitchGroup, TernaryCondition, TrueConstant, TupleList, TupleListStart, TupleScopedLogicGroup, ValueDirectionNode, VariableNode } from '../nodes/abstractNode.js';
+import { LibraryManager } from '../runtime/libraries/libraryManager.js';
+import { LanguageOperatorRegistry } from '../runtime/sandbox/languageOperatorRegistry.js';
+import { NodeHelpers } from '../utilities/nodeHelpers.js';
+import { StringUtilities } from '../utilities/stringUtilities.js';
+import { DocumentParser } from './documentParser.js';
+import { LanguageKeywords } from './languageKeywords.js';
+import { PathParser } from './pathParser.js';
 
 export class LanguageParser {
     private pathParser: PathParser = new PathParser();

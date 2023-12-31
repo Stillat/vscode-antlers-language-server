@@ -1,5 +1,5 @@
-import { replaceAllInString } from '../../../utils/strings';
-import { AntlersNode, ParameterNode } from '../../nodes/abstractNode';
+import { replaceAllInString } from '../../../utils/strings.js';
+import { AntlersNode, ParameterNode } from '../../nodes/abstractNode.js';
 
 export class NodeBuffer {
     private baseIndent: number;

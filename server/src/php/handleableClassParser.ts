@@ -1,5 +1,5 @@
-import { StringUtilities } from '../runtime/utilities/stringUtilities';
-import { extractCommentDescription } from './phpUtils';
+import { StringUtilities } from '../runtime/utilities/stringUtilities.js';
+import { extractCommentDescription } from './phpUtils.js';
 
 const engine = require('php-parser');
 
