@@ -159,12 +159,12 @@ class="font-bold">
         assert.strictEqual((await formatStringWithPrettier(template)).trim(), "<{{ as or 'a' }} {{ slot:attributes }} class=\"font-bold\"></{{ as or 'a' }}>");
     });
 
-    test('it can handle interpolation inside styles', () => {
+    test('it can handle interpolation inside styles', async () => {
         const input = `<div
 class="absolute right-0 h-[3px] bg-orange-300"
 style="
     {{ horizontal_stripe_position }}: 0px;
 "></div>`;
-        assert.strictEqual(formatStringWithPrettier(input), "<div\n    class=\"absolute right-0 h-[3px] bg-orange-300\"\n    style=\"{{ horizontal_stripe_position }}: 0px\"\n></div>\n");
+        assert.strictEqual(await formatStringWithPrettier(input), "<div\n    class=\"absolute right-0 h-[3px] bg-orange-300\"\n    style=\"{{ horizontal_stripe_position }}: 0px\"\n></div>\n");
     });
 });

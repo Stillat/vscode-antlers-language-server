@@ -67,6 +67,14 @@ export abstract class DocumentFormatter {
         return this.formatDocument(document, settings);
     }
 
+    async formatTextAsync(text: string, settings: AntlersSettings): Promise<string> {
+        const document = new AntlersDocument();
+        document.getDocumentParser().withChildDocuments(true);
+        document.loadString(text);
+
+        return await this.formatDocumentAsync(document, settings);
+    }
+
     async formatDocumentAsync(document: AntlersDocument, currentSettings: AntlersSettings): Promise<string> {
         if (!document.isFormattingEnabled()) {
             return document.getOriginalContent();
@@ -113,7 +121,7 @@ export abstract class DocumentFormatter {
         }
 
         documentToFormat.transform()
-            .withInlineFormatter((content: string) => this.formatText(content, currentSettings))
+            .withAsyncInlineFormatter((content: string) => this.formatTextAsync(content, currentSettings))
             .produceExtraStructuralPairs(this.createExtraVirtualStructures)
             .withAsyncHtmlFormatter(this.asyncHtmlFormatter)
             .withAsyncPhpFormatter(this.asyncPhpFormatter)

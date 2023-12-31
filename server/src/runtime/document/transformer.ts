@@ -4,7 +4,7 @@ import { ConditionPairAnalyzer } from '../analyzers/conditionPairAnalyzer.js';
 import { AbstractNode, AntlersNode, ConditionNode, EscapedContentNode, ExecutionBranch, FragmentPosition, LiteralNode, StructuralFragment } from '../nodes/abstractNode.js';
 import { StringUtilities } from '../utilities/stringUtilities.js';
 import { AntlersDocument } from './antlersDocument.js';
-import { InlineFormatter } from './inlineFormatter.js';
+import { AsyncInlineFormatter, InlineFormatter } from './inlineFormatter.js';
 import { CommentPrinter } from './printers/commentPrinter.js';
 import { IndentLevel } from './printers/indentLevel.js';
 import { NodePrinter } from './printers/nodePrinter.js';
@@ -88,6 +88,7 @@ export class Transformer {
     private options: TransformOptions;
     private forceBreaks: string[] = [];
     private inlineFormatter: InlineFormatter | null = null;
+    private asyncInlineFormatter: AsyncInlineFormatter | null = null;
     private ignoredLiteralBlocks: Map<string, AbstractNode[]> = new Map();
     private activeLiteralSlug: string = '';
     private isInsideIgnoreFormatter: boolean = false;
@@ -105,6 +106,12 @@ export class Transformer {
 
     withInlineFormatter(inlineFormatter: InlineFormatter) {
         this.inlineFormatter = inlineFormatter;
+
+        return this;
+    }
+
+    withAsyncInlineFormatter(asyncInlineFormatter: AsyncInlineFormatter) {
+        this.asyncInlineFormatter = asyncInlineFormatter;
 
         return this;
     }
@@ -1022,6 +1029,30 @@ export class Transformer {
         return value;
     }
 
+    private async transformCommentsAsync(content: string): Promise<string> {
+        let value = content;
+
+        for (const [slug, comment] of this.inlineComments) {
+            const open = this.selfClosing(slug),
+                commentResult = await CommentPrinter.printCommentAsync(comment, this.options.tabSize, 0, this.asyncInlineFormatter);
+
+            value = value.replace(open, commentResult);
+        }
+
+        for (let i = 0; i < this.blockComments.length; i++) {
+            const structure = this.blockComments[i];
+
+            const comment = structure.node as AntlersNode,
+                commentResult = await CommentPrinter.printCommentAsync(comment, this.options.tabSize, this.indentLevel(structure.pairOpen), this.asyncInlineFormatter);
+
+            value = value.replace(structure.pairOpen, commentResult);
+            this.removeLines.push(structure.pairClose);
+            this.removeLines.push(structure.virtualElement);
+        }
+
+        return value;
+    }
+
     private transformComments(content: string): string {
         let value = content;
 
@@ -1320,7 +1351,7 @@ export class Transformer {
         let results = this.transformInlineConditions(reflowedContent);
         results = await this.transformConditionsAsync(results);
         results = await this.transformInlineAntlersAsync(results);
-        results = this.transformComments(results);
+        results = await this.transformCommentsAsync(results);
         results = this.transformVirtualStructures(results);
         results = await this.transformDynamicAntlersAsync(results);
         results = await this.transformPairedAntlersAsync(results);
