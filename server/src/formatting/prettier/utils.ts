@@ -1,5 +1,5 @@
 import * as prettier from 'prettier';
-import * as plugin from './plugin.js';
+import plugin from './plugin.js';
 
 // eslint-disable-next-line @typescript-eslint/ban-ts-comment
 // @ts-ignore
