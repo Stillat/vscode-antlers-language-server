@@ -1047,33 +1047,6 @@ export class Transformer {
         return value;
     }
 
-    private cleanStructuralNewLines(content: string): string {
-        const lines: string[] = StringUtilities.breakByNewLine(content),
-            newLines: string[] = [];
-
-        let pruneLines = false;
-
-        lines.forEach((line) => {
-            const checkLine = line.trim();
-
-            if (checkLine.startsWith('{{') && checkLine.endsWith('}}')) {
-                newLines.push(line);
-                pruneLines = true;
-                return;
-            }
-
-            if (pruneLines && checkLine.length > 0) {
-                pruneLines = false;
-            }
-
-            if (!pruneLines) {
-                newLines.push(line);
-            }
-        });
-
-        return newLines.join("\n");
-    }
-
     private reflowSlugs(content: string): string {
         let result = content;
 
