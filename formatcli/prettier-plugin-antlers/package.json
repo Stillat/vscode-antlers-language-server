@@ -11,7 +11,7 @@
         "format"
     ],
     "peerDependencies": {
-        "prettier": ">=2.2.0"
+        "prettier": ">=3"
     },
     "author": "John Koster",
     "license": "MIT",

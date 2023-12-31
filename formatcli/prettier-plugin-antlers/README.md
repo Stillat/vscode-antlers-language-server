@@ -12,7 +12,41 @@ npm install prettier-plugin-antlers
 
 > Note: Make sure you have at least version 1.1.7.
 
-## Configuration
+## Prettier 3 Configuration
+
+To install the Prettier 3 plugin, use the following command:
+
+```bash
+npm install prettier-plugin-antlers@^2 --save-dev
+```
+
+After installing the plugin, you will need to update your `.prettierrc` file and make sure it contains the following values:
+
+```json
+{
+    "plugins": [
+        "prettier-plugin-antlers"
+    ],
+    "overrides": [
+        {
+            "files": [
+                "*.antlers.html"
+            ],
+            "options": {
+                "parser": "antlers"
+            }
+        }
+    ]
+}
+```
+
+## Prettier 2 Installation and Configuration
+
+To install the Prettier 2 plugin, use the following command:
+
+```bash
+npm install prettier-plugin-antlers@^1 --save-dev
+```
 
 If you continuously receive errors like "could not resolve module prettier-plugin-antlers", the following updates to a project's `.prettierrc` have proved successful:
 
@@ -30,6 +64,21 @@ If you continuously receive errors like "could not resolve module prettier-plugi
         }
         }
     ]
+}
+```
+
+## Visual Studio Code and Prettier
+
+If you receive errors similar to "No formatter for 'Antlers' found" after installing the Prettier Visual Studio Code extension and the Antlers plugin, you may need to update your Visual Studio Code settings and add Antlers as one of the Prettier extensions. Inside your setting's JSON file, you can apply changes similar to the following:
+
+```json
+{
+  "[antlers]": {
+    "editor.defaultFormatter": "esbenp.prettier-vscode"
+  },
+  "prettier.documentSelectors": [
+    "**/*.antlers.html"
+  ]
 }
 ```
 
