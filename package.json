@@ -206,8 +206,6 @@
     "devDependencies": {
         "@types/mocha": "^8.2.3",
         "@types/node": "^12.20.55",
-        "@typescript-eslint/eslint-plugin": "^4.33.0",
-        "@typescript-eslint/parser": "^4.33.0",
         "esbuild": "^0.14.54",
         "eslint": "^8.38.0",
         "mocha": "^10.2.0",
