@@ -38,7 +38,8 @@ suite('Formatter Prettier Comments', () => {
         {{ collection:articles limit="5" as="articles" }}
             {{ if no_results }}
                 <h2 class="text-3xl italic tracking-tight">
-                    Feel the rhythm! Feel the rhyme! Get on up, it's writing time! Cool writings!
+                    Feel the rhythm! Feel the rhyme! Get on up, it's writing time! Cool
+                    writings!
                 </h2>
             {{ /if }}
         {{ /collection:articles }}
