@@ -1,5 +1,4 @@
-// eslint-disable-next-line @typescript-eslint/no-var-requires
-const uri2path = require('file-uri-to-path');
+import uri2path from 'file-uri-to-path';
 
 export function normalizePath(path: string): string {
     return path.split('\\').join('/');

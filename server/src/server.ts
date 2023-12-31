@@ -1,8 +1,6 @@
 #!/usr/bin/env node
 
-// eslint-disable-next-line @typescript-eslint/no-var-requires
-const uri2path = require("file-uri-to-path");
-
+import uri2path from 'file-uri-to-path';
 import * as fs from 'fs';
 
 /* eslint-disable @typescript-eslint/no-namespace */
@@ -22,18 +20,18 @@ import {
     TextDocuments,
     TextDocumentSyncKind,
     WorkspaceEdit,
-} from "vscode-languageserver/node";
+} from "vscode-languageserver/node.js";
 import {
     handleOnCompletion,
     handleOnCompletionResolve,
-} from "./services/antlersCompletion";
+} from "./services/antlersCompletion.js";
 import { handleFoldingRequest } from "./services/antlersFoldingRegions.js";
 import {
     parseDocument,
     parseDocumentText,
     sendAllDiagnostics,
     validateTextDocument,
-} from "./services/antlersDiagnostics";
+} from "./services/antlersDiagnostics.js";
 import { formatAntlersDocument } from "./formatting/formatter.js";
 import { handleSignatureHelpRequest } from "./services/modifierMethodSignatures.js";
 import { handleDocumentHover } from "./services/antlersHover.js";

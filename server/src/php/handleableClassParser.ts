@@ -1,7 +1,7 @@
 import { StringUtilities } from '../runtime/utilities/stringUtilities.js';
 import { extractCommentDescription } from './phpUtils.js';
 
-const engine = require('php-parser');
+import phpparser from 'php-parser';
 
 export interface IHandledClass {
     className: string | undefined,
@@ -15,7 +15,7 @@ export class HandleableClassParser {
         let className: string | undefined,
             staticHandle: string | undefined,
             description = '';
-        const parser = new engine({
+        const parser = new phpparser.Engine({
             parser: {
                 extractDoc: true,
                 php7: true,
@@ -25,7 +25,7 @@ export class HandleableClassParser {
             },
         });
 
-        const ast = parser.parseCode(code),
+        const ast = parser.parseCode(code, ''),
             methodNames: string[] = [];
 
         ast.children.forEach((node: any) => {

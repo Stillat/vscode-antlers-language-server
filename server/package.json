@@ -8,6 +8,7 @@
         "node": "*"
     },
     "type": "module",
+    "main": "server.js",
     "repository": {
         "type": "git",
         "url": "https://github.com/Stillat/vscode-antlers-language-server"

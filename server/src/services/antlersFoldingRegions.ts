@@ -7,7 +7,7 @@ import { sessionDocuments } from '../languageService/documents.js';
 import {
     multilineCommentToFoldingRange,
     nodePairToFoldingRange,
-} from "../utils/conversions";
+} from "../utils/conversions.js";
 
 export function handleFoldingRequest(_foldingParams: FoldingRangeParams): FoldingRange[] {
     const docPath = decodeURIComponent(_foldingParams.textDocument.uri);
