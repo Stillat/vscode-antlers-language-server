@@ -296,6 +296,56 @@ export class Transformer {
         return value;
     }
 
+    private async printNodeAsync(node: AntlersNode, targetIndent: number | null = null): Promise<string> {
+        const printNode = node.getTrueNode();
+
+        if ((printNode.rawStart == '{{?' || printNode.rawStart == '{{$') && this.asyncPhpFormatter != null) {
+            try {
+                const formattedPhp = await this.asyncPhpFormatter(printNode.content);
+
+                return `${printNode.rawStart} ${formattedPhp} ${printNode.rawEnd}`;
+            } catch (err) { }
+        }
+
+        let doc = this.doc;
+
+        if (node.childDocument != null) {
+            doc = node.childDocument.document;
+        }
+
+        let prepend: string | null = null;
+
+        if (ConditionPairAnalyzer.isConditionalStructure(node)) {
+            prepend = printNode.runtimeName();
+
+            if (node.isClosingTag && (prepend == 'if' || prepend == 'unless')) {
+                return `{{ /${prepend} }}`;
+            }
+        }
+
+        if (node.isClosingTag) {
+            if (printNode.runtimeName() == 'endunless') {
+                return `{{ /unless }}`;
+            }
+
+            return `{{ ${printNode.sourceContent.trim()} }}`;
+        }
+
+        let result = NodePrinter.prettyPrintNode(printNode, doc, 0, this.options, prepend, null);
+
+        const forceBreakOperatorNames = ['switch', 'list'];
+
+        if (targetIndent != null && result.includes("\n")) {
+            if (node.isVirtual && (node.name?.name == 'switch' || node.name?.name == 'list')) {
+                result = IndentLevel.shiftIndent(result, targetIndent + this.options.tabSize, true);
+            } else {
+                result = IndentLevel.shiftIndent(result, targetIndent - (this.options.tabSize * 2), true);
+            }
+        }
+
+        return result;
+    }
+
     private printNode(node: AntlersNode, targetIndent: number | null = null) {
         const printNode = node.getTrueNode();
 
@@ -344,6 +394,69 @@ export class Transformer {
         }
 
         return result;
+    }
+
+
+    private async transformConditionsAsync(content: string): Promise<string> {
+        let value = content;
+
+        for (let i = 0; i < this.conditions.length; i++) {
+            const condition = this.conditions[i];
+
+            for (let j = 0; j < condition.structures.length; j++) {
+                const structure = condition.structures[j];
+                const structureTag = structure.branch.head as AntlersNode;
+
+                if (structure.virtualBreakOpen.length > 0) {
+                    this.removeLines.push(structure.virtualBreakOpen);
+                }
+
+                if (structure.virtualBreakClose.length > 0) {
+                    value = value.replace(structure.virtualBreakClose, structure.virtualBreakClose + "\n");
+                    this.removeLines.push(structure.virtualBreakClose);
+                }
+
+                this.virtualStructureOpens.push(structure.virtualOpen);
+                this.removeLines.push(structure.virtualOpen);
+                this.removeLines.push(structure.virtualClose);
+
+                if (!structure.isLast) {
+                    const virtualInline = this.selfClosing(structure.virtualSlug);
+
+                    if (!value.includes(virtualInline)) {
+                        const replaceRegex = '<' + structure.virtualSlug + '(\\s)+\\/>',
+                            regex = new RegExp(replaceRegex, 'gm');
+
+                        value = value.replace(regex, virtualInline);
+                    }
+
+                    if (value.includes(virtualInline)) {
+                        value = value.replace(virtualInline, structure.doc.trim());
+                    }
+
+                    this.removeLines.push(structure.pairClose);
+                    value = value.replace(structure.pairOpen, await this.printNodeAsync(structureTag, this.indentLevel(structure.pairOpen)));
+                } else {
+                    const virtualInline = this.selfClosing(structure.virtualSlug);
+
+                    if (!value.includes(virtualInline)) {
+                        const replaceRegex = '<' + structure.virtualSlug + '(\\s)+\\/>',
+                            regex = new RegExp(replaceRegex, 'gm');
+
+                        value = value.replace(regex, virtualInline);
+                    }
+
+                    if (value.includes(virtualInline)) {
+                        value = value.replace(virtualInline, structure.doc.trim());
+                    }
+
+                    value = value.replace(structure.pairOpen, await this.printNodeAsync(structureTag, this.indentLevel(structure.pairOpen)));
+                    value = value.replace(structure.pairClose, await this.printNodeAsync(structureTag.isClosedBy as AntlersNode));
+                }
+            }
+        }
+
+        return value;
     }
 
     private transformConditions(content: string): string {
@@ -755,6 +868,83 @@ export class Transformer {
         return this.registerInlineAntlers(node);
     }
 
+    private async transformDynamicAntlersAsync(content: string): Promise<string> {
+        let value = content;
+
+        for (const [slug, node] of this.dynamicElementAntlersNodes) {
+            const antlersContent = await this.printNodeAsync(node);
+
+            value = replaceAllInString(value, slug, antlersContent);
+        }
+
+        this.dynamicElementPairedAntlersNodes.forEach((node, slug) => {
+            const antlersContent = node.nodeContent;
+
+            value = replaceAllInString(value, slug, antlersContent);
+        });
+
+        this.dynamicElementConditionAntlersNodes.forEach((node, slug) => {
+            const antlersContent = node.nodeContent;
+
+            value = replaceAllInString(value, slug, antlersContent);
+        });
+
+        return value;
+    }
+
+    private async transformPairedAntlersAsync(content: string): Promise<string> {
+        let value = content;
+
+        for (const [slug, tag] of this.tagPairs) {
+            const originalTag = tag.tag;
+
+            if (tag.virtualElementSlug.length > 0) {
+                const open = this.open(tag.virtualElementSlug),
+                    close = this.close(tag.virtualElementSlug);
+                this.virtualStructureOpens.push(open);
+                this.removeLines.push(open);
+                this.removeLines.push(close);
+            }
+
+            const open = this.open(slug),
+                close = this.close(slug);
+
+            value = value.replace(open, await this.printNodeAsync(originalTag, this.indentLevel(open)));
+
+            value = value.replace(close, await this.printNodeAsync(originalTag.isClosedBy as AntlersNode));
+        }
+
+        return value;
+    }
+
+    private async transformInlineAntlersAsync(content: string): Promise<string> {
+        let value = content;
+
+        for (const [slug, node] of this.inlineNodes) {
+            const inline = this.selfClosing(slug),
+                inlineNs = this.selfClosingNs(slug),
+                printed = await this.printNodeAsync(node, this.indentLevel(inline));
+            value = value.replace(inline, printed);
+            value = value.replace(inlineNs, printed);
+        }
+
+        for (const [slug, node] of this.spanNodes) {
+            let level = 0;
+
+            if (node.isVirtual && (node.name?.name == 'switch' || node.name?.name == 'list')) {
+                level = this.indentLevel(slug, true);
+            }
+
+            const printed = await this.printNodeAsync(node, level),
+                slugNs = this.selfClosingNs(slug);
+
+            value = value.replace(slug, printed);
+            value = value.replace(slugNs, printed);
+        }
+
+        return value;
+    }
+
     private transformDynamicAntlers(content: string): string {
         let value = content;
 
@@ -1128,12 +1318,12 @@ export class Transformer {
 
         this.structureLines = StringUtilities.breakByNewLine(reflowedContent);
         let results = this.transformInlineConditions(reflowedContent);
-        results = this.transformConditions(results);
-        results = this.transformInlineAntlers(results);
+        results = await this.transformConditionsAsync(results);
+        results = await this.transformInlineAntlersAsync(results);
         results = this.transformComments(results);
         results = this.transformVirtualStructures(results);
-        results = this.transformDynamicAntlers(results);
-        results = this.transformPairedAntlers(results);
+        results = await this.transformDynamicAntlersAsync(results);
+        results = await this.transformPairedAntlersAsync(results);
         results = this.cleanVirtualStructures(results);
         results = this.cleanLines(results);
         //results = this.removeVirtualStructures(results);
