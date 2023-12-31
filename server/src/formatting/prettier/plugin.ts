@@ -42,8 +42,8 @@ const plugin: prettier.Plugin = {
 
                 document.loadString(text);
 
-                const result = (new PrettierDocumentFormatter(formatterOptions as prettier.ParserOptions))
-                    .formatDocument(document, defaultAntlersSettings);
+                const result = await (new PrettierDocumentFormatter(formatterOptions as prettier.ParserOptions))
+                    .formatDocumentAsync(document, defaultAntlersSettings);
 
                 return {
                     doc: document,

@@ -108,7 +108,7 @@ export abstract class DocumentFormatter {
             }
         }
 
-        if (this.htmlFormatter == null || documentToFormat.isValid() == false) {
+        if (this.asyncHtmlFormatter == null || documentToFormat.isValid() == false) {
             return documentToFormat.getOriginalContent();
         }
 
@@ -124,7 +124,7 @@ export abstract class DocumentFormatter {
         }
 
         const structure = documentToFormat.transform().toStructure(),
-            formatted = this.htmlFormatter(structure);
+            formatted = await this.asyncHtmlFormatter(structure);
 
         let formattedDocument = await documentToFormat.transform().fromStructureAsync(formatted);
 
