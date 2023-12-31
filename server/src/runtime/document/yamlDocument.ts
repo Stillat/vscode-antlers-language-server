@@ -1,4 +1,4 @@
-import * as YAML from 'yaml';
+import YAML from 'yaml';
 import { Pair, Scalar, YAMLMap, YAMLSeq } from 'yaml/types';
 import { Position } from '../nodes/position.js';
 import { DocumentOffset } from '../parser/documentOffset.js';

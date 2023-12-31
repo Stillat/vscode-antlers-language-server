@@ -1,6 +1,6 @@
 import * as path from "path";
 import * as fs from "fs";
-import * as YAML from "yaml";
+import YAML from "yaml";
 import { ICollection } from '../collections/collection.js';
 import { IStructure } from '../structures/structure.js';
 

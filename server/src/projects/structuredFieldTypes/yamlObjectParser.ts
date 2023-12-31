@@ -1,4 +1,4 @@
-import * as yaml from 'yaml';
+import YAML from 'yaml';
 import { Faker } from '../../documentation/generator/faker.js';
 import { IFieldDetails } from './types.js';
 
@@ -10,7 +10,7 @@ export class ParsedYamlObject {
 export class DynamicYamlFieldsParser {
 
     parse(document: string): IFieldDetails[] {
-        const parsedDocument = yaml.parse(document),
+        const parsedDocument = YAML.parse(document),
             root = this.parseObject('root', parsedDocument);
 
         return root.fields;

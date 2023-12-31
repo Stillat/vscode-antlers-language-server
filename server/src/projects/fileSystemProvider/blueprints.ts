@@ -1,4 +1,4 @@
-import * as YAML from "yaml";
+import YAML from "yaml";
 import * as fs from "fs";
 import { IBlueprintField, ISet, blueprintFieldFromFieldSet, adjustFieldType, SetFieldTypes, IBlueprint } from '../blueprints/fields.js';
 import {IFieldsetField } from '../fieldsets/fieldset.js';

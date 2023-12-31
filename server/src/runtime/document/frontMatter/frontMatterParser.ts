@@ -1,4 +1,4 @@
-import * as YAML from "yaml";
+import YAML from "yaml";
 import { Scope } from '../../../antlers/scope/scope.js';
 import { IProjectDetailsProvider } from '../../../projects/projectDetailsProvider.js';
 import { Node, Pair, Scalar, YAMLMap, YAMLSeq } from 'yaml/types';

@@ -1,5 +1,5 @@
 import * as fs from 'fs';
-import * as YAML from 'yaml';
+import YAML from 'yaml';
 import ModifierManager from '../modifierManager.js';
 import { IModifier, IModifierMacro, IModifierReference } from '../modifierTypes.js';
 
