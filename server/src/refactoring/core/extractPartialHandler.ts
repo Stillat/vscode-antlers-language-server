@@ -1,4 +1,4 @@
-import { CodeAction, CodeActionKind, Command, TextEdit, WorkspaceEdit } from 'vscode-languageserver';;
+import { CodeAction, CodeActionKind, Command, TextEdit, WorkspaceEdit } from 'vscode-languageserver';
 import ProjectManager from '../../projects/projectManager.js';
 import { normalizePath } from '../../utils/uris.js';
 import IRefactorHandler from '../refactorHandler.js';
