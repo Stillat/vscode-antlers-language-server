@@ -1,5 +1,5 @@
 import { replaceAllInString } from '../../../utils/strings.js';
-import { AbstractNode, AdditionOperator, AntlersNode, ArgSeparator, DivisionOperator, InlineBranchSeparator, InlineTernarySeparator, LeftAssignmentOperator, LogicalNegationOperator, LogicGroupBegin, LogicGroupEnd, MethodInvocationNode, ModifierNameNode, ModifierSeparator, ModifierValueNode, ModifierValueSeparator, ModulusOperator, MultiplicationOperator, NumberNode, ScopeAssignmentOperator, StatementSeparatorNode, StringValueNode, SubtractionOperator, TupleListStart, VariableNode } from '../../nodes/abstractNode.js';
+import { AbstractNode, AdditionOperator, AntlersNode, ArgSeparator, DivisionOperator, InlineBranchSeparator, InlineTernarySeparator, LeftAssignmentOperator, LogicalNegationOperator, LogicGroupBegin, LogicGroupEnd, MethodInvocationNode, ModifierNameNode, ModifierSeparator, ModifierValueNode, ModifierValueSeparator, ModulusOperator, MultiplicationOperator, NumberNode, PathNode, ScopeAssignmentOperator, StatementSeparatorNode, StringValueNode, SubtractionOperator, TupleListStart, VariableNode } from '../../nodes/abstractNode.js';
 import { LanguageParser } from '../../parser/languageParser.js';
 import { NodeHelpers } from '../../utilities/nodeHelpers.js';
 import { AntlersDocument } from '../antlersDocument.js';
@@ -113,6 +113,20 @@ export class NodePrinter {
                         if (node.name == 'as') {
                             nodeBuffer.appendOS('as');
                         } else {
+                            if (node.methodTarget != null) {
+                                if (node.variableReference != null) {
+                                    node.variableReference.pathParts.forEach((part) => {
+                                        if (part instanceof PathNode) {
+                                            nodeBuffer.append(part.name);
+                                            nodeBuffer.append('.');
+                                        }
+                                    });
+                                }
+
+                                nodeBuffer.append(node.methodTarget.method?.name ?? '');
+
+                                continue;
+                            }
                             nodeBuffer.append(node.name.trim());
                         }
                     }

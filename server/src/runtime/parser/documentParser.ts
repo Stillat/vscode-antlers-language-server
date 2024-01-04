@@ -120,7 +120,7 @@ export class DocumentParser {
     private escapedContentEndSymbol: string | null = null;
     private escapedContentSymbolEncountered = 0;
 
-    private structuralErrorCodes:string[] = [
+    private structuralErrorCodes: string[] = [
         AntlersErrorCodes.TYPE_PARSE_UNCLOSED_CONDITIONAL,
         AntlersErrorCodes.TYPE_PARSE_UNPAIRED_CONDITIONAL,
         AntlersErrorCodes.TYPE_RECURSIVE_UNPAIRED_NODE,
@@ -381,7 +381,7 @@ export class DocumentParser {
 
         return this.content.substr(position.offset, 1);
     }
-    
+
     getLinesAround(line: number): Map<number, string> {
         const lines: Map<number, string> = new Map();
 
@@ -521,7 +521,7 @@ export class DocumentParser {
 
                 if (this.lastAntlersNode != null && this.lastAntlersNode instanceof PhpExecutionNode == false && (this.lastAntlersNode.isComment && !(this.lastAntlersNode instanceof CommentParserFailNode))) {
                     if (i + 1 < indexCount) {
-                        const nextAntlersStart = this.antlersStartPositionIndex.get(i + 1) as number;
+                        let nextAntlersStart = this.antlersStartIndex[i + 1] as number;
 
                         if (this.lastAntlersNode.endPosition != null) {
                             if (nextAntlersStart < this.lastAntlersNode.endPosition.offset) {
@@ -584,7 +584,7 @@ export class DocumentParser {
                                             literalNode.endPosition = this.positionFromOffset(spanEnd, spanEnd);
                                             const startOffset = (literalNode.startPosition.index ?? 0),
                                                 endOffset = (literalNode.endPosition.index) + 1;
-                                            literalNode.sourceContent = this.content.substr(startOffset, endOffset - startOffset);
+                                            literalNode.sourceContent = this.content.substr(startOffset, endOffset - startOffset + 1);
                                             this.nodes.push(literalNode);
                                         }
 
@@ -1665,8 +1665,7 @@ export class DocumentParser {
         return newString;
     }
 
-    private resetEscapedContentState()
-    {
+    private resetEscapedContentState() {
         this.mayBeStartingEscapedContent = false;
         this.isParsingEscapedContent = false;
         this.escapedContentEndSymbol = null;
@@ -2138,7 +2137,7 @@ export class DocumentParser {
     getAntlersErrors() {
         return this.antlersErrors;
     }
-    
+
     getStructureErrors() {
         return this.structureErrors;
     }

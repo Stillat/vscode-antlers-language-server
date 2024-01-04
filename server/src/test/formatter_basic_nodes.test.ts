@@ -1,5 +1,6 @@
 import assert from 'assert';
 import { formatAntlers } from './testUtils/formatAntlers.js';
+import { formatStringWithPrettier } from '../formatting/prettier/utils.js';
 
 function assertFormattedMatches(input: string, expected: string) {
     const formatted = formatAntlers(input);
@@ -473,7 +474,7 @@ after`;
         assert.strictEqual(formatAntlers(`{{# A comment #}}
         {{# another comment {{ width }} #}}
         <div class="max-w-2xl mx-auto mb-32">
-        <p>test</p> {{ subtitle }}
+        <p>test</p> {{subtitle}}
         </div>`), output);
     });
 
@@ -775,6 +776,88 @@ nested augmented: {{ nested:augmented:drink }}`;
 {{ /%tag:this }}
 {{ $var }}
 {{ $var }}`;
+        assert.strictEqual(formatAntlers(input), out);
+    });
+
+    test('it does not eat methods', () => {
+        const input = `<div>
+{{ title.attributes.class(['border']) }}</div>`;
+        const out = `<div>
+    {{ title.attributes.class(['border']) }}
+</div>`;
+        assert.strictEqual(formatAntlers(input), out);
+    });
+
+    test('prettier: it does not eat methods', async () => {
+        const input = `<div>
+{{ title.attributes.class(['border']) }}</div>`;
+        const out = `<div>
+    {{ title.attributes.class(['border']) }}
+</div>
+`;
+        assert.strictEqual(await formatStringWithPrettier(input), out);
+    });
+
+    test('prettier: it does not trash documents with antlers pairs inside comments', async () => {
+        const input = `<div>
+{{#
+<select wire:model.live="beneficiary">
+    {{ one }}
+    {{ /one }}
+</select>
+#}}d
+</div>
+{{title}}
+<div>more stuff
+<p>here<span>and here!</span>.</p></div>`;
+        const out = `<div>
+    {{#
+        <select wire:model.live="beneficiary">
+            {{ one }}
+            {{ /one }}
+        </select>
+    #}}
+    d
+</div>
+{{ title }}
+<div>
+    more stuff
+    <p>
+        here
+        <span>and here!</span>
+        .
+    </p>
+</div>
+`;
+        assert.strictEqual(await formatStringWithPrettier(input), out);
+    });
+
+    test('it does not trash documents with tag pairs inside comments', () => {
+        const input = `<div>
+{{#
+<select wire:model.live="beneficiary">
+    {{ one }}
+    {{ /one }}
+</select>
+#}}d
+</div>
+{{title}}
+<div>more stuff
+<p>here<span>and here!</span>.</p></div>
+`;
+        const out = `<div>
+    {{#
+        <select wire:model.live="beneficiary">
+            {{ one }}
+            {{ /one }}
+        </select>
+    #}}
+    d
+</div>
+{{ title }}
+<div>more stuff
+    <p>here<span>and here!</span>.</p>
+</div>`;
         assert.strictEqual(formatAntlers(input), out);
     });
 });
