@@ -2,6 +2,10 @@
 
 Bugs fixed, what's new, and more! :)
 
+## 2.6.12
+
+- Corrects a few formatting bugs (#80)
+
 ## 2.6.11
 
 - Corrects an issue where extra whitespace is added around `->` method invocation syntax
