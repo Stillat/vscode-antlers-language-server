@@ -136,6 +136,7 @@ Includes another view into the current template.
                                     completionItems.push({
                                         label: parameter.name,
                                         kind: CompletionItemKind.Value,
+                                        detail: parameter.description,
                                         insertTextFormat: InsertTextFormat.Snippet,
                                         textEdit: TextEdit.replace(range, paramSnippet),
                                         command: {

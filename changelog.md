@@ -2,6 +2,10 @@
 
 Bugs fixed, what's new, and more! :)
 
+## 2.6.13
+
+- Provides partial parameter descriptions in suggestions.
+
 ## 2.6.12
 
 - Corrects a few formatting bugs (#80)
