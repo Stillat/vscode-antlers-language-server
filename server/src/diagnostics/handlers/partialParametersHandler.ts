@@ -10,6 +10,10 @@ const PartialParametersHandler: IDiagnosticsHandler = {
         const errors: AntlersError[] = [];
 
         if (node.isTagNode && node.name != null && node.getTagName() == 'partial') {
+            if (node.isClosingTag && !node.isSelfClosing) {
+                return errors;
+            }
+
             const viewName = getViewName(node);
 
             if (viewName == null) { return errors; }

@@ -2,6 +2,10 @@
 
 Bugs fixed, what's new, and more! :)
 
+## 2.6.14
+
+- Corrects an issue causing required partial parameter errors from appearing on closing tags (#84)
+
 ## 2.6.13
 
 - Provides partial parameter descriptions in suggestions.
