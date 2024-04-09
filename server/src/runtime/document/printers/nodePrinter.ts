@@ -1,3 +1,4 @@
+import { formatAntlers } from '../../../test/testUtils/formatAntlers.js';
 import { replaceAllInString } from '../../../utils/strings.js';
 import { AbstractNode, AdditionOperator, AntlersNode, ArgSeparator, DivisionOperator, InlineBranchSeparator, InlineTernarySeparator, LeftAssignmentOperator, LogicalNegationOperator, LogicGroupBegin, LogicGroupEnd, MethodInvocationNode, ModifierNameNode, ModifierSeparator, ModifierValueNode, ModifierValueSeparator, ModulusOperator, MultiplicationOperator, NumberNode, PathNode, ScopeAssignmentOperator, StatementSeparatorNode, StringValueNode, SubtractionOperator, TupleListStart, VariableNode } from '../../nodes/abstractNode.js';
 import { LanguageParser } from '../../parser/languageParser.js';
@@ -7,8 +8,8 @@ import { TransformOptions } from '../transformOptions.js';
 import { NodeBuffer } from './nodeBuffer.js';
 
 export class NodePrinter {
-    
-    static prettyPrintNode(antlersNode: AntlersNode, doc: AntlersDocument, indent: number, options:TransformOptions, prepend: string | null, seedIndent: number | null): string {
+
+    static prettyPrintNode(antlersNode: AntlersNode, doc: AntlersDocument, indent: number, options: TransformOptions, prepend: string | null, seedIndent: number | null): string {
 
         const lexerNodes = antlersNode.getTrueRuntimeNodes();
         let nodeStatements = 0,
@@ -64,7 +65,14 @@ export class NodePrinter {
                 }
 
                 if (node instanceof VariableNode) {
-                    if (node.convertedToOperator) {
+                    if (antlersNode.interpolationRegions && antlersNode.interpolationRegions.has(node.name)) {
+                        const interpolatedRegion = antlersNode.interpolationRegions.get(node.name);
+
+                        if (interpolatedRegion) {
+                            nodeBuffer.append(interpolatedRegion.content);
+                            continue;
+                        }
+                    } else if (node.convertedToOperator) {
                         if (node.name == 'arr') {
                             nodeBuffer.appendT(' arr');
                         } else if (node.name == 'switch' || node.name == 'list') {
@@ -349,7 +357,7 @@ export class NodePrinter {
             if (antlersNode.processedInterpolationRegions.size > 0) {
                 const regions = new Map([...antlersNode.processedInterpolationRegions.entries()].sort().reverse());
                 regions.forEach((region, key) => {
-                    const iTResult = NodePrinter.prettyPrintNode(region[0] as AntlersNode, doc, indent, options, null, null );
+                    const iTResult = NodePrinter.prettyPrintNode(region[0] as AntlersNode, doc, indent, options, null, null);
                     bContent = replaceAllInString(bContent, key, iTResult);
                 });
             }
