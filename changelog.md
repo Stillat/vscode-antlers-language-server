@@ -2,6 +2,10 @@
 
 Bugs fixed, what's new, and more! :)
 
+## 2.6.16
+
+- Corrects an issue when using `{{# format-ignore-start #}}` (#87)
+
 ## 2.6.15
 
 - Corrects an issue when formatting interpolated content in conditions (#85)
