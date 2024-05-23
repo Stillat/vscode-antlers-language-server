@@ -1075,9 +1075,16 @@ export class Transformer {
         return value;
     }
 
+    withIgnoredRegions(regions: Map<string, AbstractNode[]>): Transformer {
+        this.ignoredLiteralBlocks = regions;
+
+        return this;
+    }
+
     clone(): Transformer {
         const cloned = new Transformer(this.doc);
         cloned.withOptions(this.options).setParentTransformer(this);
+        cloned.withIgnoredRegions(this.ignoredLiteralBlocks);
 
         return cloned;
     }
