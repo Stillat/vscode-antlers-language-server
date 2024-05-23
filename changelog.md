@@ -2,6 +2,14 @@
 
 Bugs fixed, what's new, and more! :)
 
+## 2.6.17
+
+- Adds support for the `select` modifier
+- Adds support for `flatten`'s `depth` parameter
+- Adds support for the `keys` modifier
+- Adds support for the `values` modifier
+- Adds support for the `attribute` modifier
+
 ## 2.6.16
 
 - Corrects an issue when using `{{# format-ignore-start #}}` (#87)

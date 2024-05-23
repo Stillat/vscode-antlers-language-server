@@ -118,7 +118,12 @@ const arrayModifiers: IModifier[] = [
         forFieldType: [],
         description: 'Flattens a multi-dimensional array.',
         docLink: 'https://statamic.dev/modifiers/flatten',
-        parameters: [],
+        parameters: [
+            {
+                name: 'depth',
+                description: 'Specifies how deep the array should be flattened. The default is INF, which will flatten the entire array.'
+            }
+        ],
         canBeParameter: false,
         isDeprecated: false
     },
@@ -284,6 +289,22 @@ const arrayModifiers: IModifier[] = [
             {
                 name: 'value',
                 description: 'The value to pluck from the array or collection.'
+            }
+        ],
+        canBeParameter: true,
+        docLink: null,
+        isDeprecated: false
+    },
+    {
+        name: 'select',
+        acceptsType: ['array'],
+        returnsType: ['array'],
+        forFieldType: [],
+        description: 'Selects multiple values from a collection of items.',
+        parameters: [
+            {
+                name: 'values',
+                description: 'The values to select from the array or collection.'
             }
         ],
         canBeParameter: true,
@@ -460,6 +481,39 @@ const arrayModifiers: IModifier[] = [
         returnsType: ['string'],
         forFieldType: [],
         description: 'Converts an array of conditional class names to a CSS class list.',
+        canBeParameter: true,
+        docLink: '',
+        parameters: [],
+        isDeprecated: false
+    },
+    {
+        name: 'keys',
+        acceptsType: ['array'],
+        returnsType: ['array'],
+        forFieldType: [],
+        description: 'Returns the keys of the input array',
+        canBeParameter: true,
+        docLink: '',
+        parameters: [],
+        isDeprecated: false
+    },
+    {
+        name: 'values',
+        acceptsType: ['array'],
+        returnsType: ['array'],
+        forFieldType: [],
+        description: 'Returns the values of the input array',
+        canBeParameter: true,
+        docLink: '',
+        parameters: [],
+        isDeprecated: false
+    },
+    {
+        name: 'attribute',
+        acceptsType: ['*'],
+        returnsType: ['string'],
+        forFieldType: [],
+        description: 'Converts the provided value to an HTML attribute',
         canBeParameter: true,
         docLink: '',
         parameters: [],
