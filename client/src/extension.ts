@@ -184,6 +184,9 @@ export function activate(context: ExtensionContext) {
         if (! adjustCommentStylesDynamically) {
             return;
         }
+        if (typeof e === 'undefined' || !e) {
+            return;
+        }
         if (typeof e.document === 'undefined' || e.document == null) {
             return;
         }
