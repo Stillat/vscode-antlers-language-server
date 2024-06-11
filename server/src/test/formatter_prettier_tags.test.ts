@@ -167,4 +167,17 @@ style="
 "></div>`;
         assert.strictEqual(await formatStringWithPrettier(input), "<div\n    class=\"absolute right-0 h-[3px] bg-orange-300\"\n    style=\"{{ horizontal_stripe_position }}: 0px\"\n></div>\n");
     });
+
+    test('it does not remove escape sequences when formatting attributes inside attributes', async () => {
+        const template = `{{ partial:button attr="x-bind:disabled=\\"submitting\\"" }}`;
+        const expected = `{{ partial:button attr="x-bind:disabled=\\"submitting\\"" }}`;
+
+        let out = (await formatStringWithPrettier(template)).trim();
+        
+        assert.strictEqual(out, expected);
+
+        out = (await formatStringWithPrettier(out)).trim();
+        
+        assert.strictEqual(out, expected);
+    });
 });

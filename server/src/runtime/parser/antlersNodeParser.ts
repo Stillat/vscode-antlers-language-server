@@ -498,24 +498,28 @@ export class AntlersNodeParser {
                 }
 
                 if (peek == DocumentParser.String_Terminator_DoubleQuote) {
+                    currentChars.push(DocumentParser.String_EscapeCharacter);
                     currentChars.push(DocumentParser.String_Terminator_DoubleQuote);
                     i += 1;
                     continue;
                 }
 
                 if (peek == DocumentParser.String_Terminator_SingleQuote) {
+                    currentChars.push(DocumentParser.String_EscapeCharacter);
                     currentChars.push(DocumentParser.String_Terminator_SingleQuote);
                     i += 1;
                     continue;
                 }
 
                 if (peek == 'n') {
+                    currentChars.push(DocumentParser.String_EscapeCharacter);
                     currentChars.push("\n");
                     i += 1;
                     continue;
                 }
 
                 if (peek == 'r') {
+                    currentChars.push(DocumentParser.String_EscapeCharacter);
                     currentChars.push("\r");
                     i += 1;
                     continue;
