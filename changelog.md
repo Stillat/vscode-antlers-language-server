@@ -2,6 +2,10 @@
 
 Bugs fixed, what's new, and more! :)
 
+## 2.6.19
+
+- Corrects an issue when formatting escape sequences in nested strings (#90)
+
 ## 2.6.18
 
 - Improves type checking of event arguments to prevent console errors (#88)
