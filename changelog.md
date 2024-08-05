@@ -2,6 +2,10 @@
 
 Bugs fixed, what's new, and more! :)
 
+## 2.6.20
+
+- Corrects an issue where "and" would cause incorrect diagnostic reports (#95)
+
 ## 2.6.19
 
 - Corrects an issue when formatting escape sequences in nested strings (#90)

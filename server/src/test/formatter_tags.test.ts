@@ -162,4 +162,9 @@ After Partial
         assert.strictEqual(formatAntlers(`{{ view:background['default']['one'] + 'that' }}`).trim(), `{{ view:background['default']['one'] + 'that' }}`);
         assert.strictEqual(formatAntlers(`{{ view:background[default] }}`).trim(), `{{ view:background[default] }}`);
     });
+
+    test('it does not add spaces between and and or keywords in tag names', () => {
+        assert.strictEqual(formatAntlers('{{ partial:services-and-things }}').trim(), '{{ partial:services-and-things }}');
+        assert.strictEqual(formatAntlers('{{ partial:services-or-things }}').trim(), '{{ partial:services-or-things }}');
+    });
 });

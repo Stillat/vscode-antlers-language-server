@@ -2161,14 +2161,23 @@ export class LanguageParser {
             return false;
         }
 
-        const token = tokens[i + 1];
+        const token = tokens[i + 1] as AbstractNode;
 
         if (!this.isOperand(token)) {
+            if (token instanceof LogicalAndOperator) {
+                const nDistance = NodeHelpers.distance(tokens[i], token);
+
+                if (nDistance < 0) {
+                    return true;
+                }
+            }
+
             token.pushError(AntlersError.makeSyntaxError(
                 AntlersErrorCodes.TYPE_EXPECTING_OPERAND,
                 tokens[i],
                 'Expecting operand, found ' + TypeLabeler.getPrettyTypeName(token) + ' near "' + LineRetriever.getNearText(tokens[i]) + '".'
             ));
+            
             return false;
         }
 

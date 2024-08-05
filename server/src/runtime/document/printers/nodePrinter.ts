@@ -1,6 +1,6 @@
 import { formatAntlers } from '../../../test/testUtils/formatAntlers.js';
 import { replaceAllInString } from '../../../utils/strings.js';
-import { AbstractNode, AdditionOperator, AntlersNode, ArgSeparator, DivisionOperator, InlineBranchSeparator, InlineTernarySeparator, LeftAssignmentOperator, LogicalNegationOperator, LogicGroupBegin, LogicGroupEnd, MethodInvocationNode, ModifierNameNode, ModifierSeparator, ModifierValueNode, ModifierValueSeparator, ModulusOperator, MultiplicationOperator, NumberNode, PathNode, ScopeAssignmentOperator, StatementSeparatorNode, StringValueNode, SubtractionOperator, TupleListStart, VariableNode } from '../../nodes/abstractNode.js';
+import { AbstractNode, AdditionOperator, AntlersNode, ArgSeparator, DivisionOperator, InlineBranchSeparator, InlineTernarySeparator, LeftAssignmentOperator, LogicalAndOperator, LogicalNegationOperator, LogicalOrOperator, LogicGroupBegin, LogicGroupEnd, MethodInvocationNode, ModifierNameNode, ModifierSeparator, ModifierValueNode, ModifierValueSeparator, ModulusOperator, MultiplicationOperator, NumberNode, PathNode, ScopeAssignmentOperator, StatementSeparatorNode, StringValueNode, SubtractionOperator, TupleListStart, VariableNode } from '../../nodes/abstractNode.js';
 import { LanguageParser } from '../../parser/languageParser.js';
 import { NodeHelpers } from '../../utilities/nodeHelpers.js';
 import { AntlersDocument } from '../antlersDocument.js';
@@ -266,6 +266,7 @@ export class NodePrinter {
                     nodeBuffer.appendS('+');
                 } else if (node instanceof SubtractionOperator) {
                     if (doc.getDocumentParser().getLanguageParser().isMergedVariableComponent(node)) {
+                        lastPrintedNode = node;
                         nodeBuffer.append('-');
                         continue;
                     }
@@ -332,7 +333,31 @@ export class NodePrinter {
                     }
                 } else if (node instanceof MethodInvocationNode) {
                     nodeBuffer.append('->');
-                } else {
+                } else if (node instanceof LogicalAndOperator) {
+                    if (lastPrintedNode != null && lastPrintedNode instanceof SubtractionOperator) {
+                        const distance = NodeHelpers.distance(lastPrintedNode, node);
+
+                        if (distance < 0) {
+                            nodeBuffer.append(node.rawContent());
+                        } else {
+                            nodeBuffer.appendS(node.rawContent());
+                        }
+                    } else {
+                        nodeBuffer.appendS(node.rawContent());
+                    }
+                } else if (node instanceof LogicalOrOperator) {
+                    if (lastPrintedNode != null && lastPrintedNode instanceof SubtractionOperator) {
+                        const distance = NodeHelpers.distance(lastPrintedNode, node);
+
+                        if (distance < 0) {
+                            nodeBuffer.append(node.content);
+                        } else {
+                            nodeBuffer.appendS(node.content);
+                        }
+                    } else {
+                        nodeBuffer.appendS(node.content);
+                    }
+                }  else {
                     nodeBuffer.appendS(node.rawContent());
                 }
 
