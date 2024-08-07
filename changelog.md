@@ -2,6 +2,10 @@
 
 Bugs fixed, what's new, and more! :)
 
+## 2.6.21
+
+- Corrects incorrect diagnostics for some operators (#97)
+
 ## 2.6.20
 
 - Corrects an issue where "and" would cause incorrect diagnostic reports (#95)

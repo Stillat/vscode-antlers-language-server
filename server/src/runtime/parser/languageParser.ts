@@ -357,6 +357,21 @@ export class LanguageParser {
         return variableNode;
     }
 
+    private wrapStringInVariable(node: StringValueNode) {
+        const variableNode = new VariableNode();
+        variableNode.startPosition = node.startPosition;
+        variableNode.endPosition = node.endPosition;
+        variableNode.name = node.value?.toString() ?? '';
+        variableNode.content = node.value?.toString() ?? '';
+        variableNode.originalAbstractNode = node;
+        variableNode.refId = node.refId;
+        variableNode.modifierChain = node.modifierChain;
+        variableNode.index = node.index;
+        this.createdVariables.push(variableNode);
+
+        return variableNode;
+    }
+
     private wrapArithmeticModifier(operator: AbstractNode, modifierName: string) {
         const node = new ModifierNameNode();
         node.startPosition = operator.startPosition;
@@ -447,7 +462,9 @@ export class LanguageParser {
                     right = tokens[i + 1];
 
                 if (left instanceof VariableNode && right instanceof VariableNode && NodeHelpers.distance(left, node) <= 1 && NodeHelpers.distance(node, right) <= 1) {
-                    newNodes.pop();
+
+                    newNodes.push(this.wrapStringInVariable(node));
+                    continue;
 
                     /*
                     Note: We don't need to do this just for static analysis/formatting.
