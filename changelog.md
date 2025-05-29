@@ -2,6 +2,12 @@
 
 Bugs fixed, what's new, and more! :)
 
+## 2.6.22
+
+- Rebuild (correct issue with reloading project details) (#106)
+- Filter falsey names from suggestions
+- Removes global snippets from completions list
+
 ## 2.6.21
 
 - Corrects incorrect diagnostics for some operators (#97)

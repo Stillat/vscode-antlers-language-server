@@ -42,17 +42,16 @@ export function handleOnCompletion(_textDocumentPosition: TextDocumentPositionPa
         }
     }
 
-    const globalSnippets = SnippetsManager.instance?.getSnippets(suggestionRequest) ?? [];
     let suggestions = SuggestionManager.getSuggestions(suggestionRequest);
-
-    if (globalSnippets.length > 0 && (suggestionRequest.isInDoubleBraces == false || suggestionRequest.nodesInScope.length == 0)) {
-        suggestions = suggestions.concat(globalSnippets);
-    }
 
     const returnedItems: string[] = [];
 
     return suggestions.filter((item) => {
         if (returnedItems.includes(item.label)) {
+            return false;
+        }
+
+        if (! item.label) {
             return false;
         }
 
