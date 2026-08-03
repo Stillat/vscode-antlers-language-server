@@ -40,6 +40,45 @@ After installing the plugin, you will need to update your `.prettierrc` file and
 }
 ```
 
+## Options
+
+### antlersArrayWrap
+
+Controls how array literals inside Antlers regions are printed. Defaults to `collapse`.
+
+| Value | Behavior |
+|---|---|
+| `collapse` | Array literals are always printed on a single line. |
+| `preserve` | Array literals that span multiple lines in the source document keep spanning multiple lines, one item per line. Arrays written on a single line stay on a single line. |
+
+```json
+{
+    "antlersArrayWrap": "preserve",
+    "plugins": [
+        "prettier-plugin-antlers"
+    ]
+}
+```
+
+With `collapse`, long class lists built with the `classes` modifier are printed on one line:
+
+```html
+<span class="{{ ['block', 'font-semibold', 'text-green', 'underline' => is_current] | classes }}">
+```
+
+With `preserve`, the same region keeps the line breaks it was written with:
+
+```html
+<span
+    class="{{ [
+        'block',
+        'font-semibold',
+        'text-green',
+        'underline' => is_current
+    ] | classes }}"
+>
+```
+
 ## Prettier 2 Installation and Configuration
 
 To install the Prettier 2 plugin, use the following command:

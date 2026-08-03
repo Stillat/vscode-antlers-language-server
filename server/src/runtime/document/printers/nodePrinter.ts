@@ -9,9 +9,40 @@ import { NodeBuffer } from './nodeBuffer.js';
 
 export class NodePrinter {
 
+    /**
+     * Tests if the array literal starting at the provided index spans
+     * more than one line within the source document.
+     */
+    private static isMultiLineArray(lexerNodes: AbstractNode[], startIndex: number): boolean {
+        const startLine = lexerNodes[startIndex].startPosition?.line ?? 0;
+        let depth = 0;
+
+        for (let i = startIndex; i < lexerNodes.length; i++) {
+            const node = lexerNodes[i];
+
+            if (!(node instanceof VariableNode)) { continue; }
+
+            if (node.name == '[') {
+                depth += 1;
+            } else if (node.name == ']') {
+                depth -= 1;
+
+                if (depth == 0) {
+                    return (node.startPosition?.line ?? 0) > startLine;
+                }
+            }
+        }
+
+        return false;
+    }
+
     static prettyPrintNode(antlersNode: AntlersNode, doc: AntlersDocument, indent: number, options: TransformOptions, prepend: string | null, seedIndent: number | null): string {
 
         const lexerNodes = antlersNode.getTrueRuntimeNodes();
+
+        // Tracks, per open array literal, whether that array is being
+        // printed across multiple lines. The innermost array is last.
+        const arrayWrapStack: boolean[] = [];
         let nodeStatements = 0,
             nodeOperators = 0;
 
@@ -65,6 +96,35 @@ export class NodePrinter {
                 }
 
                 if (node instanceof VariableNode) {
+                    const isArrayStart = node.name == '[',
+                        isArrayEnd = node.name == ']',
+                        isInterpolationRegion = antlersNode.interpolationRegions?.has(node.name) ?? false;
+
+                    if ((isArrayStart || isArrayEnd) && !isInterpolationRegion) {
+                        if (isArrayStart) {
+                            const wrapArray = options.arrayWrap == 'preserve'
+                                && NodePrinter.isMultiLineArray(lexerNodes, i);
+
+                            arrayWrapStack.push(wrapArray);
+                            nodeBuffer.append('[');
+
+                            if (wrapArray) {
+                                nodeBuffer.newLine().addIndent(options.tabSize * arrayWrapStack.length);
+                            }
+                        } else {
+                            const wasWrapped = arrayWrapStack.pop() ?? false;
+
+                            if (wasWrapped) {
+                                nodeBuffer.newLine().addIndent(options.tabSize * arrayWrapStack.length);
+                            }
+
+                            nodeBuffer.append(']');
+                        }
+
+                        lastPrintedNode = node;
+                        continue;
+                    }
+
                     if (antlersNode.interpolationRegions && antlersNode.interpolationRegions.has(node.name)) {
                         const interpolatedRegion = antlersNode.interpolationRegions.get(node.name);
 
@@ -242,6 +302,10 @@ export class NodePrinter {
                     if (node.isSwitchGroupMember) {
                         nodeBuffer.append(',')
                             .newlineIndent();
+                    } else if (arrayWrapStack.length > 0 && arrayWrapStack[arrayWrapStack.length - 1]) {
+                        nodeBuffer.append(',')
+                            .newLine()
+                            .addIndent(options.tabSize * arrayWrapStack.length);
                     } else {
                         nodeBuffer.append(', ');
                     }

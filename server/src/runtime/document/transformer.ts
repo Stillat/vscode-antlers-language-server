@@ -100,7 +100,8 @@ export class Transformer {
             tabSize: 4,
             newlinesAfterFrontMatter: 1,
             maxAntlersStatementsPerLine: 3,
-            endNewline: true
+            endNewline: true,
+            arrayWrap: 'collapse'
         };
     }
 
@@ -942,7 +943,7 @@ export class Transformer {
                 level = this.indentLevel(slug, true);
             }
 
-            const printed = await this.printNodeAsync(node, level),
+            const printed = this.shiftSpanNode(await this.printNodeAsync(node, level), slug, level),
                 slugNs = this.selfClosingNs(slug);
 
             value = value.replace(slug, printed);
@@ -1019,7 +1020,7 @@ export class Transformer {
                 level = this.indentLevel(slug, true);
             }
 
-            const printed = this.printNode(node, level),
+            const printed = this.shiftSpanNode(this.printNode(node, level), slug, level),
                 slugNs = this.selfClosingNs(slug);
 
             value = value.replace(slug, printed);
@@ -1137,6 +1138,21 @@ export class Transformer {
         });
 
         return result;
+    }
+
+    /**
+     * Aligns multi-line inline Antlers regions, such as multi-line array
+     * literals inside an HTML attribute, with the line they appear on.
+     *
+     * Inline regions are printed without a target indent, which leaves any
+     * additional lines they produce at the start of the line.
+     */
+    private shiftSpanNode(printed: string, slug: string, level: number): string {
+        if (this.options.arrayWrap != 'preserve' || level != 0 || !printed.includes("\n")) {
+            return printed;
+        }
+
+        return IndentLevel.shiftIndent(printed, this.indentLevel(slug), true, this.options.tabSize, false);
     }
 
     private indentLevel(value: string, includeIndex = false): number {
