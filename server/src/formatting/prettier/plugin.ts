@@ -82,6 +82,10 @@ const plugin: prettier.Plugin = {
                 {
                     value: 'preserve',
                     description: 'Array literals that span multiple lines in the source document keep spanning multiple lines, one item per line.'
+                },
+                {
+                    value: 'expand',
+                    description: 'Array literals containing at least one item are always printed across multiple lines, one item per line.'
                 }
             ]
         }

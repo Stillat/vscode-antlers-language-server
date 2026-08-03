@@ -50,6 +50,7 @@ Controls how array literals inside Antlers regions are printed. Defaults to `col
 |---|---|
 | `collapse` | Array literals are always printed on a single line. |
 | `preserve` | Array literals that span multiple lines in the source document keep spanning multiple lines, one item per line. Arrays written on a single line stay on a single line. |
+| `expand` | Array literals containing at least one item are always printed across multiple lines, one item per line, regardless of how they were written. |
 
 ```json
 {
@@ -66,7 +67,7 @@ With `collapse`, long class lists built with the `classes` modifier are printed 
 <span class="{{ ['block', 'font-semibold', 'text-green', 'underline' => is_current] | classes }}">
 ```
 
-With `preserve`, the same region keeps the line breaks it was written with:
+With `preserve`, the same region keeps the line breaks it was written with, and with `expand` it is always broken up:
 
 ```html
 <span
@@ -78,6 +79,10 @@ With `preserve`, the same region keeps the line breaks it was written with:
     ] | classes }}"
 >
 ```
+
+Empty arrays are always printed as `[]`.
+
+> Note: `expand` can require a second formatting pass to settle. Introducing line breaks makes the surrounding element longer, which Prettier may then reflow onto multiple lines; the second pass is stable.
 
 ## Prettier 2 Installation and Configuration
 

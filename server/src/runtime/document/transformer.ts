@@ -1148,7 +1148,7 @@ export class Transformer {
      * additional lines they produce at the start of the line.
      */
     private shiftSpanNode(printed: string, slug: string, level: number): string {
-        if (this.options.arrayWrap != 'preserve' || level != 0 || !printed.includes("\n")) {
+        if (this.options.arrayWrap == 'collapse' || level != 0 || !printed.includes("\n")) {
             return printed;
         }
 

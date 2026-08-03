@@ -10,30 +10,86 @@ import { NodeBuffer } from './nodeBuffer.js';
 export class NodePrinter {
 
     /**
-     * Tests if the array literal starting at the provided index spans
-     * more than one line within the source document.
+     * Splits a variable name into its leading array brackets, its actual
+     * name, and its trailing array brackets.
+     *
+     * Array brackets are merged into neighboring variable names whenever they
+     * are not separated by whitespace, which makes ['one', two] produce the
+     * variable names "[" and "two]".
+     *
+     * Returns null when the name contains no brackets, or contains brackets
+     * in a position this printer does not manage.
      */
-    private static isMultiLineArray(lexerNodes: AbstractNode[], startIndex: number): boolean {
-        const startLine = lexerNodes[startIndex].startPosition?.line ?? 0;
-        let depth = 0;
+    private static splitArrayBrackets(name: string): ArrayBracketParts | null {
+        const leading = (/^\[+/.exec(name) ?? [''])[0],
+            trailing = (/\]+$/.exec(name) ?? [''])[0];
 
-        for (let i = startIndex; i < lexerNodes.length; i++) {
-            const node = lexerNodes[i];
+        if (leading.length == 0 && trailing.length == 0) { return null; }
 
-            if (!(node instanceof VariableNode)) { continue; }
+        const value = name.substring(leading.length, name.length - trailing.length);
 
-            if (node.name == '[') {
-                depth += 1;
-            } else if (node.name == ']') {
-                depth -= 1;
+        if (value.includes('[') || value.includes(']')) { return null; }
 
-                if (depth == 0) {
-                    return (node.startPosition?.line ?? 0) > startLine;
-                }
+        return {
+            openCount: leading.length,
+            value: value,
+            closeCount: trailing.length
+        };
+    }
+
+    /**
+     * Produces the wrapping decision for every array literal within the
+     * provided nodes, keyed by the node and bracket it belongs to.
+     *
+     * Brackets are numbered per node: the opening brackets of a name come
+     * first, followed by its closing brackets.
+     */
+    private static resolveArrayWrapping(lexerNodes: AbstractNode[], options: TransformOptions): Map<string, boolean> {
+        const decisions: Map<string, boolean> = new Map(),
+            openBrackets: ArrayBracket[] = [];
+
+        for (let i = 0; i < lexerNodes.length; i++) {
+            const node = lexerNodes[i],
+                line = node.startPosition?.line ?? 0;
+
+            if (!(node instanceof VariableNode)) {
+                openBrackets.forEach((bracket) => bracket.hasItems = true);
+                continue;
+            }
+
+            const parts = NodePrinter.splitArrayBrackets(node.name);
+
+            if (parts == null) {
+                openBrackets.forEach((bracket) => bracket.hasItems = true);
+                continue;
+            }
+
+            for (let b = 0; b < parts.openCount; b++) {
+                openBrackets.push({ key: NodePrinter.bracketKey(i, b), line: line, hasItems: false });
+            }
+
+            if (parts.value.length > 0) {
+                openBrackets.forEach((bracket) => bracket.hasItems = true);
+            }
+
+            for (let b = 0; b < parts.closeCount; b++) {
+                const bracket = openBrackets.pop();
+
+                if (bracket == null) { continue; }
+
+                const wrap = bracket.hasItems && (options.arrayWrap == 'expand' || line > bracket.line),
+                    closeKey = NodePrinter.bracketKey(i, parts.openCount + b);
+
+                decisions.set(bracket.key, wrap);
+                decisions.set(closeKey, wrap);
             }
         }
 
-        return false;
+        return decisions;
+    }
+
+    private static bracketKey(nodeIndex: number, bracketIndex: number): string {
+        return nodeIndex + ':' + bracketIndex;
     }
 
     static prettyPrintNode(antlersNode: AntlersNode, doc: AntlersDocument, indent: number, options: TransformOptions, prepend: string | null, seedIndent: number | null): string {
@@ -42,7 +98,10 @@ export class NodePrinter {
 
         // Tracks, per open array literal, whether that array is being
         // printed across multiple lines. The innermost array is last.
-        const arrayWrapStack: boolean[] = [];
+        const arrayWrapStack: boolean[] = [],
+            arrayWrapDecisions = options.arrayWrap == 'collapse'
+                ? new Map<string, boolean>()
+                : NodePrinter.resolveArrayWrapping(lexerNodes, options);
         let nodeStatements = 0,
             nodeOperators = 0;
 
@@ -96,14 +155,14 @@ export class NodePrinter {
                 }
 
                 if (node instanceof VariableNode) {
-                    const isArrayStart = node.name == '[',
-                        isArrayEnd = node.name == ']',
-                        isInterpolationRegion = antlersNode.interpolationRegions?.has(node.name) ?? false;
+                    const isInterpolationRegion = antlersNode.interpolationRegions?.has(node.name) ?? false,
+                        arrayParts = options.arrayWrap == 'collapse' || isInterpolationRegion
+                            ? null
+                            : NodePrinter.splitArrayBrackets(node.name);
 
-                    if ((isArrayStart || isArrayEnd) && !isInterpolationRegion) {
-                        if (isArrayStart) {
-                            const wrapArray = options.arrayWrap == 'preserve'
-                                && NodePrinter.isMultiLineArray(lexerNodes, i);
+                    if (arrayParts != null) {
+                        for (let b = 0; b < arrayParts.openCount; b++) {
+                            const wrapArray = arrayWrapDecisions.get(NodePrinter.bracketKey(i, b)) ?? false;
 
                             arrayWrapStack.push(wrapArray);
                             nodeBuffer.append('[');
@@ -111,7 +170,13 @@ export class NodePrinter {
                             if (wrapArray) {
                                 nodeBuffer.newLine().addIndent(options.tabSize * arrayWrapStack.length);
                             }
-                        } else {
+                        }
+
+                        if (arrayParts.value.length > 0) {
+                            nodeBuffer.appendOS(arrayParts.value);
+                        }
+
+                        for (let b = 0; b < arrayParts.closeCount; b++) {
                             const wasWrapped = arrayWrapStack.pop() ?? false;
 
                             if (wasWrapped) {
@@ -456,4 +521,16 @@ export class NodePrinter {
 
         return antlersNode.getTrueRawContent();
     }
+}
+
+interface ArrayBracketParts {
+    openCount: number,
+    value: string,
+    closeCount: number
+}
+
+interface ArrayBracket {
+    key: string,
+    line: number,
+    hasItems: boolean
 }
