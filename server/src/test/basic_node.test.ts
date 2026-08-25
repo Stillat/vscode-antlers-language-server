@@ -8,7 +8,7 @@ import {
 } from "./testUtils/assertions.js";
 import { getParsedRuntimeNodes, parseNodes } from "./testUtils/parserUtils.js";
 import EnvironmentDetails from "../runtime/runtime/environmentDetails.js";
-import { AntlersNode, LiteralNode, SemanticGroup, VariableNode, LogicGroup, EqualCompOperator, ModifierNode, PathNode, VariableReference } from '../runtime/nodes/abstractNode.js';
+import { AntlersNode, LiteralNode, SemanticGroup, VariableNode, LogicGroup, EqualCompOperator, ModifierNode, PathNode, RecursiveNode, VariableReference } from '../runtime/nodes/abstractNode.js';
 
 suite("Basic Node Test", () => {
     test("it returns nodes", () => {
@@ -19,6 +19,15 @@ suite("Basic Node Test", () => {
         assertInstanceOf(LiteralNode, nodes[1]);
         assertInstanceOf(AntlersNode, nodes[2]);
         assertInstanceOf(LiteralNode, nodes[3]);
+    });
+
+    test("it parses indented subrecursive nodes", () => {
+        const nodes = parseNodes("{{ *subrecursive colors* }}");
+
+        assertCount(1, nodes);
+        assertInstanceOf(RecursiveNode, nodes[0]);
+        assertTrue((nodes[0] as RecursiveNode).isNestedRecursive);
+        assert.strictEqual((nodes[0] as RecursiveNode).name?.name, "colors");
     });
 
     test("it doesnt trim off content start", () => {

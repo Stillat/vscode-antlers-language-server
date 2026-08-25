@@ -47,12 +47,12 @@ export class AntlersNodeParser {
         this.activeNode = node;
         this.reset();
 
-        if (node.content.startsWith('*subrecursive')) {
+        if (node.content.trim().startsWith('*subrecursive')) {
             let nodeContent = node.content;
 
             nodeContent = nodeContent.trim();
             nodeContent = StringUtilities.trimRight(nodeContent, '*');
-            nodeContent = nodeContent.substr(13);
+            nodeContent = nodeContent.substr(13).trim();
 
             const recursiveNode = new RecursiveNode();
             node.copyBasicDetailsTo(recursiveNode);

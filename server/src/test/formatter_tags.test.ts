@@ -125,6 +125,13 @@ After Partial
         assert.strictEqual(formatAntlers(template), output);
     });
 
+    test('it preserves subrecursive nodes', () => {
+        const input = '{{ *subrecursive colors* }}';
+
+        assert.strictEqual(formatAntlers(input), input);
+        assert.strictEqual(formatAntlers(formatAntlers(input)), input);
+    });
+
     test('it does not remove : on simple tags', () => {
         const template = `{{ tag scope="foo" }}
         {{ foo:one }} {{ foo:two }}
