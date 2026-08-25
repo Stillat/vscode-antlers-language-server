@@ -36,13 +36,12 @@ suite('Prettier Formatter Array Wrapping', () => {
     'two',
     'three' => condition
 ] | classes }}">test</div>`;
-        const expected = `<div
-    class="{{ ['one', 'two', 'three' => condition] | classes }}"
->
-    test
-</div>`;
+        const expected = `<div class="{{ ['one', 'two', 'three' => condition] | classes }}">test</div>`;
 
-        assert.strictEqual((await formatCollapsed(input)).trim(), expected);
+        const firstPass = await formatCollapsed(input);
+
+        assert.strictEqual(firstPass.trim(), expected);
+        assert.strictEqual(await formatCollapsed(firstPass), firstPass);
     });
 
     test('single line arrays are not expanded when preserving', async () => {
@@ -128,6 +127,60 @@ suite('Prettier Formatter Array Wrapping', () => {
         assert.strictEqual((await formatStringWithPrettier(input)).trim(), input);
     });
 
+    test('preserved arrays retain authored indentation widths', async () => {
+        const inputs = [
+            `{{ [
+  'one',
+  [
+    'two'
+  ]
+] }}`,
+            `{{ [
+        'one',
+        [
+                'two'
+        ]
+] }}`
+        ];
+
+        for (const input of inputs) {
+            const firstPass = await formatPreserved(input);
+
+            assert.strictEqual(firstPass.trim(), input);
+            assert.strictEqual(await formatPreserved(firstPass), firstPass);
+        }
+    });
+
+    test('tabs remain stable inside nested HTML', async () => {
+        const input = `<main>
+\t<section>
+\t\t<div class="{{ [
+\t\t\t'one',
+\t\t\t[
+\t\t\t\t'two'
+\t\t\t]
+\t\t] | classes }}">content</div>
+\t</section>
+</main>`,
+            expected = `<main>
+\t<section>
+\t\t<div class="{{ [
+\t\t\t'one',
+\t\t\t[
+\t\t\t\t'two'
+\t\t\t]
+\t\t] | classes }}">
+\t\t\tcontent
+\t\t</div>
+\t</section>
+</main>`,
+            options = { antlersArrayWrap: 'preserve', useTabs: true, tabWidth: 4 } as any,
+            firstPass = await formatStringWithPrettier(input, options);
+
+        assert.strictEqual(firstPass.trim(), expected);
+        assert.strictEqual(await formatStringWithPrettier(firstPass, options), firstPass);
+    });
+
     test('trailing separators do not add blank lines', async () => {
         const input = `{{ [
     'one',
@@ -176,5 +229,31 @@ suite('Prettier Formatter Array Wrapping', () => {
         assert.strictEqual(preservedOutput.trim(), preserved);
         assert.strictEqual((await formatCollapsed(input)).trim(), collapsed);
         assert.strictEqual(await formatStringWithPrettier(preservedOutput), preservedOutput);
+    });
+
+    test('adjacent brackets retain nesting and statement boundaries', async () => {
+        const input = `{{ values = [['one'], [], [
+        'two',
+        'three',
+    ]]
+after = values[2][1] }}`,
+            preserved = `{{ values = [
+    ['one'],
+    [],
+    [
+        'two',
+        'three',
+    ]
+]
+ after = values[2][1] }}`,
+            collapsed = `{{ values = [['one'], [], ['two', 'three',]]
+ after = values[2][1] }}`,
+            preservedOutput = await formatPreserved(input),
+            collapsedOutput = await formatCollapsed(input);
+
+        assert.strictEqual(preservedOutput.trim(), preserved);
+        assert.strictEqual(await formatPreserved(preservedOutput), preservedOutput);
+        assert.strictEqual(collapsedOutput.trim(), collapsed);
+        assert.strictEqual(await formatCollapsed(collapsedOutput), collapsedOutput);
     });
 });

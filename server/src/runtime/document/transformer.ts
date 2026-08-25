@@ -746,7 +746,10 @@ export class Transformer {
         if (this.parentTransformer != null) {
             return this.parentTransformer.registerInlineAntlers(node);
         } else {
-            const slug = this.makeSlug(node.getOriginalContent().length);
+            const slugLength = this.options.arrayWrap == 'collapse'
+                    ? this.printNode(node).length
+                    : node.getOriginalContent().length,
+                slug = this.makeSlug(slugLength);
 
             if (node.isInlineAntlers) {
                 this.spanNodes.set(slug, node);
@@ -1156,7 +1159,22 @@ export class Transformer {
             return printed;
         }
 
-        return IndentLevel.shiftIndent(printed, this.indentLevel(slug), true, this.options.tabSize, false);
+        const lines = StringUtilities.breakByNewLine(printed.trim()),
+            indent = this.indentWhitespace(slug);
+
+        return lines.map((line, index) => index == 0 ? line : indent + line).join("\n");
+    }
+
+    private indentWhitespace(value: string): string {
+        for (let i = 0; i < this.structureLines.length; i++) {
+            const thisLine = this.structureLines[i];
+
+            if (thisLine.includes(value)) {
+                return (/^[\t ]*/.exec(thisLine) ?? [''])[0];
+            }
+        }
+
+        return '';
     }
 
     private indentLevel(value: string, includeIndex = false): number {
