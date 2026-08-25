@@ -2,6 +2,23 @@ import assert from 'assert';
 import { formatStringWithPrettier } from '../formatting/prettier/utils.js';
 
 suite('Prettier Formatter Basic Nodes', () => {
+    test('it preserves automatic statement boundaries', async () => {
+        const input = `{{ text = 'one'
+number = 2
+enabled = true
+source = other
+source }}`,
+            expected = `{{ text = 'one'
+ number = 2
+ enabled = true
+ source = other
+ source }}`,
+            firstPass = await formatStringWithPrettier(input);
+
+        assert.strictEqual(firstPass.trim(), expected);
+        assert.strictEqual(await formatStringWithPrettier(firstPass), firstPass);
+    });
+
     test('it preserves the triple fallback operator', async () => {
         assert.strictEqual((await formatStringWithPrettier('{{ a ??? b }}')).trim(), '{{ a ??? b }}');
     });

@@ -2,6 +2,23 @@ import assert from 'assert';
 import { formatAntlers } from './testUtils/formatAntlers.js';
 
 suite('Formatter Operators', () => {
+    test('it preserves automatic statement boundaries', () => {
+        const input = `{{ text = 'one'
+number = 2
+enabled = true
+source = other
+source }}`,
+            expected = `{{ text = 'one'
+ number = 2
+ enabled = true
+ source = other
+ source }}`,
+            firstPass = formatAntlers(input);
+
+        assert.strictEqual(firstPass, expected);
+        assert.strictEqual(formatAntlers(firstPass), firstPass);
+    });
+
     test('it wraps multiple language operators', () => {
         const template = `
         {{ test = one merge two 

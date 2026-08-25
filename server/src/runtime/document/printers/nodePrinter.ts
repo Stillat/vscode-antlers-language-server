@@ -56,10 +56,13 @@ export class NodePrinter {
                     }
                 } else {
                     if (!node.prev?.isVirtual && node.prev?.isVirtualGroupOperatorResolve && node.prev.producesVirtualStatementTerminator) {
-                        if (node.next != null) {
-                            if (!(node.prev instanceof VariableNode) && !(node.next instanceof InlineTernarySeparator) && !(node instanceof InlineTernarySeparator)) {
-                                nodeBuffer.newlineIndent();
-                            }
+                        const followsVariableStatement = node.prev instanceof VariableNode &&
+                            node instanceof VariableNode && !node.convertedToOperator && node.name != 'as' &&
+                            !doc.getDocumentParser().getLanguageParser().isMergedVariableComponent(node);
+
+                        if ((!(node.prev instanceof VariableNode) || followsVariableStatement) &&
+                            !(node.next instanceof InlineTernarySeparator) && !(node instanceof InlineTernarySeparator)) {
+                            nodeBuffer.newlineNDIndent();
                         }
                     }
                 }
