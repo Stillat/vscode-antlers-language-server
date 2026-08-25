@@ -156,6 +156,18 @@ After Partial
         assert.strictEqual((await formatStringWithPrettier(template)).trim(), output);
     });
 
+    test('it preserves quoted shorthand modifier values', async () => {
+        const inputs = [
+            `{{ values | join:', ' }}`,
+            `{{ title | modifier:'hello world' }}`,
+            `{{ title | modifier:"hello :|" }}`
+        ];
+
+        for (const input of inputs) {
+            assert.strictEqual((await formatStringWithPrettier(input)).trim(), input);
+        }
+    });
+
     test('it formats inline antlers nodes', async () => {
         const template = `<{{ as or 'a' }}  
 {{ slot:attributes }}

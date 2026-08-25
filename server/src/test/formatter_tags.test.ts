@@ -159,6 +159,16 @@ After Partial
         assert.strictEqual(formatAntlers(input), input);
     });
 
+    test('it preserves quoted shorthand modifier values', () => {
+        const inputs = [
+            `{{ values | join:', ' }}`,
+            `{{ title | modifier:'hello world' }}`,
+            `{{ title | modifier:"hello :|" }}`
+        ];
+
+        inputs.forEach((input) => assert.strictEqual(formatAntlers(input), input));
+    });
+
     test('it doesnt duplicate array values with strings', () => {
         assert.strictEqual(formatAntlers(`{{ view:background['default'] }}`).trim(), `{{ view:background['default'] }}`);
         assert.strictEqual(formatAntlers(`{{ not_view:background['default'] }}`).trim(), `{{ not_view:background['default'] }}`);

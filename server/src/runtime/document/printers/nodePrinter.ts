@@ -9,6 +9,17 @@ import { NodeBuffer } from './nodeBuffer.js';
 
 export class NodePrinter {
 
+    private static sourceContent(node: AbstractNode, doc: AntlersDocument): string {
+        const startIndex = node.startPosition?.index,
+            endIndex = node.endPosition?.index;
+
+        if (startIndex == null || endIndex == null) {
+            return '';
+        }
+
+        return doc.getOriginalContent().substring(startIndex, endIndex + 1).trim();
+    }
+
     static prettyPrintNode(antlersNode: AntlersNode, doc: AntlersDocument, indent: number, options: TransformOptions, prepend: string | null, seedIndent: number | null): string {
 
         const lexerNodes = antlersNode.getTrueRuntimeNodes();
@@ -226,7 +237,11 @@ export class NodePrinter {
 
                     nodeBuffer.append(':');
                 } else if (node instanceof ModifierValueNode) {
-                    nodeBuffer.append(node.value.trim());
+                    const sourceContent = NodePrinter.sourceContent(node, doc),
+                        isQuoted = (sourceContent.startsWith("'") && sourceContent.endsWith("'")) ||
+                            (sourceContent.startsWith('"') && sourceContent.endsWith('"'));
+
+                    nodeBuffer.append(isQuoted ? sourceContent : node.value.trim());
                 } else if (node instanceof LogicGroupBegin) {
                     nodeBuffer.append('(');
                 } else if (node instanceof LogicGroupEnd) {
