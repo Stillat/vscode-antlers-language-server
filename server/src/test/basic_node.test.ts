@@ -301,6 +301,15 @@ suite("Basic Node Test", () => {
         assert.strictEqual(nodes[1].content, "\n<!-- End: partial -->");
     });
 
+    test("interpolated parameters dont duplicate existing trailing literals", () => {
+        const nodes = parseNodes('{{ partial:x parameter="{{ value }}" }}tail');
+
+        assertCount(2, nodes);
+        assertInstanceOf(AntlersNode, nodes[0]);
+        assertInstanceOf(LiteralNode, nodes[1]);
+        assert.strictEqual(nodes[1].content, "tail");
+    });
+
     test("neighboring comments dont confuse things", () => {
         const template = `{{# A comment #}}
 		{{# another comment {{ width }} #}}

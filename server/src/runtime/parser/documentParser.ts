@@ -730,13 +730,18 @@ export class DocumentParser {
             }
         }
 
-        if (!this.isNoParse && this.nodes.length > 0) {
-            const lastCoveredOffset = this.nodes.reduce((offset, node) => {
-                    return Math.max(offset, node.endPosition?.offset ?? -1);
+        if (!this.isNoParse && !this.doesHaveUnclosedStructures && this.nodes.length > 0) {
+            const lastNode = this.nodes[this.nodes.length - 1],
+                lastLiteralContent = lastNode instanceof LiteralNode
+                    ? lastNode.sourceContent || lastNode.content
+                    : '',
+                hasTrailingLiteral = lastLiteralContent.length > 0 && this.content.endsWith(lastLiteralContent),
+                lastCoveredIndex = this.nodes.reduce((index, node) => {
+                    return Math.max(index, node.endPosition?.index ?? -1);
                 }, -1),
-                literalStart = lastCoveredOffset + 1;
+                literalStart = lastCoveredIndex + 1;
 
-            if (literalStart < this.inputLen) {
+            if (!hasTrailingLiteral && literalStart < this.inputLen) {
                 const literalNode = new LiteralNode(),
                     literalContent = this.content.substring(literalStart);
 
