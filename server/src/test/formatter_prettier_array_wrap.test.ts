@@ -147,4 +147,34 @@ suite('Prettier Formatter Array Wrapping', () => {
 
         assert.strictEqual(secondPass, firstPass);
     });
+
+    test('array literals preserve following statement boundaries', async () => {
+        const input = `{{
+    _array = [
+        'one' => 1,
+        'three' => [
+            'four' => 4,
+            'five' => 5
+        ]
+    ]
+
+    _value = _array['three']['five']
+}}`;
+        const preserved = `{{ _array = [
+    'one' => 1,
+    'three' => [
+        'four' => 4,
+        'five' => 5
+    ]
+]
+ _value = _array['three']['five'] }}`;
+        const collapsed = `{{ _array = ['one' => 1, 'three' => ['four' => 4, 'five' => 5]]
+ _value = _array['three']['five'] }}`;
+
+        const preservedOutput = await formatStringWithPrettier(input);
+
+        assert.strictEqual(preservedOutput.trim(), preserved);
+        assert.strictEqual((await formatCollapsed(input)).trim(), collapsed);
+        assert.strictEqual(await formatStringWithPrettier(preservedOutput), preservedOutput);
+    });
 });

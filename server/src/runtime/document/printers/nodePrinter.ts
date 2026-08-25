@@ -157,7 +157,8 @@ export class NodePrinter {
                 ? new Map<string, ArrayWrapLayout>()
                 : NodePrinter.resolveArrayWrapping(lexerNodes, options, doc);
         let nodeStatements = 0,
-            nodeOperators = 0;
+            nodeOperators = 0,
+            arrayLiteralDepth = 0;
 
         if (lexerNodes.length > 0) {
             const nodeBuffer = new NodeBuffer(antlersNode, indent, prepend);
@@ -209,10 +210,24 @@ export class NodePrinter {
                 }
 
                 if (node instanceof VariableNode) {
+                    const rawArrayParts = NodePrinter.splitArrayBrackets(node.name),
+                        arrayDepthBefore = arrayLiteralDepth;
+
+                    if (rawArrayParts != null) {
+                        arrayLiteralDepth += rawArrayParts.openCount;
+                        arrayLiteralDepth = Math.max(0, arrayLiteralDepth - rawArrayParts.closeCount);
+                    }
+
+                    const nextNode = i + 1 < lexerNodes.length ? lexerNodes[i + 1] : null,
+                        closesStatementArray = rawArrayParts != null && rawArrayParts.closeCount > 0 &&
+                            (arrayDepthBefore + rawArrayParts.openCount) > 0 && arrayLiteralDepth == 0 &&
+                            nextNode instanceof VariableNode && !nextNode.convertedToOperator && !nextNode.isVirtual &&
+                            (nextNode.startPosition?.line ?? 0) > (node.endPosition?.line ?? 0);
+
                     const isInterpolationRegion = antlersNode.interpolationRegions?.has(node.name) ?? false,
                         arrayParts = options.arrayWrap == 'collapse' || isInterpolationRegion
                             ? null
-                            : NodePrinter.splitArrayBrackets(node.name);
+                            : rawArrayParts;
 
                     if (arrayParts != null) {
                         for (let b = 0; b < arrayParts.openCount; b++) {
@@ -242,6 +257,10 @@ export class NodePrinter {
                             }
 
                             nodeBuffer.append(']');
+                        }
+
+                        if (closesStatementArray) {
+                            nodeBuffer.newlineIndent();
                         }
 
                         lastPrintedNode = node;
@@ -320,6 +339,10 @@ export class NodePrinter {
                             }
                             nodeBuffer.append(node.name.trim());
                         }
+                    }
+
+                    if (closesStatementArray) {
+                        insertNlAfter = true;
                     }
                 } else if (node instanceof TupleListStart) {
                     nodeBuffer.appendTS(' list');

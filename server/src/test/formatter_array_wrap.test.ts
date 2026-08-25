@@ -78,4 +78,32 @@ suite('Formatter Array Wrapping', () => {
         assert.strictEqual(firstPass, input);
         assert.strictEqual(secondPass, firstPass);
     });
+
+    test('array literals preserve following statement boundaries', () => {
+        const input = `{{
+    _array = [
+        'one' => 1,
+        'three' => [
+            'four' => 4,
+            'five' => 5
+        ]
+    ]
+
+    _value = _array['three']['five']
+}}`;
+        const preserved = `{{ _array = [
+    'one' => 1,
+    'three' => [
+        'four' => 4,
+        'five' => 5
+    ]
+]
+ _value = _array['three']['five'] }}`;
+        const collapsed = `{{ _array = ['one' => 1, 'three' => ['four' => 4, 'five' => 5]]
+ _value = _array['three']['five'] }}`;
+
+        assert.strictEqual(formatAntlers(input), preserved);
+        assert.strictEqual(formatAntlers(input, formattingOptions('collapse')), collapsed);
+        assert.strictEqual(formatAntlers(preserved), preserved);
+    });
 });
