@@ -35,6 +35,7 @@ import { CompletionItem, CompletionItemKind } from 'vscode-languageserver';;
 import { StringUtilities } from '../../runtime/utilities/stringUtilities.js';
 import { makeTagDoc } from '../../documentation/utils.js';
 import PackageManager from '../../marketplace/packageManager.js';
+import { getDirectFiles, getFiles } from './fileScanner.js';
 
 function getRootProjectPath(path: string): string {
     const parts = normalizePath(path).split("/");
@@ -152,64 +153,6 @@ function makeTaxonomyTermsDirectory(root: string): string {
 
 function makeNavigationDirectory(root: string): string {
     return makeContentDirectory(root) + "navigation/";
-}
-
-function getFiles(
-    startPath: string,
-    filter: string,
-    foundFiles: string[]
-): string[] {
-    if (!fs.existsSync(startPath)) {
-        return [];
-    }
-
-    const fStats = fs.statSync(startPath);
-
-    if (!fStats.isDirectory()) {
-        return [];
-    }
-
-    let returnFiles = foundFiles || [];
-    const files = fs.readdirSync(startPath);
-
-    for (let i = 0; i < files.length; i++) {
-        const filename = path.join(startPath, files[i]);
-        const stat = fs.lstatSync(filename);
-
-        if (stat.isDirectory()) {
-            returnFiles = returnFiles.concat(getFiles(filename, filter, foundFiles));
-        } else if (filename.indexOf(filter) >= 0) {
-            returnFiles.push(filename);
-        }
-    }
-
-    return [...new Set(returnFiles)];
-}
-
-function getDirectFiles(startPath: string, filter: string): string[] {
-    if (!fs.existsSync(startPath)) {
-        return [];
-    }
-
-    const fStats = fs.statSync(startPath);
-
-    if (!fStats.isDirectory()) {
-        return [];
-    }
-
-    const returnFiles = [];
-    const files = fs.readdirSync(startPath);
-
-    for (let i = 0; i < files.length; i++) {
-        const filename = path.join(startPath, files[i]);
-        const stat = fs.lstatSync(filename);
-
-        if (stat.isDirectory() == false) {
-            returnFiles.push(filename);
-        }
-    }
-
-    return [...new Set(returnFiles)];
 }
 
 function getProjectViews(viewPath: string): IView[] {
