@@ -142,6 +142,17 @@
                     "default": [],
                     "title": "Formatter: Ignore File Extensions",
                     "description": "A list of file extensions the Antlers formatter should ignore."
+                },
+                "antlersLanguageServer.formatterArrayWrap": {
+                    "scope": "resource",
+                    "type": "string",
+                    "enum": [
+                        "preserve",
+                        "collapse"
+                    ],
+                    "default": "preserve",
+                    "title": "Formatter: Array Wrapping",
+                    "description": "Controls whether authored multi-line Antlers arrays are preserved or collapsed onto one line."
                 }
             }
         },

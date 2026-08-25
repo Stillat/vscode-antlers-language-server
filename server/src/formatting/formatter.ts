@@ -31,7 +31,8 @@ export function formatAntlersDocument(params: DocumentFormattingParams): TextEdi
                 insertSpaces: params.options.insertSpaces,
                 tabSize: params.options.tabSize,
                 maxStatementsPerLine: 3,
-                formatExtensions: []
+                formatExtensions: [],
+                arrayWrap: settings.formatterArrayWrap
             };
 
         const formatter = new BeautifyDocumentFormatter(antlersFormatterOptions),
