@@ -125,6 +125,13 @@ After Partial
         assert.strictEqual(formatAntlers(template), output);
     });
 
+    test('it preserves escaped and numeric parameter names', () => {
+        const input = '{{ form \\x-data="{ open: false }" :limit="10" }}';
+
+        assert.strictEqual(formatAntlers(input), input);
+        assert.strictEqual(formatAntlers(formatAntlers(input)), input);
+    });
+
     test('it preserves subrecursive nodes', () => {
         const input = '{{ *subrecursive colors* }}';
 

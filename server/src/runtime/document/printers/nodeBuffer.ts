@@ -134,11 +134,17 @@ export class NodeBuffer {
     paramS(param: ParameterNode) {
         let bParam = ' ';
 
-        if (param.isVariableReference) {
-            bParam += ':';
+        if (param.originalName.length > 0) {
+            bParam += param.originalName;
+        } else {
+            if (param.isVariableReference) {
+                bParam += ':';
+            }
+
+            bParam += param.name;
         }
 
-        bParam += param.name + '=' + param.nameDelimiter + param.value + param.nameDelimiter;
+        bParam += '=' + param.nameDelimiter + param.value + param.nameDelimiter;
 
         this.append(bParam);
 

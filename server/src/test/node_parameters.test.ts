@@ -60,6 +60,29 @@ suite("Node Parameters Test", () => {
         assertTrue(param1.isVariableReference);
     });
 
+    test("escaped parameter names disable Antlers parsing", () => {
+        const nodes = parseNodes('{{ form \\x-data="{ open: false }" \\attr:x-bind="{ value }" }}');
+        const node = toAntlers(nodes[0]);
+
+        assertCount(2, node.parameters);
+        assert.strictEqual(node.parameters[0].originalName, "\\x-data");
+        assert.strictEqual(node.parameters[0].name, "x-data");
+        assertTrue(node.parameters[0].containsEscapedContent);
+        assert.strictEqual(node.parameters[1].originalName, "\\attr:x-bind");
+        assert.strictEqual(node.parameters[1].name, "attr:x-bind");
+        assertTrue(node.parameters[1].containsEscapedContent);
+    });
+
+    test("bound numeric parameters are literal values", () => {
+        const nodes = parseNodes('{{ collection :limit="10" }}');
+        const parameter = toAntlers(nodes[0]).parameters[0];
+
+        assert.strictEqual(parameter.originalName, ":limit");
+        assert.strictEqual(parameter.name, "limit");
+        assertFalse(parameter.isVariableReference);
+        assert.strictEqual(parameter.value, "10");
+    });
+
     test("equals followed by space is not a parameter", () => {
         const nodes = parseNodes(
             "{{ is_current || is_parent ?= 'font-medium text-gray-800' }}"

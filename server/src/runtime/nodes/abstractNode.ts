@@ -926,6 +926,7 @@ export class ParameterNode extends AbstractNode {
     public isModifierParameter = false;
     public nameDelimiter:string|null = '"';
     public isVariableReference = false;
+    public originalName = "";
     public name = "";
     public value = "";
 

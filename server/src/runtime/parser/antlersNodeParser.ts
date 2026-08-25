@@ -543,18 +543,25 @@ export class AntlersNodeParser {
 
                 const parameterNode = new ParameterNode();
 
+                parameterNode.originalName = name;
+
                 if (name.startsWith(DocumentParser.Punctuation_Colon)) {
                     parameterNode.isVariableReference = true;
+                    name = name.substr(1);
+
+                    if (StringUtilities.isNumeric(content)) {
+                        parameterNode.isVariableReference = false;
+                    }
+                }
+
+                if (name.startsWith(DocumentParser.String_EscapeCharacter)) {
+                    parameterNode.containsEscapedContent = true;
                     name = name.substr(1);
                 }
 
                 parameterNode.nameDelimiter = nameDelimiter;
                 parameterNode.name = name;
                 parameterNode.value = content;
-
-                if (name.startsWith(DocumentParser.String_EscapeCharacter)) {
-                    parameterNode.containsEscapedContent = true;
-                }
 
                 if (parameterNode.nameDelimiter == null) {
                     parameterNode.hasValidValueDelimiter = false;
