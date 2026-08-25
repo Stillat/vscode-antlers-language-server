@@ -61,18 +61,19 @@ suite('Prettier Formatter Array Wrapping', () => {
 </section>`;
         const expected = `<section>
     <div>
-        <span
-            class="{{ [
-                'one',
-                'two' => condition
-            ] | classes }}"
-        >
+        <span class="{{ [
+            'one',
+            'two' => condition
+        ] | classes }}">
             test
         </span>
     </div>
 </section>`;
 
-        assert.strictEqual((await formatPreserved(input)).trim(), expected);
+        const firstPass = await formatPreserved(input);
+
+        assert.strictEqual(firstPass.trim(), expected);
+        assert.strictEqual(await formatPreserved(firstPass), firstPass);
     });
 
     test('nested arrays retain their own wrapping', async () => {
@@ -169,9 +170,7 @@ suite('Prettier Formatter Array Wrapping', () => {
 \t\t\t[
 \t\t\t\t'two'
 \t\t\t]
-\t\t] | classes }}">
-\t\t\tcontent
-\t\t</div>
+\t\t] | classes }}">content</div>
 \t</section>
 </main>`,
             options = { antlersArrayWrap: 'preserve', useTabs: true, tabWidth: 4 } as any,
@@ -255,5 +254,30 @@ after = values[2][1] }}`,
         assert.strictEqual(await formatPreserved(preservedOutput), preservedOutput);
         assert.strictEqual(collapsedOutput.trim(), collapsed);
         assert.strictEqual(await formatCollapsed(collapsedOutput), collapsedOutput);
+    });
+
+    test('multiple multi line arrays retain relative indentation', async () => {
+        const input = `{{ first = [
+    'one',
+    'two'
+]
+second = [
+    'three',
+    'four'
+]
+second }}`,
+            expected = `{{ first = [
+    'one',
+    'two'
+]
+ second = [
+     'three',
+     'four'
+ ]
+ second }}`,
+            firstPass = await formatPreserved(input);
+
+        assert.strictEqual(firstPass.trim(), expected);
+        assert.strictEqual(await formatPreserved(firstPass), firstPass);
     });
 });

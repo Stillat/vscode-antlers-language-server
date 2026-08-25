@@ -203,6 +203,13 @@ export class NodeBuffer {
         return this.buffer;
     }
 
+    getCurrentLineIndent(): string {
+        const lineStart = this.buffer.lastIndexOf("\n") + 1,
+            currentLine = this.buffer.substring(lineStart);
+
+        return (/^[\t ]*/.exec(currentLine) ?? [''])[0];
+    }
+
     endsWith(value: string): boolean {
         return this.buffer.endsWith(value);
     }

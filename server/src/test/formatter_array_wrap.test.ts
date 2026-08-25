@@ -171,4 +171,29 @@ after = values[2][1] }}`,
         assert.strictEqual(formatAntlers(preserved), preserved);
         assert.strictEqual(formatAntlers(input, formattingOptions('collapse')), collapsed);
     });
+
+    test('multiple multi line arrays retain relative indentation', () => {
+        const input = `{{ first = [
+    'one',
+    'two'
+]
+second = [
+    'three',
+    'four'
+]
+second }}`,
+            expected = `{{ first = [
+    'one',
+    'two'
+]
+ second = [
+     'three',
+     'four'
+ ]
+ second }}`,
+            firstPass = formatAntlers(input);
+
+        assert.strictEqual(firstPass, expected);
+        assert.strictEqual(formatAntlers(firstPass), firstPass);
+    });
 });

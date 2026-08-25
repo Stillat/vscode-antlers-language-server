@@ -178,7 +178,7 @@ export class NodePrinter {
 
         // Tracks, per open array literal, whether that array is being
         // printed across multiple lines. The innermost array is last.
-        const arrayWrapStack: ArrayWrapLayout[] = [],
+        const arrayWrapStack: ArrayPrintLayout[] = [],
             arrayWrapDecisions = options.arrayWrap == 'collapse'
                 ? new Map<string, ArrayWrapLayout>()
                 : NodePrinter.resolveArrayWrapping(lexerNodes, options, doc);
@@ -261,13 +261,22 @@ export class NodePrinter {
                                 wrap: false,
                                 itemIndent: '',
                                 closeIndent: ''
-                            };
+                            },
+                                outputRootIndent = arrayWrapStack.length > 0
+                                    ? arrayWrapStack[0].outputRootIndent
+                                    : nodeBuffer.getCurrentLineIndent(),
+                                printLayout: ArrayPrintLayout = {
+                                    wrap: layout.wrap,
+                                    itemIndent: outputRootIndent + layout.itemIndent,
+                                    closeIndent: outputRootIndent + layout.closeIndent,
+                                    outputRootIndent: outputRootIndent
+                                };
 
-                            arrayWrapStack.push(layout);
+                            arrayWrapStack.push(printLayout);
                             nodeBuffer.append('[');
 
-                            if (layout.wrap) {
-                                nodeBuffer.newLine().append(layout.itemIndent);
+                            if (printLayout.wrap) {
+                                nodeBuffer.newLine().append(printLayout.itemIndent);
                             }
                         }
 
@@ -666,4 +675,8 @@ interface ArrayWrapLayout {
     wrap: boolean,
     itemIndent: string,
     closeIndent: string
+}
+
+interface ArrayPrintLayout extends ArrayWrapLayout {
+    outputRootIndent: string
 }

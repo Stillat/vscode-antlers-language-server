@@ -1,7 +1,7 @@
 import { AsyncHTMLFormatter, AsyncPHPFormatter, HTMLFormatter, PHPFormatter, YAMLFormatter } from '../../formatting/formatters.js';
 import { replaceAllInString } from '../../utils/strings.js';
 import { ConditionPairAnalyzer } from '../analyzers/conditionPairAnalyzer.js';
-import { AbstractNode, AntlersNode, ConditionNode, EscapedContentNode, ExecutionBranch, FragmentPosition, LiteralNode, StructuralFragment } from '../nodes/abstractNode.js';
+import { AbstractNode, AntlersNode, ConditionNode, EscapedContentNode, ExecutionBranch, FragmentPosition, LiteralNode, StructuralFragment, VariableNode } from '../nodes/abstractNode.js';
 import { StringUtilities } from '../utilities/stringUtilities.js';
 import { AntlersDocument } from './antlersDocument.js';
 import { AsyncInlineFormatter, InlineFormatter } from './inlineFormatter.js';
@@ -746,7 +746,11 @@ export class Transformer {
         if (this.parentTransformer != null) {
             return this.parentTransformer.registerInlineAntlers(node);
         } else {
-            const slugLength = this.options.arrayWrap == 'collapse'
+            const containsArray = node.getTrueRuntimeNodes().some((runtimeNode) =>
+                    runtimeNode instanceof VariableNode &&
+                    (runtimeNode.name.startsWith('[') || runtimeNode.name.endsWith(']'))
+                ),
+                slugLength = containsArray
                     ? this.printNode(node).length
                     : node.getOriginalContent().length,
                 slug = this.makeSlug(slugLength);
