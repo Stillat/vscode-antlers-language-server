@@ -306,6 +306,10 @@ export class Transformer {
     private async printNodeAsync(node: AntlersNode, targetIndent: number | null = null): Promise<string> {
         const printNode = node.getTrueNode();
 
+        if (printNode.sourceContent.includes('@{')) {
+            return `${printNode.rawStart}${printNode.sourceContent}${printNode.rawEnd}`;
+        }
+
         if ((printNode.rawStart == '{{?' || printNode.rawStart == '{{$') && this.asyncPhpFormatter != null) {
             try {
                 const formattedPhp = await this.asyncPhpFormatter(printNode.content);
@@ -355,6 +359,10 @@ export class Transformer {
 
     private printNode(node: AntlersNode, targetIndent: number | null = null) {
         const printNode = node.getTrueNode();
+
+        if (printNode.sourceContent.includes('@{')) {
+            return `${printNode.rawStart}${printNode.sourceContent}${printNode.rawEnd}`;
+        }
 
         if ((printNode.rawStart == '{{?' || printNode.rawStart == '{{$') && this.phpFormatter != null) {
             try {

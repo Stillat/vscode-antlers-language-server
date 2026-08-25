@@ -135,4 +135,18 @@ end`;
     test('it emits escaped content characters', () => {
         assert.strictEqual(formatAntlers('{{ "hello{"@@{world@@}"}" }}'), '{{ "hello{"@@{world@@}"}" }}');
     });
+
+    test('it preserves escaped brace expressions', () => {
+        const samples = [
+            ["{{ var = '@{@{@}@}'; }}{{ var }}", "{{ var = '@{@{@}@}'; }}\n{{ var }}"],
+            ["{{ starts_with('@{') }}", "{{ starts_with('@{') }}"],
+            ['{{ "hello@{" }}', '{{ "hello@{" }}'],
+            ["{{ test variable=\"{ starts_with('@{') }\" }}", "{{ test variable=\"{ starts_with('@{') }\" }}"]
+        ];
+
+        samples.forEach(([input, expected]) => {
+            assert.strictEqual(formatAntlers(input), expected);
+            assert.strictEqual(formatAntlers(expected), expected);
+        });
+    });
 });

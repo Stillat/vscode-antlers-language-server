@@ -135,4 +135,21 @@ end`;
     test('it emits escaped content characters', async () => {
         assert.strictEqual((await formatStringWithPrettier('{{ "hello{"@@{world@@}"}" }}')).trim(), '{{ "hello{"@@{world@@}"}" }}');
     });
+
+    test('it preserves escaped brace expressions', async () => {
+        const samples = [
+            ["{{ var = '@{@{@}@}'; }}{{ var }}", "{{ var = '@{@{@}@}'; }}\n{{ var }}"],
+            ["{{ starts_with('@{') }}", "{{ starts_with('@{') }}"],
+            ['{{ "hello@{" }}', '{{ "hello@{" }}'],
+            ["{{ test variable=\"{ starts_with('@{') }\" }}", "{{ test variable=\"{ starts_with('@{') }\" }}"]
+        ];
+
+        for (const [input, expected] of samples) {
+            const once = (await formatStringWithPrettier(input)).trim();
+            const twice = (await formatStringWithPrettier(once)).trim();
+
+            assert.strictEqual(once, expected);
+            assert.strictEqual(twice, expected);
+        }
+    });
 });
