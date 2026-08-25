@@ -2,6 +2,12 @@ import assert from 'assert';
 import { formatStringWithPrettier } from '../formatting/prettier/utils.js';
 
 suite('Formatter Prettier Tags', () => {   
+    test('it preserves shorthand parameters', async () => {
+        const template = '{{ partial:file/to/partial limit="5" :$shorthandVariable offset="1" }}';
+
+        assert.strictEqual((await formatStringWithPrettier(template)).trim(), template);
+    });
+
     test('it respects parameter node value delimiters', async () => {
         const input = `{{ partial:components/button as="button" 				label="{ trans:strings.form_send }" 
                                     attribute='x-bind:disabled="sending" x-bind:class="&#123;&#39;opacity-25 cursor-default&#39;: sending&#125;"' }}`;

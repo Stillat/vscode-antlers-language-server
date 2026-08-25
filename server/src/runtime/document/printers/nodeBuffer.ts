@@ -132,6 +132,12 @@ export class NodeBuffer {
     }
 
     paramS(param: ParameterNode) {
+        if (param.isShorthand) {
+            this.append(` :$${param.name}`);
+
+            return this;
+        }
+
         let bParam = ' ';
 
         if (param.isVariableReference) {
