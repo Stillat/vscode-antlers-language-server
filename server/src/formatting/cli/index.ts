@@ -105,10 +105,10 @@ function getFiles(directory: string, extension: string, callback: fileCallback) 
     }
 }
 
-function formatString(contents: string, savePath: string|null, dumpContents: boolean, options: AntlersFormattingOptions) {
+async function formatString(contents: string, savePath: string|null, dumpContents: boolean, options: AntlersFormattingOptions) {
     const doc = AntlersDocument.fromText(contents),
         formatter = new BeautifyDocumentFormatter(options),
-        formatResults = formatter.formatDocument(doc, defaultAntlersSettings);
+        formatResults = await formatter.formatDocumentAsync(doc, defaultAntlersSettings);
     if (dumpContents === true) {
         console.log(formatResults);
     } else if (savePath != null) {
@@ -116,7 +116,7 @@ function formatString(contents: string, savePath: string|null, dumpContents: boo
     }
 }
 
-function formatFile(path: string, savePath: string, dumpContents: boolean, options: AntlersFormattingOptions) {
+async function formatFile(path: string, savePath: string, dumpContents: boolean, options: AntlersFormattingOptions) {
     if (fs.existsSync(path)) {
         try { fs.accessSync(path, fs.constants.R_OK | fs.constants.W_OK); } catch (err) { console.error(err); process.exit(EXIT_PATH_PERMISSIONS_ISSUE); }
 
@@ -124,7 +124,7 @@ function formatFile(path: string, savePath: string, dumpContents: boolean, optio
             const contents = fs.readFileSync(path, { encoding: 'utf8' }),
                 doc = AntlersDocument.fromText(contents),
                 formatter = new BeautifyDocumentFormatter(options),
-                formatResults = formatter.formatDocument(doc, defaultAntlersSettings);
+                formatResults = await formatter.formatDocumentAsync(doc, defaultAntlersSettings);
 
             if (dumpContents === true) {
                 console.log(formatResults);
@@ -140,15 +140,22 @@ function formatFile(path: string, savePath: string, dumpContents: boolean, optio
     }
 }
 
-function formatDirectory(dir: string, options: AntlersFormattingOptions, extensionsToUse: string[], dump: boolean) {
+async function formatDirectory(dir: string, options: AntlersFormattingOptions, extensionsToUse: string[], dump: boolean) {
     if (fs.existsSync(dir) && fs.statSync(dir).isDirectory()) {
         try { fs.accessSync(dir, fs.constants.R_OK | fs.constants.W_OK); } catch (err) { console.error(err); process.exit(EXIT_PATH_PERMISSIONS_ISSUE); }
 
+        const filesToFormat: string[] = [];
+
         extensionsToUse.forEach((extension) => {
             getFiles(dir, extension, (file) => {
-                formatFile(file, file, dump, options);
+                filesToFormat.push(file);
             });
         });
+
+        for (const file of filesToFormat) {
+            await formatFile(file, file, dump, options);
+        }
+
         process.exit(EXIT_SUCCESS);
     } else {
         process.exit(EXIT_FILE_NOT_FOUND);
@@ -178,7 +185,11 @@ function findSettings(root:string): string | null {
     return null;
 }
 
-if (argv._.includes('format')) {
+async function run() {
+    if (!argv._.includes('format')) {
+        return;
+    }
+
     let settingsToUse: AntlersFormattingOptions = defaultSettings;
 
     if (typeof argv.options !== 'undefined' && argv.options !== null) {
@@ -215,7 +226,7 @@ if (argv._.includes('format')) {
         if (argv.stdin === true) {
             const contents = fs.readFileSync(0, 'utf-8');
             
-            formatString(contents, argv.output, argv.dump === true, settingsToUse);
+            await formatString(contents, argv.output, argv.dump === true, settingsToUse);
             process.exit(EXIT_SUCCESS);
         }
 
@@ -232,7 +243,7 @@ if (argv._.includes('format')) {
                 extensionsToUse = defaultSettings.formatExtensions;
             }
 
-            formatDirectory(argv.dir, settingsToUse, extensionsToUse, argv.dump === true);
+            await formatDirectory(argv.dir, settingsToUse, extensionsToUse, argv.dump === true);
             process.exit(EXIT_SUCCESS);
         }
 
@@ -243,7 +254,7 @@ if (argv._.includes('format')) {
                 writePath = argv.output;
             }
 
-            formatFile(argv.path, writePath, argv.dump === true, settingsToUse);
+            await formatFile(argv.path, writePath, argv.dump === true, settingsToUse);
             process.exit(EXIT_SUCCESS);
         }
     } else {
@@ -267,7 +278,7 @@ if (argv._.includes('format')) {
                     extensionsToUse = defaultSettings.formatExtensions;
                 }
 
-                formatDirectory(path, settingsToUse, extensionsToUse, argv.dump === true);
+                await formatDirectory(path, settingsToUse, extensionsToUse, argv.dump === true);
             } else {
                 let writePath = path;
 
@@ -275,8 +286,13 @@ if (argv._.includes('format')) {
                     writePath = argv.output;
                 }
 
-                formatFile(path, writePath, argv.dump === true, settingsToUse);
+                await formatFile(path, writePath, argv.dump === true, settingsToUse);
             }
         }
     }
 }
+
+run().catch((err) => {
+    console.error(err);
+    process.exit(EXIT_GENERAL_FAILURE);
+});

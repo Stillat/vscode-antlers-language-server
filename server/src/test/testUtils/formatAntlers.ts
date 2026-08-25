@@ -38,3 +38,11 @@ export function formatAntlers(text: string, options: AntlersFormattingOptions | 
 
     return (new BeautifyDocumentFormatter(options)).formatDocument(AntlersDocument.fromText(text), defaultAntlersSettings);
 }
+
+export async function formatAntlersAsync(text: string, options: AntlersFormattingOptions | null = null): Promise<string> {
+    if (options == null) {
+        options = antlersOptions;
+    }
+
+    return (new BeautifyDocumentFormatter(options)).formatDocumentAsync(AntlersDocument.fromText(text), defaultAntlersSettings);
+}
