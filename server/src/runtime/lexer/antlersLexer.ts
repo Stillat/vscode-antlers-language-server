@@ -1,7 +1,7 @@
 import { AntlersError } from '../errors/antlersError.js';
 import { AntlersErrorCodes } from '../errors/antlersErrorCodes.js';
 import { TypeLabeler } from '../errors/typeLabeler.js';
-import { AbstractNode, AdditionAssignmentOperator, AdditionOperator, AntlersNode, ArgSeparator, ConditionalVariableFallbackOperator, DivisionAssignmentOperator, DivisionOperator, EqualCompOperator, ExponentiationOperator, FalseConstant, GreaterThanCompOperator, InlineBranchSeparator, InlineTernarySeparator, LeftAssignmentOperator, LessThanCompOperator, LessThanEqualCompOperator, LogicalAndOperator, LogicalNegationOperator, LogicalOrOperator, LogicalXorOperator, LogicGroupBegin, LogicGroupEnd, MethodInvocationNode, ModifierNameNode, ModifierSeparator, ModifierValueNode, ModifierValueSeparator, ModulusAssignmentOperator, ModulusOperator, MultiplicationAssignmentOperator, MultiplicationOperator, NotEqualCompOperator, NotStrictEqualCompOperator, NullCoalesceOperator, NullConstant, NumberNode, ScopeAssignmentOperator, SpaceshipCompOperator, StatementSeparatorNode, StrictEqualCompOperator, StringConcatenationOperator, StringValueNode, SubtractionAssignmentOperator, SubtractionOperator, TrueConstant, TupleListStart, VariableNode } from '../nodes/abstractNode.js';
+import { AbstractNode, AdditionAssignmentOperator, AdditionOperator, AntlersNode, ArgSeparator, ConditionalVariableFallbackOperator, DivisionAssignmentOperator, DivisionOperator, EqualCompOperator, ExponentiationOperator, FalseConstant, GreaterThanCompOperator, ImplicitArrayBegin, ImplicitArrayEnd, InlineBranchSeparator, InlineTernarySeparator, LeftAssignmentOperator, LessThanCompOperator, LessThanEqualCompOperator, LogicalAndOperator, LogicalNegationOperator, LogicalOrOperator, LogicalXorOperator, LogicGroupBegin, LogicGroupEnd, MethodInvocationNode, ModifierNameNode, ModifierSeparator, ModifierValueNode, ModifierValueSeparator, ModulusAssignmentOperator, ModulusOperator, MultiplicationAssignmentOperator, MultiplicationOperator, NotEqualCompOperator, NotStrictEqualCompOperator, NullCoalesceOperator, NullConstant, NumberNode, ScopeAssignmentOperator, SpaceshipCompOperator, StatementSeparatorNode, StrictEqualCompOperator, StringConcatenationOperator, StringValueNode, SubtractionAssignmentOperator, SubtractionOperator, TrueConstant, TupleListStart, VariableNode } from '../nodes/abstractNode.js';
 import { DocumentParser } from '../parser/documentParser.js';
 import { LanguageKeywords } from '../parser/languageKeywords.js';
 import { StringUtilities } from '../utilities/stringUtilities.js';
@@ -74,19 +74,15 @@ export class AntlersLexer {
         }
 
         if (this.isParsingString == false && char == ']') {
-            return true;
+            return false;
         }
 
         if (this.isParsingString == false && char == ')') {
             return false;
         }
 
-        if ((char == '[' || char == ']') && char == this.cur) {
-            return true;
-        }
-
-        if ((char == '_' || char == '.' || char == '[' || char == ']') &&
-            (!(this.currentContent.length > 0) || StringUtilities.ctypeAlpha(this.cur) || StringUtilities.ctypeDigit(this.cur))) {
+        if ((char == '_' || char == '.') &&
+            (this.currentContent.length > 0 || StringUtilities.ctypeAlpha(this.cur))) {
             return true;
         }
 
@@ -338,6 +334,12 @@ export class AntlersLexer {
                         modifierValueNode.value = parsedValue;
                         modifierValueNode.startPosition = node._lexerRelativeOffset(stringStartedOn ?? 0);
                         modifierValueNode.endPosition = node._lexerRelativeOffset(this.currentIndex);
+                        if (this.referenceParser != null) {
+                            modifierValueNode.sourceContent = this.referenceParser.getText(
+                                modifierValueNode.startPosition.index,
+                                modifierValueNode.endPosition.index + 1
+                            );
+                        }
                         modifierValueNode.parent = this.activeNode;
 
                         this.runtimeNodes.push(modifierValueNode);
@@ -1183,6 +1185,32 @@ export class AntlersLexer {
                     this.runtimeNodes.push(branchSeparator);
                     this.lastNode = branchSeparator;
                     this.isParsingModifierName = false;
+                    continue;
+                }
+
+                if (this.cur == DocumentParser.LeftBracket) {
+                    const implicitArrayBegin = new ImplicitArrayBegin();
+                    implicitArrayBegin.isVirtual = false;
+                    implicitArrayBegin.content = DocumentParser.LeftBracket;
+                    implicitArrayBegin.startPosition = node._lexerRelativeOffset(this.currentIndex);
+                    implicitArrayBegin.endPosition = node._lexerRelativeOffset(this.currentIndex + 1);
+                    implicitArrayBegin.parent = this.activeNode;
+
+                    this.runtimeNodes.push(implicitArrayBegin);
+                    this.lastNode = implicitArrayBegin;
+                    continue;
+                }
+
+                if (this.cur == DocumentParser.RightBracket) {
+                    const implicitArrayEnd = new ImplicitArrayEnd();
+                    implicitArrayEnd.isVirtual = false;
+                    implicitArrayEnd.content = DocumentParser.RightBracket;
+                    implicitArrayEnd.startPosition = node._lexerRelativeOffset(this.currentIndex);
+                    implicitArrayEnd.endPosition = node._lexerRelativeOffset(this.currentIndex + 1);
+                    implicitArrayEnd.parent = this.activeNode;
+
+                    this.runtimeNodes.push(implicitArrayEnd);
+                    this.lastNode = implicitArrayEnd;
                     continue;
                 }
             }

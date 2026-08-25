@@ -149,4 +149,16 @@ end`;
             assert.strictEqual(formatAntlers(expected), expected);
         });
     });
+
+    test('it preserves quoted modifier escapes', () => {
+        const samples = [
+            [String.raw`{{ title | modifier:"hello \"\\ world" }}`, String.raw`{{ title | modifier:"hello \"\\ world" }}`],
+            [String.raw`{{ "\"\n\t|||||hello:::::||:||\\'\\" | remove_right: "\"\n\t|||||hello:::::||:||\\'\\" }}`, String.raw`{{ "\"\n\t|||||hello:::::||:||\\'\\" | remove_right:"\"\n\t|||||hello:::::||:||\\'\\" }}`]
+        ];
+
+        samples.forEach(([input, expected]) => {
+            assert.strictEqual(formatAntlers(input), expected);
+            assert.strictEqual(formatAntlers(expected), expected);
+        });
+    });
 });

@@ -180,7 +180,7 @@ export class AntlersNodeParser {
             node.resetContentCache();
         }
 
-        if (name.startsWith('[') == false) {
+        if (name.startsWith('[') == false && name.includes('(') == false) {
             node.pathReference = this.pathParser.parse(name);
         }
         node.mergeErrors(this.pathParser.getAntlersErrors());

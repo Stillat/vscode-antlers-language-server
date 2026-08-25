@@ -1,6 +1,6 @@
 import { formatAntlers } from '../../../test/testUtils/formatAntlers.js';
 import { replaceAllInString } from '../../../utils/strings.js';
-import { AbstractNode, AdditionOperator, AntlersNode, ArgSeparator, DivisionOperator, InlineBranchSeparator, InlineTernarySeparator, LeftAssignmentOperator, LogicalAndOperator, LogicalNegationOperator, LogicalOrOperator, LogicGroupBegin, LogicGroupEnd, MethodInvocationNode, ModifierNameNode, ModifierSeparator, ModifierValueNode, ModifierValueSeparator, ModulusOperator, MultiplicationOperator, NumberNode, PathNode, ScopeAssignmentOperator, StatementSeparatorNode, StringValueNode, SubtractionOperator, TupleListStart, VariableNode } from '../../nodes/abstractNode.js';
+import { AbstractNode, AdditionOperator, AntlersNode, ArgSeparator, DivisionOperator, FalseConstant, ImplicitArrayBegin, ImplicitArrayEnd, InlineBranchSeparator, InlineTernarySeparator, LeftAssignmentOperator, LogicalAndOperator, LogicalNegationOperator, LogicalOrOperator, LogicGroupBegin, LogicGroupEnd, MethodInvocationNode, ModifierNameNode, ModifierSeparator, ModifierValueNode, ModifierValueSeparator, ModulusOperator, MultiplicationOperator, NullConstant, NumberNode, PathNode, ScopeAssignmentOperator, StatementSeparatorNode, StringValueNode, SubtractionOperator, TrueConstant, TupleListStart, VariableNode } from '../../nodes/abstractNode.js';
 import { LanguageParser } from '../../parser/languageParser.js';
 import { NodeHelpers } from '../../utilities/nodeHelpers.js';
 import { AntlersDocument } from '../antlersDocument.js';
@@ -46,6 +46,14 @@ export class NodePrinter {
                                     if (node.next instanceof VariableNode && node.next.name == 'as') {
                                         insertNlAfter = false;
                                     }
+
+                                    if (node.next instanceof VariableNode && node.next.methodDelimiter.length > 0) {
+                                        insertNlAfter = false;
+                                    }
+
+                                    if (node.next instanceof MethodInvocationNode) {
+                                        insertNlAfter = false;
+                                    }
                                 }
                             }
 
@@ -62,6 +70,11 @@ export class NodePrinter {
                             }
                         }
                     }
+                }
+
+                if ((node.prev instanceof ImplicitArrayBegin || node.prev instanceof ImplicitArrayEnd) &&
+                    doc.getDocumentParser().getLanguageParser().isMergedVariableComponent(node)) {
+                    continue;
                 }
 
                 if (node instanceof VariableNode) {
@@ -118,10 +131,25 @@ export class NodePrinter {
                     if (node.mergeRefName != null && node.mergeRefName.trim().length > 0 && node.mergeRefName != node.name) {
                         nodeBuffer.append(node.mergeRefName.trim());
                     } else {
+                        if (node.methodDelimiter.length > 0) {
+                            nodeBuffer.append(node.methodDelimiter + node.name.trim());
+                            lastPrintedNode = node;
+                            continue;
+                        }
+
                         if (node.name == 'as') {
                             nodeBuffer.appendOS('as');
                         } else {
                             if (node.methodTarget != null) {
+                                const previousNode = i > 0 ? lexerNodes[i - 1] : null,
+                                    nextNode = i + 1 < lexerNodes.length ? lexerNodes[i + 1] : null;
+
+                                if (previousNode instanceof MethodInvocationNode || nextNode instanceof MethodInvocationNode) {
+                                    nodeBuffer.append(node.name.trim());
+                                    lastPrintedNode = node;
+                                    continue;
+                                }
+
                                 if (node.variableReference != null) {
                                     node.variableReference.pathParts.forEach((part) => {
                                         if (part instanceof PathNode) {
@@ -132,7 +160,7 @@ export class NodePrinter {
                                 }
 
                                 nodeBuffer.append(node.methodTarget.method?.name ?? '');
-
+                                lastPrintedNode = node;
                                 continue;
                             }
                             nodeBuffer.append(node.name.trim());
@@ -160,6 +188,12 @@ export class NodePrinter {
                 } else if (node instanceof ModifierSeparator) {
                     nodeBuffer.appendS('|');
                 } else if (node instanceof InlineBranchSeparator) {
+                    if (node.isTernaryBranchSeparator) {
+                        nodeBuffer.appendS(':');
+                        lastPrintedNode = node;
+                        continue;
+                    }
+
                     if (lastPrintedNode != null) {
                         if (node.startPosition?.isBefore(lastPrintedNode.endPosition)) {
                             continue;
@@ -223,7 +257,11 @@ export class NodePrinter {
 
                     nodeBuffer.append(':');
                 } else if (node instanceof ModifierValueNode) {
-                    nodeBuffer.append(node.value.trim());
+                    if (node.sourceContent.length > 0) {
+                        nodeBuffer.append(node.sourceContent.trim());
+                    } else {
+                        nodeBuffer.append(node.value.trim());
+                    }
                 } else if (node instanceof LogicGroupBegin) {
                     nodeBuffer.append('(');
                 } else if (node instanceof LogicGroupEnd) {
@@ -258,6 +296,18 @@ export class NodePrinter {
                     }
 
                     nodeBuffer.append(valueToPrint);
+                } else if (node instanceof TrueConstant || node instanceof FalseConstant || node instanceof NullConstant) {
+                    if (node.prev instanceof ImplicitArrayBegin || node.prev instanceof ArgSeparator) {
+                        nodeBuffer.append(node.content);
+                    } else {
+                        nodeBuffer.appendS(node.content);
+                    }
+                } else if (node instanceof ImplicitArrayBegin || node instanceof ImplicitArrayEnd) {
+                    if (doc.getDocumentParser().getLanguageParser().isMergedVariableComponent(node)) {
+                        continue;
+                    }
+
+                    nodeBuffer.append(node.content);
                 } else if (node instanceof LeftAssignmentOperator) {
                     nodeBuffer.appendS('=');
                 } else if (node instanceof ScopeAssignmentOperator) {
@@ -332,7 +382,7 @@ export class NodePrinter {
                         nodeBuffer.appendS(node.rawContent());
                     }
                 } else if (node instanceof MethodInvocationNode) {
-                    nodeBuffer.append('->');
+                    nodeBuffer.append(node.rawContent());
                 } else if (node instanceof LogicalAndOperator) {
                     if (lastPrintedNode != null && lastPrintedNode instanceof SubtractionOperator) {
                         const distance = NodeHelpers.distance(lastPrintedNode, node);

@@ -152,4 +152,19 @@ end`;
             assert.strictEqual(twice, expected);
         }
     });
+
+    test('it preserves quoted modifier escapes', async () => {
+        const samples = [
+            [String.raw`{{ title | modifier:"hello \"\\ world" }}`, String.raw`{{ title | modifier:"hello \"\\ world" }}`],
+            [String.raw`{{ "\"\n\t|||||hello:::::||:||\\'\\" | remove_right: "\"\n\t|||||hello:::::||:||\\'\\" }}`, String.raw`{{ "\"\n\t|||||hello:::::||:||\\'\\" | remove_right:"\"\n\t|||||hello:::::||:||\\'\\" }}`]
+        ];
+
+        for (const [input, expected] of samples) {
+            const once = (await formatStringWithPrettier(input)).trim();
+            const twice = (await formatStringWithPrettier(once)).trim();
+
+            assert.strictEqual(once, expected);
+            assert.strictEqual(twice, expected);
+        }
+    });
 });
