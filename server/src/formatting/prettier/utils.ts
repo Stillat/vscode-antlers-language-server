@@ -61,9 +61,10 @@ export function formatAsHtml(text: string) {
     return prettier.format(text, htmlOptions);
 }
 
-export function formatStringWithPrettier(text: string) {
+export function formatStringWithPrettier(text: string, options: prettier.Options = {}) {
     return prettier.format(text, {
         parser: 'antlers',
-        plugins: [plugin as any as string]
+        plugins: [plugin as any as string],
+        ...options
     });
 }

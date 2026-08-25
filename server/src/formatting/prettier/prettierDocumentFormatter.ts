@@ -18,7 +18,8 @@ export class PrettierDocumentFormatter extends DocumentFormatter {
                 endNewline: true,
                 maxAntlersStatementsPerLine: 3,
                 newlinesAfterFrontMatter: 1,
-                tabSize: options.tabWidth
+                tabSize: options.tabWidth,
+                insertSpaces: options.useTabs !== true
             })
             .withAsyncPhpFormatter(formatPhp)
             .withPreFormatter((document) => {
