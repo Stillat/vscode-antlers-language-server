@@ -21,6 +21,9 @@
 		"text.html.statamic": {
 			"patterns": [
 				{
+					"include": "#antlers-directives"
+				},
+				{
 					"include": "#antlers-components"
 				},
 				{
@@ -36,6 +39,9 @@
         {
             "include": "#php-tag"
         },
+		{
+			"include": "#antlers-directives"
+		},
 		{
 			"include": "#antlers-components"
 		},
@@ -140,6 +146,49 @@
 			"begin": "{{#",
 			"end": "#}}",
 			"name": "comment.block.statamic"
+		},
+		"antlers-directives": {
+			"patterns": [
+				{
+					"begin": "(?<!@)(@)(props|aware|cascade)(\\s*)(\\()",
+					"beginCaptures": {
+						"1": {
+							"name": "punctuation.definition.directive.statamic"
+						},
+						"2": {
+							"name": "support.function.directive.statamic"
+						},
+						"4": {
+							"name": "punctuation.section.group.begin.statamic"
+						}
+					},
+					"contentName": "source.php",
+					"end": "(\\))",
+					"endCaptures": {
+						"1": {
+							"name": "punctuation.section.group.end.statamic"
+						}
+					},
+					"name": "meta.directive.statamic",
+					"patterns": [
+						{
+							"include": "source.php"
+						}
+					]
+				},
+				{
+					"match": "(?<!@)(@)(cascade)\\b(?!\\s*\\()",
+					"captures": {
+						"1": {
+							"name": "punctuation.definition.directive.statamic"
+						},
+						"2": {
+							"name": "support.function.directive.statamic"
+						}
+					},
+					"name": "meta.directive.statamic"
+				}
+			]
 		},
 		"antlers-components": {
 			"begin": "(<\\/?)(?:(s|statamic)([-:]))([a-zA-Z_][\\w:-]*)",

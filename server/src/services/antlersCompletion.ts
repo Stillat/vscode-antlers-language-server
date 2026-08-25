@@ -7,6 +7,7 @@ import ProjectManager from '../projects/projectManager.js';
 import { makeProviderRequest } from "../providers/providerParameters.js";
 import { globalSettings } from '../server.js';
 import { getAntlersComponentSuggestions } from '../suggestions/antlersComponentSuggestions.js';
+import { getAntlersDirectiveSuggestions } from '../suggestions/antlersDirectiveSuggestions.js';
 import { SuggestionManager } from "../suggestions/suggestionManager.js";
 
 interface ICompletionDetail {
@@ -47,8 +48,14 @@ export function handleOnCompletion(_textDocumentPosition: TextDocumentPositionPa
         suggestionRequest.position,
         suggestionRequest.project
     );
+    const directiveSuggestions = componentSuggestions == null
+        ? getAntlersDirectiveSuggestions(
+            suggestionRequest.antlersDocument.getOriginalContent(),
+            suggestionRequest.position
+        )
+        : null;
 
-    let suggestions = componentSuggestions ?? SuggestionManager.getSuggestions(suggestionRequest);
+    let suggestions = componentSuggestions ?? directiveSuggestions ?? SuggestionManager.getSuggestions(suggestionRequest);
 
     const returnedItems: string[] = [];
 
