@@ -46,7 +46,8 @@ export function handleOnCompletion(_textDocumentPosition: TextDocumentPositionPa
     const componentSuggestions = getAntlersComponentSuggestions(
         suggestionRequest.antlersDocument.getOriginalContent(),
         suggestionRequest.position,
-        suggestionRequest.project
+        suggestionRequest.project,
+        suggestionRequest
     );
     const directiveSuggestions = componentSuggestions == null
         ? getAntlersDirectiveSuggestions(
