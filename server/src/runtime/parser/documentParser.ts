@@ -730,6 +730,28 @@ export class DocumentParser {
             }
         }
 
+        if (!this.isNoParse && this.nodes.length > 0) {
+            const lastCoveredOffset = this.nodes.reduce((offset, node) => {
+                    return Math.max(offset, node.endPosition?.offset ?? -1);
+                }, -1),
+                literalStart = lastCoveredOffset + 1;
+
+            if (literalStart < this.inputLen) {
+                const literalNode = new LiteralNode(),
+                    literalContent = this.content.substring(literalStart);
+
+                literalNode.withParser(this);
+                literalNode.content = this.prepareLiteralContent(literalContent);
+
+                if (literalNode.content.length > 0) {
+                    literalNode.startPosition = this.positionFromOffset(literalStart, literalStart);
+                    literalNode.endPosition = this.positionFromOffset(this.inputLen - 1, this.inputLen - 1);
+                    literalNode.sourceContent = literalContent;
+                    this.nodes.push(literalNode);
+                }
+            }
+        }
+
         let index = 0;
 
         this.nodes.forEach((node) => {

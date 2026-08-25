@@ -180,4 +180,12 @@ style="
         
         assert.strictEqual(out, expected);
     });
+
+    test('it preserves content after interpolated parameters', async () => {
+        const template = `<!-- /page_builder/_tab_page_child_nav.antlers.html -->
+{{ partial:navigation/tabs tab_parent_url="{{ url }}" tab_parent_title="{{ tabname }}" }}
+<!-- End: /page_builder/_tab_page_child_nav.antlers.html -->`;
+
+        assert.strictEqual((await formatStringWithPrettier(template)).trim(), template);
+    });
 });

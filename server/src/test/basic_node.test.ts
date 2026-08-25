@@ -281,6 +281,17 @@ suite("Basic Node Test", () => {
         assert.strictEqual(nodes[1].content, "<p>I am a literal.</p>");
     });
 
+    test("interpolated parameters dont skip trailing literal nodes", () => {
+        const nodes = parseNodes(
+            '{{ partial:navigation/tabs tab_parent_url="{{ url }}" tab_parent_title="{{ tabname }}" }}\n<!-- End: partial -->'
+        );
+
+        assertCount(2, nodes);
+        assertInstanceOf(AntlersNode, nodes[0]);
+        assertInstanceOf(LiteralNode, nodes[1]);
+        assert.strictEqual(nodes[1].content, "\n<!-- End: partial -->");
+    });
+
     test("neighboring comments dont confuse things", () => {
         const template = `{{# A comment #}}
 		{{# another comment {{ width }} #}}
