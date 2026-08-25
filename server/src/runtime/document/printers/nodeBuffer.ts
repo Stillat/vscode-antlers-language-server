@@ -84,7 +84,7 @@ export class NodeBuffer {
     }
 
     appendOS(text: string) {
-        if (this.buffer.endsWith(' ') == false
+        if (/\s$/.test(this.buffer) == false
             && this.buffer.endsWith('(') == false
             && this.buffer.endsWith('{') == false
             && this.buffer.endsWith('[') == false

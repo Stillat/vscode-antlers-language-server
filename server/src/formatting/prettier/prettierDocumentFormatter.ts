@@ -8,11 +8,11 @@ import { ArrayWrapStyle } from '../../runtime/document/transformOptions.js';
 function getArrayWrapStyle(options: prettier.ParserOptions): ArrayWrapStyle {
     const value = (options as unknown as Record<string, unknown>).antlersArrayWrap;
 
-    if (value === 'preserve' || value === 'expand') {
-        return value;
+    if (value === 'collapse') {
+        return 'collapse';
     }
 
-    return 'collapse';
+    return 'preserve';
 }
 
 export class PrettierDocumentFormatter extends DocumentFormatter {

@@ -72,7 +72,7 @@ const plugin: prettier.Plugin = {
         antlersArrayWrap: {
             type: 'choice',
             category: 'Antlers',
-            default: 'collapse',
+            default: 'preserve',
             description: 'Controls how array literals inside Antlers regions are printed.',
             choices: [
                 {
@@ -82,10 +82,6 @@ const plugin: prettier.Plugin = {
                 {
                     value: 'preserve',
                     description: 'Array literals that span multiple lines in the source document keep spanning multiple lines, one item per line.'
-                },
-                {
-                    value: 'expand',
-                    description: 'Array literals containing at least one item are always printed across multiple lines, one item per line.'
                 }
             ]
         }

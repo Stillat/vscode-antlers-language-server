@@ -101,7 +101,7 @@ export class Transformer {
             newlinesAfterFrontMatter: 1,
             maxAntlersStatementsPerLine: 3,
             endNewline: true,
-            arrayWrap: 'collapse'
+            arrayWrap: 'preserve'
         };
     }
 
@@ -155,6 +155,10 @@ export class Transformer {
 
     withOptions(options: TransformOptions) {
         this.options = options;
+
+        if (this.options.arrayWrap != 'collapse' && this.options.arrayWrap != 'preserve') {
+            this.options.arrayWrap = 'preserve';
+        }
 
         if (this.options.tabSize <= 0) {
             this.options.tabSize = 4;

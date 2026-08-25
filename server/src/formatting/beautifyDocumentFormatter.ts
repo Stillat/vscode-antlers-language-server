@@ -18,7 +18,7 @@ export class BeautifyDocumentFormatter extends DocumentFormatter {
                 maxAntlersStatementsPerLine: options.maxStatementsPerLine,
                 newlinesAfterFrontMatter: 1,
                 tabSize: options.tabSize,
-                arrayWrap: options.arrayWrap ?? 'collapse'
+                arrayWrap: options.arrayWrap == 'collapse' ? 'collapse' : 'preserve'
             });
     }
 
