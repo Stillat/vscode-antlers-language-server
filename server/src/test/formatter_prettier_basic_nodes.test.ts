@@ -2,6 +2,10 @@ import assert from 'assert';
 import { formatStringWithPrettier } from '../formatting/prettier/utils.js';
 
 suite('Prettier Formatter Basic Nodes', () => {
+    test('it preserves the triple fallback operator', async () => {
+        assert.strictEqual((await formatStringWithPrettier('{{ a ??? b }}')).trim(), '{{ a ??? b }}');
+    });
+
     test('it doesnt remove variable parts with neighboring numeric nodes', async () => {
         assert.strictEqual((await formatStringWithPrettier('{{ assets:0 }}')).trim(), '{{ assets:0 }}');
         assert.strictEqual((await formatStringWithPrettier('{{ assets:0:0 }}')).trim(), '{{ assets:0:0 }}');

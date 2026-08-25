@@ -8,7 +8,7 @@ import {
 } from "./testUtils/assertions.js";
 import { getParsedRuntimeNodes, parseNodes } from "./testUtils/parserUtils.js";
 import EnvironmentDetails from "../runtime/runtime/environmentDetails.js";
-import { AntlersNode, LiteralNode, SemanticGroup, VariableNode, LogicGroup, EqualCompOperator, ModifierNode, PathNode, VariableReference } from '../runtime/nodes/abstractNode.js';
+import { AntlersNode, LiteralNode, SemanticGroup, VariableNode, LogicGroup, EqualCompOperator, ModifierNode, PathNode, VariableReference, NullCoalesceOperator } from '../runtime/nodes/abstractNode.js';
 
 suite("Basic Node Test", () => {
     test("it returns nodes", () => {
@@ -28,6 +28,15 @@ suite("Basic Node Test", () => {
             toAntlers(nodes[0]).getContent(),
             ' meta_title ?? title ?? "No Title Set" '
         );
+    });
+
+    test("it lexes the triple fallback operator as one token", () => {
+        const nodes = parseNodes("{{ a ??? b }}"),
+            antlersNode = toAntlers(nodes[0]);
+
+        assertCount(3, antlersNode.runtimeNodes);
+        assertInstanceOf(NullCoalesceOperator, antlersNode.runtimeNodes[1]);
+        assert.strictEqual(antlersNode.runtimeNodes[1].content, "???");
     });
 
     test("it removes params from node content", () => {

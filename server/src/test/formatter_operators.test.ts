@@ -119,6 +119,10 @@ suite('Formatter Operators', () => {
         assert.strictEqual(formatAntlers('{{ left   ??     right }}'), '{{ left ?? right }}');
     });
 
+    test('it emits ???', () => {
+        assert.strictEqual(formatAntlers('{{ left   ???     right }}'), '{{ left ??? right }}');
+    });
+
     test('it emits ?:', () => {
         assert.strictEqual(formatAntlers('{{ left   ?:     right }}'), '{{ left ?: right }}');
     });
