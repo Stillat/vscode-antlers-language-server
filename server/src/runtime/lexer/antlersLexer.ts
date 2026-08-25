@@ -427,6 +427,7 @@ export class AntlersLexer {
                     }
 
                     const parsedValue = this.currentContent.join('').trim(),
+                        lowerParsedValue = parsedValue.toLowerCase(),
                         valueLen = parsedValue.length,
                         valueStartIndex = this.currentIndex - valueLen,
                         startPosition = node._lexerRelativeOffset(valueStartIndex),
@@ -436,7 +437,7 @@ export class AntlersLexer {
                     this.rawContent = [];
 
                     // Check against internal keywords.
-                    if (parsedValue == LanguageKeywords.LogicalAnd) {
+                    if (lowerParsedValue == LanguageKeywords.LogicalAnd) {
                         const logicalAnd = new LogicalAndOperator();
                         logicalAnd.isVirtual = false;
                         logicalAnd.content = LanguageKeywords.LogicalAnd;
@@ -447,7 +448,7 @@ export class AntlersLexer {
                         this.runtimeNodes.push(logicalAnd);
                         this.lastNode = logicalAnd;
                         continue;
-                    } else if (parsedValue == LanguageKeywords.LogicalOr) {
+                    } else if (lowerParsedValue == LanguageKeywords.LogicalOr) {
                         const logicalOr = new LogicalOrOperator();
                         logicalOr.isVirtual = false;
                         logicalOr.content = LanguageKeywords.LogicalOr;
@@ -458,7 +459,7 @@ export class AntlersLexer {
                         this.runtimeNodes.push(logicalOr);
                         this.lastNode = logicalOr;
                         continue;
-                    } else if (parsedValue == LanguageKeywords.LogicalXor) {
+                    } else if (lowerParsedValue == LanguageKeywords.LogicalXor) {
                         const logicalXor = new LogicalXorOperator();
                         logicalXor.isVirtual = false;
                         logicalXor.content = LanguageKeywords.LogicalXor;
@@ -469,7 +470,7 @@ export class AntlersLexer {
                         this.runtimeNodes.push(logicalXor);
                         this.lastNode = logicalXor;
                         continue;
-                    } else if (parsedValue == LanguageKeywords.ConstNull) {
+                    } else if (lowerParsedValue == LanguageKeywords.ConstNull) {
                         const constNull = new NullConstant();
                         constNull.isVirtual = false;
                         constNull.content = LanguageKeywords.ConstNull;
@@ -480,7 +481,7 @@ export class AntlersLexer {
                         this.runtimeNodes.push(constNull);
                         this.lastNode = constNull;
                         continue;
-                    } else if (parsedValue == LanguageKeywords.ConstTrue) {
+                    } else if (lowerParsedValue == LanguageKeywords.ConstTrue) {
                         const constTrue = new TrueConstant();
                         constTrue.isVirtual = false;
                         constTrue.content = LanguageKeywords.ConstTrue;
@@ -491,7 +492,7 @@ export class AntlersLexer {
                         this.runtimeNodes.push(constTrue);
                         this.lastNode = constTrue;
                         continue;
-                    } else if (parsedValue == LanguageKeywords.ConstFalse) {
+                    } else if (lowerParsedValue == LanguageKeywords.ConstFalse) {
                         const constFalse = new FalseConstant();
                         constFalse.isVirtual = false;
                         constFalse.content = LanguageKeywords.ConstFalse;
@@ -502,7 +503,7 @@ export class AntlersLexer {
                         this.runtimeNodes.push(constFalse);
                         this.lastNode = constFalse;
                         continue;
-                    } else if (parsedValue == LanguageKeywords.LogicalNot) {
+                    } else if (lowerParsedValue == LanguageKeywords.LogicalNot) {
                         const logicNegation = new LogicalNegationOperator();
                         logicNegation.isVirtual = false;
                         logicNegation.content = LanguageKeywords.LogicalNot;
@@ -513,7 +514,7 @@ export class AntlersLexer {
                         this.runtimeNodes.push(logicNegation);
                         this.lastNode = logicNegation;
                         continue;
-                    } else if (parsedValue == LanguageKeywords.ArrList && this.next == DocumentParser.LeftParen) {
+                    } else if (lowerParsedValue == LanguageKeywords.ArrList && this.next == DocumentParser.LeftParen) {
                         const tupleListStart = new TupleListStart();
                         tupleListStart.isVirtual = false;
                         tupleListStart.content = LanguageKeywords.ArrList;
