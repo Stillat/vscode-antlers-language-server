@@ -21,6 +21,9 @@
 		"text.html.statamic": {
 			"patterns": [
 				{
+					"include": "#antlers-components"
+				},
+				{
 					"include": "#statamic-comments"
 				},
 				{
@@ -33,6 +36,9 @@
         {
             "include": "#php-tag"
         },
+		{
+			"include": "#antlers-components"
+		},
 		{
 			"include": "#statamic-comments"
 		},
@@ -134,6 +140,35 @@
 			"begin": "{{#",
 			"end": "#}}",
 			"name": "comment.block.statamic"
+		},
+		"antlers-components": {
+			"begin": "(<\\/?)(?:(s|statamic)([-:]))([a-zA-Z_][\\w:-]*)",
+			"beginCaptures": {
+				"1": {
+					"name": "punctuation.definition.tag.begin.html"
+				},
+				"2": {
+					"name": "support.class.component.statamic"
+				},
+				"3": {
+					"name": "punctuation.separator.component.statamic"
+				},
+				"4": {
+					"name": "entity.name.tag.statamic"
+				}
+			},
+			"end": "(/?>)",
+			"endCaptures": {
+				"1": {
+					"name": "punctuation.definition.tag.end.html"
+				}
+			},
+			"name": "meta.tag.statamic.component",
+			"patterns": [
+				{
+					"include": "text.html.basic#tag-stuff"
+				}
+			]
 		},
 		"antlers-tags": {
 			"begin": "(?<!@){{(?!\\$)(\\s?)",
