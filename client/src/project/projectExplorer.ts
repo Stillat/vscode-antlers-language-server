@@ -291,8 +291,8 @@ class ProjectItem extends vscode.TreeItem {
         if (typeof context['internalIcon'] === 'string') {
             this.icon = context['internalIcon'] as string;
             this.iconPath = {
-                light: path.join(__dirname, '..', '..', '..', 'resources', 'light', this.icon + '.svg'),
-                dark: path.join(__dirname, '..', '..', '..', 'resources', 'dark', this.icon + '.svg'),
+                light: vscode.Uri.file(path.join(__dirname, '..', '..', '..', 'resources', 'light', this.icon + '.svg')),
+                dark: vscode.Uri.file(path.join(__dirname, '..', '..', '..', 'resources', 'dark', this.icon + '.svg')),
             };
         }
     }

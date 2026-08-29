@@ -1,4 +1,4 @@
-import { NotificationType } from "vscode-languageserver/node.js";
+import { NotificationType } from "vscode-languageserver/node";
 import { IProjectFields } from "../projects/structuredFieldTypes/types.js";
 
 export interface ProjectDetailsParams {

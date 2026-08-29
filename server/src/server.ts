@@ -20,7 +20,7 @@ import {
     TextDocuments,
     TextDocumentSyncKind,
     WorkspaceEdit,
-} from "vscode-languageserver/node.js";
+} from "vscode-languageserver/node";
 import {
     handleOnCompletion,
     handleOnCompletionResolve,

@@ -94,7 +94,7 @@ function askForProjectUpdate() {
 
 const debounceAskForProjectUpdate = debounce(askForProjectUpdate, 350);
 
-export function activate(context: ExtensionContext) {
+export async function activate(context: ExtensionContext) {
     // The server is implemented in node
     const serverModule = context.asAbsolutePath(
         path.join('server', 'out', 'server.js')
@@ -211,46 +211,41 @@ export function activate(context: ExtensionContext) {
     activateAntlersDebug(context);
 
     // Start the client. This will also launch the server
-    const disposable = client.start();
-    toDispose.push(disposable);
-    client.onReady().then(() => {
+    await client.start();
+    isClientReady = true;
 
+    client.onNotification(ProjectUpdatedNotification.type, (f) => {
+        if (projectExplorer != null) {
+            projectExplorer.updateStructure(f.content);
+        }
+    });
 
-        isClientReady = true;
-
-        client.onNotification(ProjectUpdatedNotification.type, (f) => {
-            if (projectExplorer != null) {
-                projectExplorer.updateStructure(f.content);
+    setTimeout(() => {
+        client.sendRequest(SemanticTokenLegendRequest.type).then(legend => {
+            if (legend) {
+                const provider: DocumentSemanticTokensProvider & DocumentRangeSemanticTokensProvider = {
+                    provideDocumentSemanticTokens(doc) {
+                        const params: SemanticTokenParams = {
+                            textDocument: client.code2ProtocolConverter.asTextDocumentIdentifier(doc),
+                        };
+                        return client.sendRequest(SemanticTokenRequest.type, params).then(data => {
+                            return data && new SemanticTokens(new Uint32Array(data));
+                        });
+                    },
+                    provideDocumentRangeSemanticTokens(doc, range) {
+                        const params: SemanticTokenParams = {
+                            textDocument: client.code2ProtocolConverter.asTextDocumentIdentifier(doc),
+                            ranges: [client.code2ProtocolConverter.asRange(range)]
+                        };
+                        return client.sendRequest(SemanticTokenRequest.type, params).then(data => {
+                            return data && new SemanticTokens(new Uint32Array(data));
+                        });
+                    }
+                };
+                toDispose.push(languages.registerDocumentSemanticTokensProvider(documentSelector, provider, new SemanticTokensLegend(legend.types, legend.modifiers)));
             }
         });
-
-        setTimeout(() => {
-            client.sendRequest(SemanticTokenLegendRequest.type).then(legend => {
-                if (legend) {
-                    const provider: DocumentSemanticTokensProvider & DocumentRangeSemanticTokensProvider = {
-                        provideDocumentSemanticTokens(doc) {
-                            const params: SemanticTokenParams = {
-                                textDocument: client.code2ProtocolConverter.asTextDocumentIdentifier(doc),
-                            };
-                            return client.sendRequest(SemanticTokenRequest.type, params).then(data => {
-                                return data && new SemanticTokens(new Uint32Array(data));
-                            });
-                        },
-                        provideDocumentRangeSemanticTokens(doc, range) {
-                            const params: SemanticTokenParams = {
-                                textDocument: client.code2ProtocolConverter.asTextDocumentIdentifier(doc),
-                                ranges: [client.code2ProtocolConverter.asRange(range)]
-                            };
-                            return client.sendRequest(SemanticTokenRequest.type, params).then(data => {
-                                return data && new SemanticTokens(new Uint32Array(data));
-                            });
-                        }
-                    };
-                    toDispose.push(languages.registerDocumentSemanticTokensProvider(documentSelector, provider, new SemanticTokensLegend(legend.types, legend.modifiers)));
-                }
-            });
-        }, 2500);
-    });
+    }, 2500);
 }
 
 export function deactivate(): Thenable<void> | undefined {
