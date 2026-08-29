@@ -76,6 +76,8 @@
         "yaml": "^1.10.3"
     },
     "devDependencies": {
+        "@types/mocha": "^10.0.10",
+        "@types/node": "^12.20.55",
         "@types/vscode": "^1.67.0",
         "js-yaml": "^4.3.2"
     }

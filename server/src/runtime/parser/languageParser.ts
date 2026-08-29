@@ -2313,7 +2313,7 @@ export class LanguageParser {
         return newTokens;
     }
 
-    private isOperand(token: AbstractNode) {
+    private isOperand(token: AbstractNode): boolean {
         return token instanceof VariableNode || token instanceof LogicGroup ||
             token instanceof StringValueNode || token instanceof NumberNode ||
             token instanceof FalseConstant || token instanceof NullConstant ||
@@ -2323,7 +2323,7 @@ export class LanguageParser {
             token instanceof ScopeAssignmentOperator;
     }
 
-    private isProperMethodChainTargetStrict(token: AbstractNode) {
+    private isProperMethodChainTargetStrict(token: AbstractNode): boolean {
         return token instanceof LogicGroup ||
             token instanceof StringValueNode || token instanceof NumberNode ||
             token instanceof FalseConstant || token instanceof NullConstant ||

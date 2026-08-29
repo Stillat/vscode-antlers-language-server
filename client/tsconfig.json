@@ -8,6 +8,11 @@
 		"outDir": "out",
 		"rootDir": "src",
 		"sourceMap": true,
+		"strict": false,
+		"types": [
+			"mocha",
+			"node"
+		],
 		"skipLibCheck": true
 	},
 	"include": [

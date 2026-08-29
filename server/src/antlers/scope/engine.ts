@@ -233,7 +233,7 @@ export class ScopeEngine {
                         const listReference = currentScope.getList(trimmedRuntimeName);
 
                         if (listReference != null && listReference.values.size > 0) {
-                            const firstListVar = listReference.values.entries().next().value[1] as IScopeVariable;
+                            const firstListVar = listReference.values.values().next().value as IScopeVariable;
 
                             currentNode.scopeVariable = {
                                 dataType: 'array',

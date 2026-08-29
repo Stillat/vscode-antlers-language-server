@@ -9,7 +9,7 @@ export class RecursiveParentAnalyzer {
             const node = nodes[i];
 
             if (node instanceof RecursiveNode) {
-                const recursiveContent = '*recursive ' + node.name?.name ?? '' + '*';
+                const recursiveContent = '*recursive ' + node.name?.name;
 
                 if (i - 1 < 0) {
                     node.pushError(AntlersError.makeSyntaxError(
