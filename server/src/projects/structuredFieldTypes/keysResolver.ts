@@ -1,5 +1,4 @@
-import { Faker } from '../../documentation/generator/faker.js';
-import { IInjectedField } from '../../documentation/generator/types.js';
+import { Faker, IInjectedField } from './faker.js';
 import { IFieldDetails } from './types.js';
 
 export class KeysResolver {
