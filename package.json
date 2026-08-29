@@ -213,6 +213,7 @@
         "build:webview": "cd docsui && npm run build",
         "postinstall": "cd client && npm install && cd ../server && npm install && cd ../docsui && npm install && cd ..",
         "bundle:everything": "npm run bundle:format_cli && npm run bundle:antlersls && npm run bundle:prettier",
+        "test": "npm run test:server && npm run test:client",
         "test:server": "npm run compile && mocha ./server/out/test/*.js -- -u tdd",
         "test:grammar": "npm run compile && mocha ./client/out/test/syntax_grammar.test.js -- -u tdd",
         "test:client": "npm run compile && mocha ./client/out/test/*.js -- -u tdd"
