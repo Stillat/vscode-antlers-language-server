@@ -31,7 +31,7 @@ export class RecursiveParentAnalyzer {
 
                     if (subNode instanceof AntlersNode && subNode.isClosedBy != null) {
                         if (node.isNestedRecursive) {
-                            if (subNode.content.trim() == node.name?.name ?? '') {
+                            if (subNode.content.trim() == (node.name?.name ?? '')) {
                                 lastNode = subNode;
                                 break;
                             }
