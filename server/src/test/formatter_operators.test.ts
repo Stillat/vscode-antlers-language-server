@@ -196,9 +196,9 @@ source }}`,
             'one' => 1,
             'two' => 2	
         ] }}`), `{{ test = [
-            'one' => 1,
-            'two' => 2
-        ] }}`);
+    'one' => 1,
+    'two' => 2
+] }}`);
     });
 
     test('it emits strings', () => {

@@ -44,45 +44,42 @@ export class NodePrinter {
      * Brackets are numbered per node: the opening brackets of a name come
      * first, followed by its closing brackets.
      */
-    private static resolveArrayWrapping(lexerNodes: AbstractNode[], options: TransformOptions, doc: AntlersDocument): Map<string, ArrayWrapLayout> {
+    private static resolveArrayWrapping(lexerNodes: AbstractNode[], options: TransformOptions): Map<string, ArrayWrapLayout> {
         const decisions: Map<string, ArrayWrapLayout> = new Map(),
-            openBrackets: ArrayBracket[] = [];
+            openBrackets: ArrayBracket[] = [],
+            indentUnit = options.insertSpaces
+                ? ' '.repeat(options.tabSize)
+                : '\t';
 
         for (let i = 0; i < lexerNodes.length; i++) {
             const node = lexerNodes[i],
                 line = node.startPosition?.line ?? 0;
 
             if (!(node instanceof VariableNode)) {
-                NodePrinter.markArrayItems(openBrackets, node, doc);
+                NodePrinter.markArrayItems(openBrackets);
                 continue;
             }
 
             const parts = NodePrinter.splitArrayBrackets(node.name);
 
             if (parts == null) {
-                NodePrinter.markArrayItems(openBrackets, node, doc);
+                NodePrinter.markArrayItems(openBrackets);
                 continue;
             }
 
             for (let b = 0; b < parts.openCount; b++) {
-                NodePrinter.markArrayItems(openBrackets, node, doc);
-
-                const rootIndent = openBrackets.length > 0
-                    ? openBrackets[0].rootIndent
-                    : NodePrinter.sourceIndent(node, doc);
+                NodePrinter.markArrayItems(openBrackets);
 
                 openBrackets.push({
                     key: NodePrinter.bracketKey(i, b),
                     line: line,
                     hasItems: false,
-                    rootIndent: rootIndent,
-                    itemIndent: null,
                     depth: openBrackets.length + 1
                 });
             }
 
             if (parts.value.length > 0) {
-                NodePrinter.markArrayItems(openBrackets, node, doc);
+                NodePrinter.markArrayItems(openBrackets);
             }
 
             for (let b = 0; b < parts.closeCount; b++) {
@@ -91,18 +88,12 @@ export class NodePrinter {
                 if (bracket == null) { continue; }
 
                 const wrap = bracket.hasItems && line > bracket.line,
-                    closeKey = NodePrinter.bracketKey(i, parts.openCount + b),
-                    parentBracket = openBrackets.length > 0
-                        ? openBrackets[openBrackets.length - 1]
-                        : null,
-                    closeIndent = parts.closeCount > 1
-                        ? parentBracket?.itemIndent ?? ''
-                        : NodePrinter.relativeIndent(NodePrinter.sourceIndent(node, doc, true), bracket.rootIndent);
+                    closeKey = NodePrinter.bracketKey(i, parts.openCount + b);
 
                 const layout: ArrayWrapLayout = {
                     wrap: wrap,
-                    itemIndent: bracket.itemIndent ?? ' '.repeat(options.tabSize * bracket.depth),
-                    closeIndent: closeIndent
+                    itemIndent: indentUnit.repeat(bracket.depth),
+                    closeIndent: indentUnit.repeat(Math.max(0, bracket.depth - 1))
                 };
 
                 decisions.set(bracket.key, layout);
@@ -113,46 +104,10 @@ export class NodePrinter {
         return decisions;
     }
 
-    private static markArrayItems(openBrackets: ArrayBracket[], node: AbstractNode, doc: AntlersDocument) {
-        const line = node.startPosition?.line ?? 0,
-            sourceIndent = NodePrinter.sourceIndent(node, doc),
-            rootIndent = openBrackets[0]?.rootIndent ?? '',
-            relativeIndent = NodePrinter.relativeIndent(sourceIndent, rootIndent),
-            currentDepth = openBrackets.length;
-
+    private static markArrayItems(openBrackets: ArrayBracket[]) {
         openBrackets.forEach((bracket) => {
             bracket.hasItems = true;
-
-            if (bracket.itemIndent == null && line > bracket.line) {
-                const targetLength = bracket.depth == currentDepth
-                    ? relativeIndent.length
-                    : Math.round(relativeIndent.length * (bracket.depth / currentDepth));
-
-                bracket.itemIndent = relativeIndent.substring(0, targetLength);
-            }
         });
-    }
-
-    private static sourceIndent(node: AbstractNode, doc: AntlersDocument, useEndPosition = false): string {
-        const content = doc.getOriginalContent(),
-            index = Math.max(0, (useEndPosition ? node.endPosition?.index : node.startPosition?.index) ?? 0),
-            lineStart = content.lastIndexOf("\n", index - 1) + 1,
-            lineEndCandidate = content.indexOf("\n", index),
-            lineEnd = lineEndCandidate == -1 ? content.length : lineEndCandidate,
-            line = content.substring(lineStart, lineEnd);
-
-        return (/^[\t ]*/.exec(line) ?? [''])[0];
-    }
-
-    private static relativeIndent(indent: string, rootIndent: string): string {
-        let sharedLength = 0;
-
-        while (sharedLength < indent.length && sharedLength < rootIndent.length &&
-            indent[sharedLength] == rootIndent[sharedLength]) {
-            sharedLength += 1;
-        }
-
-        return indent.substring(sharedLength);
     }
 
     private static hasLineBreakAfter(node: AbstractNode, nextNode: AbstractNode, doc: AntlersDocument): boolean {
@@ -203,7 +158,7 @@ export class NodePrinter {
         const arrayWrapStack: ArrayPrintLayout[] = [],
             arrayWrapDecisions = options.arrayWrap == 'collapse'
                 ? new Map<string, ArrayWrapLayout>()
-                : NodePrinter.resolveArrayWrapping(lexerNodes, options, doc);
+                : NodePrinter.resolveArrayWrapping(lexerNodes, options);
         let nodeStatements = 0,
             nodeOperators = 0,
             arrayLiteralDepth = 0;
@@ -697,8 +652,6 @@ interface ArrayBracket {
     key: string,
     line: number,
     hasItems: boolean,
-    rootIndent: string,
-    itemIndent: string | null,
     depth: number
 }
 
