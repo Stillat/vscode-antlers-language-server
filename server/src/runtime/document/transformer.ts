@@ -1,7 +1,7 @@
 import { AsyncHTMLFormatter, AsyncPHPFormatter, HTMLFormatter, PHPFormatter, YAMLFormatter } from '../../formatting/formatters.js';
 import { replaceAllInString } from '../../utils/strings.js';
 import { ConditionPairAnalyzer } from '../analyzers/conditionPairAnalyzer.js';
-import { AbstractNode, AntlersNode, ConditionNode, EscapedContentNode, ExecutionBranch, FragmentPosition, LiteralNode, StructuralFragment } from '../nodes/abstractNode.js';
+import { AbstractNode, AntlersNode, ConditionNode, EscapedContentNode, ExecutionBranch, FragmentPosition, LiteralNode, StructuralFragment, VariableNode } from '../nodes/abstractNode.js';
 import { StringUtilities } from '../utilities/stringUtilities.js';
 import { AntlersDocument } from './antlersDocument.js';
 import { AsyncInlineFormatter, InlineFormatter } from './inlineFormatter.js';
@@ -101,7 +101,8 @@ export class Transformer {
             insertSpaces: true,
             newlinesAfterFrontMatter: 1,
             maxAntlersStatementsPerLine: 3,
-            endNewline: true
+            endNewline: true,
+            arrayWrap: 'preserve'
         };
     }
 
@@ -155,6 +156,10 @@ export class Transformer {
 
     withOptions(options: TransformOptions) {
         this.options = options;
+
+        if (this.options.arrayWrap != 'collapse' && this.options.arrayWrap != 'preserve') {
+            this.options.arrayWrap = 'preserve';
+        }
 
         if (this.options.tabSize <= 0) {
             this.options.tabSize = 4;
@@ -742,7 +747,14 @@ export class Transformer {
         if (this.parentTransformer != null) {
             return this.parentTransformer.registerInlineAntlers(node);
         } else {
-            const slug = this.makeSlug(node.getOriginalContent().length);
+            const containsArray = node.getTrueRuntimeNodes().some((runtimeNode) =>
+                    runtimeNode instanceof VariableNode &&
+                    (runtimeNode.name.startsWith('[') || runtimeNode.name.endsWith(']'))
+                ),
+                slugLength = containsArray
+                    ? this.printNode(node).length
+                    : node.getOriginalContent().length,
+                slug = this.makeSlug(slugLength);
 
             if (node.isInlineAntlers) {
                 this.spanNodes.set(slug, node);
@@ -943,7 +955,7 @@ export class Transformer {
                 level = this.indentLevel(slug, true);
             }
 
-            const printed = await this.printNodeAsync(node, level),
+            const printed = this.shiftSpanNode(await this.printNodeAsync(node, level), slug, level),
                 slugNs = this.selfClosingNs(slug);
 
             value = value.replace(slug, printed);
@@ -1020,7 +1032,7 @@ export class Transformer {
                 level = this.indentLevel(slug, true);
             }
 
-            const printed = this.printNode(node, level),
+            const printed = this.shiftSpanNode(this.printNode(node, level), slug, level),
                 slugNs = this.selfClosingNs(slug);
 
             value = value.replace(slug, printed);
@@ -1140,6 +1152,24 @@ export class Transformer {
         return result;
     }
 
+    /**
+     * Aligns multi-line inline Antlers regions, such as multi-line array
+     * literals inside an HTML attribute, with the line they appear on.
+     *
+     * Inline regions are printed without a target indent, which leaves any
+     * additional lines they produce at the start of the line.
+     */
+    private shiftSpanNode(printed: string, slug: string, level: number): string {
+        if (this.options.arrayWrap == 'collapse' || level != 0 || !printed.includes("\n")) {
+            return printed;
+        }
+
+        const lines = StringUtilities.breakByNewLine(printed.trim()),
+            indent = this.indentWhitespace(slug);
+
+        return lines.map((line, index) => index == 0 ? line : indent + line).join("\n");
+    }
+
     private indentWhitespace(value: string): string {
         for (let i = 0; i < this.structureLines.length; i++) {
             const thisLine = this.structureLines[i];
@@ -1151,7 +1181,6 @@ export class Transformer {
 
         return '';
     }
-
     private indentLevel(value: string, includeIndex = false): number {
 
         for (let i = 0; i < this.structureLines.length; i++) {

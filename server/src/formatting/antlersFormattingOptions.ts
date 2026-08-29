@@ -1,3 +1,4 @@
+import { ArrayWrapStyle } from '../runtime/document/transformOptions.js';
 import { IHTMLFormatConfiguration } from './htmlCompat.js';
 
 export interface AntlersFormattingOptions {
@@ -6,5 +7,6 @@ export interface AntlersFormattingOptions {
     insertSpaces: boolean,
     formatFrontMatter: boolean,
     maxStatementsPerLine: number,
-    formatExtensions: string[]
+    formatExtensions: string[],
+    arrayWrap?: ArrayWrapStyle
 }

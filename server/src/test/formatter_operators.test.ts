@@ -195,7 +195,10 @@ source }}`,
         assert.strictEqual(formatAntlers(`{{ test =    [
             'one' => 1,
             'two' => 2	
-        ] }}`), `{{ test = ['one' => 1, 'two' => 2] }}`);
+        ] }}`), `{{ test = [
+            'one' => 1,
+            'two' => 2
+        ] }}`);
     });
 
     test('it emits strings', () => {

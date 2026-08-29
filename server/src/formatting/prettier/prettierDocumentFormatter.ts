@@ -3,6 +3,17 @@ import * as prettier from 'prettier';
 import { formatAsHtml, formatPhp, setOptions } from './utils.js';
 import { FrontMatterFormatter } from '../frontMatterFormatter.js';
 import { ErrorPrinter } from '../../runtime/document/printers/errorPrinter.js';
+import { ArrayWrapStyle } from '../../runtime/document/transformOptions.js';
+
+function getArrayWrapStyle(options: prettier.ParserOptions): ArrayWrapStyle {
+    const value = (options as unknown as Record<string, unknown>).antlersArrayWrap;
+
+    if (value === 'collapse') {
+        return 'collapse';
+    }
+
+    return 'preserve';
+}
 
 export class PrettierDocumentFormatter extends DocumentFormatter {
 
@@ -19,7 +30,8 @@ export class PrettierDocumentFormatter extends DocumentFormatter {
                 maxAntlersStatementsPerLine: 3,
                 newlinesAfterFrontMatter: 1,
                 tabSize: options.tabWidth,
-                insertSpaces: options.useTabs !== true
+                insertSpaces: options.useTabs !== true,
+                arrayWrap: getArrayWrapStyle(options)
             })
             .withAsyncPhpFormatter(formatPhp)
             .withPreFormatter((document) => {

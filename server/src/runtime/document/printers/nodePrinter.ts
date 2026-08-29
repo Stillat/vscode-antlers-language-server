@@ -9,6 +9,169 @@ import { NodeBuffer } from './nodeBuffer.js';
 
 export class NodePrinter {
 
+    /**
+     * Splits a variable name into its leading array brackets, its actual
+     * name, and its trailing array brackets.
+     *
+     * Array brackets are merged into neighboring variable names whenever they
+     * are not separated by whitespace, which makes ['one', two] produce the
+     * variable names "[" and "two]".
+     *
+     * Returns null when the name contains no brackets, or contains brackets
+     * in a position this printer does not manage.
+     */
+    private static splitArrayBrackets(name: string): ArrayBracketParts | null {
+        const leading = (/^\[+/.exec(name) ?? [''])[0],
+            trailing = (/\]+$/.exec(name) ?? [''])[0];
+
+        if (leading.length == 0 && trailing.length == 0) { return null; }
+
+        const value = name.substring(leading.length, name.length - trailing.length);
+
+        if (value.includes('[') || value.includes(']')) { return null; }
+
+        return {
+            openCount: leading.length,
+            value: value,
+            closeCount: trailing.length
+        };
+    }
+
+    /**
+     * Produces the wrapping decision for every array literal within the
+     * provided nodes, keyed by the node and bracket it belongs to.
+     *
+     * Brackets are numbered per node: the opening brackets of a name come
+     * first, followed by its closing brackets.
+     */
+    private static resolveArrayWrapping(lexerNodes: AbstractNode[], options: TransformOptions, doc: AntlersDocument): Map<string, ArrayWrapLayout> {
+        const decisions: Map<string, ArrayWrapLayout> = new Map(),
+            openBrackets: ArrayBracket[] = [];
+
+        for (let i = 0; i < lexerNodes.length; i++) {
+            const node = lexerNodes[i],
+                line = node.startPosition?.line ?? 0;
+
+            if (!(node instanceof VariableNode)) {
+                NodePrinter.markArrayItems(openBrackets, node, doc);
+                continue;
+            }
+
+            const parts = NodePrinter.splitArrayBrackets(node.name);
+
+            if (parts == null) {
+                NodePrinter.markArrayItems(openBrackets, node, doc);
+                continue;
+            }
+
+            for (let b = 0; b < parts.openCount; b++) {
+                NodePrinter.markArrayItems(openBrackets, node, doc);
+
+                const rootIndent = openBrackets.length > 0
+                    ? openBrackets[0].rootIndent
+                    : NodePrinter.sourceIndent(node, doc);
+
+                openBrackets.push({
+                    key: NodePrinter.bracketKey(i, b),
+                    line: line,
+                    hasItems: false,
+                    rootIndent: rootIndent,
+                    itemIndent: null,
+                    depth: openBrackets.length + 1
+                });
+            }
+
+            if (parts.value.length > 0) {
+                NodePrinter.markArrayItems(openBrackets, node, doc);
+            }
+
+            for (let b = 0; b < parts.closeCount; b++) {
+                const bracket = openBrackets.pop();
+
+                if (bracket == null) { continue; }
+
+                const wrap = bracket.hasItems && line > bracket.line,
+                    closeKey = NodePrinter.bracketKey(i, parts.openCount + b),
+                    parentBracket = openBrackets.length > 0
+                        ? openBrackets[openBrackets.length - 1]
+                        : null,
+                    closeIndent = parts.closeCount > 1
+                        ? parentBracket?.itemIndent ?? ''
+                        : NodePrinter.relativeIndent(NodePrinter.sourceIndent(node, doc, true), bracket.rootIndent);
+
+                const layout: ArrayWrapLayout = {
+                    wrap: wrap,
+                    itemIndent: bracket.itemIndent ?? ' '.repeat(options.tabSize * bracket.depth),
+                    closeIndent: closeIndent
+                };
+
+                decisions.set(bracket.key, layout);
+                decisions.set(closeKey, layout);
+            }
+        }
+
+        return decisions;
+    }
+
+    private static markArrayItems(openBrackets: ArrayBracket[], node: AbstractNode, doc: AntlersDocument) {
+        const line = node.startPosition?.line ?? 0,
+            sourceIndent = NodePrinter.sourceIndent(node, doc),
+            rootIndent = openBrackets[0]?.rootIndent ?? '',
+            relativeIndent = NodePrinter.relativeIndent(sourceIndent, rootIndent),
+            currentDepth = openBrackets.length;
+
+        openBrackets.forEach((bracket) => {
+            bracket.hasItems = true;
+
+            if (bracket.itemIndent == null && line > bracket.line) {
+                const targetLength = bracket.depth == currentDepth
+                    ? relativeIndent.length
+                    : Math.round(relativeIndent.length * (bracket.depth / currentDepth));
+
+                bracket.itemIndent = relativeIndent.substring(0, targetLength);
+            }
+        });
+    }
+
+    private static sourceIndent(node: AbstractNode, doc: AntlersDocument, useEndPosition = false): string {
+        const content = doc.getOriginalContent(),
+            index = Math.max(0, (useEndPosition ? node.endPosition?.index : node.startPosition?.index) ?? 0),
+            lineStart = content.lastIndexOf("\n", index - 1) + 1,
+            lineEndCandidate = content.indexOf("\n", index),
+            lineEnd = lineEndCandidate == -1 ? content.length : lineEndCandidate,
+            line = content.substring(lineStart, lineEnd);
+
+        return (/^[\t ]*/.exec(line) ?? [''])[0];
+    }
+
+    private static relativeIndent(indent: string, rootIndent: string): string {
+        let sharedLength = 0;
+
+        while (sharedLength < indent.length && sharedLength < rootIndent.length &&
+            indent[sharedLength] == rootIndent[sharedLength]) {
+            sharedLength += 1;
+        }
+
+        return indent.substring(sharedLength);
+    }
+
+    private static hasLineBreakAfter(node: AbstractNode, nextNode: AbstractNode, doc: AntlersDocument): boolean {
+        const endIndex = node.endPosition?.index,
+            nextIndex = nextNode.startPosition?.index;
+
+        if (endIndex == null || nextIndex == null) {
+            return (nextNode.startPosition?.line ?? 0) > (node.endPosition?.line ?? 0);
+        }
+
+        return doc.getOriginalContent()
+            .substring(endIndex + 1, Math.max(endIndex + 1, nextIndex + 1))
+            .includes("\n");
+    }
+
+    private static bracketKey(nodeIndex: number, bracketIndex: number): string {
+        return nodeIndex + ':' + bracketIndex;
+    }
+
     private static sourceContent(node: AbstractNode, doc: AntlersDocument): string {
         const startIndex = node.startPosition?.index,
             endIndex = node.endPosition?.index;
@@ -20,11 +183,30 @@ export class NodePrinter {
         return doc.getOriginalContent().substring(startIndex, endIndex + 1).trim();
     }
 
+    private static isAdjacentArrayAccessor(previous: VariableNode, current: VariableNode): boolean {
+        const previousEnd = previous.endPosition?.index,
+            currentStart = current.startPosition?.index;
+
+        if (previousEnd == null || currentStart == null || currentStart != previousEnd) {
+            return false;
+        }
+
+        return current.name.startsWith('[');
+    }
+
     static prettyPrintNode(antlersNode: AntlersNode, doc: AntlersDocument, indent: number, options: TransformOptions, prepend: string | null, seedIndent: number | null): string {
 
         const lexerNodes = antlersNode.getTrueRuntimeNodes();
+
+        // Tracks, per open array literal, whether that array is being
+        // printed across multiple lines. The innermost array is last.
+        const arrayWrapStack: ArrayPrintLayout[] = [],
+            arrayWrapDecisions = options.arrayWrap == 'collapse'
+                ? new Map<string, ArrayWrapLayout>()
+                : NodePrinter.resolveArrayWrapping(lexerNodes, options, doc);
         let nodeStatements = 0,
-            nodeOperators = 0;
+            nodeOperators = 0,
+            arrayLiteralDepth = 0;
 
         if (lexerNodes.length > 0) {
             const nodeBuffer = new NodeBuffer(antlersNode, indent, prepend);
@@ -67,9 +249,11 @@ export class NodePrinter {
                     }
                 } else {
                     if (!node.prev?.isVirtual && node.prev?.isVirtualGroupOperatorResolve && node.prev.producesVirtualStatementTerminator) {
-                        const followsVariableStatement = node.prev instanceof VariableNode &&
-                            node instanceof VariableNode && !node.convertedToOperator && node.name != 'as' &&
-                            !doc.getDocumentParser().getLanguageParser().isMergedVariableComponent(node);
+                         const followsVariableStatement = node.prev instanceof VariableNode &&
+                             node instanceof VariableNode && arrayLiteralDepth == 0 &&
+                             !node.convertedToOperator && node.name != 'as' &&
+                             !doc.getDocumentParser().getLanguageParser().isMergedVariableComponent(node) &&
+                             !NodePrinter.isAdjacentArrayAccessor(node.prev, node);
 
                         if ((!(node.prev instanceof VariableNode) || followsVariableStatement) &&
                             !(node.next instanceof InlineTernarySeparator) && !(node instanceof InlineTernarySeparator)) {
@@ -79,6 +263,72 @@ export class NodePrinter {
                 }
 
                 if (node instanceof VariableNode) {
+                    const rawArrayParts = NodePrinter.splitArrayBrackets(node.name),
+                        arrayDepthBefore = arrayLiteralDepth;
+
+                    if (rawArrayParts != null) {
+                        arrayLiteralDepth += rawArrayParts.openCount;
+                        arrayLiteralDepth = Math.max(0, arrayLiteralDepth - rawArrayParts.closeCount);
+                    }
+
+                    const nextNode = i + 1 < lexerNodes.length ? lexerNodes[i + 1] : null,
+                        closesStatementArray = rawArrayParts != null && rawArrayParts.closeCount > 0 &&
+                            (arrayDepthBefore + rawArrayParts.openCount) > 0 && arrayLiteralDepth == 0 &&
+                            nextNode instanceof VariableNode && !nextNode.convertedToOperator && !nextNode.isVirtual &&
+                            NodePrinter.hasLineBreakAfter(node, nextNode, doc);
+
+                    const isInterpolationRegion = antlersNode.interpolationRegions?.has(node.name) ?? false,
+                        arrayParts = options.arrayWrap == 'collapse' || isInterpolationRegion
+                            ? null
+                            : rawArrayParts;
+
+                    if (arrayParts != null) {
+                        for (let b = 0; b < arrayParts.openCount; b++) {
+                            const layout = arrayWrapDecisions.get(NodePrinter.bracketKey(i, b)) ?? {
+                                wrap: false,
+                                itemIndent: '',
+                                closeIndent: ''
+                            },
+                                outputRootIndent = arrayWrapStack.length > 0
+                                    ? arrayWrapStack[0].outputRootIndent
+                                    : nodeBuffer.getCurrentLineIndent(),
+                                printLayout: ArrayPrintLayout = {
+                                    wrap: layout.wrap,
+                                    itemIndent: outputRootIndent + layout.itemIndent,
+                                    closeIndent: outputRootIndent + layout.closeIndent,
+                                    outputRootIndent: outputRootIndent
+                                };
+
+                            arrayWrapStack.push(printLayout);
+                            nodeBuffer.append('[');
+
+                            if (printLayout.wrap) {
+                                nodeBuffer.newLine().append(printLayout.itemIndent);
+                            }
+                        }
+
+                        if (arrayParts.value.length > 0) {
+                            nodeBuffer.appendOS(arrayParts.value);
+                        }
+
+                        for (let b = 0; b < arrayParts.closeCount; b++) {
+                            const layout = arrayWrapStack.pop();
+
+                            if (layout?.wrap) {
+                                nodeBuffer.newLine().append(layout.closeIndent);
+                            }
+
+                            nodeBuffer.append(']');
+                        }
+
+                        if (closesStatementArray) {
+                            nodeBuffer.newlineIndent();
+                        }
+
+                        lastPrintedNode = node;
+                        continue;
+                    }
+
                     if (antlersNode.interpolationRegions && antlersNode.interpolationRegions.has(node.name)) {
                         const interpolatedRegion = antlersNode.interpolationRegions.get(node.name);
 
@@ -151,6 +401,10 @@ export class NodePrinter {
                             }
                             nodeBuffer.append(node.name.trim());
                         }
+                    }
+
+                    if (closesStatementArray) {
+                        insertNlAfter = true;
                     }
                 } else if (node instanceof TupleListStart) {
                     nodeBuffer.appendTS(' list');
@@ -261,7 +515,28 @@ export class NodePrinter {
                         nodeBuffer.append(',')
                             .newlineIndent();
                     } else {
-                        nodeBuffer.append(', ');
+                        const nextNode = i + 1 < lexerNodes.length ? lexerNodes[i + 1] : null,
+                            nextParts = nextNode instanceof VariableNode
+                                ? NodePrinter.splitArrayBrackets(nextNode.name)
+                                : null,
+                            isTrailingSeparator = arrayLiteralDepth > 0 && nextParts != null &&
+                                nextParts.value.length == 0 && nextParts.openCount == 0 && nextParts.closeCount > 0;
+
+                        if (isTrailingSeparator) {
+                            nodeBuffer.append(',');
+                            lastPrintedNode = node;
+                            continue;
+                        }
+
+                        if (arrayWrapStack.length > 0 && arrayWrapStack[arrayWrapStack.length - 1].wrap) {
+                            const layout = arrayWrapStack[arrayWrapStack.length - 1];
+
+                            nodeBuffer.append(',')
+                                .newLine()
+                                .append(layout.itemIndent);
+                        } else {
+                            nodeBuffer.append(', ');
+                        }
                     }
                 } else if (node instanceof NumberNode) {
                     lastPrintedNode = node;
@@ -410,4 +685,29 @@ export class NodePrinter {
 
         return antlersNode.getTrueRawContent();
     }
+}
+
+interface ArrayBracketParts {
+    openCount: number,
+    value: string,
+    closeCount: number
+}
+
+interface ArrayBracket {
+    key: string,
+    line: number,
+    hasItems: boolean,
+    rootIndent: string,
+    itemIndent: string | null,
+    depth: number
+}
+
+interface ArrayWrapLayout {
+    wrap: boolean,
+    itemIndent: string,
+    closeIndent: string
+}
+
+interface ArrayPrintLayout extends ArrayWrapLayout {
+    outputRootIndent: string
 }
