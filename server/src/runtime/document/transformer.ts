@@ -338,8 +338,10 @@ export class Transformer {
             try {
                 const formattedPhp = await this.asyncPhpFormatter(printNode.content);
 
-                return `${printNode.rawStart} ${formattedPhp} ${printNode.rawEnd}`;
-            } catch (err) { }
+                return this.printPhpNode(printNode, formattedPhp, targetIndent);
+            } catch (err) {
+                return `${printNode.rawStart}${printNode.sourceContent}${printNode.rawEnd}`;
+            }
         }
 
         let doc = this.doc;
@@ -392,8 +394,10 @@ export class Transformer {
             try {
                 const formattedPhp = this.phpFormatter(printNode.content);
 
-                return `${printNode.rawStart} ${formattedPhp} ${printNode.rawEnd}`;
-            } catch (err) { }
+                return this.printPhpNode(printNode, formattedPhp, targetIndent);
+            } catch (err) {
+                return `${printNode.rawStart}${printNode.sourceContent}${printNode.rawEnd}`;
+            }
         }
 
         let doc = this.doc;
@@ -433,6 +437,97 @@ export class Transformer {
         }
 
         return result;
+    }
+
+    private printPhpNode(node: AntlersNode, formattedPhp: string, targetIndent: number | null): string {
+        const normalizedPhp = formattedPhp.trim().replace(/\r\n?/g, '\n');
+
+        if (!normalizedPhp.includes('\n')) {
+            return `${node.rawStart} ${normalizedPhp} ${node.rawEnd}`;
+        }
+
+        const indentCount = Math.max(0, targetIndent ?? 0),
+            outerIndent = this.options.insertSpaces ? ' '.repeat(indentCount) : '\t'.repeat(indentCount),
+            indentUnit = this.options.insertSpaces ? ' '.repeat(this.options.tabSize) : '\t',
+            bodyIndent = outerIndent + indentUnit,
+            indentedPhp = this.indentPhpLines(normalizedPhp, bodyIndent);
+
+        return `${node.rawStart}\n${indentedPhp}\n${outerIndent}${node.rawEnd}`;
+    }
+
+    private indentPhpLines(php: string, indent: string): string {
+        let activeQuote: string | null = null,
+            heredocLabel: string | null = null,
+            insideBlockComment = false;
+
+        return php.split('\n').map((line) => {
+            const shouldIndent = activeQuote == null,
+                output = line.length == 0 ? '' : (shouldIndent ? indent : '') + line;
+
+            if (heredocLabel != null) {
+                const escapedLabel = heredocLabel.replace(/[.*+?^${}()|[\]\\]/g, '\\$&'),
+                    closingPattern = new RegExp(`^\\s*${escapedLabel}(?:[;,)]|$)`);
+
+                if (closingPattern.test(line)) {
+                    heredocLabel = null;
+                }
+
+                return output;
+            }
+
+            for (let i = 0; i < line.length; i++) {
+                const current = line[i],
+                    next = line[i + 1] ?? '';
+
+                if (activeQuote != null) {
+                    if (current == '\\') {
+                        i += 1;
+                        continue;
+                    }
+
+                    if (current == activeQuote) {
+                        activeQuote = null;
+                    }
+
+                    continue;
+                }
+
+                if (insideBlockComment) {
+                    if (current == '*' && next == '/') {
+                        insideBlockComment = false;
+                        i += 1;
+                    }
+
+                    continue;
+                }
+
+                if (current == '/' && next == '*') {
+                    insideBlockComment = true;
+                    i += 1;
+                    continue;
+                }
+
+                if ((current == '/' && next == '/') || (current == '#' && next != '[')) {
+                    break;
+                }
+
+                if (current == '\'' || current == '"' || current == '`') {
+                    activeQuote = current;
+                    continue;
+                }
+
+                if (current == '<' && line.substring(i).startsWith('<<<')) {
+                    const heredocMatch = /^<<<[ \t]*['"]?([A-Za-z_][A-Za-z0-9_]*)['"]?/.exec(line.substring(i));
+
+                    if (heredocMatch != null) {
+                        heredocLabel = heredocMatch[1];
+                        break;
+                    }
+                }
+            }
+
+            return output;
+        }).join('\n');
     }
 
 

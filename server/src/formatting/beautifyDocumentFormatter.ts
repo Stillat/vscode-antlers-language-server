@@ -3,6 +3,7 @@ import { AntlersFormattingOptions } from './antlersFormattingOptions.js';
 import { DocumentFormatter } from './documentFormatter.js';
 import { FrontMatterFormatter } from './frontMatterFormatter.js';
 import { getFormatOption, getTagsFormatOption } from './htmlCompat.js';
+import { formatPhp } from './phpFormatter.js';
 
 export class BeautifyDocumentFormatter extends DocumentFormatter {
     private options: AntlersFormattingOptions;
@@ -12,6 +13,11 @@ export class BeautifyDocumentFormatter extends DocumentFormatter {
 
         this.options = options;
         this.withHtmlFormatter(this.formatHtml)
+            .withAsyncHtmlFormatter(async (input) => this.formatHtml(input))
+            .withAsyncPhpFormatter((input) => formatPhp(input, {
+                tabWidth: options.tabSize,
+                useTabs: !options.insertSpaces
+            }))
             .withYamlFormatter(FrontMatterFormatter.formatFrontMatter)
             .withTransformOptions({
                 endNewline: getFormatOption(options.htmlOptions, "endWithNewline", false) as boolean,

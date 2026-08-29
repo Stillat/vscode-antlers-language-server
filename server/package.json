@@ -14,9 +14,11 @@
         "url": "https://github.com/Stillat/vscode-antlers-language-server"
     },
     "dependencies": {
+        "@prettier/plugin-php": "^0.22",
         "file-uri-to-path": "^2.0.0",
         "js-beautify": "^1.13.13",
         "js-yaml": "^4.1.0",
+        "prettier": "^3",
         "semver": "^5.7.1",
         "ts-debounce": "^3.0.0",
         "ts-md5": "^1.2.9",
@@ -27,13 +29,11 @@
     },
     "scripts": {},
     "devDependencies": {
-        "@prettier/plugin-php": "^0.22",
         "@types/js-beautify": "^1.14.3",
         "@types/js-yaml": "^4.0.5",
         "@types/prettier": "^2.6.3",
         "@types/semver": "^7.3.5",
         "@typescript-eslint/parser": "^4.29.3",
-        "prettier": "^3",
         "typescript": "^4.4.2"
     }
 }

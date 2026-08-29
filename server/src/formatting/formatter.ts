@@ -8,7 +8,7 @@ import { AntlersFormattingOptions } from './antlersFormattingOptions.js';
 import { BeautifyDocumentFormatter } from './beautifyDocumentFormatter.js';
 import { IHTMLFormatConfiguration } from "./htmlCompat.js";
 
-export function formatAntlersDocument(params: DocumentFormattingParams): TextEdit[] | null {
+export async function formatAntlersDocument(params: DocumentFormattingParams): Promise<TextEdit[] | null> {
     const settings = getAntlersSettings();
     const documentPath = decodeURIComponent(params.textDocument.uri);
     const options = htmlFormatterSettings.format as IHTMLFormatConfiguration;
@@ -36,7 +36,7 @@ export function formatAntlersDocument(params: DocumentFormattingParams): TextEdi
             };
 
         const formatter = new BeautifyDocumentFormatter(antlersFormatterOptions),
-            results = formatter.formatDocument(antlersDoc, getAntlersSettings());
+            results = await formatter.formatDocumentAsync(antlersDoc, getAntlersSettings());
 
         const replaceEndPosition = document.positionAt(docText.length);
 
