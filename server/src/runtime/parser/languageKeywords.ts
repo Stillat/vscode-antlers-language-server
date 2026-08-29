@@ -1,3 +1,5 @@
+import { StringUtilities } from '../utilities/stringUtilities.js';
+
 export class LanguageKeywords {
     static readonly LogicalAnd = 'and';
     static readonly LogicalNot = 'not';
@@ -12,6 +14,10 @@ export class LanguageKeywords {
 
     static isLanguageLogicalKeyword(value: string) {
         if (value == this.LogicalAnd || value == this.LogicalNot || value == this.LogicalOr || value == this.LogicalXor) {
+            return true;
+        }
+
+        if (StringUtilities.ctypePunct(value.substring(0, 1))) {
             return true;
         }
 

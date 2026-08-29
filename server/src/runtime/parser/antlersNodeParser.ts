@@ -47,12 +47,12 @@ export class AntlersNodeParser {
         this.activeNode = node;
         this.reset();
 
-        if (node.content.startsWith('*subrecursive')) {
+        if (node.content.trim().startsWith('*subrecursive')) {
             let nodeContent = node.content;
 
             nodeContent = nodeContent.trim();
             nodeContent = StringUtilities.trimRight(nodeContent, '*');
-            nodeContent = nodeContent.substr(13);
+            nodeContent = nodeContent.substr(13).trim();
 
             const recursiveNode = new RecursiveNode();
             node.copyBasicDetailsTo(recursiveNode);
@@ -180,7 +180,7 @@ export class AntlersNodeParser {
             node.resetContentCache();
         }
 
-        if (name.startsWith('[') == false) {
+        if (name.startsWith('[') == false && name.includes('(') == false) {
             node.pathReference = this.pathParser.parse(name);
         }
         node.mergeErrors(this.pathParser.getAntlersErrors());
@@ -595,18 +595,25 @@ export class AntlersNodeParser {
 
                 const parameterNode = new ParameterNode();
 
+                parameterNode.originalName = name;
+
                 if (name.startsWith(DocumentParser.Punctuation_Colon)) {
                     parameterNode.isVariableReference = true;
+                    name = name.substr(1);
+
+                    if (StringUtilities.isNumeric(content)) {
+                        parameterNode.isVariableReference = false;
+                    }
+                }
+
+                if (name.startsWith(DocumentParser.String_EscapeCharacter)) {
+                    parameterNode.containsEscapedContent = true;
                     name = name.substr(1);
                 }
 
                 parameterNode.nameDelimiter = nameDelimiter;
                 parameterNode.name = name;
                 parameterNode.value = content;
-
-                if (name.startsWith(DocumentParser.String_EscapeCharacter)) {
-                    parameterNode.containsEscapedContent = true;
-                }
 
                 if (parameterNode.nameDelimiter == null) {
                     parameterNode.hasValidValueDelimiter = false;

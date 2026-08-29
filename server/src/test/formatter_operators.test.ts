@@ -104,6 +104,14 @@ source }}`,
         assert.strictEqual(formatAntlers('{{ left   and     right }}'), '{{ left and right }}');
     });
 
+    test('it normalizes uppercase logical keywords and constants', () => {
+        const input = '{{ TrUe AND FALSE oR something }}';
+        const output = '{{ true and false\n or something }}';
+
+        assert.strictEqual(formatAntlers(input), output);
+        assert.strictEqual(formatAntlers(output), output);
+    });
+
     test('it emits symbolic and full', () => {
         assert.strictEqual(formatAntlers('{{ left   &&     right }}'), '{{ left && right }}');
     });

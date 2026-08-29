@@ -1,7 +1,7 @@
 import { AsyncHTMLFormatter, AsyncPHPFormatter, HTMLFormatter, PHPFormatter, YAMLFormatter } from '../../formatting/formatters.js';
 import { replaceAllInString } from '../../utils/strings.js';
 import { ConditionPairAnalyzer } from '../analyzers/conditionPairAnalyzer.js';
-import { AbstractNode, AntlersNode, ConditionNode, EscapedContentNode, ExecutionBranch, FragmentPosition, LiteralNode, StructuralFragment, VariableNode } from '../nodes/abstractNode.js';
+import { AbstractNode, AntlersNode, ConditionNode, EscapedContentNode, ExecutionBranch, FragmentPosition, ImplicitArrayBegin, LiteralNode, StructuralFragment, VariableNode } from '../nodes/abstractNode.js';
 import { StringUtilities } from '../utilities/stringUtilities.js';
 import { AntlersDocument } from './antlersDocument.js';
 import { AsyncInlineFormatter, InlineFormatter } from './inlineFormatter.js';
@@ -180,9 +180,13 @@ export class Transformer {
     }
 
     private hasArrayLiteral(node: AntlersNode): boolean {
+        const doc = node.childDocument?.document ?? this.doc,
+            languageParser = doc.getDocumentParser().getLanguageParser();
+
         return node.getTrueNode().getTrueRuntimeNodes().some((runtimeNode) =>
-            runtimeNode instanceof VariableNode &&
-            (runtimeNode.name.startsWith('[') || runtimeNode.name.endsWith(']'))
+            (runtimeNode instanceof ImplicitArrayBegin && !languageParser.isMergedVariableComponent(runtimeNode)) ||
+            (runtimeNode instanceof VariableNode &&
+                (runtimeNode.name.startsWith('[') || runtimeNode.name.endsWith(']')))
         );
     }
 
@@ -326,6 +330,10 @@ export class Transformer {
     private async printNodeAsync(node: AntlersNode, targetIndent: number | null = null, alignContinuation = false): Promise<string> {
         const printNode = node.getTrueNode();
 
+        if (printNode.sourceContent.includes('@{')) {
+            return `${printNode.rawStart}${printNode.sourceContent}${printNode.rawEnd}`;
+        }
+
         if ((printNode.rawStart == '{{?' || printNode.rawStart == '{{$') && this.asyncPhpFormatter != null) {
             try {
                 const formattedPhp = await this.asyncPhpFormatter(printNode.content);
@@ -375,6 +383,10 @@ export class Transformer {
 
     private printNode(node: AntlersNode, targetIndent: number | null = null, alignContinuation = false) {
         const printNode = node.getTrueNode();
+
+        if (printNode.sourceContent.includes('@{')) {
+            return `${printNode.rawStart}${printNode.sourceContent}${printNode.rawEnd}`;
+        }
 
         if ((printNode.rawStart == '{{?' || printNode.rawStart == '{{$') && this.phpFormatter != null) {
             try {

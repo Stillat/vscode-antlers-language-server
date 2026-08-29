@@ -927,6 +927,7 @@ export class ParameterNode extends AbstractNode {
     public isShorthand = false;
     public nameDelimiter:string|null = '"';
     public isVariableReference = false;
+    public originalName = "";
     public name = "";
     public value = "";
 
@@ -1110,7 +1111,7 @@ export class DirectionGroup extends AbstractNode {
 }
 
 export class InlineBranchSeparator extends AbstractNode {
-
+    public isTernaryBranchSeparator = false;
 }
 export class ModifierSeparator extends AbstractNode {
 
@@ -1183,6 +1184,8 @@ export class ConditionalFallbackGroup extends AbstractNode {
 export class ArrayNode extends AbstractNode {
     public nodes: (NameValueNode | ArrayNode)[] = [];
 }
+export class ImplicitArrayBegin extends AbstractNode { }
+export class ImplicitArrayEnd extends AbstractNode { }
 export class TernaryCondition extends AbstractNode {
     public head: AbstractNode | null = null;
     public truthBranch: AbstractNode | null = null;
@@ -1292,6 +1295,7 @@ export class StringValueNode extends AbstractNode {
 export class VariableNode extends AbstractNode {
     public name = '';
     public mergeRefName = '';
+    public methodDelimiter = '';
     public variableReference: VariableReference | null = null;
     public interpolationNodes: AbstractNode[] = [];
     public isInterpolationReference = false;

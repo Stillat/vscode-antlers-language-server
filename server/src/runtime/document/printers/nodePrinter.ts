@@ -1,6 +1,6 @@
 import { formatAntlers } from '../../../test/testUtils/formatAntlers.js';
 import { replaceAllInString } from '../../../utils/strings.js';
-import { AbstractNode, AdditionOperator, AntlersNode, ArgSeparator, DivisionOperator, InlineBranchSeparator, InlineTernarySeparator, LeftAssignmentOperator, LogicalAndOperator, LogicalNegationOperator, LogicalOrOperator, LogicGroupBegin, LogicGroupEnd, MethodInvocationNode, ModifierNameNode, ModifierSeparator, ModifierValueNode, ModifierValueSeparator, ModulusOperator, MultiplicationOperator, NumberNode, PathNode, ScopeAssignmentOperator, StatementSeparatorNode, StringValueNode, SubtractionOperator, TupleListStart, VariableNode } from '../../nodes/abstractNode.js';
+import { AbstractNode, AdditionOperator, AntlersNode, ArgSeparator, DivisionOperator, FalseConstant, ImplicitArrayBegin, ImplicitArrayEnd, InlineBranchSeparator, InlineTernarySeparator, LeftAssignmentOperator, LogicalAndOperator, LogicalNegationOperator, LogicalOrOperator, LogicGroupBegin, LogicGroupEnd, MethodInvocationNode, ModifierNameNode, ModifierSeparator, ModifierValueNode, ModifierValueSeparator, ModulusOperator, MultiplicationOperator, NullConstant, NumberNode, PathNode, ScopeAssignmentOperator, StatementSeparatorNode, StringValueNode, SubtractionOperator, TrueConstant, TupleListStart, VariableNode } from '../../nodes/abstractNode.js';
 import { LanguageParser } from '../../parser/languageParser.js';
 import { NodeHelpers } from '../../utilities/nodeHelpers.js';
 import { AntlersDocument } from '../antlersDocument.js';
@@ -44,9 +44,10 @@ export class NodePrinter {
      * Brackets are numbered per node: the opening brackets of a name come
      * first, followed by its closing brackets.
      */
-    private static resolveArrayWrapping(lexerNodes: AbstractNode[], options: TransformOptions): Map<string, ArrayWrapLayout> {
+    private static resolveArrayWrapping(lexerNodes: AbstractNode[], options: TransformOptions, doc: AntlersDocument): Map<string, ArrayWrapLayout> {
         const decisions: Map<string, ArrayWrapLayout> = new Map(),
             openBrackets: ArrayBracket[] = [],
+            languageParser = doc.getDocumentParser().getLanguageParser(),
             indentUnit = options.insertSpaces
                 ? ' '.repeat(options.tabSize)
                 : '\t';
@@ -54,6 +55,37 @@ export class NodePrinter {
         for (let i = 0; i < lexerNodes.length; i++) {
             const node = lexerNodes[i],
                 line = node.startPosition?.line ?? 0;
+
+            if (node instanceof ImplicitArrayBegin) {
+                if (languageParser.isMergedVariableComponent(node)) { continue; }
+
+                NodePrinter.markArrayItems(openBrackets);
+                openBrackets.push({
+                    key: NodePrinter.bracketKey(i, 0),
+                    line: line,
+                    hasItems: false,
+                    depth: openBrackets.length + 1
+                });
+                continue;
+            }
+
+            if (node instanceof ImplicitArrayEnd) {
+                if (languageParser.isMergedVariableComponent(node)) { continue; }
+
+                const bracket = openBrackets.pop();
+
+                if (bracket == null) { continue; }
+
+                const layout: ArrayWrapLayout = {
+                    wrap: bracket.hasItems && line > bracket.line,
+                    itemIndent: indentUnit.repeat(bracket.depth),
+                    closeIndent: indentUnit.repeat(Math.max(0, bracket.depth - 1))
+                };
+
+                decisions.set(bracket.key, layout);
+                decisions.set(NodePrinter.bracketKey(i, 0), layout);
+                continue;
+            }
 
             if (!(node instanceof VariableNode)) {
                 NodePrinter.markArrayItems(openBrackets);
@@ -119,7 +151,7 @@ export class NodePrinter {
         }
 
         return doc.getOriginalContent()
-            .substring(endIndex + 1, Math.max(endIndex + 1, nextIndex + 1))
+            .substring(Math.min(endIndex, nextIndex), Math.max(endIndex, nextIndex) + 1)
             .includes("\n");
     }
 
@@ -158,7 +190,7 @@ export class NodePrinter {
         const arrayWrapStack: ArrayPrintLayout[] = [],
             arrayWrapDecisions = options.arrayWrap == 'collapse'
                 ? new Map<string, ArrayWrapLayout>()
-                : NodePrinter.resolveArrayWrapping(lexerNodes, options);
+                : NodePrinter.resolveArrayWrapping(lexerNodes, options, doc);
         let nodeStatements = 0,
             nodeOperators = 0,
             arrayLiteralDepth = 0;
@@ -225,6 +257,14 @@ export class NodePrinter {
                                     if (node.next instanceof VariableNode && node.next.name == 'as') {
                                         insertNlAfter = false;
                                     }
+
+                                    if (node.next instanceof VariableNode && node.next.methodDelimiter.length > 0) {
+                                        insertNlAfter = false;
+                                    }
+
+                                    if (node.next instanceof MethodInvocationNode) {
+                                        insertNlAfter = false;
+                                    }
                                 }
                             }
 
@@ -249,6 +289,11 @@ export class NodePrinter {
                 }
 
                 if (node instanceof VariableNode) {
+                    if ((node.prev instanceof ImplicitArrayBegin || node.prev instanceof ImplicitArrayEnd) &&
+                        doc.getDocumentParser().getLanguageParser().isMergedVariableComponent(node)) {
+                        continue;
+                    }
+
                     const rawArrayParts = NodePrinter.splitArrayBrackets(node.name),
                         arrayDepthBefore = arrayLiteralDepth;
 
@@ -372,10 +417,25 @@ export class NodePrinter {
                     if (node.mergeRefName != null && node.mergeRefName.trim().length > 0 && node.mergeRefName != node.name) {
                         nodeBuffer.append(node.mergeRefName.trim());
                     } else {
+                        if (node.methodDelimiter.length > 0) {
+                            nodeBuffer.append(node.methodDelimiter + node.name.trim());
+                            lastPrintedNode = node;
+                            continue;
+                        }
+
                         if (node.name == 'as') {
                             nodeBuffer.appendOS('as');
                         } else {
                             if (node.methodTarget != null) {
+                                const previousNode = i > 0 ? lexerNodes[i - 1] : null,
+                                    nextNode = i + 1 < lexerNodes.length ? lexerNodes[i + 1] : null;
+
+                                if (previousNode instanceof MethodInvocationNode || nextNode instanceof MethodInvocationNode) {
+                                    nodeBuffer.append(node.name.trim());
+                                    lastPrintedNode = node;
+                                    continue;
+                                }
+
                                 if (node.variableReference != null) {
                                     node.variableReference.pathParts.forEach((part) => {
                                         if (part instanceof PathNode) {
@@ -386,7 +446,7 @@ export class NodePrinter {
                                 }
 
                                 nodeBuffer.append(node.methodTarget.method?.name ?? '');
-
+                                lastPrintedNode = node;
                                 continue;
                             }
                             nodeBuffer.append(node.name.trim());
@@ -419,6 +479,12 @@ export class NodePrinter {
                 } else if (node instanceof ModifierSeparator) {
                     nodeBuffer.appendS('|');
                 } else if (node instanceof InlineBranchSeparator) {
+                    if (node.isTernaryBranchSeparator) {
+                        nodeBuffer.appendS(':');
+                        lastPrintedNode = node;
+                        continue;
+                    }
+
                     if (lastPrintedNode != null) {
                         if (node.startPosition?.isBefore(lastPrintedNode.endPosition)) {
                             continue;
@@ -527,9 +593,11 @@ export class NodePrinter {
                                 ? NodePrinter.splitArrayBrackets(nextNode.name)
                                 : null,
                             isTrailingSeparator = arrayLiteralDepth > 0 && nextParts != null &&
-                                nextParts.value.length == 0 && nextParts.openCount == 0 && nextParts.closeCount > 0;
+                                nextParts.value.length == 0 && nextParts.openCount == 0 && nextParts.closeCount > 0,
+                            isImplicitTrailingSeparator = arrayLiteralDepth > 0 && nextNode instanceof ImplicitArrayEnd &&
+                                !doc.getDocumentParser().getLanguageParser().isMergedVariableComponent(nextNode);
 
-                        if (isTrailingSeparator) {
+                        if (isTrailingSeparator || isImplicitTrailingSeparator) {
                             nodeBuffer.append(',');
                             lastPrintedNode = node;
                             continue;
@@ -558,6 +626,65 @@ export class NodePrinter {
                     }
 
                     nodeBuffer.append(valueToPrint);
+                } else if (node instanceof TrueConstant || node instanceof FalseConstant || node instanceof NullConstant) {
+                    if (doc.getDocumentParser().getLanguageParser().isMergedVariableComponent(node)) {
+                        continue;
+                    }
+
+                    if (node.prev instanceof ImplicitArrayBegin || node.prev instanceof ArgSeparator) {
+                        nodeBuffer.append(node.content);
+                    } else {
+                        nodeBuffer.appendS(node.content);
+                    }
+                } else if (node instanceof ImplicitArrayBegin) {
+                    if (doc.getDocumentParser().getLanguageParser().isMergedVariableComponent(node)) {
+                        continue;
+                    }
+
+                    const layout = arrayWrapDecisions.get(NodePrinter.bracketKey(i, 0)) ?? {
+                            wrap: false,
+                            itemIndent: '',
+                            closeIndent: ''
+                        },
+                        outputRootIndent = arrayWrapStack.length > 0
+                            ? arrayWrapStack[0].outputRootIndent
+                            : nodeBuffer.getCurrentLineIndent(),
+                        printLayout: ArrayPrintLayout = {
+                            wrap: layout.wrap,
+                            itemIndent: outputRootIndent + layout.itemIndent,
+                            closeIndent: outputRootIndent + layout.closeIndent,
+                            outputRootIndent: outputRootIndent
+                        };
+
+                    arrayLiteralDepth += 1;
+                    arrayWrapStack.push(printLayout);
+                    nodeBuffer.append(node.content);
+
+                    if (printLayout.wrap) {
+                        nodeBuffer.newLine().append(printLayout.itemIndent);
+                    }
+                } else if (node instanceof ImplicitArrayEnd) {
+                    if (doc.getDocumentParser().getLanguageParser().isMergedVariableComponent(node)) {
+                        continue;
+                    }
+
+                    const depthBefore = arrayLiteralDepth,
+                        nextNode = i + 1 < lexerNodes.length ? lexerNodes[i + 1] : null,
+                        layout = arrayWrapStack.pop();
+
+                    arrayLiteralDepth = Math.max(0, arrayLiteralDepth - 1);
+
+                    if (layout?.wrap) {
+                        nodeBuffer.newLine().append(layout.closeIndent);
+                    }
+
+                    nodeBuffer.append(node.content);
+
+                    if (depthBefore > 0 && arrayLiteralDepth == 0 && nextNode instanceof VariableNode &&
+                        !nextNode.convertedToOperator && !nextNode.isVirtual &&
+                        NodePrinter.hasLineBreakAfter(node, nextNode, doc)) {
+                        nodeBuffer.newlineIndent();
+                    }
                 } else if (node instanceof LeftAssignmentOperator) {
                     nodeBuffer.appendS('=');
                 } else if (node instanceof ScopeAssignmentOperator) {
@@ -632,7 +759,7 @@ export class NodePrinter {
                         nodeBuffer.appendS(node.rawContent());
                     }
                 } else if (node instanceof MethodInvocationNode) {
-                    nodeBuffer.append('->');
+                    nodeBuffer.append(node.rawContent());
                 } else if (node instanceof LogicalAndOperator) {
                     if (lastPrintedNode != null && lastPrintedNode instanceof SubtractionOperator) {
                         const distance = NodeHelpers.distance(lastPrintedNode, node);
