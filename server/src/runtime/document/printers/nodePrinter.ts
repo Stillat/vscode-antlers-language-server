@@ -172,6 +172,28 @@ export class NodePrinter {
         return nodeIndex + ':' + bracketIndex;
     }
 
+    private static sourceContent(node: AbstractNode, doc: AntlersDocument): string {
+        const startIndex = node.startPosition?.index,
+            endIndex = node.endPosition?.index;
+
+        if (startIndex == null || endIndex == null) {
+            return '';
+        }
+
+        return doc.getOriginalContent().substring(startIndex, endIndex + 1).trim();
+    }
+
+    private static isAdjacentArrayAccessor(previous: VariableNode, current: VariableNode): boolean {
+        const previousEnd = previous.endPosition?.index,
+            currentStart = current.startPosition?.index;
+
+        if (previousEnd == null || currentStart == null || currentStart != previousEnd) {
+            return false;
+        }
+
+        return current.name.startsWith('[');
+    }
+
     static prettyPrintNode(antlersNode: AntlersNode, doc: AntlersDocument, indent: number, options: TransformOptions, prepend: string | null, seedIndent: number | null): string {
 
         const lexerNodes = antlersNode.getTrueRuntimeNodes();
@@ -227,10 +249,15 @@ export class NodePrinter {
                     }
                 } else {
                     if (!node.prev?.isVirtual && node.prev?.isVirtualGroupOperatorResolve && node.prev.producesVirtualStatementTerminator) {
-                        if (node.next != null) {
-                            if (!(node.prev instanceof VariableNode) && !(node.next instanceof InlineTernarySeparator) && !(node instanceof InlineTernarySeparator)) {
-                                nodeBuffer.newlineIndent();
-                            }
+                         const followsVariableStatement = node.prev instanceof VariableNode &&
+                             node instanceof VariableNode && arrayLiteralDepth == 0 &&
+                             !node.convertedToOperator && node.name != 'as' &&
+                             !doc.getDocumentParser().getLanguageParser().isMergedVariableComponent(node) &&
+                             !NodePrinter.isAdjacentArrayAccessor(node.prev, node);
+
+                        if ((!(node.prev instanceof VariableNode) || followsVariableStatement) &&
+                            !(node.next instanceof InlineTernarySeparator) && !(node instanceof InlineTernarySeparator)) {
+                            nodeBuffer.newlineNDIndent();
                         }
                     }
                 }
@@ -464,7 +491,11 @@ export class NodePrinter {
 
                     nodeBuffer.append(':');
                 } else if (node instanceof ModifierValueNode) {
-                    nodeBuffer.append(node.value.trim());
+                    const sourceContent = NodePrinter.sourceContent(node, doc),
+                        isQuoted = (sourceContent.startsWith("'") && sourceContent.endsWith("'")) ||
+                            (sourceContent.startsWith('"') && sourceContent.endsWith('"'));
+
+                    nodeBuffer.append(isQuoted ? sourceContent : node.value.trim());
                 } else if (node instanceof LogicGroupBegin) {
                     nodeBuffer.append('(');
                 } else if (node instanceof LogicGroupEnd) {

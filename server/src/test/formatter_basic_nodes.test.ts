@@ -9,6 +9,21 @@ function assertFormattedMatches(input: string, expected: string) {
 }
 
 suite("Document Formatting Test", () => {
+    test('multiline PHP formatting is idempotent', () => {
+        const template = `{{# Extract Youtube Video ID #}}
+{{?
+preg_match('/(?:youtube\\.com\\/.*v=|youtu\\.be\\/|youtube\\.com\\/embed\\/)([^&\\/\\?\\#]+)/', $video_link, $matches);
+$videoId = $matches[1] ?? null;
+?}}`;
+
+        let output = template;
+
+        for (let i = 0; i < 5; i++) {
+            output = formatAntlers(output);
+            assert.strictEqual(output, template);
+        }
+    });
+
     test('it doesnt remove variable parts with neighboring numeric nodes', () => {
         assert.strictEqual(formatAntlers('{{ assets:0 }}'), '{{ assets:0 }}');
         assert.strictEqual(formatAntlers('{{ assets:0:0 }}'), '{{ assets:0:0 }}');

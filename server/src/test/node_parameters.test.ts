@@ -60,6 +60,19 @@ suite("Node Parameters Test", () => {
         assertTrue(param1.isVariableReference);
     });
 
+    test("shorthand variable references are parsed", () => {
+        const nodes = parseNodes('{{ partial:file/to/partial limit="5" :$shorthandVariable offset="1" }}'),
+            node = toAntlers(nodes[0]);
+
+        assertCount(3, node.parameters);
+
+        const shorthand = node.parameters[1];
+
+        assertTrue(shorthand.isShorthand);
+        assertTrue(shorthand.isVariableReference);
+        assertParameterNameValue(shorthand, "shorthandVariable", "shorthandVariable");
+    });
+
     test("equals followed by space is not a parameter", () => {
         const nodes = parseNodes(
             "{{ is_current || is_parent ?= 'font-medium text-gray-800' }}"

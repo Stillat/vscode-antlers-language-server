@@ -98,6 +98,7 @@ export class Transformer {
 
         this.options = {
             tabSize: 4,
+            insertSpaces: true,
             newlinesAfterFrontMatter: 1,
             maxAntlersStatementsPerLine: 3,
             endNewline: true,
@@ -1046,7 +1047,7 @@ export class Transformer {
 
         for (const [slug, comment] of this.inlineComments) {
             const open = this.selfClosing(slug),
-                commentResult = await CommentPrinter.printCommentAsync(comment, this.options.tabSize, 0, this.asyncInlineFormatter);
+                commentResult = await CommentPrinter.printCommentAsync(comment, this.options.tabSize, '', this.options.insertSpaces, this.asyncInlineFormatter);
 
             value = value.replace(open, commentResult);
         }
@@ -1055,7 +1056,7 @@ export class Transformer {
             const structure = this.blockComments[i];
 
             const comment = structure.node as AntlersNode,
-                commentResult = await CommentPrinter.printCommentAsync(comment, this.options.tabSize, this.indentLevel(structure.pairOpen), this.asyncInlineFormatter);
+                commentResult = await CommentPrinter.printCommentAsync(comment, this.options.tabSize, this.indentWhitespace(structure.pairOpen), this.options.insertSpaces, this.asyncInlineFormatter);
 
             value = value.replace(structure.pairOpen, commentResult);
             this.removeLines.push(structure.pairClose);
@@ -1070,14 +1071,14 @@ export class Transformer {
 
         this.inlineComments.forEach((comment, slug) => {
             const open = this.selfClosing(slug),
-                commentResult = CommentPrinter.printComment(comment, this.options.tabSize, 0, this.inlineFormatter);
+                commentResult = CommentPrinter.printComment(comment, this.options.tabSize, '', this.options.insertSpaces, this.inlineFormatter);
 
             value = value.replace(open, commentResult);
         });
 
         this.blockComments.forEach((structure) => {
             const comment = structure.node as AntlersNode,
-                commentResult = CommentPrinter.printComment(comment, this.options.tabSize, this.indentLevel(structure.pairOpen), this.inlineFormatter);
+                commentResult = CommentPrinter.printComment(comment, this.options.tabSize, this.indentWhitespace(structure.pairOpen), this.options.insertSpaces, this.inlineFormatter);
 
             value = value.replace(structure.pairOpen, commentResult);
             this.removeLines.push(structure.pairClose);
@@ -1180,7 +1181,6 @@ export class Transformer {
 
         return '';
     }
-
     private indentLevel(value: string, includeIndex = false): number {
 
         for (let i = 0; i < this.structureLines.length; i++) {

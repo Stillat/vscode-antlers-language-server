@@ -145,4 +145,38 @@ suite('Formatter Prettier Comments', () => {
                 assert.strictEqual(res, expected);
             }
     });
+
+    test('tab-indented comments remain stable', async () => {
+        const input = [
+            '<div>',
+            '\t<div>',
+            '\t\t{{#',
+            '            @name Button',
+            '\t\t\t@param href Creates a link',
+            '                - nested detail',
+            '\t\t#}}',
+            '\t</div>',
+            '</div>'
+        ].join('\n');
+        const expected = [
+            '<div>',
+            '\t<div>',
+            '\t\t{{#',
+            '\t\t\t@name Button',
+            '\t\t\t@param href Creates a link',
+            '\t\t\t\t- nested detail',
+            '\t\t#}}',
+            '\t</div>',
+            '</div>'
+        ].join('\n');
+        const options = { useTabs: true, tabWidth: 4 };
+
+        let result = (await formatStringWithPrettier(input, options)).trimEnd();
+        assert.strictEqual(result, expected);
+
+        for (let i = 0; i < 5; i++) {
+            result = (await formatStringWithPrettier(result, options)).trimEnd();
+            assert.strictEqual(result, expected);
+        }
+    });
 });

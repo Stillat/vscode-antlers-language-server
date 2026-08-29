@@ -924,6 +924,7 @@ export class EscapedContentNode extends AntlersNode {
 export class ParameterNode extends AbstractNode {
     public modifier: IModifier | null = null;
     public isModifierParameter = false;
+    public isShorthand = false;
     public nameDelimiter:string|null = '"';
     public isVariableReference = false;
     public name = "";

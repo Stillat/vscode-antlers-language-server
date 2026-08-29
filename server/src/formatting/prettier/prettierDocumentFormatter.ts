@@ -30,6 +30,7 @@ export class PrettierDocumentFormatter extends DocumentFormatter {
                 maxAntlersStatementsPerLine: 3,
                 newlinesAfterFrontMatter: 1,
                 tabSize: options.tabWidth,
+                insertSpaces: options.useTabs !== true,
                 arrayWrap: getArrayWrapStyle(options)
             })
             .withAsyncPhpFormatter(formatPhp)
