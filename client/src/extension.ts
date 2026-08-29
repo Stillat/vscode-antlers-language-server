@@ -6,7 +6,7 @@ import {
     languages, SemanticTokensLegend,
     DocumentSemanticTokensProvider, DocumentRangeSemanticTokensProvider, SemanticTokens
 } from 'vscode';
-import { RequestType, TextDocumentIdentifier, RequestType0, Range as LspRange, DidOpenTextDocumentNotification } from 'vscode-languageclient';
+import { RequestType, TextDocumentIdentifier, RequestType0, Range as LspRange, DidOpenTextDocumentNotification, NotificationType } from 'vscode-languageclient';
 import { debounce } from 'ts-debounce';
 import { activateAntlersDebug } from './debug/activateAntlersDebug';
 import { TimingsLensProvider } from './debug/timingsLensProvider';
@@ -83,8 +83,8 @@ interface ProjectDetailsParams {
     content: IProjectFields;
 }
 
-namespace ProjectUpdatedRequest {
-    export const type: RequestType<ProjectDetailsParams, null, any> = new RequestType('antlers/projectDetailsAvailable');
+namespace ProjectUpdatedNotification {
+    export const type = new NotificationType<ProjectDetailsParams>('antlers/projectDetailsAvailable');
 }
 
 namespace SemanticTokenRequest {
@@ -245,7 +245,7 @@ export function activate(context: ExtensionContext) {
 
         isClientReady = true;
 
-        client.onRequest(ProjectUpdatedRequest.type, (f) => {
+        client.onNotification(ProjectUpdatedNotification.type, (f) => {
             if (projectExplorer != null) {
                 projectExplorer.updateStructure(f.content);
             }
