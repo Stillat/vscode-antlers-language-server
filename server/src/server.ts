@@ -64,10 +64,7 @@ import ExtractPartialHandler from './refactoring/core/extractPartialHandler.js';
 import { BeautifyDocumentFormatter } from './formatting/beautifyDocumentFormatter.js';
 import { AntlersSettings } from './antlersSettings.js';
 import { debounce } from 'ts-debounce';
-import { DocumentationHandler } from './documentation/generator/handler.js';
 import { IProjectFields } from './projects/structuredFieldTypes/types.js';
-import { IDocumentationResult } from './documentation/generator/types.js';
-import { updateCurrentDetails } from './documentation/generator/documentationProvider.js';
 import { notifyProjectDetails } from './protocol/projectDetailsNotification.js';
 
 const defaultSettings: AntlersSettings = {
@@ -128,19 +125,6 @@ interface DocumentTransformResult {
     shouldParse: boolean,
     transformedText: string,
     replacements: TransformReplacement[]
-}
-
-export interface GenerateHelpParams {
-    context: any
-}
-
-export interface GenerateHelpResult {
-    result: IDocumentationResult,
-    didGenerate: boolean
-}
-
-namespace GenerateHelpRequest {
-    export const type: RequestType<GenerateHelpParams, GenerateHelpResult, any> = new RequestType('antlers/generateHelp');
 }
 
 namespace LockEditsRequest {
@@ -385,13 +369,6 @@ connection.onRequest(ForcedFormatRequest.type, (params) => {
     return formatter.formatDocument(AntlersDocument.fromText(params.content), getAntlersSettings());
 });
 
-connection.onRequest(GenerateHelpRequest.type, (params) => {
-    return {
-        didGenerate: true,
-        result: DocumentationHandler.handle(params)
-    } as GenerateHelpResult;
-});
-
 connection.onRequest(DocumentTransformRequest.type, (params) => {
     const transformer = new DocumentTransformer();
     transformer.load(params.content);
@@ -489,7 +466,6 @@ export function requestEdits(edit: WorkspaceEdit) {
 
 export function sendProjectDetails(contents: IProjectFields) {
     ProjectManager.instance?.setStructuredProject(contents);
-    updateCurrentDetails(contents);
     notifyProjectDetails(connection, contents);
 }
 

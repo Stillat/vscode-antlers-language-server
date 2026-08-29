@@ -198,17 +198,7 @@ class ProjectDataProvider implements vscode.TreeDataProvider<ProjectItem> {
 
                 return getFieldListingItems(fields);
             } else if (element.type == ItemType.Field) {
-                const tempItems: ProjectItem[] = [],
-                    helpItem = new ProjectItem('Help', '', ItemType.HelpItem, vscode.TreeItemCollapsibleState.None);
-
-                helpItem.command = {
-                    command: 'extension.antlersLanguageServer.generateHelpInformation',
-                    title: '',
-                    arguments: [element.context]
-                };
-
-                helpItem.setContext(element.context);
-                tempItems.push(helpItem);
+                const tempItems: ProjectItem[] = [];
 
                 if (typeof element.context['sets'] !== 'undefined') {
                     const tempSets = element.context['sets'] as any[];
@@ -279,7 +269,6 @@ enum ItemType {
     Collection,
     FieldsListing,
     Field,
-    HelpItem,
     PropertyListing,
     SetEntry,
     NestedSetsListing,
@@ -295,7 +284,7 @@ class ProjectItem extends vscode.TreeItem {
     setContext(context: any) {
         this.context = context;
 
-        if (this.type == ItemType.FieldsListing || this.type == ItemType.HelpItem || this.type == ItemType.PropertyListing) {
+        if (this.type == ItemType.FieldsListing || this.type == ItemType.PropertyListing) {
             return;
         }
 

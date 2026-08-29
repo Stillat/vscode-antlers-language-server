@@ -1,6 +1,11 @@
-import { IArrayFieldType, IDateFieldType, IFieldDetails, IIntegerFieldType, ISlugFieldType, IToggleFieldType } from '../../projects/structuredFieldTypes/types.js';
-import { ITextField } from './fieldTypeProviders/generalTextDocumentationProvider.js';
-import { IInjectedField } from './types.js';
+import { IArrayFieldType, IDateFieldType, IFieldDetails, IIntegerFieldType, ISlugFieldType, IToggleFieldType } from './types.js';
+
+export interface IInjectedField {
+    name: string;
+    type: string;
+    field: IFieldDetails;
+    description: string;
+}
 
 export class Faker {
     static getInternalIcon(type: string): string {
@@ -79,7 +84,7 @@ export class Faker {
         };
     }
 
-    static textField(handle: string, instructionText: string): ITextField {
+    static textField(handle: string, instructionText: string): IFieldDetails {
         return {
             ...this.baseField(handle, 'text', instructionText)
         }

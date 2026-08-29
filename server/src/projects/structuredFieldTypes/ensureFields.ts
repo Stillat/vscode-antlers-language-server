@@ -1,4 +1,4 @@
-import { Faker } from '../../documentation/generator/faker.js';
+import { Faker } from './faker.js';
 import { IFieldDetails, IParsedBlueprint } from './types.js';
 
 export class EnsureFields {
