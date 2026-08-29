@@ -44,6 +44,7 @@
                 "path": "./syntaxes/antlers.json",
                 "embeddedLanguages": {
                     "meta.embedded.block.frontmatter": "yaml",
+                    "meta.embedded.inline.alpinejs": "javascript",
                     "source.php": "php",
                     "source.js": "js"
                 }

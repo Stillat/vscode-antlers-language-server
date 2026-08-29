@@ -79,6 +79,7 @@ const defaultSettings: AntlersSettings = {
     },
     trace: { server: 'off' },
     formatterIgnoreExtensions: ['xml'],
+    formatterArrayWrap: 'preserve',
     languageVersion: 'runtime'
 };
 
@@ -380,7 +381,8 @@ connection.onRequest(ForcedFormatRequest.type, (params) => {
         insertSpaces: params.insertSpaces,
         formatExtensions: [],
         maxStatementsPerLine: 3,
-        htmlOptions: options
+        htmlOptions: options,
+        arrayWrap: settings.formatterArrayWrap
     });
 
     return formatter.formatDocument(AntlersDocument.fromText(params.content), getAntlersSettings());

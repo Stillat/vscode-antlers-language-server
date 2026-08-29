@@ -47,12 +47,12 @@ export class AntlersNodeParser {
         this.activeNode = node;
         this.reset();
 
-        if (node.content.startsWith('*subrecursive')) {
+        if (node.content.trim().startsWith('*subrecursive')) {
             let nodeContent = node.content;
 
             nodeContent = nodeContent.trim();
             nodeContent = StringUtilities.trimRight(nodeContent, '*');
-            nodeContent = nodeContent.substr(13);
+            nodeContent = nodeContent.substr(13).trim();
 
             const recursiveNode = new RecursiveNode();
             node.copyBasicDetailsTo(recursiveNode);
@@ -180,7 +180,7 @@ export class AntlersNodeParser {
             node.resetContentCache();
         }
 
-        if (name.startsWith('[') == false) {
+        if (name.startsWith('[') == false && name.includes('(') == false) {
             node.pathReference = this.pathParser.parse(name);
         }
         node.mergeErrors(this.pathParser.getAntlersErrors());
@@ -401,6 +401,58 @@ export class AntlersNodeParser {
                 ignorePrevious = false;
             }
 
+            if (hasFoundName == false && i >= parseContentOffset &&
+                current == DocumentParser.Punctuation_Colon && next == '$' &&
+                (prev == null || StringUtilities.ctypeSpace(prev))) {
+                let shorthandEnd = i + 2;
+
+                while (shorthandEnd < charCount &&
+                    !StringUtilities.ctypeSpace(chars[shorthandEnd]) && chars[shorthandEnd] != '/') {
+                    shorthandEnd += 1;
+                }
+
+                const shorthandName = chars.slice(i + 2, shorthandEnd).join('');
+
+                if (shorthandName.length > 0) {
+                    const parameterNode = new ParameterNode(),
+                        valueStart = i + 2,
+                        valueEnd = shorthandEnd - 1;
+
+                    parameterNode.isShorthand = true;
+                    parameterNode.isVariableReference = true;
+                    parameterNode.hasValidValueDelimiter = false;
+                    parameterNode.nameDelimiter = null;
+                    parameterNode.name = shorthandName;
+                    parameterNode.value = shorthandName;
+                    parameterNode.parent = node;
+                    parameterNode.startPosition = node.relativePositionFromOffset(i + 1, i + 1) ?? null;
+                    parameterNode.endPosition = node.relativePositionFromOffset(shorthandEnd + 1, shorthandEnd + 1) ?? null;
+                    parameterNode.blockPosition = {
+                        start: node.relativeOffset(i, i) ?? null,
+                        end: node.relativeOffset(valueEnd, valueEnd) ?? null
+                    };
+                    parameterNode.namePosition = {
+                        start: node.relativeOffset(valueStart, valueStart) ?? null,
+                        end: node.relativeOffset(valueEnd, valueEnd) ?? null
+                    };
+                    parameterNode.valuePosition = {
+                        start: node.relativeOffset(valueStart, valueStart) ?? null,
+                        end: node.relativeOffset(valueEnd, valueEnd) ?? null
+                    };
+
+                    parameters.push(parameterNode);
+                    i = shorthandEnd - 1;
+                    currentChars = [];
+                    blockStartAt = -1;
+                    blockEndAt = -1;
+                    nameBlockStartAt = -1;
+                    nameBlockEndAt = -1;
+                    valueBlockStartAt = -1;
+                    valueBlockEndAt = -1;
+                    continue;
+                }
+            }
+
             if (hasFoundName == false && StringUtilities.ctypeSpace(current)) {
                 // Flush the buffer.
                 currentChars = [];
@@ -543,18 +595,25 @@ export class AntlersNodeParser {
 
                 const parameterNode = new ParameterNode();
 
+                parameterNode.originalName = name;
+
                 if (name.startsWith(DocumentParser.Punctuation_Colon)) {
                     parameterNode.isVariableReference = true;
+                    name = name.substr(1);
+
+                    if (StringUtilities.isNumeric(content)) {
+                        parameterNode.isVariableReference = false;
+                    }
+                }
+
+                if (name.startsWith(DocumentParser.String_EscapeCharacter)) {
+                    parameterNode.containsEscapedContent = true;
                     name = name.substr(1);
                 }
 
                 parameterNode.nameDelimiter = nameDelimiter;
                 parameterNode.name = name;
                 parameterNode.value = content;
-
-                if (name.startsWith(DocumentParser.String_EscapeCharacter)) {
-                    parameterNode.containsEscapedContent = true;
-                }
 
                 if (parameterNode.nameDelimiter == null) {
                     parameterNode.hasValidValueDelimiter = false;

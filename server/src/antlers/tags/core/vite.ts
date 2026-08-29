@@ -4,15 +4,17 @@ import { ISuggestionRequest } from '../../../suggestions/suggestionRequest.js';
 import { EmptyCompletionResult, IAntlersTag, exclusiveResult } from '../../tagManager.js';
 import { tagToCompletionItem } from '../../documentedLabel.js';
 import ViteAsset from './vite/viteAsset.js';
+import { ViteContentTag } from './additionalTagMethods.js';
 
 const ViteTagCompletionItems: CompletionItem[] = [
-    tagToCompletionItem(ViteAsset)
+    tagToCompletionItem(ViteAsset),
+    tagToCompletionItem(ViteContentTag)
 ];
 
 const Vite: IAntlersTag = {
     tagName: 'vite',
     hideFromCompletions: false,
-    requiresClose: true,
+    requiresClose: false,
     injectParentScope: false,
     allowsContentClose: false,
     allowsArbitraryParameters: false,

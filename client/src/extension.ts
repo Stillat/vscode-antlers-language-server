@@ -16,6 +16,7 @@ import HelpPanel from './help/helpPanel';
 import { ProjectExplorer } from './project/projectExplorer';
 import { IProjectFields } from './project/types';
 import { IDocumentationResult } from './help/documentationTypes';
+import { resolveHtmlBlockComment } from './utils/commentConfiguration';
 
 interface SemanticTokenParams {
     textDocument: TextDocumentIdentifier;
@@ -98,6 +99,7 @@ let client: LanguageClient;
 let projectWatcher: FileSystemWatcher | null = null;
 let projectExplorer:ProjectExplorer;
 let isClientReady = false;
+let htmlCommentConfiguration: vscode.Disposable | undefined;
 
 function askForProjectUpdate() {
     if (isClientReady) {
@@ -108,8 +110,6 @@ function askForProjectUpdate() {
 const debounceAskForProjectUpdate = debounce(askForProjectUpdate, 350);
 
 export function activate(context: ExtensionContext) {
-    const antlersOverrideHtmlComments = workspace.getConfiguration().get('antlersOverrideHtmlComments');
-
     // The server is implemented in node
     const serverModule = context.asAbsolutePath(
         path.join('server', 'out', 'server.js')
@@ -150,85 +150,42 @@ export function activate(context: ExtensionContext) {
         }
     };
 
-    let adjustCommentStylesDynamically = true;
-    const activeEditor = vscode.window.activeTextEditor;
+    const applyHtmlCommentConfiguration = (editor: vscode.TextEditor | undefined) => {
+        htmlCommentConfiguration?.dispose();
+        htmlCommentConfiguration = undefined;
 
-    // Handle the case of initial open.
-    if (activeEditor != null) {
-        if (! adjustCommentStylesDynamically) {
-            return;
-        }
-        if (typeof activeEditor.document === 'undefined' || activeEditor.document == null) {
-            return;
-        }
-        if (typeof activeEditor.document.fileName === 'undefined' || activeEditor.document.fileName == null) {
-            return;
-        }
-        const fileName = activeEditor.document.fileName;
-        if (fileName.toLowerCase().endsWith('.antlers.html') || fileName.toLowerCase().endsWith('.antlers.xml')) {
-            vscode.languages.setLanguageConfiguration('html', {
-                comments: {
-                    blockComment: ['{{#', '#}}']
-                }
-            });
-        } else {
-            vscode.languages.setLanguageConfiguration('html', {
-                comments: {
-                    blockComment: ['<!--', '-->']
-                }
-            });
-        }
-    }
+        const overrideHtmlComments = workspace
+            .getConfiguration(undefined, editor?.document?.uri)
+            .get('antlersOverrideHtmlComments') === true;
+        const blockComment = resolveHtmlBlockComment(editor?.document?.fileName, overrideHtmlComments);
 
-    vscode.window.onDidChangeActiveTextEditor((e) => {
-        if (! adjustCommentStylesDynamically) {
+        if (blockComment == null) {
             return;
         }
-        if (typeof e === 'undefined' || !e) {
-            return;
-        }
-        if (typeof e.document === 'undefined' || e.document == null) {
-            return;
-        }
-        if (typeof e.document.fileName === 'undefined' || e.document.fileName == null) {
-            return;
-        }
-        const fileName = e.document.fileName;
-        if (fileName.toLowerCase().endsWith('.antlers.html') || fileName.toLowerCase().endsWith('.antlers.xml')) {
-            vscode.languages.setLanguageConfiguration('html', {
-                comments: {
-                    blockComment: ['{{#', '#}}']
-                }
-            });
-        } else {
-            vscode.languages.setLanguageConfiguration('html', {
-                comments: {
-                    blockComment: ['<!--', '-->']
-                }
-            });
-        }
-    });
-   
-    workspace.onDidChangeConfiguration((e) => {
+
+        htmlCommentConfiguration = vscode.languages.setLanguageConfiguration('html', {
+            comments: { blockComment }
+        });
+    };
+
+    applyHtmlCommentConfiguration(vscode.window.activeTextEditor);
+
+    context.subscriptions.push(vscode.window.onDidChangeActiveTextEditor((editor) => {
+        applyHtmlCommentConfiguration(editor);
+    }));
+
+    context.subscriptions.push(workspace.onDidChangeConfiguration((e) => {
         if (e.affectsConfiguration('antlersOverrideHtmlComments')) {
-            const newHtmlCommentSetting = workspace.getConfiguration().get('antlersOverrideHtmlComments');
+            applyHtmlCommentConfiguration(vscode.window.activeTextEditor);
+        }
+    }));
 
-            if (typeof newHtmlCommentSetting !== 'undefined' && newHtmlCommentSetting === true) {
-                adjustCommentStylesDynamically = true;
-            } else {
-                adjustCommentStylesDynamically = false;
-                vscode.languages.setLanguageConfiguration('html', {
-                    comments: {
-                        blockComment: ['<!--', '-->']
-                    }
-                });
-            }
+    context.subscriptions.push({
+        dispose: () => {
+            htmlCommentConfiguration?.dispose();
+            htmlCommentConfiguration = undefined;
         }
     });
-
-    if (typeof antlersOverrideHtmlComments !== 'undefined' && antlersOverrideHtmlComments === true) {
-        adjustCommentStylesDynamically = true;
-    }
 
     context.subscriptions.push(
         vscode.commands.registerCommand('extension.antlersLanguageServer.generateHelpInformation', (obj) => {
@@ -324,15 +281,12 @@ export function activate(context: ExtensionContext) {
 }
 
 export function deactivate(): Thenable<void> | undefined {
+    htmlCommentConfiguration?.dispose();
+    htmlCommentConfiguration = undefined;
+
     if (!client) {
         return undefined;
     }
-
-    vscode.languages.setLanguageConfiguration('html', {
-        comments: {
-            blockComment: ['<!--', '-->']
-        }
-    });
 
     projectWatcher?.dispose();
 

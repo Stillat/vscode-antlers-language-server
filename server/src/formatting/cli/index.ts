@@ -72,7 +72,8 @@ const defaultSettings: AntlersFormattingOptions = {
     insertSpaces: true,
     maxStatementsPerLine: 3,
     tabSize: 4,
-    formatExtensions: ['.antlers.html']
+    formatExtensions: ['.antlers.html'],
+    arrayWrap: 'preserve'
 };
 
 function resolveSettings(path: string): AntlersFormattingOptions | null {

@@ -61,6 +61,20 @@ echo 'ready';
         assert.strictEqual(await formatStringWithPrettier(input, { singleQuote: true }), expected);
     });
 
+    test('multiline PHP formatting is idempotent', async () => {
+        const template = `{{# Extract Youtube Video ID #}}
+{{?
+preg_match('/(?:youtube\\.com\\/.*v=|youtu\\.be\\/|youtube\\.com\\/embed\\/)([^&\\/\\?\\#]+)/', $video_link, $matches);
+$videoId = $matches[1] ?? null;
+?}}`;
+
+        const once = await formatStringWithPrettier(template),
+            twice = await formatStringWithPrettier(once);
+
+        assert.strictEqual(twice, once);
+        assert.ok(once.endsWith('?}}\n'));
+    });
+
     test('it can format PHP nodes', async () => {
         assert.strictEqual(
             (await formatStringWithPrettier(`

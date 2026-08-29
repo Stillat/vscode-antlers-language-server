@@ -14,10 +14,13 @@ import { makeGlideVariables } from "../../variables/glideVariables.js";
 import GlideBatch from './glideBatch.js';
 import GlideDataUrl from './glideDataUrl.js';
 import { GlideParameters, resolveGlideParameterCompletions } from './glideParameters.js';
+import { GlideDataUriTag, GlideGenerateTag } from './additionalTagMethods.js';
 
 const GlideCompletionItems: CompletionItem[] = [
     tagToCompletionItem(GlideBatch),
-    tagToCompletionItem(GlideDataUrl)
+    tagToCompletionItem(GlideDataUrl),
+    tagToCompletionItem(GlideDataUriTag),
+    tagToCompletionItem(GlideGenerateTag)
 ];
 
 const Glide: IAntlersTag = {

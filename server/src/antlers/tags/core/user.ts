@@ -17,10 +17,12 @@ import {
 import UserCan from './userCan.js';
 import UserCant from './userCant.js';
 import { UserForgotPasswordForm } from './userForgotPasswordForm.js';
+import UserIn from './userIn.js';
 import UserIs from './userIs.js';
 import UserIsnt from './userIsnt.js';
 import UserLogout from './userLogout.js';
 import UserLogoutUrl from './userLogoutUrl.js';
+import { UserLoginForm } from './userLoginForm.js';
 import UserNotIn from './userNotIn.js';
 import UserPasswordForm from './userPasswordForm.js';
 import { UserPasswordReset } from './userPasswordReset.js';
@@ -28,12 +30,15 @@ import UserProfile from './userProfile.js';
 import UserProfileForm from './userProfileForm.js';
 import { UserProfileParameters } from './userProfileParameters.js';
 import { UserRegister } from './userRegister.js';
+import { userSecurityTags } from './userSecurityTags.js';
 
 const UserTagCompletionItems: CompletionItem[] = [
     tagToCompletionItem(UserIs),
+    tagToCompletionItem(UserIn),
     tagToCompletionItem(UserNotIn),
     tagToCompletionItem(UserIsnt),
     tagToCompletionItem(UserProfile),
+    tagToCompletionItem(UserLoginForm),
     tagToCompletionItem(UserCan),
     tagToCompletionItem(UserCant),
     tagToCompletionItem(UserForgotPasswordForm),
@@ -43,6 +48,7 @@ const UserTagCompletionItems: CompletionItem[] = [
     tagToCompletionItem(UserPasswordReset),
     tagToCompletionItem(UserProfileForm),
     tagToCompletionItem(UserPasswordForm),
+    ...userSecurityTags.map(tagToCompletionItem),
 ];
 
 const User: IAntlersTag = {

@@ -6,6 +6,7 @@ import {
     assertNotNull,
 } from "./testUtils/assertions.js";
 import { getParsedRuntimeNodes } from "./testUtils/parserUtils.js";
+import { DocumentParser } from '../runtime/parser/documentParser.js';
 
 suite("Node Modifiers Test", () => {
     test("it parses node modifiers", () => {
@@ -115,6 +116,13 @@ suite("Node Modifiers Test", () => {
         const modifierValue = modifierOne.valueNodes[0] as ModifierValueNode;
 
         assert.strictEqual(modifierValue.value, 'hello "\\ world');
+    });
+
+    test("shorthand modifiers stop before symbolic operators", () => {
+        const parser = new DocumentParser();
+        parser.parse('{{ url | contains:/about/news && uri !== \'/about/news\' }}');
+
+        assert.deepStrictEqual(parser.getAntlersErrors(), []);
     });
 });
 

@@ -1,7 +1,7 @@
 import { AntlersError } from '../errors/antlersError.js';
 import { AntlersErrorCodes } from '../errors/antlersErrorCodes.js';
 import { TypeLabeler } from '../errors/typeLabeler.js';
-import { AbstractNode, AdditionAssignmentOperator, AdditionOperator, AntlersNode, ArgSeparator, ConditionalVariableFallbackOperator, DivisionAssignmentOperator, DivisionOperator, EqualCompOperator, ExponentiationOperator, FalseConstant, GreaterThanCompOperator, InlineBranchSeparator, InlineTernarySeparator, LeftAssignmentOperator, LessThanCompOperator, LessThanEqualCompOperator, LogicalAndOperator, LogicalNegationOperator, LogicalOrOperator, LogicalXorOperator, LogicGroupBegin, LogicGroupEnd, MethodInvocationNode, ModifierNameNode, ModifierSeparator, ModifierValueNode, ModifierValueSeparator, ModulusAssignmentOperator, ModulusOperator, MultiplicationAssignmentOperator, MultiplicationOperator, NotEqualCompOperator, NotStrictEqualCompOperator, NullCoalesceOperator, NullConstant, NumberNode, ScopeAssignmentOperator, SpaceshipCompOperator, StatementSeparatorNode, StrictEqualCompOperator, StringConcatenationOperator, StringValueNode, SubtractionAssignmentOperator, SubtractionOperator, TrueConstant, TupleListStart, VariableNode } from '../nodes/abstractNode.js';
+import { AbstractNode, AdditionAssignmentOperator, AdditionOperator, AntlersNode, ArgSeparator, ConditionalVariableFallbackOperator, DivisionAssignmentOperator, DivisionOperator, EqualCompOperator, ExponentiationOperator, FalseConstant, GreaterThanCompOperator, ImplicitArrayBegin, ImplicitArrayEnd, InlineBranchSeparator, InlineTernarySeparator, LeftAssignmentOperator, LessThanCompOperator, LessThanEqualCompOperator, LogicalAndOperator, LogicalNegationOperator, LogicalOrOperator, LogicalXorOperator, LogicGroupBegin, LogicGroupEnd, MethodInvocationNode, ModifierNameNode, ModifierSeparator, ModifierValueNode, ModifierValueSeparator, ModulusAssignmentOperator, ModulusOperator, MultiplicationAssignmentOperator, MultiplicationOperator, NotEqualCompOperator, NotStrictEqualCompOperator, NullCoalesceOperator, NullConstant, NumberNode, ScopeAssignmentOperator, SpaceshipCompOperator, StatementSeparatorNode, StrictEqualCompOperator, StringConcatenationOperator, StringValueNode, SubtractionAssignmentOperator, SubtractionOperator, TrueConstant, TupleListStart, VariableNode } from '../nodes/abstractNode.js';
 import { DocumentParser } from '../parser/documentParser.js';
 import { LanguageKeywords } from '../parser/languageKeywords.js';
 import { StringUtilities } from '../utilities/stringUtilities.js';
@@ -74,19 +74,15 @@ export class AntlersLexer {
         }
 
         if (this.isParsingString == false && char == ']') {
-            return true;
+            return false;
         }
 
         if (this.isParsingString == false && char == ')') {
             return false;
         }
 
-        if ((char == '[' || char == ']') && char == this.cur) {
-            return true;
-        }
-
-        if ((char == '_' || char == '.' || char == '[' || char == ']') &&
-            (!(this.currentContent.length > 0) || StringUtilities.ctypeAlpha(this.cur) || StringUtilities.ctypeDigit(this.cur))) {
+        if ((char == '_' || char == '.') &&
+            (this.currentContent.length > 0 || StringUtilities.ctypeAlpha(this.cur))) {
             return true;
         }
 
@@ -338,6 +334,12 @@ export class AntlersLexer {
                         modifierValueNode.value = parsedValue;
                         modifierValueNode.startPosition = node._lexerRelativeOffset(stringStartedOn ?? 0);
                         modifierValueNode.endPosition = node._lexerRelativeOffset(this.currentIndex);
+                        if (this.referenceParser != null) {
+                            modifierValueNode.sourceContent = this.referenceParser.getText(
+                                modifierValueNode.startPosition.index,
+                                modifierValueNode.endPosition.index + 1
+                            );
+                        }
                         modifierValueNode.parent = this.activeNode;
 
                         this.runtimeNodes.push(modifierValueNode);
@@ -427,6 +429,7 @@ export class AntlersLexer {
                     }
 
                     const parsedValue = this.currentContent.join('').trim(),
+                        lowerParsedValue = parsedValue.toLowerCase(),
                         valueLen = parsedValue.length,
                         valueStartIndex = this.currentIndex - valueLen,
                         startPosition = node._lexerRelativeOffset(valueStartIndex),
@@ -436,7 +439,7 @@ export class AntlersLexer {
                     this.rawContent = [];
 
                     // Check against internal keywords.
-                    if (parsedValue == LanguageKeywords.LogicalAnd) {
+                    if (lowerParsedValue == LanguageKeywords.LogicalAnd) {
                         const logicalAnd = new LogicalAndOperator();
                         logicalAnd.isVirtual = false;
                         logicalAnd.content = LanguageKeywords.LogicalAnd;
@@ -447,7 +450,7 @@ export class AntlersLexer {
                         this.runtimeNodes.push(logicalAnd);
                         this.lastNode = logicalAnd;
                         continue;
-                    } else if (parsedValue == LanguageKeywords.LogicalOr) {
+                    } else if (lowerParsedValue == LanguageKeywords.LogicalOr) {
                         const logicalOr = new LogicalOrOperator();
                         logicalOr.isVirtual = false;
                         logicalOr.content = LanguageKeywords.LogicalOr;
@@ -458,7 +461,7 @@ export class AntlersLexer {
                         this.runtimeNodes.push(logicalOr);
                         this.lastNode = logicalOr;
                         continue;
-                    } else if (parsedValue == LanguageKeywords.LogicalXor) {
+                    } else if (lowerParsedValue == LanguageKeywords.LogicalXor) {
                         const logicalXor = new LogicalXorOperator();
                         logicalXor.isVirtual = false;
                         logicalXor.content = LanguageKeywords.LogicalXor;
@@ -469,7 +472,7 @@ export class AntlersLexer {
                         this.runtimeNodes.push(logicalXor);
                         this.lastNode = logicalXor;
                         continue;
-                    } else if (parsedValue == LanguageKeywords.ConstNull) {
+                    } else if (lowerParsedValue == LanguageKeywords.ConstNull) {
                         const constNull = new NullConstant();
                         constNull.isVirtual = false;
                         constNull.content = LanguageKeywords.ConstNull;
@@ -480,7 +483,7 @@ export class AntlersLexer {
                         this.runtimeNodes.push(constNull);
                         this.lastNode = constNull;
                         continue;
-                    } else if (parsedValue == LanguageKeywords.ConstTrue) {
+                    } else if (lowerParsedValue == LanguageKeywords.ConstTrue) {
                         const constTrue = new TrueConstant();
                         constTrue.isVirtual = false;
                         constTrue.content = LanguageKeywords.ConstTrue;
@@ -491,7 +494,7 @@ export class AntlersLexer {
                         this.runtimeNodes.push(constTrue);
                         this.lastNode = constTrue;
                         continue;
-                    } else if (parsedValue == LanguageKeywords.ConstFalse) {
+                    } else if (lowerParsedValue == LanguageKeywords.ConstFalse) {
                         const constFalse = new FalseConstant();
                         constFalse.isVirtual = false;
                         constFalse.content = LanguageKeywords.ConstFalse;
@@ -502,7 +505,7 @@ export class AntlersLexer {
                         this.runtimeNodes.push(constFalse);
                         this.lastNode = constFalse;
                         continue;
-                    } else if (parsedValue == LanguageKeywords.LogicalNot) {
+                    } else if (lowerParsedValue == LanguageKeywords.LogicalNot) {
                         const logicNegation = new LogicalNegationOperator();
                         logicNegation.isVirtual = false;
                         logicNegation.content = LanguageKeywords.LogicalNot;
@@ -513,7 +516,7 @@ export class AntlersLexer {
                         this.runtimeNodes.push(logicNegation);
                         this.lastNode = logicNegation;
                         continue;
-                    } else if (parsedValue == LanguageKeywords.ArrList && this.next == DocumentParser.LeftParen) {
+                    } else if (lowerParsedValue == LanguageKeywords.ArrList && this.next == DocumentParser.LeftParen) {
                         const tupleListStart = new TupleListStart();
                         tupleListStart.isVirtual = false;
                         tupleListStart.content = LanguageKeywords.ArrList;
@@ -1079,6 +1082,22 @@ export class AntlersLexer {
                     continue;
                 }
 
+                if (this.cur == DocumentParser.Punctuation_Question && this.next == DocumentParser.Punctuation_Question &&
+                    this.chars[this.currentIndex + 2] == DocumentParser.Punctuation_Question) {
+                    // ???
+                    const nullCoalesceOperator = new NullCoalesceOperator();
+                    nullCoalesceOperator.isVirtual = false;
+                    nullCoalesceOperator.content = '???';
+                    nullCoalesceOperator.startPosition = node._lexerRelativeOffset(this.currentIndex);
+                    nullCoalesceOperator.endPosition = node._lexerRelativeOffset(this.currentIndex + 3);
+                    nullCoalesceOperator.parent = this.activeNode;
+
+                    this.runtimeNodes.push(nullCoalesceOperator);
+                    this.lastNode = nullCoalesceOperator;
+                    this.currentIndex += 2;
+                    continue;
+                }
+
                 if (this.cur == DocumentParser.Punctuation_Question && this.next == DocumentParser.Punctuation_Question) {
                     // ??
                     const nullCoalesceOperator = new NullCoalesceOperator();
@@ -1182,6 +1201,32 @@ export class AntlersLexer {
                     this.runtimeNodes.push(branchSeparator);
                     this.lastNode = branchSeparator;
                     this.isParsingModifierName = false;
+                    continue;
+                }
+
+                if (this.cur == DocumentParser.LeftBracket) {
+                    const implicitArrayBegin = new ImplicitArrayBegin();
+                    implicitArrayBegin.isVirtual = false;
+                    implicitArrayBegin.content = DocumentParser.LeftBracket;
+                    implicitArrayBegin.startPosition = node._lexerRelativeOffset(this.currentIndex);
+                    implicitArrayBegin.endPosition = node._lexerRelativeOffset(this.currentIndex + 1);
+                    implicitArrayBegin.parent = this.activeNode;
+
+                    this.runtimeNodes.push(implicitArrayBegin);
+                    this.lastNode = implicitArrayBegin;
+                    continue;
+                }
+
+                if (this.cur == DocumentParser.RightBracket) {
+                    const implicitArrayEnd = new ImplicitArrayEnd();
+                    implicitArrayEnd.isVirtual = false;
+                    implicitArrayEnd.content = DocumentParser.RightBracket;
+                    implicitArrayEnd.startPosition = node._lexerRelativeOffset(this.currentIndex);
+                    implicitArrayEnd.endPosition = node._lexerRelativeOffset(this.currentIndex + 1);
+                    implicitArrayEnd.parent = this.activeNode;
+
+                    this.runtimeNodes.push(implicitArrayEnd);
+                    this.lastNode = implicitArrayEnd;
                     continue;
                 }
             }

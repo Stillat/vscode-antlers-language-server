@@ -2,7 +2,7 @@ import { AntlersError } from '../errors/antlersError.js';
 import { AntlersErrorCodes } from '../errors/antlersErrorCodes.js';
 import { LineRetriever } from '../errors/lineRetriever.js';
 import { TypeLabeler } from '../errors/typeLabeler.js';
-import { AbstractNode, AdditionAssignmentOperator, AdditionOperator, AliasedScopeLogicGroup, AntlersNode, ArgSeparator, ArgumentGroup, ArrayNode, ConditionalVariableFallbackOperator, DirectionGroup, DivisionAssignmentOperator, DivisionOperator, EqualCompOperator, ExponentiationOperator, FactorialOperator, FalseConstant, GreaterThanCompOperator, GreaterThanEqualCompOperator, InlineBranchSeparator, InlineTernarySeparator, LanguageOperatorConstruct, LeftAssignmentOperator, LessThanCompOperator, LessThanEqualCompOperator, LibraryInvocationConstruct, ListValueNode, LogicalAndOperator, LogicalNegationOperator, LogicalOrOperator, LogicalXorOperator, LogicGroup, LogicGroupBegin, LogicGroupEnd, MethodInvocationNode, ModifierChainNode, ModifierNameNode, ModifierNode, ModifierSeparator, ModifierValueNode, ModifierValueSeparator, ModulusAssignmentOperator, ModulusOperator, MultiplicationAssignmentOperator, MultiplicationOperator, NamedArgumentNode, NameValueNode, NotEqualCompOperator, NotStrictEqualCompOperator, NullCoalescenceGroup, NullCoalesceOperator, NullConstant, NumberNode, PathNode, ScopeAssignmentOperator, ScopedLogicGroup, SemanticGroup, SpaceshipCompOperator, StatementSeparatorNode, StaticTracedAssignment, StrictEqualCompOperator, StringConcatenationOperator, StringValueNode, SubtractionAssignmentOperator, SubtractionOperator, SwitchCase, SwitchGroup, TernaryCondition, TrueConstant, TupleList, TupleListStart, TupleScopedLogicGroup, ValueDirectionNode, VariableNode } from '../nodes/abstractNode.js';
+import { AbstractNode, AdditionAssignmentOperator, AdditionOperator, AliasedScopeLogicGroup, AntlersNode, ArgSeparator, ArgumentGroup, ArrayNode, ConditionalVariableFallbackOperator, DirectionGroup, DivisionAssignmentOperator, DivisionOperator, EqualCompOperator, ExponentiationOperator, FactorialOperator, FalseConstant, GreaterThanCompOperator, GreaterThanEqualCompOperator, ImplicitArrayBegin, ImplicitArrayEnd, InlineBranchSeparator, InlineTernarySeparator, LanguageOperatorConstruct, LeftAssignmentOperator, LessThanCompOperator, LessThanEqualCompOperator, LibraryInvocationConstruct, ListValueNode, LogicalAndOperator, LogicalNegationOperator, LogicalOrOperator, LogicalXorOperator, LogicGroup, LogicGroupBegin, LogicGroupEnd, MethodInvocationNode, ModifierChainNode, ModifierNameNode, ModifierNode, ModifierSeparator, ModifierValueNode, ModifierValueSeparator, ModulusAssignmentOperator, ModulusOperator, MultiplicationAssignmentOperator, MultiplicationOperator, NamedArgumentNode, NameValueNode, NotEqualCompOperator, NotStrictEqualCompOperator, NullCoalescenceGroup, NullCoalesceOperator, NullConstant, NumberNode, PathNode, ScopeAssignmentOperator, ScopedLogicGroup, SemanticGroup, SpaceshipCompOperator, StatementSeparatorNode, StaticTracedAssignment, StrictEqualCompOperator, StringConcatenationOperator, StringValueNode, SubtractionAssignmentOperator, SubtractionOperator, SwitchCase, SwitchGroup, TernaryCondition, TrueConstant, TupleList, TupleListStart, TupleScopedLogicGroup, ValueDirectionNode, VariableNode } from '../nodes/abstractNode.js';
 import { LibraryManager } from '../runtime/libraries/libraryManager.js';
 import { LanguageOperatorRegistry } from '../runtime/sandbox/languageOperatorRegistry.js';
 import { NodeHelpers } from '../utilities/nodeHelpers.js';
@@ -124,6 +124,7 @@ export class LanguageParser {
         this.tokens = tokens;
 
         this.tokens = this.combineVariablePaths(this.tokens);
+        this.tokens = this.rewriteImplicitArraysToKeywordForm(this.tokens);
 
         this.tokens = this.createLanguageOperators(this.tokens);
         this.tokens = this.createLogicalGroups(this.tokens);
@@ -164,6 +165,40 @@ export class LanguageParser {
         this.isRoot = isRoot;
 
         return this;
+    }
+
+    private rewriteImplicitArraysToKeywordForm(nodes: AbstractNode[]) {
+        const newNodes: AbstractNode[] = [];
+
+        nodes.forEach((node) => {
+            if (node instanceof ImplicitArrayBegin) {
+                const arrayConstruct = new LanguageOperatorConstruct();
+                arrayConstruct.startPosition = node.startPosition;
+                arrayConstruct.endPosition = node.endPosition;
+                arrayConstruct.originalAbstractNode = node;
+                arrayConstruct.content = LanguageOperatorRegistry.ARR_MAKE;
+
+                const logicGroupBegin = new LogicGroupBegin();
+                logicGroupBegin.startPosition = node.startPosition;
+                logicGroupBegin.endPosition = node.endPosition;
+                logicGroupBegin.originalAbstractNode = node;
+                logicGroupBegin.content = '(';
+
+                newNodes.push(arrayConstruct, logicGroupBegin);
+            } else if (node instanceof ImplicitArrayEnd) {
+                const logicGroupEnd = new LogicGroupEnd();
+                logicGroupEnd.startPosition = node.startPosition;
+                logicGroupEnd.endPosition = node.endPosition;
+                logicGroupEnd.originalAbstractNode = node;
+                logicGroupEnd.content = ')';
+
+                newNodes.push(logicGroupEnd);
+            } else {
+                newNodes.push(node);
+            }
+        });
+
+        return newNodes;
     }
 
     private validateNeighboringOperators(tokens: AbstractNode[]) {
@@ -357,6 +392,21 @@ export class LanguageParser {
         return variableNode;
     }
 
+    private wrapConstantInVariable(node: AbstractNode) {
+        const variableNode = new VariableNode();
+        variableNode.startPosition = node.startPosition;
+        variableNode.endPosition = node.endPosition;
+        variableNode.name = node.content;
+        variableNode.content = node.content;
+        variableNode.originalAbstractNode = node;
+        variableNode.refId = node.refId;
+        variableNode.modifierChain = node.modifierChain;
+        variableNode.index = node.index;
+        this.createdVariables.push(variableNode);
+
+        return variableNode;
+    }
+
     private wrapStringInVariable(node: StringValueNode) {
         const variableNode = new VariableNode();
         variableNode.startPosition = node.startPosition;
@@ -418,12 +468,21 @@ export class LanguageParser {
                     continue;
                 }
 
-                const left = newNodes[newNodeCount - 1];
-                let right = tokens[i + 1];
+                let left = newNodes[newNodeCount - 1],
+                    right = tokens[i + 1];
 
 
                 if (right instanceof NumberNode && NodeHelpers.distance(left, right) == 1) {
                     right = this.wrapNumberInVariable(right);
+                }
+
+                if ((right instanceof NullConstant || right instanceof TrueConstant || right instanceof FalseConstant) && NodeHelpers.distance(left, right) == 1) {
+                    right = this.wrapConstantInVariable(right);
+                }
+
+                if (left instanceof NumberNode && right instanceof VariableNode) {
+                    left = this.wrapNumberInVariable(left);
+                    newNodes[newNodeCount - 1] = left;
                 }
 
                 if (left instanceof VariableNode && right instanceof VariableNode && NodeHelpers.distance(left, right) == 1) {
@@ -483,6 +542,60 @@ export class LanguageParser {
                 } else {
                     newNodes.push(node);
                 }
+            } else if (node instanceof ImplicitArrayBegin && newNodeCount > 0) {
+                if ((i + 1) >= tokenCount) {
+                    newNodes.push(node);
+                    continue;
+                }
+
+                const left = newNodes[newNodeCount - 1],
+                    right = tokens[i + 1];
+
+                if (left instanceof VariableNode && this.canMergeIntoVariablePath(right) &&
+                    NodeHelpers.distance(left, node) <= 1 && NodeHelpers.distance(node, right) <= 1) {
+                    const mergeRefName = left.mergeRefName;
+                    newNodes.pop();
+                    NodeHelpers.mergeVarContentLeft(node.content, node, left);
+                    const rightContent = this.getMergeContent(right);
+                    NodeHelpers.mergeVarContentLeft(rightContent, right, left);
+                    left.mergeRefName = mergeRefName.length > 0 ? mergeRefName + node.content + rightContent : '';
+
+                    newNodes.push(left);
+                    this.mergedComponents.set(left, left);
+                    this.mergedComponents.set(node, left);
+                    this.mergedComponents.set(right, left);
+                    i += 1;
+                    continue;
+                }
+
+                newNodes.push(node);
+            } else if (node instanceof ImplicitArrayEnd && newNodeCount > 0) {
+                const left = newNodes[newNodeCount - 1];
+
+                if (left instanceof VariableNode && NodeHelpers.distance(left, node) <= 1 && left.name.includes('[')) {
+                    const mergeRefName = left.mergeRefName;
+                    newNodes.pop();
+                    NodeHelpers.mergeVarContentLeft(node.content, node, left);
+                    left.mergeRefName = mergeRefName.length > 0 ? mergeRefName + node.content : '';
+                    newNodes.push(left);
+                    this.mergedComponents.set(node, left);
+                    continue;
+                }
+
+                newNodes.push(node);
+            } else if (node instanceof VariableNode && newNodeCount > 0) {
+                const left = newNodes[newNodeCount - 1];
+
+                if (left instanceof VariableNode && NodeHelpers.distance(left, node) < 1) {
+                    const mergeRefName = left.mergeRefName;
+                    newNodes.pop();
+                    NodeHelpers.mergeVarContentLeft(node.name, node, left);
+                    left.mergeRefName = mergeRefName.length > 0 ? mergeRefName + node.name : '';
+                    newNodes.push(left);
+                    this.mergedComponents.set(node, left);
+                } else {
+                    newNodes.push(node);
+                }
             } else if (node instanceof SubtractionOperator && newNodeCount > 0) {
                 const left = newNodes[newNodeCount - 1],
                     right  = tokens[i + 1];
@@ -518,6 +631,56 @@ export class LanguageParser {
         });
 
         return newNodes;
+    }
+
+    private canMergeIntoVariablePath(node: AbstractNode) {
+        return node instanceof ModifierValueNode ||
+            node instanceof VariableNode ||
+            node instanceof TrueConstant ||
+            node instanceof FalseConstant ||
+            node instanceof NullConstant ||
+            node instanceof NumberNode ||
+            node instanceof StringValueNode;
+    }
+
+    private getMergeContent(node: AbstractNode) {
+        if (node instanceof ModifierValueNode) {
+            return node.value;
+        }
+
+        if (node instanceof VariableNode) {
+            return node.name;
+        }
+
+        if (node instanceof TrueConstant) {
+            return LanguageKeywords.ConstTrue;
+        }
+
+        if (node instanceof FalseConstant) {
+            return LanguageKeywords.ConstFalse;
+        }
+
+        if (node instanceof NullConstant) {
+            return LanguageKeywords.ConstNull;
+        }
+
+        if (node instanceof StringValueNode) {
+            if (node.sourceContent.length > 0) {
+                return node.sourceContent;
+            }
+
+            if (node.rawLexContent.length > 0) {
+                return node.rawLexContent;
+            }
+
+            return node.sourceTerminator + node.value + node.sourceTerminator;
+        }
+
+        if (node instanceof NumberNode) {
+            return node.rawLexContent.length > 0 ? node.rawLexContent : node.value?.toString() ?? '';
+        }
+
+        return node.innerContent();
     }
 
     private convertVarNodeToOperator(variable: VariableNode) {
@@ -850,6 +1013,7 @@ export class LanguageParser {
 
     private cleanVariableForMethodInvocation(node: VariableNode) {
         if (node.name.startsWith(':') || node.name.startsWith('.')) {
+            node.methodDelimiter = node.name.substring(0, 1);
             node.name = node.name.substr(1);
 
             if (node.variableReference != null) {
@@ -2286,6 +2450,10 @@ export class LanguageParser {
 
             if (node instanceof InlineTernarySeparator) {
                 const separator = this.seek(InlineBranchSeparator, i + 1);
+
+                if (separator.node instanceof InlineBranchSeparator) {
+                    separator.node.isTernaryBranchSeparator = true;
+                }
 
                 if (separator.node?.originalAbstractNode != null) {
                     if (separator.node.originalAbstractNode instanceof ModifierValueSeparator) {

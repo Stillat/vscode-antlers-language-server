@@ -1,6 +1,6 @@
 import { formatAntlers } from '../../../test/testUtils/formatAntlers.js';
 import { replaceAllInString } from '../../../utils/strings.js';
-import { AbstractNode, AdditionOperator, AntlersNode, ArgSeparator, DivisionOperator, InlineBranchSeparator, InlineTernarySeparator, LeftAssignmentOperator, LogicalAndOperator, LogicalNegationOperator, LogicalOrOperator, LogicGroupBegin, LogicGroupEnd, MethodInvocationNode, ModifierNameNode, ModifierSeparator, ModifierValueNode, ModifierValueSeparator, ModulusOperator, MultiplicationOperator, NumberNode, PathNode, ScopeAssignmentOperator, StatementSeparatorNode, StringValueNode, SubtractionOperator, TupleListStart, VariableNode } from '../../nodes/abstractNode.js';
+import { AbstractNode, AdditionOperator, AntlersNode, ArgSeparator, DivisionOperator, FalseConstant, ImplicitArrayBegin, ImplicitArrayEnd, InlineBranchSeparator, InlineTernarySeparator, LeftAssignmentOperator, LogicalAndOperator, LogicalNegationOperator, LogicalOrOperator, LogicGroupBegin, LogicGroupEnd, MethodInvocationNode, ModifierNameNode, ModifierSeparator, ModifierValueNode, ModifierValueSeparator, ModulusOperator, MultiplicationOperator, NullConstant, NumberNode, PathNode, ScopeAssignmentOperator, StatementSeparatorNode, StringValueNode, SubtractionOperator, TrueConstant, TupleListStart, VariableNode } from '../../nodes/abstractNode.js';
 import { LanguageParser } from '../../parser/languageParser.js';
 import { NodeHelpers } from '../../utilities/nodeHelpers.js';
 import { AntlersDocument } from '../antlersDocument.js';
@@ -9,11 +9,191 @@ import { NodeBuffer } from './nodeBuffer.js';
 
 export class NodePrinter {
 
+    /**
+     * Splits a variable name into its leading array brackets, its actual
+     * name, and its trailing array brackets.
+     *
+     * Array brackets are merged into neighboring variable names whenever they
+     * are not separated by whitespace, which makes ['one', two] produce the
+     * variable names "[" and "two]".
+     *
+     * Returns null when the name contains no brackets, or contains brackets
+     * in a position this printer does not manage.
+     */
+    private static splitArrayBrackets(name: string): ArrayBracketParts | null {
+        const leading = (/^\[+/.exec(name) ?? [''])[0],
+            trailing = (/\]+$/.exec(name) ?? [''])[0];
+
+        if (leading.length == 0 && trailing.length == 0) { return null; }
+
+        const value = name.substring(leading.length, name.length - trailing.length);
+
+        if (value.includes('[') || value.includes(']')) { return null; }
+
+        return {
+            openCount: leading.length,
+            value: value,
+            closeCount: trailing.length
+        };
+    }
+
+    /**
+     * Produces the wrapping decision for every array literal within the
+     * provided nodes, keyed by the node and bracket it belongs to.
+     *
+     * Brackets are numbered per node: the opening brackets of a name come
+     * first, followed by its closing brackets.
+     */
+    private static resolveArrayWrapping(lexerNodes: AbstractNode[], options: TransformOptions, doc: AntlersDocument): Map<string, ArrayWrapLayout> {
+        const decisions: Map<string, ArrayWrapLayout> = new Map(),
+            openBrackets: ArrayBracket[] = [],
+            languageParser = doc.getDocumentParser().getLanguageParser(),
+            indentUnit = options.insertSpaces
+                ? ' '.repeat(options.tabSize)
+                : '\t';
+
+        for (let i = 0; i < lexerNodes.length; i++) {
+            const node = lexerNodes[i],
+                line = node.startPosition?.line ?? 0;
+
+            if (node instanceof ImplicitArrayBegin) {
+                if (languageParser.isMergedVariableComponent(node)) { continue; }
+
+                NodePrinter.markArrayItems(openBrackets);
+                openBrackets.push({
+                    key: NodePrinter.bracketKey(i, 0),
+                    line: line,
+                    hasItems: false,
+                    depth: openBrackets.length + 1
+                });
+                continue;
+            }
+
+            if (node instanceof ImplicitArrayEnd) {
+                if (languageParser.isMergedVariableComponent(node)) { continue; }
+
+                const bracket = openBrackets.pop();
+
+                if (bracket == null) { continue; }
+
+                const layout: ArrayWrapLayout = {
+                    wrap: bracket.hasItems && line > bracket.line,
+                    itemIndent: indentUnit.repeat(bracket.depth),
+                    closeIndent: indentUnit.repeat(Math.max(0, bracket.depth - 1))
+                };
+
+                decisions.set(bracket.key, layout);
+                decisions.set(NodePrinter.bracketKey(i, 0), layout);
+                continue;
+            }
+
+            if (!(node instanceof VariableNode)) {
+                NodePrinter.markArrayItems(openBrackets);
+                continue;
+            }
+
+            const parts = NodePrinter.splitArrayBrackets(node.name);
+
+            if (parts == null) {
+                NodePrinter.markArrayItems(openBrackets);
+                continue;
+            }
+
+            for (let b = 0; b < parts.openCount; b++) {
+                NodePrinter.markArrayItems(openBrackets);
+
+                openBrackets.push({
+                    key: NodePrinter.bracketKey(i, b),
+                    line: line,
+                    hasItems: false,
+                    depth: openBrackets.length + 1
+                });
+            }
+
+            if (parts.value.length > 0) {
+                NodePrinter.markArrayItems(openBrackets);
+            }
+
+            for (let b = 0; b < parts.closeCount; b++) {
+                const bracket = openBrackets.pop();
+
+                if (bracket == null) { continue; }
+
+                const wrap = bracket.hasItems && line > bracket.line,
+                    closeKey = NodePrinter.bracketKey(i, parts.openCount + b);
+
+                const layout: ArrayWrapLayout = {
+                    wrap: wrap,
+                    itemIndent: indentUnit.repeat(bracket.depth),
+                    closeIndent: indentUnit.repeat(Math.max(0, bracket.depth - 1))
+                };
+
+                decisions.set(bracket.key, layout);
+                decisions.set(closeKey, layout);
+            }
+        }
+
+        return decisions;
+    }
+
+    private static markArrayItems(openBrackets: ArrayBracket[]) {
+        openBrackets.forEach((bracket) => {
+            bracket.hasItems = true;
+        });
+    }
+
+    private static hasLineBreakAfter(node: AbstractNode, nextNode: AbstractNode, doc: AntlersDocument): boolean {
+        const endIndex = node.endPosition?.index,
+            nextIndex = nextNode.startPosition?.index;
+
+        if (endIndex == null || nextIndex == null) {
+            return (nextNode.startPosition?.line ?? 0) > (node.endPosition?.line ?? 0);
+        }
+
+        return doc.getOriginalContent()
+            .substring(Math.min(endIndex, nextIndex), Math.max(endIndex, nextIndex) + 1)
+            .includes("\n");
+    }
+
+    private static bracketKey(nodeIndex: number, bracketIndex: number): string {
+        return nodeIndex + ':' + bracketIndex;
+    }
+
+    private static sourceContent(node: AbstractNode, doc: AntlersDocument): string {
+        const startIndex = node.startPosition?.index,
+            endIndex = node.endPosition?.index;
+
+        if (startIndex == null || endIndex == null) {
+            return '';
+        }
+
+        return doc.getOriginalContent().substring(startIndex, endIndex + 1).trim();
+    }
+
+    private static isAdjacentArrayAccessor(previous: VariableNode, current: VariableNode): boolean {
+        const previousEnd = previous.endPosition?.index,
+            currentStart = current.startPosition?.index;
+
+        if (previousEnd == null || currentStart == null || currentStart != previousEnd) {
+            return false;
+        }
+
+        return current.name.startsWith('[');
+    }
+
     static prettyPrintNode(antlersNode: AntlersNode, doc: AntlersDocument, indent: number, options: TransformOptions, prepend: string | null, seedIndent: number | null): string {
 
         const lexerNodes = antlersNode.getTrueRuntimeNodes();
+
+        // Tracks, per open array literal, whether that array is being
+        // printed across multiple lines. The innermost array is last.
+        const arrayWrapStack: ArrayPrintLayout[] = [],
+            arrayWrapDecisions = options.arrayWrap == 'collapse'
+                ? new Map<string, ArrayWrapLayout>()
+                : NodePrinter.resolveArrayWrapping(lexerNodes, options, doc);
         let nodeStatements = 0,
-            nodeOperators = 0;
+            nodeOperators = 0,
+            arrayLiteralDepth = 0;
 
         if (lexerNodes.length > 0) {
             const nodeBuffer = new NodeBuffer(antlersNode, indent, prepend);
@@ -21,6 +201,35 @@ export class NodePrinter {
             if (seedIndent != null) {
                 nodeBuffer.setIndentSeed(seedIndent);
             }
+
+            const groupsContainingSwitch = new Set<LogicGroupBegin>(),
+                groupScanStack: LogicGroupBegin[] = [];
+
+            for (let i = 0; i < lexerNodes.length; i++) {
+                const scanNode = lexerNodes[i];
+
+                if (scanNode instanceof LogicGroupBegin) {
+                    groupScanStack.push(scanNode);
+                } else if (scanNode instanceof LogicGroupEnd) {
+                    groupScanStack.pop();
+                } else if (scanNode instanceof VariableNode && scanNode.convertedToOperator && scanNode.name == 'switch') {
+                    groupScanStack.forEach((group) => groupsContainingSwitch.add(group));
+                }
+            }
+
+            type LayoutGroup = {
+                type: 'inline' | 'switch' | 'wrapped'
+            };
+
+            const layoutGroups: LayoutGroup[] = [];
+            let layoutDepth = 0;
+            const indentForDepth = (depth: number) => {
+                if (depth <= 0) {
+                    return 0;
+                }
+
+                return nodeBuffer.getContentIndent() + ((depth - 1) * options.tabSize);
+            };
 
             let lastPrintedNode: AbstractNode | null = null;
 
@@ -39,11 +248,21 @@ export class NodePrinter {
                 if (node instanceof LogicGroupEnd) {
                     if (node.next instanceof LogicGroupEnd == false && node.next != null) {
                         if (!LanguageParser.isOperatorType(node.next) || !LanguageParser.isAssignmentOperator(node.next)) {
-                            if (node.next instanceof StatementSeparatorNode == false && node.next instanceof InlineBranchSeparator == false) {
+                            if (node.next instanceof StatementSeparatorNode == false
+                                && node.next instanceof InlineBranchSeparator == false
+                                && node.next instanceof ArgSeparator == false) {
                                 if (!node.isSwitchGroupMember && !LanguageParser.isOperatorType(node.next)) {
                                     insertNlAfter = true;
 
                                     if (node.next instanceof VariableNode && node.next.name == 'as') {
+                                        insertNlAfter = false;
+                                    }
+
+                                    if (node.next instanceof VariableNode && node.next.methodDelimiter.length > 0) {
+                                        insertNlAfter = false;
+                                    }
+
+                                    if (node.next instanceof MethodInvocationNode) {
                                         insertNlAfter = false;
                                     }
                                 }
@@ -56,15 +275,91 @@ export class NodePrinter {
                     }
                 } else {
                     if (!node.prev?.isVirtual && node.prev?.isVirtualGroupOperatorResolve && node.prev.producesVirtualStatementTerminator) {
-                        if (node.next != null) {
-                            if (!(node.prev instanceof VariableNode) && !(node.next instanceof InlineTernarySeparator) && !(node instanceof InlineTernarySeparator)) {
-                                nodeBuffer.newlineIndent();
-                            }
+                         const followsVariableStatement = node.prev instanceof VariableNode &&
+                             node instanceof VariableNode && arrayLiteralDepth == 0 &&
+                             !node.convertedToOperator && node.name != 'as' &&
+                             !doc.getDocumentParser().getLanguageParser().isMergedVariableComponent(node) &&
+                             !NodePrinter.isAdjacentArrayAccessor(node.prev, node);
+
+                        if ((!(node.prev instanceof VariableNode) || followsVariableStatement) &&
+                            !(node.next instanceof InlineTernarySeparator) && !(node instanceof InlineTernarySeparator)) {
+                            nodeBuffer.newlineNDIndent();
                         }
                     }
                 }
 
                 if (node instanceof VariableNode) {
+                    if ((node.prev instanceof ImplicitArrayBegin || node.prev instanceof ImplicitArrayEnd) &&
+                        doc.getDocumentParser().getLanguageParser().isMergedVariableComponent(node)) {
+                        continue;
+                    }
+
+                    const rawArrayParts = NodePrinter.splitArrayBrackets(node.name),
+                        arrayDepthBefore = arrayLiteralDepth;
+
+                    if (rawArrayParts != null) {
+                        arrayLiteralDepth += rawArrayParts.openCount;
+                        arrayLiteralDepth = Math.max(0, arrayLiteralDepth - rawArrayParts.closeCount);
+                    }
+
+                    const nextNode = i + 1 < lexerNodes.length ? lexerNodes[i + 1] : null,
+                        closesStatementArray = rawArrayParts != null && rawArrayParts.closeCount > 0 &&
+                            (arrayDepthBefore + rawArrayParts.openCount) > 0 && arrayLiteralDepth == 0 &&
+                            nextNode instanceof VariableNode && !nextNode.convertedToOperator && !nextNode.isVirtual &&
+                            NodePrinter.hasLineBreakAfter(node, nextNode, doc);
+
+                    const isInterpolationRegion = antlersNode.interpolationRegions?.has(node.name) ?? false,
+                        arrayParts = options.arrayWrap == 'collapse' || isInterpolationRegion
+                            ? null
+                            : rawArrayParts;
+
+                    if (arrayParts != null) {
+                        for (let b = 0; b < arrayParts.openCount; b++) {
+                            const layout = arrayWrapDecisions.get(NodePrinter.bracketKey(i, b)) ?? {
+                                wrap: false,
+                                itemIndent: '',
+                                closeIndent: ''
+                            },
+                                outputRootIndent = arrayWrapStack.length > 0
+                                    ? arrayWrapStack[0].outputRootIndent
+                                    : nodeBuffer.getCurrentLineIndent(),
+                                printLayout: ArrayPrintLayout = {
+                                    wrap: layout.wrap,
+                                    itemIndent: outputRootIndent + layout.itemIndent,
+                                    closeIndent: outputRootIndent + layout.closeIndent,
+                                    outputRootIndent: outputRootIndent
+                                };
+
+                            arrayWrapStack.push(printLayout);
+                            nodeBuffer.append('[');
+
+                            if (printLayout.wrap) {
+                                nodeBuffer.newLine().append(printLayout.itemIndent);
+                            }
+                        }
+
+                        if (arrayParts.value.length > 0) {
+                            nodeBuffer.appendOS(arrayParts.value);
+                        }
+
+                        for (let b = 0; b < arrayParts.closeCount; b++) {
+                            const layout = arrayWrapStack.pop();
+
+                            if (layout?.wrap) {
+                                nodeBuffer.newLine().append(layout.closeIndent);
+                            }
+
+                            nodeBuffer.append(']');
+                        }
+
+                        if (closesStatementArray) {
+                            nodeBuffer.newlineIndent();
+                        }
+
+                        lastPrintedNode = node;
+                        continue;
+                    }
+
                     if (antlersNode.interpolationRegions && antlersNode.interpolationRegions.has(node.name)) {
                         const interpolatedRegion = antlersNode.interpolationRegions.get(node.name);
 
@@ -85,16 +380,20 @@ export class NodePrinter {
                                     break;
                                 }
 
-                                // Keep <switch/list>( together, and start a new line for the conditions.
-
                                 nodeBuffer.append('(');
-                                if (node.name != 'list') {
-                                    nodeBuffer
-                                        .relativeIndent(node.name)
-                                        .newLine().indent();
+                                const groupType = node.name == 'switch'
+                                    ? 'switch'
+                                    : (groupsContainingSwitch.has(next) ? 'wrapped' : 'inline');
+
+                                layoutGroups.push({ type: groupType });
+
+                                if (groupType != 'inline') {
+                                    layoutDepth += 1;
+                                    nodeBuffer.newlineAt(indentForDepth(layoutDepth));
                                 }
+
                                 i += 1;
-                                lastPrintedNode = lexerNodes[i + 1];
+                                lastPrintedNode = next;
                                 continue;
                             } else {
                                 break;
@@ -118,10 +417,25 @@ export class NodePrinter {
                     if (node.mergeRefName != null && node.mergeRefName.trim().length > 0 && node.mergeRefName != node.name) {
                         nodeBuffer.append(node.mergeRefName.trim());
                     } else {
+                        if (node.methodDelimiter.length > 0) {
+                            nodeBuffer.append(node.methodDelimiter + node.name.trim());
+                            lastPrintedNode = node;
+                            continue;
+                        }
+
                         if (node.name == 'as') {
                             nodeBuffer.appendOS('as');
                         } else {
                             if (node.methodTarget != null) {
+                                const previousNode = i > 0 ? lexerNodes[i - 1] : null,
+                                    nextNode = i + 1 < lexerNodes.length ? lexerNodes[i + 1] : null;
+
+                                if (previousNode instanceof MethodInvocationNode || nextNode instanceof MethodInvocationNode) {
+                                    nodeBuffer.append(node.name.trim());
+                                    lastPrintedNode = node;
+                                    continue;
+                                }
+
                                 if (node.variableReference != null) {
                                     node.variableReference.pathParts.forEach((part) => {
                                         if (part instanceof PathNode) {
@@ -132,11 +446,15 @@ export class NodePrinter {
                                 }
 
                                 nodeBuffer.append(node.methodTarget.method?.name ?? '');
-
+                                lastPrintedNode = node;
                                 continue;
                             }
                             nodeBuffer.append(node.name.trim());
                         }
+                    }
+
+                    if (closesStatementArray) {
+                        insertNlAfter = true;
                     }
                 } else if (node instanceof TupleListStart) {
                     nodeBuffer.appendTS(' list');
@@ -151,8 +469,9 @@ export class NodePrinter {
                         // Keep <switch/list>( together, and start a new line for the conditions.
 
                         nodeBuffer.append('(');
+                        layoutGroups.push({ type: 'inline' });
                         i += 1;
-                        lastPrintedNode = lexerNodes[i + 1];
+                        lastPrintedNode = next;
                         continue;
                     } else {
                         break;
@@ -160,6 +479,12 @@ export class NodePrinter {
                 } else if (node instanceof ModifierSeparator) {
                     nodeBuffer.appendS('|');
                 } else if (node instanceof InlineBranchSeparator) {
+                    if (node.isTernaryBranchSeparator) {
+                        nodeBuffer.appendS(':');
+                        lastPrintedNode = node;
+                        continue;
+                    }
+
                     if (lastPrintedNode != null) {
                         if (node.startPosition?.isBefore(lastPrintedNode.endPosition)) {
                             continue;
@@ -223,10 +548,29 @@ export class NodePrinter {
 
                     nodeBuffer.append(':');
                 } else if (node instanceof ModifierValueNode) {
-                    nodeBuffer.append(node.value.trim());
+                    const sourceContent = NodePrinter.sourceContent(node, doc),
+                        isQuoted = (sourceContent.startsWith("'") && sourceContent.endsWith("'")) ||
+                            (sourceContent.startsWith('"') && sourceContent.endsWith('"'));
+
+                    nodeBuffer.append(isQuoted ? sourceContent : node.value.trim());
                 } else if (node instanceof LogicGroupBegin) {
                     nodeBuffer.append('(');
+                    const groupType = groupsContainingSwitch.has(node) ? 'wrapped' : 'inline';
+
+                    layoutGroups.push({ type: groupType });
+
+                    if (groupType == 'wrapped') {
+                        layoutDepth += 1;
+                        nodeBuffer.newlineAt(indentForDepth(layoutDepth));
+                    }
                 } else if (node instanceof LogicGroupEnd) {
+                    const layoutGroup = layoutGroups.pop();
+
+                    if (layoutGroup != null && layoutGroup.type != 'inline') {
+                        layoutDepth = Math.max(0, layoutDepth - 1);
+                        nodeBuffer.newlineAt(indentForDepth(layoutDepth));
+                    }
+
                     nodeBuffer.append(')');
                 } else if (node instanceof StringValueNode) {
                     if (doc.getDocumentParser().getLanguageParser().isMergedVariableComponent(node)) {
@@ -239,11 +583,35 @@ export class NodePrinter {
                         nodeBuffer.appendOS(node.sourceTerminator + node.value + node.sourceTerminator);
                     }
                 } else if (node instanceof ArgSeparator) {
-                    if (node.isSwitchGroupMember) {
-                        nodeBuffer.append(',')
-                            .newlineIndent();
+                    const layoutGroup = layoutGroups[layoutGroups.length - 1];
+
+                    if (layoutGroup != null && layoutGroup.type != 'inline') {
+                        nodeBuffer.append(',').newlineAt(indentForDepth(layoutDepth));
                     } else {
-                        nodeBuffer.append(', ');
+                        const nextNode = i + 1 < lexerNodes.length ? lexerNodes[i + 1] : null,
+                            nextParts = nextNode instanceof VariableNode
+                                ? NodePrinter.splitArrayBrackets(nextNode.name)
+                                : null,
+                            isTrailingSeparator = arrayLiteralDepth > 0 && nextParts != null &&
+                                nextParts.value.length == 0 && nextParts.openCount == 0 && nextParts.closeCount > 0,
+                            isImplicitTrailingSeparator = arrayLiteralDepth > 0 && nextNode instanceof ImplicitArrayEnd &&
+                                !doc.getDocumentParser().getLanguageParser().isMergedVariableComponent(nextNode);
+
+                        if (isTrailingSeparator || isImplicitTrailingSeparator) {
+                            nodeBuffer.append(',');
+                            lastPrintedNode = node;
+                            continue;
+                        }
+
+                        if (arrayWrapStack.length > 0 && arrayWrapStack[arrayWrapStack.length - 1].wrap) {
+                            const layout = arrayWrapStack[arrayWrapStack.length - 1];
+
+                            nodeBuffer.append(',')
+                                .newLine()
+                                .append(layout.itemIndent);
+                        } else {
+                            nodeBuffer.append(', ');
+                        }
                     }
                 } else if (node instanceof NumberNode) {
                     lastPrintedNode = node;
@@ -258,6 +626,65 @@ export class NodePrinter {
                     }
 
                     nodeBuffer.append(valueToPrint);
+                } else if (node instanceof TrueConstant || node instanceof FalseConstant || node instanceof NullConstant) {
+                    if (doc.getDocumentParser().getLanguageParser().isMergedVariableComponent(node)) {
+                        continue;
+                    }
+
+                    if (node.prev instanceof ImplicitArrayBegin || node.prev instanceof ArgSeparator) {
+                        nodeBuffer.append(node.content);
+                    } else {
+                        nodeBuffer.appendS(node.content);
+                    }
+                } else if (node instanceof ImplicitArrayBegin) {
+                    if (doc.getDocumentParser().getLanguageParser().isMergedVariableComponent(node)) {
+                        continue;
+                    }
+
+                    const layout = arrayWrapDecisions.get(NodePrinter.bracketKey(i, 0)) ?? {
+                            wrap: false,
+                            itemIndent: '',
+                            closeIndent: ''
+                        },
+                        outputRootIndent = arrayWrapStack.length > 0
+                            ? arrayWrapStack[0].outputRootIndent
+                            : nodeBuffer.getCurrentLineIndent(),
+                        printLayout: ArrayPrintLayout = {
+                            wrap: layout.wrap,
+                            itemIndent: outputRootIndent + layout.itemIndent,
+                            closeIndent: outputRootIndent + layout.closeIndent,
+                            outputRootIndent: outputRootIndent
+                        };
+
+                    arrayLiteralDepth += 1;
+                    arrayWrapStack.push(printLayout);
+                    nodeBuffer.append(node.content);
+
+                    if (printLayout.wrap) {
+                        nodeBuffer.newLine().append(printLayout.itemIndent);
+                    }
+                } else if (node instanceof ImplicitArrayEnd) {
+                    if (doc.getDocumentParser().getLanguageParser().isMergedVariableComponent(node)) {
+                        continue;
+                    }
+
+                    const depthBefore = arrayLiteralDepth,
+                        nextNode = i + 1 < lexerNodes.length ? lexerNodes[i + 1] : null,
+                        layout = arrayWrapStack.pop();
+
+                    arrayLiteralDepth = Math.max(0, arrayLiteralDepth - 1);
+
+                    if (layout?.wrap) {
+                        nodeBuffer.newLine().append(layout.closeIndent);
+                    }
+
+                    nodeBuffer.append(node.content);
+
+                    if (depthBefore > 0 && arrayLiteralDepth == 0 && nextNode instanceof VariableNode &&
+                        !nextNode.convertedToOperator && !nextNode.isVirtual &&
+                        NodePrinter.hasLineBreakAfter(node, nextNode, doc)) {
+                        nodeBuffer.newlineIndent();
+                    }
                 } else if (node instanceof LeftAssignmentOperator) {
                     nodeBuffer.appendS('=');
                 } else if (node instanceof ScopeAssignmentOperator) {
@@ -332,7 +759,7 @@ export class NodePrinter {
                         nodeBuffer.appendS(node.rawContent());
                     }
                 } else if (node instanceof MethodInvocationNode) {
-                    nodeBuffer.append('->');
+                    nodeBuffer.append(node.rawContent());
                 } else if (node instanceof LogicalAndOperator) {
                     if (lastPrintedNode != null && lastPrintedNode instanceof SubtractionOperator) {
                         const distance = NodeHelpers.distance(lastPrintedNode, node);
@@ -392,4 +819,27 @@ export class NodePrinter {
 
         return antlersNode.getTrueRawContent();
     }
+}
+
+interface ArrayBracketParts {
+    openCount: number,
+    value: string,
+    closeCount: number
+}
+
+interface ArrayBracket {
+    key: string,
+    line: number,
+    hasItems: boolean,
+    depth: number
+}
+
+interface ArrayWrapLayout {
+    wrap: boolean,
+    itemIndent: string,
+    closeIndent: string
+}
+
+interface ArrayPrintLayout extends ArrayWrapLayout {
+    outputRootIndent: string
 }

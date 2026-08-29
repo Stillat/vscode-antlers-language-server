@@ -1,3 +1,5 @@
+import { ArrayWrapStyle } from './runtime/document/transformOptions.js';
+
 export interface ServerTrace {
     server: string;
 }
@@ -14,5 +16,6 @@ export interface AntlersSettings {
     diagnostics: AntlersDiagnosticsSettings;
     trace: ServerTrace;
     formatterIgnoreExtensions: string[];
+    formatterArrayWrap?: ArrayWrapStyle;
     languageVersion: string;
 }
