@@ -248,6 +248,16 @@ suite("Syntax Grammar", () => {
         assertScope(line, ">", "punctuation.definition.tag.end.html");
     });
 
+    test("it highlights Antlers component tags and attributes", () => {
+        ["s-", "s:", "statamic-", "statamic:"].forEach((prefix) => {
+            const line = `<${prefix}collection from="articles"></${prefix}collection>`;
+
+            assertScope(line, "collection", "entity.name.tag.statamic");
+            assertScope(line, "from", "entity.other.attribute-name.html");
+            assertNoInvalidScopes(line);
+        });
+    });
+
     test("it embeds JavaScript in Alpine attributes", () => {
         const line = `<button x-data="{ open: false }" @click="open = !open" :class="{ 'is-open': open }" x-show="open">`;
 

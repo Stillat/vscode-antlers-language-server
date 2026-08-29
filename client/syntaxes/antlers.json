@@ -335,7 +335,7 @@
 			"name": "meta.tag.statamic.component",
 			"patterns": [
 				{
-					"include": "text.html.basic#tag-stuff"
+					"include": "text.html.basic#attribute"
 				}
 			]
 		},
