@@ -30,6 +30,16 @@ suite("Basic Node Test", () => {
         assert.strictEqual((nodes[0] as RecursiveNode).name?.name, "colors");
     });
 
+    test("it associates subrecursive nodes with their matching parent", () => {
+        const nodes = parseNodes("{{ colors }}{{ *subrecursive colors* }}{{ /colors }}"),
+            parent = nodes[0] as AntlersNode,
+            recursive = nodes[1] as RecursiveNode;
+
+        assertInstanceOf(RecursiveNode, recursive);
+        assert.strictEqual(recursive.recursiveParent, parent);
+        assertTrue(parent.hasRecursiveNode);
+    });
+
     test("it doesnt trim off content start", () => {
         const nodes = parseNodes('{{ meta_title ?? title ?? "No Title Set" }}');
 
