@@ -1,8 +1,8 @@
 
 import {
 	LoggingDebugSession, InitializedEvent, StoppedEvent, Thread, Scope, Handles, Breakpoint
-} from 'vscode-debugadapter';
-import { DebugProtocol } from 'vscode-debugprotocol';
+} from '@vscode/debugadapter';
+import { DebugProtocol } from '@vscode/debugprotocol';
 import { Subject } from 'await-notify';
 import { IRuntimeBreakpoint, IRuntimeException, RuntimeBridge } from './runtimeBridge';
 import * as nodePath from 'path';
