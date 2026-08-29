@@ -2,6 +2,45 @@
 
 Bugs fixed, what's new, and more! :)
 
+## 2.7.0
+
+This is a large formatter, language support, stability, and project health release.
+
+- Requires Visual Studio Code 1.91 or newer.
+
+### Formatting
+
+- Adds `preserve` and `collapse` array wrapping modes across VS Code, Prettier, and the formatter CLI. Multi-line arrays are preserved by default, while single-line arrays remain inline. (#118, #117, #83)
+- Normalizes preserved array indentation across nested arrays, surrounding indentation levels, configured space widths, and tabs without introducing formatting drift. (#129)
+- Preserves trailing content after nested interpolation, triple fallback operators, shorthand variable parameters, quoted modifier values, automatic statement boundaries, and relative comment indentation. (#119, #116, #115, #100, #99, #98)
+- Improves nested switch formatting, including switches inside long HTML attributes and nested function arguments. (#125, #81)
+- Improves formatter parity with current Antlers syntax, including shorthand arrays, array accessors, arrow/dot/colon method chains, escaped braces, and authored escape sequences. (#127)
+- Formats embedded PHP consistently through VS Code, Prettier, and the formatter CLI, with stable indentation for spaces and tabs while preserving invalid PHP and multiline string contents. (#128, #86)
+
+### Language support and editor experience
+
+- Adds current Statamic core tags and explicit methods to completions, diagnostics, scopes, and highlighting. (#126)
+- Adds completion parity for Antlers components using `s-`, `s:`, `statamic-`, and `statamic:` syntax, including parameter names, project-backed values, and bound scope variables. (#126)
+- Adds completion and highlighting support for `@props`, `@aware`, and `@cascade` directives. (#126)
+- Improves syntax highlighting between HTML attributes, inside modifier strings, around conditional attributes, for dynamic HTML tags, and within Alpine attributes. (#124, #93, #91, #105)
+- Reports invalid `{{ else if ... }}` syntax and suggests the supported `elseif` spelling. (#121, #109)
+- Resolves document links for quoted `partial src=...` parameters while preserving method-style partial links. (#122, #103)
+- Applies the HTML comment override setting reliably when the extension activates and when active editors or resource-scoped settings change. (#123, #107)
+
+### Stability
+
+- Hardens project scanning against directory symlinks, broken entries, inaccessible paths, and incorrectly unfiltered direct scans. (#120, #110)
+- Publishes project details as an LSP notification so non-VS Code clients no longer need to implement a private request to avoid a server crash. (#130, #59)
+
+### Project health
+
+- Adds the full server and client test suite to GitHub Actions across Windows and Ubuntu on Node.js 22 and 24. (#131)
+- Removes the legacy documentation webview and its separate frontend build. (#132)
+- Updates vulnerable runtime dependencies and refreshes the dependency tree. (#133)
+- Updates esbuild, adopts the official scoped VS Code debug packages, and removes unused deprecated VS Code test infrastructure. (#134, #135)
+- Updates the project to TypeScript 6 and Node16 module resolution. (#136)
+- Updates the language client and server to 10.1.1, the Language Server Protocol packages to 3.18.3, and the minimum supported VS Code version to 1.91. (#137)
+
 ## 2.6.22
 
 - Rebuild (correct issue with reloading project details) (#106)
