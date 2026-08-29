@@ -9,8 +9,6 @@ import { IModifier } from '../antlers/modifierTypes.js';
 import { makeProviderRequest } from "../providers/providerParameters.js";
 
 const EmptySignatureHelp: SignatureHelp = {
-    activeSignature: null,
-    activeParameter: null,
     signatures: [],
 };
 

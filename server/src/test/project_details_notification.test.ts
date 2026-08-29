@@ -1,5 +1,5 @@
 import assert from "assert";
-import { NotificationType } from "vscode-languageserver/node.js";
+import { NotificationType } from "vscode-languageserver/node";
 import {
     notifyProjectDetails,
     ProjectDetailsAvailableNotification,
