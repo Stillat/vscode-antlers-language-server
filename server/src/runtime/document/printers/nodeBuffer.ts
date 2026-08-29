@@ -5,8 +5,8 @@ export class NodeBuffer {
     private baseIndent: number;
     private buffer = '';
     private closeString = '';
-    private relativeIndentSize = 0;
     private indentSeed = 0;
+    private contentIndent = 0;
 
     constructor(node: AntlersNode, indent: number, prepend: string | null) {
         this.baseIndent = indent;
@@ -31,6 +31,8 @@ export class NodeBuffer {
         if (prepend != null && prepend.trim().length > 0) {
             this.buffer += prepend + ' ';
         }
+
+        this.contentIndent = this.buffer.length + (node.isInterpolationNode ? 1 : 0);
     }
 
     setIndentSeed(indent: number) {
@@ -54,8 +56,12 @@ export class NodeBuffer {
     }
 
     appendT(text: string) {
-        if (this.buffer.endsWith(' ')) {
-            this.buffer = this.buffer.trimEnd();
+        const currentLine = this.buffer.substring(this.buffer.lastIndexOf("\n") + 1);
+
+        if (currentLine.trim().length == 0) {
+            text = text.trimStart();
+        } else if (this.buffer.endsWith(' ')) {
+            this.buffer = this.buffer.replace(/[ \t]+$/, '');
         }
 
         this.buffer += text;
@@ -64,8 +70,12 @@ export class NodeBuffer {
     }
 
     appendTS(text: string, preserveSpace = false) {
-        if (this.buffer.endsWith(' ')) {
-            this.buffer = this.buffer.trimEnd();
+        const currentLine = this.buffer.substring(this.buffer.lastIndexOf("\n") + 1);
+
+        if (currentLine.trim().length == 0) {
+            text = text.trimStart();
+        } else if (this.buffer.endsWith(' ')) {
+            this.buffer = this.buffer.replace(/[ \t]+$/, '');
         }
 
         if (this.buffer.endsWith('{') && !preserveSpace) {
@@ -84,7 +94,7 @@ export class NodeBuffer {
     }
 
     appendOS(text: string) {
-        if (this.buffer.endsWith(' ') == false
+        if (/\s$/.test(this.buffer) == false
             && this.buffer.endsWith('(') == false
             && this.buffer.endsWith('{') == false
             && this.buffer.endsWith('[') == false
@@ -114,10 +124,6 @@ export class NodeBuffer {
 
         if (repeatCount == 0) { repeatCount = 1; } else { repeatCount += 2; }
 
-        if (this.relativeIndentSize > 0) {
-            repeatCount += this.relativeIndentSize;
-        }
-
         this.buffer += ' '.repeat(repeatCount);
 
         return this;
@@ -131,7 +137,27 @@ export class NodeBuffer {
         return this;
     }
 
+    newlineAt(indent: number) {
+        this.buffer = this.buffer.trimEnd() + "\n";
+
+        if (indent > 0) {
+            this.buffer += ' '.repeat(indent);
+        }
+
+        return this;
+    }
+
+    getContentIndent() {
+        return this.contentIndent;
+    }
+
     paramS(param: ParameterNode) {
+        if (param.isShorthand) {
+            this.append(` :$${param.name}`);
+
+            return this;
+        }
+
         let bParam = ' ';
 
         if (param.isVariableReference) {
@@ -147,32 +173,6 @@ export class NodeBuffer {
 
     replace(find: string, replace: string) {
         this.buffer = replaceAllInString(this.buffer, find, replace);
-
-        return this;
-    }
-
-    relativeIndent(relativeTo: string) {
-        const bufferLines = this.buffer.split("\n");
-
-        if (bufferLines.length == 0) {
-            return this;
-        }
-
-        let lastLine = bufferLines[bufferLines.length - 1].trimEnd();
-
-        if (lastLine.endsWith('(')) {
-            lastLine = lastLine.slice(0, -1);
-        }
-
-        if (lastLine.endsWith(relativeTo) == false) {
-            return this;
-        }
-
-        this.relativeIndentSize = lastLine.lastIndexOf(relativeTo);
-
-        //  this.relativeIndentSize += Math.ceil(relativeTo.length / 2);
-
-        // this.relativeIndentSize += 4;
 
         return this;
     }
@@ -201,6 +201,13 @@ export class NodeBuffer {
 
     getContent() {
         return this.buffer;
+    }
+
+    getCurrentLineIndent(): string {
+        const lineStart = this.buffer.lastIndexOf("\n") + 1,
+            currentLine = this.buffer.substring(lineStart);
+
+        return (/^[\t ]*/.exec(currentLine) ?? [''])[0];
     }
 
     endsWith(value: string): boolean {
