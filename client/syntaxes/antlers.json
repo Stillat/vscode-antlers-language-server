@@ -13,6 +13,12 @@
 		"L:text.html.statamic": {
 			"patterns": [
 				{
+					"include": "#antlers-directives"
+				},
+				{
+					"include": "#antlers-components"
+				},
+				{
 					"include": "#statamic-comments"
 				},
 				{
@@ -40,6 +46,12 @@
         {
             "include": "#php-tag"
         },
+		{
+			"include": "#antlers-directives"
+		},
+		{
+			"include": "#antlers-components"
+		},
 		{
 			"include": "#statamic-comments"
 		},
@@ -254,6 +266,78 @@
 			"begin": "{{#",
 			"end": "#}}",
 			"name": "comment.block.statamic"
+		},
+		"antlers-directives": {
+			"patterns": [
+				{
+					"begin": "(?<!@)(@)(props|aware|cascade)(\\s*)(\\()",
+					"beginCaptures": {
+						"1": {
+							"name": "punctuation.definition.directive.statamic"
+						},
+						"2": {
+							"name": "support.function.directive.statamic"
+						},
+						"4": {
+							"name": "punctuation.section.group.begin.statamic"
+						}
+					},
+					"contentName": "source.php",
+					"end": "(\\))",
+					"endCaptures": {
+						"1": {
+							"name": "punctuation.section.group.end.statamic"
+						}
+					},
+					"name": "meta.directive.statamic",
+					"patterns": [
+						{
+							"include": "source.php"
+						}
+					]
+				},
+				{
+					"match": "(?<!@)(@)(cascade)\\b(?!\\s*\\()",
+					"captures": {
+						"1": {
+							"name": "punctuation.definition.directive.statamic"
+						},
+						"2": {
+							"name": "support.function.directive.statamic"
+						}
+					},
+					"name": "meta.directive.statamic"
+				}
+			]
+		},
+		"antlers-components": {
+			"begin": "(<\\/?)(?:(s|statamic)([-:]))([a-zA-Z_][\\w:-]*)",
+			"beginCaptures": {
+				"1": {
+					"name": "punctuation.definition.tag.begin.html"
+				},
+				"2": {
+					"name": "support.class.component.statamic"
+				},
+				"3": {
+					"name": "punctuation.separator.component.statamic"
+				},
+				"4": {
+					"name": "entity.name.tag.statamic"
+				}
+			},
+			"end": "(/?>)",
+			"endCaptures": {
+				"1": {
+					"name": "punctuation.definition.tag.end.html"
+				}
+			},
+			"name": "meta.tag.statamic.component",
+			"patterns": [
+				{
+					"include": "text.html.basic#attribute"
+				}
+			]
 		},
 		"antlers-tags": {
 			"begin": "(?<!@){{(?!\\$)(\\s?)",
@@ -667,7 +751,7 @@
 		"core-tag-names": {
 			"patterns": [
 				{
-					"match": "(?i)\\b(taxonomy|cookie|user_groups|user_roles|get_site|collection|asset|nocache|vite|mount_url|form|assets|cache|can|dd|ddd|dump|get_content|get_error|get_errors|get_files|glide|in|increment|installed|is|iterate|foreach|link|locales|markdown|member|mix|nav|not_found|404|obfuscate|parent|partial|path|query|range|loop|redirect|relate|rotate|route|scope|section|session|set|structure|svg|theme|trans|trans_choice|user|users|widont|yields|yield|slot|once|noparse|view|stack|push)\\b",
+					"match": "(?i)\\b(taxonomy|cookie|user_groups|user_roles|get_site|collection|asset|nocache|vite|mount_url|form|assets|cache|can|children|dictionary|dd|ddd|dump|get_content|get_error|get_errors|get_files|glide|in|increment|installed|is|iterate|foreach|link|locales|markdown|member|mix|nav|not_found|404|oauth|obfuscate|parent|partial|path|protect|query|range|loop|redirect|relate|rotate|route|scope|search|section|session|set|structure|svg|theme|trans|trans_choice|user|users|widont|yields|yield|slot|once|noparse|view|stack|push)\\b",
 					"name": "entity.name.tag.statamic"
 				}
 			]

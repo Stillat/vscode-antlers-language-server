@@ -5,7 +5,7 @@ import { IAntlersTag } from '../../../tagManager.js';
 const ViteAsset: IAntlersTag = {
     tagName: 'vite:asset',
     hideFromCompletions: false,
-    requiresClose: true,
+    requiresClose: false,
     injectParentScope: false,
     allowsContentClose: false,
     allowsArbitraryParameters: false,

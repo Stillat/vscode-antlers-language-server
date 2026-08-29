@@ -3,23 +3,29 @@ import { ISuggestionRequest } from '../../../suggestions/suggestionRequest.js';
 import { createDefinitionAlias } from '../alias.js';
 import User from './user.js';
 import UserCan from './userCan.js';
+import UserCant from './userCant.js';
 import UserIn from './userIn.js';
 import UserIs from './userIs.js';
 import UserIsnt from './userIsnt.js';
 import UserLogout from './userLogout.js';
 import UserLogoutUrl from './userLogoutUrl.js';
 import UserNotIn from './userNotIn.js';
+import UserPasswordForm from './userPasswordForm.js';
 import UserProfile from './userProfile.js';
+import UserProfileForm from './userProfileForm.js';
 
 const MemberTag = createDefinitionAlias(User, 'member'),
     MemberIs = createDefinitionAlias(UserIs, 'member:is'),
     MemberIsnt = createDefinitionAlias(UserIsnt, 'member:isnt'),
     MemberProfile = createDefinitionAlias(UserProfile, 'member:profile'),
     MemberCan = createDefinitionAlias(UserCan, 'member:can'),
+    MemberCant = createDefinitionAlias(UserCant, 'member:cant'),
     MemberLogout = createDefinitionAlias(UserLogout, 'member:logout'),
     MemberLogoutUrl = createDefinitionAlias(UserLogoutUrl, 'member:logout_url'),
     MemberIn = createDefinitionAlias(UserIn, 'member:in'),
-    MemberNotIn = createDefinitionAlias(UserNotIn, 'member:not_in');
+    MemberNotIn = createDefinitionAlias(UserNotIn, 'member:not_in'),
+    MemberPasswordForm = createDefinitionAlias(UserPasswordForm, 'member:password_form'),
+    MemberProfileForm = createDefinitionAlias(UserProfileForm, 'member:profile_form');
 
 MemberTag.hideFromCompletions = true;
 
@@ -98,5 +104,6 @@ MemberNotIn.resolveDocumentation = (params?: ISuggestionRequest) => {
 
 export {
     MemberTag, MemberIs, MemberIsnt, MemberProfile,
-    MemberCan, MemberLogout, MemberLogoutUrl, MemberIn, MemberNotIn
+    MemberCan, MemberCant, MemberLogout, MemberLogoutUrl, MemberIn, MemberNotIn,
+    MemberPasswordForm, MemberProfileForm
 };
