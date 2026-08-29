@@ -1082,6 +1082,22 @@ export class AntlersLexer {
                     continue;
                 }
 
+                if (this.cur == DocumentParser.Punctuation_Question && this.next == DocumentParser.Punctuation_Question &&
+                    this.chars[this.currentIndex + 2] == DocumentParser.Punctuation_Question) {
+                    // ???
+                    const nullCoalesceOperator = new NullCoalesceOperator();
+                    nullCoalesceOperator.isVirtual = false;
+                    nullCoalesceOperator.content = '???';
+                    nullCoalesceOperator.startPosition = node._lexerRelativeOffset(this.currentIndex);
+                    nullCoalesceOperator.endPosition = node._lexerRelativeOffset(this.currentIndex + 3);
+                    nullCoalesceOperator.parent = this.activeNode;
+
+                    this.runtimeNodes.push(nullCoalesceOperator);
+                    this.lastNode = nullCoalesceOperator;
+                    this.currentIndex += 2;
+                    continue;
+                }
+
                 if (this.cur == DocumentParser.Punctuation_Question && this.next == DocumentParser.Punctuation_Question) {
                     // ??
                     const nullCoalesceOperator = new NullCoalesceOperator();

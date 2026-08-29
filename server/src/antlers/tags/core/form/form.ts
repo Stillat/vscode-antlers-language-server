@@ -9,6 +9,7 @@ import FormSubmission from './formSubmission.js';
 import FormSubmissions from './formSubmissions.js';
 import FormSuccess from './formSuccess.js';
 import { resolveFormParameterCompletions } from "./parameterCompletions.js";
+import { FormFieldsTag } from '../additionalTagMethods.js';
 
 const FormCompletions: CompletionItem[] = [
     tagToCompletionItem(FormSetTag),
@@ -16,7 +17,8 @@ const FormCompletions: CompletionItem[] = [
     tagToCompletionItem(FormErrors),
     tagToCompletionItem(FormSuccess),
     tagToCompletionItem(FormSubmissions),
-    tagToCompletionItem(FormSubmission)
+    tagToCompletionItem(FormSubmission),
+    tagToCompletionItem(FormFieldsTag)
 ];
 
 const FormTag: IAntlersTag = {

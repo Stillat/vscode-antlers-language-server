@@ -68,13 +68,16 @@ import {
 } from "./core/collection/ageDirectional.js";
 import {
     MemberCan,
+    MemberCant,
     MemberIn,
     MemberIs,
     MemberIsnt,
     MemberLogout,
     MemberLogoutUrl,
     MemberNotIn,
+    MemberPasswordForm,
     MemberProfile,
+    MemberProfileForm,
     MemberTag,
 } from "./core/memberUserAliases.js";
 import TaxonomyTag from "./core/taxonomies/taxonomy.js";
@@ -124,6 +127,19 @@ import CookieValue from './core/cookie/cookieValue.js';
 import UserProfileForm from './core/userProfileForm.js';
 import UserPasswordForm from './core/userPasswordForm.js';
 import ViteAsset from './core/vite/viteAsset.js';
+import {
+    FormFieldsTag,
+    GetErrorAllTag,
+    GlideDataUriTag,
+    GlideGenerateTag,
+    OAuthDisconnectFormTag,
+    OAuthLoginUrlTag,
+    ProtectPasswordFormTag,
+    TaxonomyCountTag,
+    ViteContentTag,
+} from './core/additionalTagMethods.js';
+import { CanTag, ChildrenTag, DictionaryTag, GetSiteTag, UsersTag } from './core/siteTags.js';
+import { memberSecurityTags, userSecurityTags } from './core/userSecurityTags.js';
 
 const coreTags = [
     If,
@@ -134,6 +150,8 @@ const coreTags = [
 
     Asset,
     Assets,
+    CanTag,
+    ChildrenTag,
     Collection,
     CollectionCount,
     CollectionPrevious,
@@ -147,6 +165,8 @@ const coreTags = [
     CookieSet,
     CookieValue,
 
+    DictionaryTag,
+
     Relate,
 
     FormTag,
@@ -158,12 +178,15 @@ const coreTags = [
     FormSetTag,
     FormSuccess,
     FormErrors,
+    FormFieldsTag,
 
     SetTag,
 
     GetErrors,
     GetError,
     GetAllErrors,
+    GetErrorAllTag,
+    GetSiteTag,
 
     BaseSearchTag,
     SearchResultsTag,
@@ -184,6 +207,8 @@ const coreTags = [
     Glide,
     GlideBatch,
     GlideDataUrl,
+    GlideDataUriTag,
+    GlideGenerateTag,
     Link,
     Loop,
     RangeTag,
@@ -224,20 +249,25 @@ const coreTags = [
     UserProfileForm,
     UserPasswordForm,
     UserRegister,
+    ...userSecurityTags,
 
     MemberTag,
     MemberIs,
     MemberIsnt,
     MemberProfile,
     MemberCan,
+    MemberCant,
     MemberLogout,
     MemberLogoutUrl,
     MemberIn,
     MemberNotIn,
+    MemberPasswordForm,
+    MemberProfileForm,
     MemberLoginForm,
     MemberPasswordReset,
     MemberForgotPasswordForm,
     MemberRegister,
+    ...memberSecurityTags,
 
     NoParse,
     NoCache,
@@ -245,6 +275,8 @@ const coreTags = [
     Switch,
     Rotate,
     OAuth,
+    OAuthLoginUrlTag,
+    OAuthDisconnectFormTag,
     Obfuscate,
     Parent,
     PathTag,
@@ -261,6 +293,8 @@ const coreTags = [
     SessionDump,
     SVGTag,
     TaxonomyTag,
+    TaxonomyCountTag,
+    ProtectPasswordFormTag,
     Theme,
     ThemePath,
     ThemeAsset,
@@ -277,7 +311,9 @@ const coreTags = [
     MarkdownIndent,
     Widont,
     Vite,
-    ViteAsset
+    ViteAsset,
+    ViteContentTag,
+    UsersTag
 ];
 
 export { coreTags };

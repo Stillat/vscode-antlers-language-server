@@ -6,7 +6,7 @@ import { GlideParameters, resolveGlideParameterCompletions } from './glideParame
 const GlideDataUrl: IAntlersTag = {
     tagName: 'glide:data_url',
     hideFromCompletions: false,
-    requiresClose: true,
+    requiresClose: false,
     allowsContentClose: false,
     allowsArbitraryParameters: false,
     injectParentScope: false,

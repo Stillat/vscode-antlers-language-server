@@ -401,6 +401,58 @@ export class AntlersNodeParser {
                 ignorePrevious = false;
             }
 
+            if (hasFoundName == false && i >= parseContentOffset &&
+                current == DocumentParser.Punctuation_Colon && next == '$' &&
+                (prev == null || StringUtilities.ctypeSpace(prev))) {
+                let shorthandEnd = i + 2;
+
+                while (shorthandEnd < charCount &&
+                    !StringUtilities.ctypeSpace(chars[shorthandEnd]) && chars[shorthandEnd] != '/') {
+                    shorthandEnd += 1;
+                }
+
+                const shorthandName = chars.slice(i + 2, shorthandEnd).join('');
+
+                if (shorthandName.length > 0) {
+                    const parameterNode = new ParameterNode(),
+                        valueStart = i + 2,
+                        valueEnd = shorthandEnd - 1;
+
+                    parameterNode.isShorthand = true;
+                    parameterNode.isVariableReference = true;
+                    parameterNode.hasValidValueDelimiter = false;
+                    parameterNode.nameDelimiter = null;
+                    parameterNode.name = shorthandName;
+                    parameterNode.value = shorthandName;
+                    parameterNode.parent = node;
+                    parameterNode.startPosition = node.relativePositionFromOffset(i + 1, i + 1) ?? null;
+                    parameterNode.endPosition = node.relativePositionFromOffset(shorthandEnd + 1, shorthandEnd + 1) ?? null;
+                    parameterNode.blockPosition = {
+                        start: node.relativeOffset(i, i) ?? null,
+                        end: node.relativeOffset(valueEnd, valueEnd) ?? null
+                    };
+                    parameterNode.namePosition = {
+                        start: node.relativeOffset(valueStart, valueStart) ?? null,
+                        end: node.relativeOffset(valueEnd, valueEnd) ?? null
+                    };
+                    parameterNode.valuePosition = {
+                        start: node.relativeOffset(valueStart, valueStart) ?? null,
+                        end: node.relativeOffset(valueEnd, valueEnd) ?? null
+                    };
+
+                    parameters.push(parameterNode);
+                    i = shorthandEnd - 1;
+                    currentChars = [];
+                    blockStartAt = -1;
+                    blockEndAt = -1;
+                    nameBlockStartAt = -1;
+                    nameBlockEndAt = -1;
+                    valueBlockStartAt = -1;
+                    valueBlockEndAt = -1;
+                    continue;
+                }
+            }
+
             if (hasFoundName == false && StringUtilities.ctypeSpace(current)) {
                 // Flush the buffer.
                 currentChars = [];

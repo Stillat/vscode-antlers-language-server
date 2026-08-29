@@ -2,6 +2,23 @@ import assert from 'assert';
 import { formatAntlers } from './testUtils/formatAntlers.js';
 
 suite('Formatter Operators', () => {
+    test('it preserves automatic statement boundaries', () => {
+        const input = `{{ text = 'one'
+number = 2
+enabled = true
+source = other
+source }}`,
+            expected = `{{ text = 'one'
+ number = 2
+ enabled = true
+ source = other
+ source }}`,
+            firstPass = formatAntlers(input);
+
+        assert.strictEqual(firstPass, expected);
+        assert.strictEqual(formatAntlers(firstPass), firstPass);
+    });
+
     test('it wraps multiple language operators', () => {
         const template = `
         {{ test = one merge two 
@@ -89,7 +106,7 @@ suite('Formatter Operators', () => {
 
     test('it normalizes uppercase logical keywords and constants', () => {
         const input = '{{ TrUe AND FALSE oR something }}';
-        const output = '{{ true and false \n or something }}';
+        const output = '{{ true and false\n or something }}';
 
         assert.strictEqual(formatAntlers(input), output);
         assert.strictEqual(formatAntlers(output), output);
@@ -125,6 +142,10 @@ suite('Formatter Operators', () => {
 
     test('it emits ??', () => {
         assert.strictEqual(formatAntlers('{{ left   ??     right }}'), '{{ left ?? right }}');
+    });
+
+    test('it emits ???', () => {
+        assert.strictEqual(formatAntlers('{{ left   ???     right }}'), '{{ left ??? right }}');
     });
 
     test('it emits ?:', () => {
@@ -182,7 +203,10 @@ suite('Formatter Operators', () => {
         assert.strictEqual(formatAntlers(`{{ test =    [
             'one' => 1,
             'two' => 2	
-        ] }}`), `{{ test = ['one' => 1, 'two' => 2] }}`);
+        ] }}`), `{{ test = [
+    'one' => 1,
+    'two' => 2
+] }}`);
     });
 
     test('it emits strings', () => {
@@ -209,7 +233,7 @@ suite('Formatter Operators', () => {
         assert.strictEqual(formatAntlers('{{ left where       right }}'), '{{ left where right }}');
     });
 
-    test('it preserves space on switch and inlines expanded groups', () => {
+    test('it formats switches in inline attributes', () => {
         const input = `{{#
     @name h1
     @desc The typography h1 partial to render an h1 with \`class\`, \`as\`, \`color\` and \`content\` attributes.
@@ -242,8 +266,9 @@ suite('Formatter Operators', () => {
 
 <!-- /typography/_h1.antlers.html -->
 <{{ as or 'h1' }} class="{{ switch(
-                              (format == 'eyebrow') => '',
-                              () => 'text-2xl md:text-4xl font-bold leading-tight') }}
+       (format == 'eyebrow') => '',
+       () => 'text-2xl md:text-4xl font-bold leading-tight'
+    ) }}
         {{ color or 'text-neutral' }} {{ class }}">
     {{ content | nl2br }}
 </{{ as or 'h1' }}>
@@ -260,10 +285,11 @@ suite('Formatter Operators', () => {
 (size == 'xl') => '90vw'
 )}" }}`;
         const expected = `{{ test variable="{ switch(
-   (size == 'sm') => '(min-width: 768px) 35vw, 90vw',
-   (size == 'md') => '(min-width: 768px) 55vw, 90vw',
-   (size == 'lg') => '(min-width: 768px) 75vw, 90vw',
-   (size == 'xl') => '90vw')}" }}`;
+  (size == 'sm') => '(min-width: 768px) 35vw, 90vw',
+  (size == 'md') => '(min-width: 768px) 55vw, 90vw',
+  (size == 'lg') => '(min-width: 768px) 75vw, 90vw',
+  (size == 'xl') => '90vw'
+)}" }}`;
 
         assert.strictEqual(formatAntlers(input), expected);
     });
@@ -345,9 +371,9 @@ suite('Formatter Operators', () => {
                             {{ five }}
                                 {{ six }}
                                     {{ parity = switch(
-                                             ((index | mod:2) == 0) => 'even',
-                                             ((index | mod:2) == 1) => 'odd',
-                                         ) }}
+                                       ((index | mod:2) == 0) => 'even',
+                                       ((index | mod:2) == 1) => 'odd',
+                                    ) }}
                                 {{ /six }}
                             {{ /five }}
                         {{ /four }}

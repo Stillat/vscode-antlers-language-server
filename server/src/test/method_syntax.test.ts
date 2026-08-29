@@ -98,7 +98,11 @@ suite('Method and Array Syntax', () => {
         'class' => 'another-one'
     ])
 }}>x</div>`;
-        const expected = "<div {{ attributes.merge(['class' => 'hello-there!']).merge(['class' => 'another-one']) }}>x</div>";
+        const expected = `<div {{ attributes.merge([
+    'class' => 'hello-there!'
+]).merge([
+    'class' => 'another-one'
+]) }}>x</div>`;
 
         parseWithoutErrors(input);
         assertStableFormatting(input, expected);

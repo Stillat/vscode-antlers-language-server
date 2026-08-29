@@ -8,7 +8,7 @@ import {
 } from "./testUtils/assertions.js";
 import { getParsedRuntimeNodes, parseNodes } from "./testUtils/parserUtils.js";
 import EnvironmentDetails from "../runtime/runtime/environmentDetails.js";
-import { AntlersNode, LiteralNode, SemanticGroup, VariableNode, LogicGroup, EqualCompOperator, ModifierNode, PathNode, RecursiveNode, VariableReference } from '../runtime/nodes/abstractNode.js';
+import { AntlersNode, LiteralNode, SemanticGroup, VariableNode, LogicGroup, EqualCompOperator, ModifierNode, PathNode, RecursiveNode, VariableReference, NullCoalesceOperator } from '../runtime/nodes/abstractNode.js';
 
 suite("Basic Node Test", () => {
     test("it returns nodes", () => {
@@ -37,6 +37,15 @@ suite("Basic Node Test", () => {
             toAntlers(nodes[0]).getContent(),
             ' meta_title ?? title ?? "No Title Set" '
         );
+    });
+
+    test("it lexes the triple fallback operator as one token", () => {
+        const nodes = parseNodes("{{ a ??? b }}"),
+            antlersNode = toAntlers(nodes[0]);
+
+        assertCount(3, antlersNode.runtimeNodes);
+        assertInstanceOf(NullCoalesceOperator, antlersNode.runtimeNodes[1]);
+        assert.strictEqual(antlersNode.runtimeNodes[1].content, "???");
     });
 
     test("it removes params from node content", () => {
@@ -288,6 +297,26 @@ suite("Basic Node Test", () => {
             " test comment {{ var }} "
         );
         assert.strictEqual(nodes[1].content, "<p>I am a literal.</p>");
+    });
+
+    test("interpolated parameters dont skip trailing literal nodes", () => {
+        const nodes = parseNodes(
+            '{{ partial:navigation/tabs tab_parent_url="{{ url }}" tab_parent_title="{{ tabname }}" }}\n<!-- End: partial -->'
+        );
+
+        assertCount(2, nodes);
+        assertInstanceOf(AntlersNode, nodes[0]);
+        assertInstanceOf(LiteralNode, nodes[1]);
+        assert.strictEqual(nodes[1].content, "\n<!-- End: partial -->");
+    });
+
+    test("interpolated parameters dont duplicate existing trailing literals", () => {
+        const nodes = parseNodes('{{ partial:x parameter="{{ value }}" }}tail');
+
+        assertCount(2, nodes);
+        assertInstanceOf(AntlersNode, nodes[0]);
+        assertInstanceOf(LiteralNode, nodes[1]);
+        assert.strictEqual(nodes[1].content, "tail");
     });
 
     test("neighboring comments dont confuse things", () => {

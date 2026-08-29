@@ -2,6 +2,12 @@ import assert from 'assert';
 import { formatStringWithPrettier } from '../formatting/prettier/utils.js';
 
 suite('Formatter Prettier Tags', () => {   
+    test('it preserves shorthand parameters', async () => {
+        const template = '{{ partial:file/to/partial limit="5" :$shorthandVariable offset="1" }}';
+
+        assert.strictEqual((await formatStringWithPrettier(template)).trim(), template);
+    });
+
     test('it respects parameter node value delimiters', async () => {
         const input = `{{ partial:components/button as="button" 				label="{ trans:strings.form_send }" 
                                     attribute='x-bind:disabled="sending" x-bind:class="&#123;&#39;opacity-25 cursor-default&#39;: sending&#125;"' }}`;
@@ -150,6 +156,18 @@ After Partial
         assert.strictEqual((await formatStringWithPrettier(template)).trim(), output);
     });
 
+    test('it preserves quoted shorthand modifier values', async () => {
+        const inputs = [
+            `{{ values | join:', ' }}`,
+            `{{ title | modifier:'hello world' }}`,
+            `{{ title | modifier:"hello :|" }}`
+        ];
+
+        for (const input of inputs) {
+            assert.strictEqual((await formatStringWithPrettier(input)).trim(), input);
+        }
+    });
+
     test('it formats inline antlers nodes', async () => {
         const template = `<{{ as or 'a' }}  
 {{ slot:attributes }}
@@ -179,5 +197,13 @@ style="
         out = (await formatStringWithPrettier(out)).trim();
         
         assert.strictEqual(out, expected);
+    });
+
+    test('it preserves content after interpolated parameters', async () => {
+        const template = `<!-- /page_builder/_tab_page_child_nav.antlers.html -->
+{{ partial:navigation/tabs tab_parent_url="{{ url }}" tab_parent_title="{{ tabname }}" }}
+<!-- End: /page_builder/_tab_page_child_nav.antlers.html -->`;
+
+        assert.strictEqual((await formatStringWithPrettier(template)).trim(), template);
     });
 });
