@@ -117,18 +117,33 @@ suite('Prettier Formatter Array Wrapping', () => {
         assert.strictEqual((await formatCollapsed(input)).trim(), `{{ [one, 'two', three] }}`);
     });
 
-    test('preserved arrays retain tabs and nested indentation', async () => {
-        const input = `{{ [
-\t'one',
-\t[
-\t\t'two'
-\t]
-] | classes }}`;
+    test('preserved arrays normalize nested indentation', async () => {
+        const input = `{{
+    test = [
+            'one' => 1,
+            'two' => 2,
+            'nested' => [
+            'one' => 1,
+            'two' => 2,
 
-        assert.strictEqual((await formatStringWithPrettier(input)).trim(), input);
+    ]
+        ]
+}}`,
+            expected = `{{ test = [
+    'one' => 1,
+    'two' => 2,
+    'nested' => [
+        'one' => 1,
+        'two' => 2,
+    ]
+] }}`,
+            firstPass = await formatPreserved(input);
+
+        assert.strictEqual(firstPass.trim(), expected);
+        assert.strictEqual(await formatPreserved(firstPass), firstPass);
     });
 
-    test('preserved arrays retain authored indentation widths', async () => {
+    test('preserved arrays use configured indentation widths', async () => {
         const inputs = [
             `{{ [
   'one',
@@ -147,9 +162,36 @@ suite('Prettier Formatter Array Wrapping', () => {
         for (const input of inputs) {
             const firstPass = await formatPreserved(input);
 
-            assert.strictEqual(firstPass.trim(), input);
+            assert.strictEqual(firstPass.trim(), `{{ [
+    'one',
+    [
+        'two'
+    ]
+] }}`);
             assert.strictEqual(await formatPreserved(firstPass), firstPass);
         }
+    });
+
+    test('preserved nested arrays use configured tabs', async () => {
+        const input = `{{ values = [
+        'one' => [
+        'two' => [
+        'three'
+]
+]
+] }}`,
+            expected = `{{ values = [
+\t'one' => [
+\t\t'two' => [
+\t\t\t'three'
+\t\t]
+\t]
+] }}`,
+            options = { antlersArrayWrap: 'preserve', useTabs: true, tabWidth: 4 } as any,
+            firstPass = await formatStringWithPrettier(input, options);
+
+        assert.strictEqual(firstPass.trim(), expected);
+        assert.strictEqual(await formatStringWithPrettier(firstPass, options), firstPass);
     });
 
     test('tabs remain stable inside nested HTML', async () => {

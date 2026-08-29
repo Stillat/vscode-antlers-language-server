@@ -46,18 +46,34 @@ suite('Formatter Array Wrapping', () => {
         assert.strictEqual(formatAntlers(input, formattingOptions('invalid')), input);
     });
 
-    test('preserved arrays retain tabs and nested indentation', () => {
-        const input = `{{ [
-\t'one',
-\t[
-\t\t'two'
-\t]
-] | classes }}`;
+    test('preserved arrays normalize nested indentation', () => {
+        const input = `{{
+    test = [
+            'one' => 1,
+            'two' => 2,
+            'nested' => [
+            'one' => 1,
+            'two' => 2,
 
-        assert.strictEqual(formatAntlers(input), input);
+    ]
+        ]
+}}`,
+            expected = `{{ test = [
+    'one' => 1,
+    'two' => 2,
+    'nested' => [
+        'one' => 1,
+        'two' => 2,
+    ]
+] }}`;
+
+        const firstPass = formatAntlers(input, formattingOptions('preserve'));
+
+        assert.strictEqual(firstPass, expected);
+        assert.strictEqual(formatAntlers(firstPass, formattingOptions('preserve')), firstPass);
     });
 
-    test('preserved arrays retain authored indentation widths', () => {
+    test('preserved arrays use configured indentation widths', () => {
         const inputs = [
             `{{ [
   'one',
@@ -76,9 +92,64 @@ suite('Formatter Array Wrapping', () => {
         inputs.forEach((input) => {
             const firstPass = formatAntlers(input);
 
-            assert.strictEqual(firstPass, input);
+            assert.strictEqual(firstPass, `{{ [
+    'one',
+    [
+        'two'
+    ]
+] }}`);
             assert.strictEqual(formatAntlers(firstPass), firstPass);
         });
+    });
+
+    test('preserved nested arrays use configured tabs', () => {
+        const input = `{{ values = [
+        'one' => [
+        'two' => [
+        'three'
+]
+]
+] }}`,
+            expected = `{{ values = [
+\t'one' => [
+\t\t'two' => [
+\t\t\t'three'
+\t\t]
+\t]
+] }}`,
+            options = formattingOptions('preserve', false),
+            firstPass = formatAntlers(input, options);
+
+        assert.strictEqual(firstPass, expected);
+        assert.strictEqual(formatAntlers(firstPass, options), firstPass);
+    });
+
+    test('preserved arrays retain their formatted leading indentation', () => {
+        const input = `        {{ values = [
+                    ['alpha'],
+                    [],
+                    [
+                    'beta',
+                    'gamma',
+            ]
+                ]
+         after = values[2][1] }}`,
+            expected = `        {{ values = [
+            ['alpha'],
+            [],
+            [
+                'beta',
+                'gamma',
+            ]
+        ]
+         after = values[2][1] }}`;
+
+        let output = input;
+
+        for (let pass = 0; pass < 5; pass++) {
+            output = formatAntlers(output, formattingOptions('preserve'));
+            assert.strictEqual(output, expected);
+        }
     });
 
     test('tabs remain stable inside nested HTML', () => {

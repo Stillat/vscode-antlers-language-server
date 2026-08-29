@@ -172,6 +172,13 @@ export class Transformer {
         return this;
     }
 
+    private hasArrayLiteral(node: AntlersNode): boolean {
+        return node.getTrueNode().getTrueRuntimeNodes().some((runtimeNode) =>
+            runtimeNode instanceof VariableNode &&
+            (runtimeNode.name.startsWith('[') || runtimeNode.name.endsWith(']'))
+        );
+    }
+
     setParentTransformer(transformer: Transformer) {
         this.parentTransformer = transformer;
 
@@ -747,10 +754,7 @@ export class Transformer {
         if (this.parentTransformer != null) {
             return this.parentTransformer.registerInlineAntlers(node);
         } else {
-            const containsArray = node.getTrueRuntimeNodes().some((runtimeNode) =>
-                    runtimeNode instanceof VariableNode &&
-                    (runtimeNode.name.startsWith('[') || runtimeNode.name.endsWith(']'))
-                ),
+            const containsArray = this.hasArrayLiteral(node),
                 slugLength = containsArray
                     ? this.printNode(node).length
                     : node.getOriginalContent().length,
@@ -943,7 +947,10 @@ export class Transformer {
         for (const [slug, node] of this.inlineNodes) {
             const inline = this.selfClosing(slug),
                 inlineNs = this.selfClosingNs(slug),
-                printed = await this.printNodeAsync(node, this.indentLevel(inline));
+                preserveArrayIndent = this.options.arrayWrap == 'preserve' && this.hasArrayLiteral(node),
+                printed = preserveArrayIndent
+                    ? this.shiftSpanNode(await this.printNodeAsync(node), inline, 0)
+                    : await this.printNodeAsync(node, this.indentLevel(inline));
             value = value.replace(inline, printed);
             value = value.replace(inlineNs, printed);
         }
@@ -1020,7 +1027,10 @@ export class Transformer {
         this.inlineNodes.forEach((node: AntlersNode, slug: string) => {
             const inline = this.selfClosing(slug),
                 inlineNs = this.selfClosingNs(slug),
-                printed = this.printNode(node, this.indentLevel(inline));
+                preserveArrayIndent = this.options.arrayWrap == 'preserve' && this.hasArrayLiteral(node),
+                printed = preserveArrayIndent
+                    ? this.shiftSpanNode(this.printNode(node), inline, 0)
+                    : this.printNode(node, this.indentLevel(inline));
             value = value.replace(inline, printed);
             value = value.replace(inlineNs, printed);
         });
