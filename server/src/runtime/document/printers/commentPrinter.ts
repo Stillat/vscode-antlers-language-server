@@ -4,41 +4,77 @@ import { AsyncInlineFormatter, InlineFormatter } from '../inlineFormatter.js';
 
 export class CommentPrinter {
 
-    static printCommentLines(comment: AntlersNode, tabSize: number, targetIndent: number): string {
-        const sourceContent = comment.getContent(),
-            content = sourceContent.trim();
+    private static isDocumentationDirective(line: string): boolean {
+        return /^@(name|description|desc|entry|collection|blueprint|var|set|param\*?|format)\b/.test(line.trim());
+    }
+
+    private static isDocumentationComment(content: string): boolean {
+        return StringUtilities.breakByNewLine(content).some((line) => this.isDocumentationDirective(line));
+    }
+
+    private static indentWidth(line: string, tabSize: number): number {
+        let width = 0;
+
+        for (const char of line) {
+            if (char == ' ') {
+                width++;
+            } else if (char == '\t') {
+                width += tabSize - (width % tabSize);
+            } else {
+                break;
+            }
+        }
+
+        return width;
+    }
+
+    private static makeIndent(width: number, tabSize: number, insertSpaces: boolean): string {
+        if (insertSpaces) {
+            return ' '.repeat(width);
+        }
+
+        const tabs = Math.floor(width / tabSize),
+            spaces = width % tabSize;
+
+        return '\t'.repeat(tabs) + ' '.repeat(spaces);
+    }
+
+    private static printContent(sourceContent: string, tabSize: number, targetIndent: string, insertSpaces: boolean): string {
+        const content = sourceContent.trim();
 
         if (content.includes("\n")) {
-            const lines = StringUtilities.breakByNewLine(sourceContent),
+            const lines = StringUtilities.breakByNewLine(sourceContent);
+
+            while (lines.length > 0 && lines[0].trim().length == 0) {
+                lines.shift();
+            }
+
+            while (lines.length > 0 && lines[lines.length - 1].trim().length == 0) {
+                lines.pop();
+            }
+
+            const contentIndents = lines
+                .filter((line) => line.trim().length > 0)
+                .map((line) => this.indentWidth(line, tabSize)),
+                baseIndent = contentIndents.length > 0 ? Math.min(...contentIndents) : 0,
+                childIndent = targetIndent + this.makeIndent(tabSize, tabSize, insertSpaces),
                 reflowedLines: string[] = [];
 
             lines.forEach((line) => {
                 if (line.trim().length == 0) {
-                    reflowedLines.push(' '.repeat(tabSize + targetIndent) + line.trim());
+                    reflowedLines.push('');
                     return;
                 }
-                // Preserve relative indentation.
-                let curRelIndent = line.length - line.trim().length;
 
-                const checkLine = line.trim();
-
-                if (checkLine.startsWith('@desc') || checkLine.startsWith('@set') || checkLine.startsWith('@name')) {
-                    curRelIndent = tabSize;
-                }
-
-                reflowedLines.push(' '.repeat(tabSize + targetIndent + curRelIndent - tabSize) + line.trim());
+                const relativeIndent = this.isDocumentationDirective(line)
+                    ? 0
+                    : Math.max(0, this.indentWidth(line, tabSize) - baseIndent);
+                reflowedLines.push(childIndent + this.makeIndent(relativeIndent, tabSize, insertSpaces) + line.trim());
             });
 
-            if (reflowedLines.length > 0) {
-                if (reflowedLines[reflowedLines.length - 1].trim().length == 0) {
-                    reflowedLines.pop();
-                }
-            }
-
-            const content = reflowedLines.join("\n");
             let newComment = "{{#\n";
-            newComment += content;
-            newComment += "\n" + ' '.repeat(targetIndent) + '#}}';
+            newComment += reflowedLines.join("\n");
+            newComment += "\n" + targetIndent + '#}}';
 
             return newComment;
         }
@@ -46,11 +82,15 @@ export class CommentPrinter {
         return '{{# ' + content + ' #}}';
     }
 
-    static async printCommentAsync(comment: AntlersNode, tabSize: number, targetIndent: number, stringFormatter: AsyncInlineFormatter | null): Promise<string> {
+    static printCommentLines(comment: AntlersNode, tabSize: number, targetIndent: string, insertSpaces: boolean): string {
+        return this.printContent(comment.getContent(), tabSize, targetIndent, insertSpaces);
+    }
+
+    static async printCommentAsync(comment: AntlersNode, tabSize: number, targetIndent: string, insertSpaces: boolean, stringFormatter: AsyncInlineFormatter | null): Promise<string> {
         const sourceContent = comment.getContent(),
             content = sourceContent;
 
-        if (content.includes("\n") && !(content.includes('@desc') || content.includes('@set') || content.includes('@name'))) {
+        if (content.includes("\n") && !this.isDocumentationComment(content)) {
             try {
                 let formattedCommentContent = content;
 
@@ -58,39 +98,19 @@ export class CommentPrinter {
                     formattedCommentContent = await stringFormatter(formattedCommentContent);
                 }
 
-                const lines = StringUtilities.breakByNewLine(formattedCommentContent),
-                    reflowedLines: string[] = [];
-
-                lines.forEach((line) => {
-                    if (line.trim().length == 0) {
-                        reflowedLines.push(' '.repeat(tabSize + targetIndent) + line.trim());
-                        return;
-                    }
-                    // Preserve relative indentation.
-                    let curRelIndent = line.length - line.trim().length;
-
-                    reflowedLines.push(' '.repeat(tabSize + targetIndent + curRelIndent) + line.trim());
-                });
-
-                if (reflowedLines.length > 0) {
-                    if (reflowedLines[reflowedLines.length - 1].trim().length == 0) {
-                        reflowedLines.pop();
-                    }
-                }
-
-                return "{{#\n" + reflowedLines.join("\n") + "\n" + ' '.repeat(targetIndent) + '#}}';;
+                return this.printContent(formattedCommentContent, tabSize, targetIndent, insertSpaces);
             } catch (err) {
             }
         }
 
-        return this.printCommentLines(comment, tabSize, targetIndent);
+        return this.printCommentLines(comment, tabSize, targetIndent, insertSpaces);
     }
 
-    static printComment(comment: AntlersNode, tabSize: number, targetIndent: number, stringFormatter: InlineFormatter | null): string {
+    static printComment(comment: AntlersNode, tabSize: number, targetIndent: string, insertSpaces: boolean, stringFormatter: InlineFormatter | null): string {
         const sourceContent = comment.getContent(),
             content = sourceContent.trim();
 
-        if (content.includes("\n") && !(content.includes('@desc') || content.includes('@set') || content.includes('@name'))) {
+        if (content.includes("\n") && !this.isDocumentationComment(content)) {
             try {
                 let formattedCommentContent = content;
 
@@ -98,31 +118,11 @@ export class CommentPrinter {
                     formattedCommentContent = stringFormatter(formattedCommentContent);
                 }
 
-                const lines = StringUtilities.breakByNewLine(formattedCommentContent),
-                    reflowedLines: string[] = [];
-
-                lines.forEach((line) => {
-                    if (line.trim().length == 0) {
-                        reflowedLines.push(' '.repeat(tabSize + targetIndent) + line.trim());
-                        return;
-                    }
-                    // Preserve relative indentation.
-                    let curRelIndent = line.length - line.trim().length;
-
-                    reflowedLines.push(' '.repeat(tabSize + targetIndent + curRelIndent) + line.trim());
-                });
-
-                if (reflowedLines.length > 0) {
-                    if (reflowedLines[reflowedLines.length - 1].trim().length == 0) {
-                        reflowedLines.pop();
-                    }
-                }
-
-                return "{{#\n" + reflowedLines.join("\n") + "\n" + ' '.repeat(targetIndent) + '#}}';;
+                return this.printContent(formattedCommentContent, tabSize, targetIndent, insertSpaces);
             } catch (err) {
             }
         }
 
-        return this.printCommentLines(comment, tabSize, targetIndent);
+        return this.printCommentLines(comment, tabSize, targetIndent, insertSpaces);
     }
 }

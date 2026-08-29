@@ -1,6 +1,7 @@
 import { IDiagnosticsHandler } from '../diagnosticsHandler.js';
 import DataDumpHandler from './dataDumpHandler.js';
 import DeprecatedModifierHandler from './deprecatedModifierHandler.js';
+import ElseIfSyntaxHandler from './elseIfSyntaxHandler.js';
 import FieldTypeModifierSequenceHandler from './fieldTypeModifierSequenceHandler.js';
 import InterleavedNodeHandler from './interleavedNodes.js';
 import InvalidParameterHandler from './invalidParameterHandler.js';
@@ -20,6 +21,7 @@ const CoreHandlers: IDiagnosticsHandler[] = [
     ModifierRuntimeTypeHandler,
     FieldTypeModifierSequenceHandler,
     DeprecatedModifierHandler,
+    ElseIfSyntaxHandler,
     RelateTagHandler,
     TagsThatErrorHandler,
     ShorthandModifierHandler,

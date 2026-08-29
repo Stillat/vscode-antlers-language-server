@@ -94,7 +94,7 @@ export class NodeBuffer {
     }
 
     appendOS(text: string) {
-        if (this.buffer.endsWith(' ') == false
+        if (/\s$/.test(this.buffer) == false
             && this.buffer.endsWith('(') == false
             && this.buffer.endsWith('{') == false
             && this.buffer.endsWith('[') == false
@@ -152,6 +152,12 @@ export class NodeBuffer {
     }
 
     paramS(param: ParameterNode) {
+        if (param.isShorthand) {
+            this.append(` :$${param.name}`);
+
+            return this;
+        }
+
         let bParam = ' ';
 
         if (param.isVariableReference) {
@@ -195,6 +201,13 @@ export class NodeBuffer {
 
     getContent() {
         return this.buffer;
+    }
+
+    getCurrentLineIndent(): string {
+        const lineStart = this.buffer.lastIndexOf("\n") + 1,
+            currentLine = this.buffer.substring(lineStart);
+
+        return (/^[\t ]*/.exec(currentLine) ?? [''])[0];
     }
 
     endsWith(value: string): boolean {
