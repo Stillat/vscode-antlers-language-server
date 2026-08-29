@@ -730,6 +730,33 @@ export class DocumentParser {
             }
         }
 
+        if (!this.isNoParse && !this.doesHaveUnclosedStructures && this.nodes.length > 0) {
+            const lastNode = this.nodes[this.nodes.length - 1],
+                lastLiteralContent = lastNode instanceof LiteralNode
+                    ? lastNode.sourceContent || lastNode.content
+                    : '',
+                hasTrailingLiteral = lastLiteralContent.length > 0 && this.content.endsWith(lastLiteralContent),
+                lastCoveredIndex = this.nodes.reduce((index, node) => {
+                    return Math.max(index, node.endPosition?.index ?? -1);
+                }, -1),
+                literalStart = lastCoveredIndex + 1;
+
+            if (!hasTrailingLiteral && literalStart < this.inputLen) {
+                const literalNode = new LiteralNode(),
+                    literalContent = this.content.substring(literalStart);
+
+                literalNode.withParser(this);
+                literalNode.content = this.prepareLiteralContent(literalContent);
+
+                if (literalNode.content.length > 0) {
+                    literalNode.startPosition = this.positionFromOffset(literalStart, literalStart);
+                    literalNode.endPosition = this.positionFromOffset(this.inputLen - 1, this.inputLen - 1);
+                    literalNode.sourceContent = literalContent;
+                    this.nodes.push(literalNode);
+                }
+            }
+        }
+
         let index = 0;
 
         this.nodes.forEach((node) => {

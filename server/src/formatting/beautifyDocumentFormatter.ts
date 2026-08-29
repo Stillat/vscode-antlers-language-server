@@ -17,7 +17,9 @@ export class BeautifyDocumentFormatter extends DocumentFormatter {
                 endNewline: getFormatOption(options.htmlOptions, "endWithNewline", false) as boolean,
                 maxAntlersStatementsPerLine: options.maxStatementsPerLine,
                 newlinesAfterFrontMatter: 1,
-                tabSize: options.tabSize
+                tabSize: options.tabSize,
+                insertSpaces: options.insertSpaces,
+                arrayWrap: options.arrayWrap == 'collapse' ? 'collapse' : 'preserve'
             });
     }
 
