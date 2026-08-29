@@ -3,6 +3,23 @@
     "fileTypes": ["antlers.html", "antlers.php", "antlers.xml", "html", "htm", "xhtml"],
 	"scopeName": "text.html.statamic",
 	"injections": {
+		"L:(text.html.statamic meta.tag - (meta.embedded.block.statamic | meta.embedded.line.statamic | comment.block.statamic | comment.block.html))": {
+			"patterns": [
+				{
+					"include": "#alpine-attribute"
+				}
+			]
+		},
+		"L:text.html.statamic": {
+			"patterns": [
+				{
+					"include": "#statamic-comments"
+				},
+				{
+					"include": "#antlers-tags"
+				}
+			]
+		},
 		"text.html.statamic - (meta.embedded | meta.tag), L:((text.html.statamic meta.tag) - (meta.embedded.block.php | meta.embedded.line.php)), L:(source.js - (meta.embedded.block.php | meta.embedded.line.php)), L:(source.css - (meta.embedded.block.php | meta.embedded.line.php))": {
 			"patterns": [
 				{
@@ -15,16 +32,6 @@
 				{
 					"comment": "This is set to use XHTML standards, but you can change that by changing .strict to .basic for HTML standards",
 					"include": "text.html.basic"
-				}
-			]
-		},
-		"text.html.statamic": {
-			"patterns": [
-				{
-					"include": "#statamic-comments"
-				},
-				{
-					"include": "#antlers-tags"
 				}
 			]
 		}
@@ -40,10 +47,123 @@
 			"include": "#frontMatter"
 		},
 		{
+			"include": "#dynamic-html-tag"
+		},
+		{
 			"include": "#antlers-tags"
 		}
 	],
 	"repository": {
+		"dynamic-html-tag": {
+			"begin": "(</?)(?={{)",
+			"beginCaptures": {
+				"1": {
+					"name": "punctuation.definition.tag.begin.html"
+				}
+			},
+			"end": "(/?>)",
+			"endCaptures": {
+				"1": {
+					"name": "punctuation.definition.tag.end.html"
+				}
+			},
+			"name": "meta.tag.other.dynamic.html",
+			"patterns": [
+				{
+					"include": "#antlers-tags"
+				},
+				{
+					"include": "text.html.basic#attribute"
+				}
+			]
+		},
+		"alpine-attribute": {
+			"name": "meta.attribute.alpine",
+			"begin": "(?:\\b(x-)|(:|@|#))([a-zA-Z0-9\\-_]+)(?:\\:([a-zA-Z\\-_]+))?(?:\\.([a-zA-Z0-9\\-_]+))*\\s*(=)",
+			"end": "(?<=['\"`])|(?=[\\s<>])",
+			"captures": {
+				"1": {
+					"name": "entity.other.attribute-name.html"
+				},
+				"2": {
+					"name": "punctuation.separator.key-value.html"
+				},
+				"3": {
+					"name": "entity.other.attribute-name.html"
+				},
+				"4": {
+					"name": "entity.other.attribute-name.html"
+				},
+				"5": {
+					"name": "entity.other.attribute-name.html"
+				},
+				"6": {
+					"name": "punctuation.separator.key-value.html"
+				}
+			},
+			"patterns": [
+				{
+					"contentName": "meta.embedded.inline.alpinejs",
+					"begin": "`",
+					"beginCaptures": {
+						"0": {
+							"name": "punctuation.definition.string.begin.html"
+						}
+					},
+					"end": "`",
+					"endCaptures": {
+						"0": {
+							"name": "punctuation.definition.string.end.html"
+						}
+					},
+					"patterns": [
+						{
+							"include": "source.js#expression"
+						}
+					]
+				},
+				{
+					"contentName": "meta.embedded.inline.alpinejs",
+					"begin": "\"",
+					"beginCaptures": {
+						"0": {
+							"name": "punctuation.definition.string.begin.html"
+						}
+					},
+					"end": "\"",
+					"endCaptures": {
+						"0": {
+							"name": "punctuation.definition.string.end.html"
+						}
+					},
+					"patterns": [
+						{
+							"include": "source.js#expression"
+						}
+					]
+				},
+				{
+					"contentName": "meta.embedded.inline.alpinejs",
+					"begin": "'",
+					"beginCaptures": {
+						"0": {
+							"name": "punctuation.definition.string.begin.html"
+						}
+					},
+					"end": "'",
+					"endCaptures": {
+						"0": {
+							"name": "punctuation.definition.string.end.html"
+						}
+					},
+					"patterns": [
+						{
+							"include": "source.js#expression"
+						}
+					]
+				}
+			]
+		},
 		"php-tag": {
 			"patterns": [
 				{
@@ -263,7 +383,7 @@
 					"name": "keyword.operator.assignment.statamic"
 				},
 				{
-                    "match": "(?<!-)\\b(?i)(!|\\?\\?|\\?=|\\?|&&|&|\\|\\|)|\\b(and|or|xor)\\b",
+                    "match": "(?<!-)(!|\\?\\?|\\?=|\\?|&&|&|\\|\\|)|(?i:\\b(and|or|xor)\\b)",
 					"name": "keyword.operator.logical.statamic"
 				},
 				{
@@ -334,7 +454,7 @@
 			]
 		},
 		"antlers-tag-parameter-variable": {
-			"match": "(:?([\\S:]+?)(=)('|\")([^\\4]*?)(\\4))",
+			"match": "(?<!\\S)(:?([\\S:]+?)(=)('|\")([^\\4]*?)(\\4))",
 			"captures": {
 				"1": {
 					"patterns": [
