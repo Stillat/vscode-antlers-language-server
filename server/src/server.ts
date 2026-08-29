@@ -68,6 +68,7 @@ import { DocumentationHandler } from './documentation/generator/handler.js';
 import { IProjectFields } from './projects/structuredFieldTypes/types.js';
 import { IDocumentationResult } from './documentation/generator/types.js';
 import { updateCurrentDetails } from './documentation/generator/documentationProvider.js';
+import { notifyProjectDetails } from './protocol/projectDetailsNotification.js';
 
 const defaultSettings: AntlersSettings = {
     formatFrontMatter: false,
@@ -116,10 +117,6 @@ interface ForcedFormatParams {
 
 interface DocumentTransformParams {
     content: string
-}
-
-interface ProjectDetailsParams {
-    content: IProjectFields
 }
 
 interface TransformReplacement {
@@ -493,11 +490,7 @@ export function requestEdits(edit: WorkspaceEdit) {
 export function sendProjectDetails(contents: IProjectFields) {
     ProjectManager.instance?.setStructuredProject(contents);
     updateCurrentDetails(contents);
-    const params: ProjectDetailsParams = {
-        content: contents
-    };
-
-    connection.sendRequest("antlers/projectDetailsAvailable", params);
+    notifyProjectDetails(connection, contents);
 }
 
 function analyzeStructures(document: string) {
