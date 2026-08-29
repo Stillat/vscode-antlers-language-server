@@ -74,6 +74,7 @@ export class Transformer {
     private inlineIfs: Map<string, ConditionNode> = new Map();
     private createExraStructuralPairs = false;
     private spanNodes: Map<string, AntlersNode> = new Map();
+    private multilineSpanSlugs: Set<string> = new Set();
     private inlineNodes: Map<string, AntlersNode> = new Map();
     private virtualBlocks: VirtualBlockStructure[] = [];
     private inlineComments: Map<string, AntlersNode> = new Map();
@@ -116,6 +117,12 @@ export class Transformer {
         this.asyncInlineFormatter = asyncInlineFormatter;
 
         return this;
+    }
+
+    private hasSwitchOperator(node: AntlersNode): boolean {
+        return node.getTrueNode().getTrueRuntimeNodes().some((runtimeNode) => runtimeNode instanceof VariableNode
+            && runtimeNode.convertedToOperator
+            && runtimeNode.name == 'switch');
     }
 
     produceExtraStructuralPairs(doCreate: boolean) {
@@ -316,7 +323,7 @@ export class Transformer {
         return value;
     }
 
-    private async printNodeAsync(node: AntlersNode, targetIndent: number | null = null): Promise<string> {
+    private async printNodeAsync(node: AntlersNode, targetIndent: number | null = null, alignContinuation = false): Promise<string> {
         const printNode = node.getTrueNode();
 
         if ((printNode.rawStart == '{{?' || printNode.rawStart == '{{$') && this.asyncPhpFormatter != null) {
@@ -353,10 +360,10 @@ export class Transformer {
 
         let result = NodePrinter.prettyPrintNode(printNode, doc, 0, this.options, prepend, null);
 
-        const forceBreakOperatorNames = ['switch', 'list'];
-
         if (targetIndent != null && result.includes("\n")) {
-            if (node.isVirtual && (node.name?.name == 'switch' || node.name?.name == 'list')) {
+            if (alignContinuation || this.hasSwitchOperator(printNode)) {
+                result = IndentLevel.shiftIndent(result, targetIndent, true, this.options.tabSize, false);
+            } else if (node.isVirtual && (node.name?.name == 'switch' || node.name?.name == 'list')) {
                 result = IndentLevel.shiftIndent(result, targetIndent + this.options.tabSize, true);
             } else {
                 result = IndentLevel.shiftIndent(result, targetIndent - (this.options.tabSize * 2), true);
@@ -366,7 +373,7 @@ export class Transformer {
         return result;
     }
 
-    private printNode(node: AntlersNode, targetIndent: number | null = null) {
+    private printNode(node: AntlersNode, targetIndent: number | null = null, alignContinuation = false) {
         const printNode = node.getTrueNode();
 
         if ((printNode.rawStart == '{{?' || printNode.rawStart == '{{$') && this.phpFormatter != null) {
@@ -403,10 +410,10 @@ export class Transformer {
 
         let result = NodePrinter.prettyPrintNode(printNode, doc, 0, this.options, prepend, null);
 
-        const forceBreakOperatorNames = ['switch', 'list'];
-
         if (targetIndent != null && result.includes("\n")) {
-            if (node.isVirtual && (node.name?.name == 'switch' || node.name?.name == 'list')) {
+            if (alignContinuation || this.hasSwitchOperator(printNode)) {
+                result = IndentLevel.shiftIndent(result, targetIndent, true, this.options.tabSize, false);
+            } else if (node.isVirtual && (node.name?.name == 'switch' || node.name?.name == 'list')) {
                 result = IndentLevel.shiftIndent(result, targetIndent + this.options.tabSize, true);
             } else {
                 result = IndentLevel.shiftIndent(result, targetIndent - (this.options.tabSize * 2), true);
@@ -763,6 +770,12 @@ export class Transformer {
             if (node.isInlineAntlers) {
                 this.spanNodes.set(slug, node);
 
+                if (this.hasSwitchOperator(node)) {
+                    this.multilineSpanSlugs.add(slug);
+
+                    return slug + "\n";
+                }
+
                 return slug;
             } else {
                 this.inlineNodes.set(slug, node);
@@ -956,14 +969,15 @@ export class Transformer {
         }
 
         for (const [slug, node] of this.spanNodes) {
-            let level = 0;
-
-            if (node.isVirtual && (node.name?.name == 'switch' || node.name?.name == 'list')) {
-                level = this.indentLevel(slug, true);
-            }
-
-            const printed = this.shiftSpanNode(await this.printNodeAsync(node, level), slug, level),
+            const alignContinuation = this.multilineSpanSlugs.has(slug),
+                level = alignContinuation ? this.indentLevel(slug, true) : 0,
+                printed = this.shiftSpanNode(await this.printNodeAsync(node, level, alignContinuation), slug, level),
                 slugNs = this.selfClosingNs(slug);
+
+            if (this.multilineSpanSlugs.has(slug)) {
+                value = value.replace(slug + "\r\n", printed);
+                value = value.replace(slug + "\n", printed);
+            }
 
             value = value.replace(slug, printed);
             value = value.replace(slugNs, printed);
@@ -1036,14 +1050,15 @@ export class Transformer {
         });
 
         this.spanNodes.forEach((node: AntlersNode, slug: string) => {
-            let level = 0;
-
-            if (node.isVirtual && (node.name?.name == 'switch' || node.name?.name == 'list')) {
-                level = this.indentLevel(slug, true);
-            }
-
-            const printed = this.shiftSpanNode(this.printNode(node, level), slug, level),
+            const alignContinuation = this.multilineSpanSlugs.has(slug),
+                level = alignContinuation ? this.indentLevel(slug, true) : 0,
+                printed = this.shiftSpanNode(this.printNode(node, level, alignContinuation), slug, level),
                 slugNs = this.selfClosingNs(slug);
+
+            if (this.multilineSpanSlugs.has(slug)) {
+                value = value.replace(slug + "\r\n", printed);
+                value = value.replace(slug + "\n", printed);
+            }
 
             value = value.replace(slug, printed);
             value = value.replace(slugNs, printed);
@@ -1202,7 +1217,15 @@ export class Transformer {
                 let indent = thisLine.length - trimmed.length;
 
                 if (includeIndex) {
-                    indent += thisLine.indexOf(value);
+                    const valueIndex = thisLine.indexOf(value);
+
+                    const inlineAlignmentLimit = Math.max(this.options.tabSize * 3, 12);
+
+                    if (valueIndex - indent <= inlineAlignmentLimit) {
+                        indent = valueIndex;
+                    } else {
+                        indent += this.options.tabSize;
+                    }
                 }
 
                 return indent;

@@ -225,7 +225,7 @@ source }}`,
         assert.strictEqual(formatAntlers('{{ left where       right }}'), '{{ left where right }}');
     });
 
-    test('it preserves space on switch and inlines expanded groups', () => {
+    test('it formats switches in inline attributes', () => {
         const input = `{{#
     @name h1
     @desc The typography h1 partial to render an h1 with \`class\`, \`as\`, \`color\` and \`content\` attributes.
@@ -258,8 +258,9 @@ source }}`,
 
 <!-- /typography/_h1.antlers.html -->
 <{{ as or 'h1' }} class="{{ switch(
-                              (format == 'eyebrow') => '',
-                              () => 'text-2xl md:text-4xl font-bold leading-tight') }}
+       (format == 'eyebrow') => '',
+       () => 'text-2xl md:text-4xl font-bold leading-tight'
+    ) }}
         {{ color or 'text-neutral' }} {{ class }}">
     {{ content | nl2br }}
 </{{ as or 'h1' }}>
@@ -276,10 +277,11 @@ source }}`,
 (size == 'xl') => '90vw'
 )}" }}`;
         const expected = `{{ test variable="{ switch(
-   (size == 'sm') => '(min-width: 768px) 35vw, 90vw',
-   (size == 'md') => '(min-width: 768px) 55vw, 90vw',
-   (size == 'lg') => '(min-width: 768px) 75vw, 90vw',
-   (size == 'xl') => '90vw')}" }}`;
+  (size == 'sm') => '(min-width: 768px) 35vw, 90vw',
+  (size == 'md') => '(min-width: 768px) 55vw, 90vw',
+  (size == 'lg') => '(min-width: 768px) 75vw, 90vw',
+  (size == 'xl') => '90vw'
+)}" }}`;
 
         assert.strictEqual(formatAntlers(input), expected);
     });
@@ -361,9 +363,9 @@ source }}`,
                             {{ five }}
                                 {{ six }}
                                     {{ parity = switch(
-                                             ((index | mod:2) == 0) => 'even',
-                                             ((index | mod:2) == 1) => 'odd',
-                                         ) }}
+                                       ((index | mod:2) == 0) => 'even',
+                                       ((index | mod:2) == 1) => 'odd',
+                                    ) }}
                                 {{ /six }}
                             {{ /five }}
                         {{ /four }}

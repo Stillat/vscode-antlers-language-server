@@ -170,6 +170,35 @@ export class NodePrinter {
                 nodeBuffer.setIndentSeed(seedIndent);
             }
 
+            const groupsContainingSwitch = new Set<LogicGroupBegin>(),
+                groupScanStack: LogicGroupBegin[] = [];
+
+            for (let i = 0; i < lexerNodes.length; i++) {
+                const scanNode = lexerNodes[i];
+
+                if (scanNode instanceof LogicGroupBegin) {
+                    groupScanStack.push(scanNode);
+                } else if (scanNode instanceof LogicGroupEnd) {
+                    groupScanStack.pop();
+                } else if (scanNode instanceof VariableNode && scanNode.convertedToOperator && scanNode.name == 'switch') {
+                    groupScanStack.forEach((group) => groupsContainingSwitch.add(group));
+                }
+            }
+
+            type LayoutGroup = {
+                type: 'inline' | 'switch' | 'wrapped'
+            };
+
+            const layoutGroups: LayoutGroup[] = [];
+            let layoutDepth = 0;
+            const indentForDepth = (depth: number) => {
+                if (depth <= 0) {
+                    return 0;
+                }
+
+                return nodeBuffer.getContentIndent() + ((depth - 1) * options.tabSize);
+            };
+
             let lastPrintedNode: AbstractNode | null = null;
 
 
@@ -187,7 +216,9 @@ export class NodePrinter {
                 if (node instanceof LogicGroupEnd) {
                     if (node.next instanceof LogicGroupEnd == false && node.next != null) {
                         if (!LanguageParser.isOperatorType(node.next) || !LanguageParser.isAssignmentOperator(node.next)) {
-                            if (node.next instanceof StatementSeparatorNode == false && node.next instanceof InlineBranchSeparator == false) {
+                            if (node.next instanceof StatementSeparatorNode == false
+                                && node.next instanceof InlineBranchSeparator == false
+                                && node.next instanceof ArgSeparator == false) {
                                 if (!node.isSwitchGroupMember && !LanguageParser.isOperatorType(node.next)) {
                                     insertNlAfter = true;
 
@@ -304,16 +335,20 @@ export class NodePrinter {
                                     break;
                                 }
 
-                                // Keep <switch/list>( together, and start a new line for the conditions.
-
                                 nodeBuffer.append('(');
-                                if (node.name != 'list') {
-                                    nodeBuffer
-                                        .relativeIndent(node.name)
-                                        .newLine().indent();
+                                const groupType = node.name == 'switch'
+                                    ? 'switch'
+                                    : (groupsContainingSwitch.has(next) ? 'wrapped' : 'inline');
+
+                                layoutGroups.push({ type: groupType });
+
+                                if (groupType != 'inline') {
+                                    layoutDepth += 1;
+                                    nodeBuffer.newlineAt(indentForDepth(layoutDepth));
                                 }
+
                                 i += 1;
-                                lastPrintedNode = lexerNodes[i + 1];
+                                lastPrintedNode = next;
                                 continue;
                             } else {
                                 break;
@@ -374,8 +409,9 @@ export class NodePrinter {
                         // Keep <switch/list>( together, and start a new line for the conditions.
 
                         nodeBuffer.append('(');
+                        layoutGroups.push({ type: 'inline' });
                         i += 1;
-                        lastPrintedNode = lexerNodes[i + 1];
+                        lastPrintedNode = next;
                         continue;
                     } else {
                         break;
@@ -453,7 +489,22 @@ export class NodePrinter {
                     nodeBuffer.append(isQuoted ? sourceContent : node.value.trim());
                 } else if (node instanceof LogicGroupBegin) {
                     nodeBuffer.append('(');
+                    const groupType = groupsContainingSwitch.has(node) ? 'wrapped' : 'inline';
+
+                    layoutGroups.push({ type: groupType });
+
+                    if (groupType == 'wrapped') {
+                        layoutDepth += 1;
+                        nodeBuffer.newlineAt(indentForDepth(layoutDepth));
+                    }
                 } else if (node instanceof LogicGroupEnd) {
+                    const layoutGroup = layoutGroups.pop();
+
+                    if (layoutGroup != null && layoutGroup.type != 'inline') {
+                        layoutDepth = Math.max(0, layoutDepth - 1);
+                        nodeBuffer.newlineAt(indentForDepth(layoutDepth));
+                    }
+
                     nodeBuffer.append(')');
                 } else if (node instanceof StringValueNode) {
                     if (doc.getDocumentParser().getLanguageParser().isMergedVariableComponent(node)) {
@@ -466,9 +517,10 @@ export class NodePrinter {
                         nodeBuffer.appendOS(node.sourceTerminator + node.value + node.sourceTerminator);
                     }
                 } else if (node instanceof ArgSeparator) {
-                    if (node.isSwitchGroupMember) {
-                        nodeBuffer.append(',')
-                            .newlineIndent();
+                    const layoutGroup = layoutGroups[layoutGroups.length - 1];
+
+                    if (layoutGroup != null && layoutGroup.type != 'inline') {
+                        nodeBuffer.append(',').newlineAt(indentForDepth(layoutDepth));
                     } else {
                         const nextNode = i + 1 < lexerNodes.length ? lexerNodes[i + 1] : null,
                             nextParts = nextNode instanceof VariableNode
