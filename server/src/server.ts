@@ -32,7 +32,7 @@ import {
     sendAllDiagnostics,
     validateTextDocument,
 } from "./services/antlersDiagnostics.js";
-import { formatAntlersDocument } from "./formatting/formatter.js";
+import { formatAntlersDocument, formatAntlersRange } from "./formatting/formatter.js";
 import { handleSignatureHelpRequest } from "./services/modifierMethodSignatures.js";
 import { handleDocumentHover } from "./services/antlersHover.js";
 import { handleDefinitionRequest } from "./services/antlersDefinitions.js";
@@ -186,6 +186,7 @@ connection.onInitialize((params: InitializeParams) => {
                 triggerCharacters: [":", '"', "'", "{", "/", "|", "@", ' '],
             },
             documentFormattingProvider: {},
+            documentRangeFormattingProvider: {},
             foldingRangeProvider: {},
             signatureHelpProvider: {
                 triggerCharacters: [','],
@@ -344,6 +345,7 @@ connection.onDefinition(handleDefinitionRequest);
 connection.onFoldingRanges(handleFoldingRequest);
 connection.onSignatureHelp(handleSignatureHelpRequest);
 connection.onDocumentFormatting(formatAntlersDocument);
+connection.onDocumentRangeFormatting(formatAntlersRange);
 connection.onCompletion(debouncedCompletionHandler);
 connection.onCompletionResolve(handleOnCompletionResolve);
 documents.listen(connection);
