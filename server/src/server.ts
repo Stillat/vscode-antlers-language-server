@@ -33,11 +33,11 @@ import {
     sendAllDiagnostics,
     validateTextDocument,
 } from "./services/antlersDiagnostics.js";
-import { formatAntlersDocument } from "./formatting/formatter.js";
+import { formatAntlersDocument, formatAntlersRange } from "./formatting/formatter.js";
 import { handleSignatureHelpRequest } from "./services/modifierMethodSignatures.js";
 import { handleDocumentHover } from "./services/antlersHover.js";
 import { handleDefinitionRequest } from "./services/antlersDefinitions.js";
-import { newSemanticTokenProvider } from "./services/semanticTokens.js";
+import { newSemanticTokenProvider, semanticTokenLegend } from "./services/semanticTokens.js";
 import { handleDocumentSymbolRequest } from "./services/documentSymbols.js";
 import { DocumentLinkManager } from "./services/antlersLinks.js";
 import ProjectManager from './projects/projectManager.js';
@@ -65,6 +65,8 @@ import ExtractPartialHandler from './refactoring/core/extractPartialHandler.js';
 import { BeautifyDocumentFormatter } from './formatting/beautifyDocumentFormatter.js';
 import { AntlersSettings } from './antlersSettings.js';
 import { debounce } from 'ts-debounce';
+import { buildFieldTypeInlayHints } from './services/fieldTypeInlayHints.js';
+import { buildWorkspaceSymbols } from './services/workspaceSymbols.js';
 
 const defaultSettings: AntlersSettings = {
     formatFrontMatter: false,
@@ -77,13 +79,39 @@ const defaultSettings: AntlersSettings = {
     trace: { server: 'off' },
     formatterIgnoreExtensions: ['xml'],
     formatterArrayWrap: 'preserve',
-    languageVersion: 'runtime'
+    languageVersion: 'runtime',
+    inlayHints: {
+        showFieldTypes: false
+    }
 };
 
 let globalSettings: AntlersSettings = defaultSettings;
 
+function refreshFieldTypeInlayHints() {
+    if (!hasInlayHintRefreshCapability) {
+        return;
+    }
+
+    void connection.languages.inlayHint.refresh().catch((error: unknown) => {
+        connection.console.warn(
+            `Unable to refresh field type inlay hints: ${String(error)}`
+        );
+    });
+}
+
 function updateGlobalSettings(settings: AntlersSettings) {
+    const fieldTypeHintsWereEnabled =
+        globalSettings.inlayHints?.showFieldTypes === true;
+    const fieldTypeHintsAreEnabled =
+        settings.inlayHints?.showFieldTypes === true;
+    const shouldRefreshInlayHints =
+        fieldTypeHintsWereEnabled !== fieldTypeHintsAreEnabled;
+
     globalSettings = settings;
+
+    if (shouldRefreshInlayHints) {
+        refreshFieldTypeInlayHints();
+    }
 }
 
 export function getAntlersSettings() {
@@ -99,7 +127,21 @@ const documents: TextDocuments<TextDocument> = new TextDocuments(TextDocument);
 let hasConfigurationCapability = false;
 let hasWorkspaceFolderCapability = false;
 let hasDiagnosticRelatedInformationCapability = false;
+let hasInlayHintRefreshCapability = false;
+let hasSemanticTokenRefreshCapability = false;
 let hasDynamicWatchedFilesCapability = false;
+
+function refreshSemanticTokens() {
+    if (!hasSemanticTokenRefreshCapability) {
+        return;
+    }
+
+    void connection.languages.semanticTokens.refresh().catch((error: unknown) => {
+        connection.console.warn(
+            `Unable to refresh semantic tokens: ${String(error)}`
+        );
+    });
+}
 
 const projectWatcherGlobs = [
     '**/resources/**/*.{yaml,yml}',
@@ -184,6 +226,16 @@ connection.onInitialize((params: InitializeParams) => {
         capabilities.textDocument.publishDiagnostics &&
         capabilities.textDocument.publishDiagnostics.relatedInformation
     );
+    hasInlayHintRefreshCapability = !!(
+        capabilities.workspace &&
+        capabilities.workspace.inlayHint &&
+        capabilities.workspace.inlayHint.refreshSupport
+    );
+    hasSemanticTokenRefreshCapability = !!(
+        capabilities.workspace &&
+        capabilities.workspace.semanticTokens &&
+        capabilities.workspace.semanticTokens.refreshSupport
+    );
     hasDynamicWatchedFilesCapability = !!(
         capabilities.workspace &&
         capabilities.workspace.didChangeWatchedFiles &&
@@ -199,6 +251,7 @@ connection.onInitialize((params: InitializeParams) => {
                 triggerCharacters: [":", '"', "'", "{", "/", "|", "@", ' '],
             },
             documentFormattingProvider: {},
+            documentRangeFormattingProvider: {},
             foldingRangeProvider: {},
             signatureHelpProvider: {
                 triggerCharacters: [','],
@@ -207,6 +260,13 @@ connection.onInitialize((params: InitializeParams) => {
             hoverProvider: {},
             definitionProvider: {},
             documentSymbolProvider: {},
+            inlayHintProvider: true,
+            workspaceSymbolProvider: {},
+            semanticTokensProvider: {
+                legend: semanticTokenLegend,
+                full: true,
+                range: true
+            },
             referencesProvider: {},
             documentHighlightProvider: {},
             codeActionProvider: {},
@@ -372,6 +432,10 @@ connection.onDocumentSymbol((_params) => {
     return handleDocumentSymbolRequest(_params);
 });
 
+connection.onWorkspaceSymbol((params, token) => {
+    return buildWorkspaceSymbols(params, ProjectManager.instance, token);
+});
+
 connection.onDocumentHighlight(handleDocumentHighlight);
 connection.onReferences(handleReferences);
 
@@ -379,12 +443,18 @@ connection.onDefinition(handleDefinitionRequest);
 connection.onFoldingRanges(handleFoldingRequest);
 connection.onSignatureHelp(handleSignatureHelpRequest);
 connection.onDocumentFormatting(formatAntlersDocument);
+connection.onDocumentRangeFormatting(formatAntlersRange);
 connection.onCompletion(debouncedCompletionHandler);
 connection.onCompletionResolve(handleOnCompletionResolve);
 documents.listen(connection);
 
 connection.onRequest(SemanticTokenLegendRequest.type, (token) => {
-    return newSemanticTokenProvider().legend;
+    const legend = newSemanticTokenProvider().legend;
+
+    return {
+        types: legend.tokenTypes,
+        modifiers: legend.tokenModifiers
+    };
 });
 
 connection.onRequest(ForcedFormatRequest.type, (params) => {
@@ -439,6 +509,10 @@ function reloadProjectDetails(): null {
         InjectionManager.instance?.updateProject(currentStructure);
     }
 
+    if (getAntlersSettings().inlayHints?.showFieldTypes === true) {
+        refreshFieldTypeInlayHints();
+    }
+    refreshSemanticTokens();
     return null;
 }
 
@@ -454,6 +528,44 @@ connection.onRequest(SemanticTokenRequest.type, (params, token) => {
     }
 
     return null;
+});
+
+connection.languages.inlayHint.on((params) => {
+    return buildFieldTypeInlayHints(
+        params,
+        getAntlersSettings().inlayHints?.showFieldTypes === true
+    );
+});
+
+connection.languages.semanticTokens.on(async (params) => {
+    const docPath = decodeURIComponent(params.textDocument.uri);
+
+    if (!documentMap.has(docPath)) {
+        return null;
+    }
+
+    const document = documentMap.get(docPath) as TextDocument;
+
+    return {
+        data: await newSemanticTokenProvider().getSemanticTokens(document)
+    };
+});
+
+connection.languages.semanticTokens.onRange(async (params) => {
+    const docPath = decodeURIComponent(params.textDocument.uri);
+
+    if (!documentMap.has(docPath)) {
+        return null;
+    }
+
+    const document = documentMap.get(docPath) as TextDocument;
+
+    return {
+        data: await newSemanticTokenProvider().getSemanticTokens(
+            document,
+            [params.range]
+        )
+    };
 });
 
 /**

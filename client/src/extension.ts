@@ -2,21 +2,13 @@
 import * as path from 'path';
 import { ExtensionContext, workspace } from 'vscode';
 import { LanguageClient, LanguageClientOptions, ServerOptions, TransportKind } from 'vscode-languageclient/node';
-import {
-    languages, SemanticTokensLegend,
-    DocumentSemanticTokensProvider, DocumentRangeSemanticTokensProvider, SemanticTokens
-} from 'vscode';
-import { RequestType, TextDocumentIdentifier, RequestType0, Range as LspRange, DidOpenTextDocumentNotification } from 'vscode-languageclient';
+import { languages } from 'vscode';
+import { RequestType, DidOpenTextDocumentNotification } from 'vscode-languageclient';
 import { activateAntlersDebug } from './debug/activateAntlersDebug';
 import { TimingsLensProvider } from './debug/timingsLensProvider';
 import { resetTimings } from './debug/antlersDebug';
 import *  as vscode from 'vscode';
 import { resolveHtmlBlockComment } from './utils/commentConfiguration';
-
-interface SemanticTokenParams {
-    textDocument: TextDocumentIdentifier;
-    ranges?: LspRange[];
-}
 
 // eslint-disable-next-line @typescript-eslint/no-empty-interface
 interface LockEditsParams { }
@@ -59,14 +51,6 @@ namespace ForcedFormatRequest {
 
 namespace ProjectUpdateRequest {
     export const type: RequestType<ProjectUpdateParams, null, any> = new RequestType('antlers/projectUpdate');
-}
-
-namespace SemanticTokenRequest {
-    export const type: RequestType<SemanticTokenParams, number[] | null, any> = new RequestType('antlers/semanticTokens');
-}
-
-namespace SemanticTokenLegendRequest {
-    export const type: RequestType0<{ types: string[]; modifiers: string[] } | null, any> = new RequestType0('antlers/semanticTokenLegend');
 }
 
 let client: LanguageClient;
@@ -184,33 +168,6 @@ export async function activate(context: ExtensionContext) {
     // Start the client. This will also launch the server
     await client.start();
     isClientReady = true;
-
-    setTimeout(() => {
-        client.sendRequest(SemanticTokenLegendRequest.type).then(legend => {
-            if (legend) {
-                const provider: DocumentSemanticTokensProvider & DocumentRangeSemanticTokensProvider = {
-                    provideDocumentSemanticTokens(doc) {
-                        const params: SemanticTokenParams = {
-                            textDocument: client.code2ProtocolConverter.asTextDocumentIdentifier(doc),
-                        };
-                        return client.sendRequest(SemanticTokenRequest.type, params).then(data => {
-                            return data && new SemanticTokens(new Uint32Array(data));
-                        });
-                    },
-                    provideDocumentRangeSemanticTokens(doc, range) {
-                        const params: SemanticTokenParams = {
-                            textDocument: client.code2ProtocolConverter.asTextDocumentIdentifier(doc),
-                            ranges: [client.code2ProtocolConverter.asRange(range)]
-                        };
-                        return client.sendRequest(SemanticTokenRequest.type, params).then(data => {
-                            return data && new SemanticTokens(new Uint32Array(data));
-                        });
-                    }
-                };
-                toDispose.push(languages.registerDocumentSemanticTokensProvider(documentSelector, provider, new SemanticTokensLegend(legend.types, legend.modifiers)));
-            }
-        });
-    }, 2500);
 }
 
 export function deactivate(): Thenable<void> | undefined {

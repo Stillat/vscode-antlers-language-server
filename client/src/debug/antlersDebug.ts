@@ -3,7 +3,6 @@ import {
 	LoggingDebugSession, InitializedEvent, StoppedEvent, Thread, Scope, Handles, Breakpoint
 } from '@vscode/debugadapter';
 import { DebugProtocol } from '@vscode/debugprotocol';
-import { Subject } from 'await-notify';
 import { IRuntimeBreakpoint, IRuntimeException, RuntimeBridge } from './runtimeBridge';
 import * as nodePath from 'path';
 
@@ -33,8 +32,7 @@ export {ActiveTimings};
 export class AntlersDebugSession extends LoggingDebugSession {
 	public static threadID = 1;
 	
-	private _configurationDone = new Subject();
-	private _runtimeBridge:RuntimeBridge = null;
+	private _runtimeBridge:RuntimeBridge;
 	private _lastMemDump:any = null;
 	private _hitBreakpoint:IRuntimeBreakpoint| null = null;
 	private _variableHandles = new Handles<'root' | 'contextual' | 'other'>();
@@ -57,8 +55,8 @@ export class AntlersDebugSession extends LoggingDebugSession {
 		});
 	}
 
-	public shutdown() {
-		this._runtimeBridge.stopSession();
+	public shutdown(): void {
+		void this._runtimeBridge.stopSession().finally(() => super.shutdown());
 	}
 
 	private objToArray(object:any) {
@@ -113,25 +111,23 @@ export class AntlersDebugSession extends LoggingDebugSession {
 		response.body.supportsSetExpression = false;
 		response.body.supportsWriteMemoryRequest = false;
 
-		// make VS Code send disassemble request
-		response.body.supportsDisassembleRequest = true;
-		response.body.supportsSteppingGranularity = true;
+		// Antlers debugging is driven by the Statamic runtime bridge. It can
+		// continue from a breakpoint, but it does not expose instructions or
+		// instruction-level stepping. Do not advertise requests we cannot serve.
+		response.body.supportsDisassembleRequest = false;
+		response.body.supportsSteppingGranularity = false;
 
 
+		this._runtimeBridge.startSession();
 		this.sendResponse(response);
 		this.sendEvent(new InitializedEvent());
-		this._runtimeBridge.startSession();
 	}
 
 	protected configurationDoneRequest(response: DebugProtocol.ConfigurationDoneResponse, args: DebugProtocol.ConfigurationDoneArguments): void {
 		super.configurationDoneRequest(response, args);
-
-		// notify the launchRequest that configuration has finished
-		this._configurationDone.notify();
 	}
 
 	protected launchRequest(response: DebugProtocol.LaunchResponse, args: DebugProtocol.LaunchRequestArguments) {
-
 		response.success = true;
 		this.sendResponse(response);
 	}
@@ -150,15 +146,12 @@ export class AntlersDebugSession extends LoggingDebugSession {
 	}
 
 	protected variablesRequest(response: DebugProtocol.VariablesResponse, args: DebugProtocol.VariablesArguments, request?: DebugProtocol.Request) {
+		response.body = { variables: [] };
+
 		if (!this._variableHandles || !this._lastMemDump) {
 			this.sendResponse(response);
 			return;
 		}
-
-		response.body = {
-			variables: [
-			]
-		};
 
 		const varHandle = this._variableHandles.get(args.variablesReference);
 
@@ -180,6 +173,8 @@ export class AntlersDebugSession extends LoggingDebugSession {
 	}
 
 	protected breakpointLocationsRequest(response: DebugProtocol.BreakpointLocationsResponse, args: DebugProtocol.BreakpointLocationsArguments, request?: DebugProtocol.Request) {
+		response.body = { breakpoints: [] };
+
 		if (args.source.path) {
 			const bps = this._runtimeBridge.getAllBreakPoints(args.source.path, args.line);
 
@@ -214,6 +209,11 @@ export class AntlersDebugSession extends LoggingDebugSession {
 	}
 
 	protected stackTraceRequest(response: DebugProtocol.StackTraceResponse, args: DebugProtocol.StackTraceArguments) {
+		response.body = {
+			stackFrames: [],
+			totalFrames: 0
+		};
+
 		if (this._lastException != null) {
 			response.body  = {
 				stackFrames: [
@@ -267,19 +267,27 @@ export class AntlersDebugSession extends LoggingDebugSession {
 	}
 
 	protected continueRequest(response: DebugProtocol.ContinueResponse, args: DebugProtocol.ContinueArguments) {
-		this._runtimeBridge.releaseActiveLock();
+		this._runtimeBridge?.releaseActiveLock();
+		response.body = { allThreadsContinued: true };
 		
 		this.sendResponse(response);
 	}
 
 	protected async setBreakPointsRequest(response: DebugProtocol.SetBreakpointsResponse, args: DebugProtocol.SetBreakpointsArguments): Promise<void> {
-		const path = args.source.path as string,
+		const sourcePath = args.source.path;
+
+		if (sourcePath == null || sourcePath.trim().length === 0) {
+			this.sendErrorResponse(response, 1005, 'An Antlers breakpoint source path is required.');
+			return;
+		}
+
+		const path = nodePath.resolve(sourcePath),
 			clientLines = args.lines || [];
 		
 		this._runtimeBridge.resetBreakPoints(path);
 
 		const breakPoints = clientLines.map(l => {
-			const runtimeBp =  this._runtimeBridge.setBreakPoint(path, l);
+			const runtimeBp = this._runtimeBridge.setBreakPoint(path, l);
 			const bp = new Breakpoint(runtimeBp.verified, runtimeBp.line) as DebugProtocol.Breakpoint;
 			bp.id  = runtimeBp.id;
 

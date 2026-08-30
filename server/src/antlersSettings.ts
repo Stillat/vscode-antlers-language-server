@@ -18,4 +18,7 @@ export interface AntlersSettings {
     formatterIgnoreExtensions: string[];
     formatterArrayWrap?: ArrayWrapStyle;
     languageVersion: string;
+    inlayHints?: {
+        showFieldTypes?: boolean;
+    };
 }
