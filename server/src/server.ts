@@ -65,6 +65,7 @@ import ExtractPartialHandler from './refactoring/core/extractPartialHandler.js';
 import { BeautifyDocumentFormatter } from './formatting/beautifyDocumentFormatter.js';
 import { AntlersSettings } from './antlersSettings.js';
 import { debounce } from 'ts-debounce';
+import { buildFieldTypeInlayHints } from './services/fieldTypeInlayHints.js';
 import { buildWorkspaceSymbols } from './services/workspaceSymbols.js';
 
 const defaultSettings: AntlersSettings = {
@@ -78,13 +79,39 @@ const defaultSettings: AntlersSettings = {
     trace: { server: 'off' },
     formatterIgnoreExtensions: ['xml'],
     formatterArrayWrap: 'preserve',
-    languageVersion: 'runtime'
+    languageVersion: 'runtime',
+    inlayHints: {
+        showFieldTypes: false
+    }
 };
 
 let globalSettings: AntlersSettings = defaultSettings;
 
+function refreshFieldTypeInlayHints() {
+    if (!hasInlayHintRefreshCapability) {
+        return;
+    }
+
+    void connection.languages.inlayHint.refresh().catch((error: unknown) => {
+        connection.console.warn(
+            `Unable to refresh field type inlay hints: ${String(error)}`
+        );
+    });
+}
+
 function updateGlobalSettings(settings: AntlersSettings) {
+    const fieldTypeHintsWereEnabled =
+        globalSettings.inlayHints?.showFieldTypes === true;
+    const fieldTypeHintsAreEnabled =
+        settings.inlayHints?.showFieldTypes === true;
+    const shouldRefreshInlayHints =
+        fieldTypeHintsWereEnabled !== fieldTypeHintsAreEnabled;
+
     globalSettings = settings;
+
+    if (shouldRefreshInlayHints) {
+        refreshFieldTypeInlayHints();
+    }
 }
 
 export function getAntlersSettings() {
@@ -100,6 +127,7 @@ const documents: TextDocuments<TextDocument> = new TextDocuments(TextDocument);
 let hasConfigurationCapability = false;
 let hasWorkspaceFolderCapability = false;
 let hasDiagnosticRelatedInformationCapability = false;
+let hasInlayHintRefreshCapability = false;
 let hasSemanticTokenRefreshCapability = false;
 let hasDynamicWatchedFilesCapability = false;
 
@@ -198,6 +226,11 @@ connection.onInitialize((params: InitializeParams) => {
         capabilities.textDocument.publishDiagnostics &&
         capabilities.textDocument.publishDiagnostics.relatedInformation
     );
+    hasInlayHintRefreshCapability = !!(
+        capabilities.workspace &&
+        capabilities.workspace.inlayHint &&
+        capabilities.workspace.inlayHint.refreshSupport
+    );
     hasSemanticTokenRefreshCapability = !!(
         capabilities.workspace &&
         capabilities.workspace.semanticTokens &&
@@ -227,6 +260,7 @@ connection.onInitialize((params: InitializeParams) => {
             hoverProvider: {},
             definitionProvider: {},
             documentSymbolProvider: {},
+            inlayHintProvider: true,
             workspaceSymbolProvider: {},
             semanticTokensProvider: {
                 legend: semanticTokenLegend,
@@ -475,6 +509,9 @@ function reloadProjectDetails(): null {
         InjectionManager.instance?.updateProject(currentStructure);
     }
 
+    if (getAntlersSettings().inlayHints?.showFieldTypes === true) {
+        refreshFieldTypeInlayHints();
+    }
     refreshSemanticTokens();
     return null;
 }
@@ -491,6 +528,13 @@ connection.onRequest(SemanticTokenRequest.type, (params, token) => {
     }
 
     return null;
+});
+
+connection.languages.inlayHint.on((params) => {
+    return buildFieldTypeInlayHints(
+        params,
+        getAntlersSettings().inlayHints?.showFieldTypes === true
+    );
 });
 
 connection.languages.semanticTokens.on(async (params) => {
