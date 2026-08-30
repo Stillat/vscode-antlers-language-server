@@ -348,7 +348,15 @@ const debouncedCompletionHandler = debounce(handleOnCompletion, 97);
 // when the text document first opened or when its content has changed.
 documents.onDidChangeContent(contentChangeHandler);
 
-const debouncedProjectReload = debounce(reloadProjectDetails, 350);
+const debouncedProjectReload = debounce(() => {
+    try {
+        reloadProjectDetails();
+    } catch (error) {
+        connection.console.error(
+            `Unable to reload Statamic project details: ${String(error)}`
+        );
+    }
+}, 350);
 
 connection.onDidChangeWatchedFiles((change) => {
     if (change.changes.length > 0) {
