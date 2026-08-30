@@ -1,4 +1,4 @@
-import { Location, ReferenceParams } from 'vscode-languageserver';;
+import { Location, ReferenceParams } from 'vscode-languageserver';
 import { sessionDocuments } from '../languageService/documents.js';
 import ProjectManager from '../projects/projectManager.js';
 import { makeProviderRequest } from '../providers/providerParameters.js';

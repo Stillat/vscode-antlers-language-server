@@ -20,6 +20,6 @@ const CookieForget: IAntlersTag = {
             isRequired: true
         }
     ],
-}
+};
 
 export default CookieForget;

@@ -16,6 +16,6 @@ const Seotamic: IMarketplaceAddon = {
         'seotamic:social:site_name',
     ],
     providesModifiers: []
-}
+};
 
 export default Seotamic;

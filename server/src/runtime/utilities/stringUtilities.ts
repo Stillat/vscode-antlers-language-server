@@ -90,7 +90,7 @@ export class StringUtilities {
                 charactersLength));
         }
 
-        let slug = 'A' + result + 'A';
+        const slug = 'A' + result + 'A';
 
         return slug.toLowerCase();
     }

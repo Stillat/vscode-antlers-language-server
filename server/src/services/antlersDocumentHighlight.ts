@@ -1,4 +1,4 @@
-import { DocumentHighlight, DocumentHighlightParams } from 'vscode-languageserver';;
+import { DocumentHighlight, DocumentHighlightParams } from 'vscode-languageserver';
 import { makeProviderRequest } from '../providers/providerParameters.js';
 import { AbstractNode, VariableNode } from '../runtime/nodes/abstractNode.js';
 import { nodeToRange } from '../utils/conversions.js';

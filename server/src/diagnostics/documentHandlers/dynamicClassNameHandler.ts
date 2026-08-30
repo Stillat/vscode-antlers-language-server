@@ -1,4 +1,4 @@
-import { Position } from 'vscode-languageserver';;
+import { Position } from 'vscode-languageserver';
 import ProjectManager from '../../projects/projectManager.js';
 import { DynamicClassAnalyzer } from '../../runtime/analyzers/dynamicClassAnalyzer.js';
 import { AntlersDocument } from '../../runtime/document/antlersDocument.js';
@@ -95,6 +95,6 @@ Possible Classes: ${allNames.join(', ')}`,
 
         return errors;
     }
-}
+};
 
 export default DynamicClassNameHandler;

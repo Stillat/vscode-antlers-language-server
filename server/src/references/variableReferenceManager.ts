@@ -1,4 +1,4 @@
-import { Location } from 'vscode-languageserver';;
+import { Location } from 'vscode-languageserver';
 import { sessionDocuments } from '../languageService/documents.js';
 import { AbstractNode, VariableNode } from '../runtime/nodes/abstractNode.js';
 import { ISuggestionRequest } from '../suggestions/suggestionRequest.js';

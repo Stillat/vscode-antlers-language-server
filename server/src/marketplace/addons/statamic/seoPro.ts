@@ -9,6 +9,6 @@ const SeoPro: IMarketplaceAddon = {
         'seo_pro:dump_meta_data',
     ],
     providesModifiers: []
-}
+};
 
 export default SeoPro;

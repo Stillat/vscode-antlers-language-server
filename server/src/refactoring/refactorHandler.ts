@@ -1,4 +1,4 @@
-import { CodeAction } from 'vscode-languageserver';;
+import { CodeAction } from 'vscode-languageserver';
 import IRefactoringRequest from './refactoringRequest.js';
 
 interface IRefactorHandler {

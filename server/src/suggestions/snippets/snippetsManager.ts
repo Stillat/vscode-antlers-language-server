@@ -1,4 +1,4 @@
-import { Range, InsertTextFormat, CompletionItemKind, TextEdit } from 'vscode-languageserver';;
+import { Range, InsertTextFormat, CompletionItemKind, TextEdit } from 'vscode-languageserver';
 import { CompletionItem } from "vscode-languageserver-types";
 import { ISuggestionRequest } from '../suggestionRequest.js';
 import CollectionSnippet from "./antlers/collection.js";

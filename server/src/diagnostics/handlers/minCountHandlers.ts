@@ -11,7 +11,7 @@ const MinCountHandler: IDiagnosticsHandler = {
         if (node.scopeVariable != null && node.isTagNode == false) {
             if (node.runtimeNodes.length == 0) { return errors; }
 
-            let firstRtNode = node.runtimeNodes[0];
+            const firstRtNode = node.runtimeNodes[0];
 
             if (firstRtNode instanceof VariableNode && node.scopeVariable.sourceField != null &&
                 firstRtNode.variableReference != null && firstRtNode.variableReference.pathParts.length > 1) {

@@ -56,7 +56,7 @@ export function handleOnCompletion(_textDocumentPosition: TextDocumentPositionPa
         )
         : null;
 
-    let suggestions = componentSuggestions ?? directiveSuggestions ?? SuggestionManager.getSuggestions(suggestionRequest);
+    const suggestions = componentSuggestions ?? directiveSuggestions ?? SuggestionManager.getSuggestions(suggestionRequest);
 
     const returnedItems: string[] = [];
 

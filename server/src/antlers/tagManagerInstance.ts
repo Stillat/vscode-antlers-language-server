@@ -46,7 +46,7 @@ class TagManager {
             tags.push({
                 label: tag.tagName,
                 documentation: ''
-            })
+            });
         });
 
         return tags;
@@ -214,7 +214,7 @@ class TagManager {
     isCustomTag(name:string):boolean {
         const customTags = ProjectManager.instance?.getStructure()?.getCustomAntlersTags() ?? [];
 
-        for (var i = 0; i < customTags.length; i++) {
+        for (let i = 0; i < customTags.length; i++) {
             if (customTags[i].tagName == name) {
                 return true;
             }
@@ -265,7 +265,7 @@ class TagManager {
                                 label: method,
                                 kind: CompletionItemKind.Text,
                                 insertText: method
-                            })
+                            });
                         });
                     }
 

@@ -1,4 +1,4 @@
-import { Position } from 'vscode-languageserver';;
+import { Position } from 'vscode-languageserver';
 import { IProjectDetailsProvider } from '../projects/projectDetailsProvider.js';
 import { AntlersDocument } from '../runtime/document/antlersDocument.js';
 import { PositionContext } from '../runtime/document/contexts/positionContext.js';

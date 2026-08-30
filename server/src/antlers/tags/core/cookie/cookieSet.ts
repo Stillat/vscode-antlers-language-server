@@ -20,6 +20,6 @@ const CookieSet: IAntlersTag = {
             isRequired: true
         }
     ],
-}
+};
 
 export default CookieSet;

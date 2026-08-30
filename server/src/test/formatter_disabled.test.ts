@@ -182,5 +182,5 @@ one
     <title>{{ yield:document_title_section }}{{ document_title ?? title + ' / ' + config:app:name }}{{ /yield:document_title_section }}</title>
 {{# format-ignore-end #}}`;
         assert.strictEqual(formatAntlers(input), expected);
-    })
+    });
 });

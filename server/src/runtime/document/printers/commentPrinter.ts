@@ -100,6 +100,7 @@ export class CommentPrinter {
 
                 return this.printContent(formattedCommentContent, tabSize, targetIndent, insertSpaces);
             } catch (err) {
+                // Fall back to printing the original comment content.
             }
         }
 
@@ -120,6 +121,7 @@ export class CommentPrinter {
 
                 return this.printContent(formattedCommentContent, tabSize, targetIndent, insertSpaces);
             } catch (err) {
+                // Fall back to printing the original comment content.
             }
         }
 

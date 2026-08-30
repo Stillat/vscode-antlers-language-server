@@ -49,6 +49,14 @@ suite("Basic Node Test", () => {
         );
     });
 
+    test("it tracks the tag content position", () => {
+        const node = toAntlers(parseNodes("{{ collection:articles }}")[0]);
+
+        node.getContent();
+
+        assertNotNull(node.contentOffset);
+    });
+
     test("it lexes the triple fallback operator as one token", () => {
         const nodes = parseNodes("{{ a ??? b }}"),
             antlersNode = toAntlers(nodes[0]);
@@ -118,10 +126,10 @@ suite("Basic Node Test", () => {
         assertNotNull(firstNode.modifierChain);
         assertCount(2, firstNode.modifierChain?.modifierChain ?? []);
 
-        (nodes = getParsedRuntimeNodes(
+        nodes = getParsedRuntimeNodes(
             '{{ view:test[view:test[nested:data[more:nested[keys]]]]|upper:test:param:"hello :|"|lower }}'
-        )),
-            (result = nodes[0]);
+        );
+        result = nodes[0];
 
         assertInstanceOf(SemanticGroup, result);
 

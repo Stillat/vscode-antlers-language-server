@@ -41,6 +41,6 @@ const UserRoles: IAntlersTag = {
             null
         );
     }
-}
+};
 
 export default UserRoles;

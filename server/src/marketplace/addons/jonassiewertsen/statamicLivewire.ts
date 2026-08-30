@@ -8,6 +8,6 @@ const StatamicLivewire: IMarketplaceAddon = {
         'livewire:scripts',
     ],
     providesModifiers: []
-}
+};
 
 export default StatamicLivewire;

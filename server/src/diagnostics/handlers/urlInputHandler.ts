@@ -53,6 +53,6 @@ const UrlInputHandler: IDiagnosticsHandler = {
 
         return errors;
     }
-}
+};
 
 export default UrlInputHandler;

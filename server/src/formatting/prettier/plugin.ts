@@ -89,6 +89,6 @@ const plugin: prettier.Plugin = {
     defaultOptions: {
         tabWidth: 4,
     },
-}
+};
 
 export default plugin;

@@ -8,6 +8,6 @@ const StatamicRecaptcha: IMarketplaceAddon = {
         'recaptcha:checkbox',
     ],
     providesModifiers: []
-}
+};
 
 export default StatamicRecaptcha;

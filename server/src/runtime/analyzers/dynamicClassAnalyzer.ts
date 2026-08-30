@@ -71,19 +71,21 @@ export class DynamicClassAnalyzer {
         if (doc.hasFrontMatter()) {
             try {
                 this.yamlData = yaml.load(doc.getFrontMatter());
-            } catch (err) { }
+            } catch (err) {
+                // Invalid front matter should not prevent class analysis.
+            }
         }
 
         return this.analyzeNodes(nodes);
     }
 
     private analyzeNodes(nodes: AbstractNode[]): ClassSearchResults[] {
-        let results: ClassSearchResults[] = []
+        let results: ClassSearchResults[] = [];
 
         nodes.forEach((node) => {
-            let classNames: string[] = [],
-                patternNames: string[] = [],
-                classPrefix = '',
+            const classNames: string[] = [],
+                patternNames: string[] = [];
+            let classPrefix = '',
                 classSuffix = '';
 
             if (this.isInClassParmaeter(node)) {

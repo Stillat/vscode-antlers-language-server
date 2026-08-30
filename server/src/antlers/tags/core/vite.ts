@@ -1,4 +1,4 @@
-import { CompletionItem } from 'vscode-languageserver';;
+import { CompletionItem } from 'vscode-languageserver';
 import { makeTagDocWithCodeSample } from '../../../documentation/utils.js';
 import { ISuggestionRequest } from '../../../suggestions/suggestionRequest.js';
 import { EmptyCompletionResult, IAntlersTag, exclusiveResult } from '../../tagManager.js';

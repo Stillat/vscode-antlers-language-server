@@ -87,7 +87,7 @@ export class Faker {
     static textField(handle: string, instructionText: string): IFieldDetails {
         return {
             ...this.baseField(handle, 'text', instructionText)
-        }
+        };
     }
 
     static slugField(handle: string, instructionText: string): ISlugFieldType {
@@ -112,7 +112,7 @@ export class Faker {
             ...this.baseField(handle, 'toggle', instructionText),
             inlineLabel: '',
             default: false
-        }
+        };
     }
 
     static injectedBoolField(handle: string, instructionText: string): IInjectedField {

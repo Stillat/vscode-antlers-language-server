@@ -34,7 +34,7 @@ const dateModifiers: IModifier[] = [
         returnsType: ['string', 'date'],
         forFieldType: ['date'],
         description: 'Formats the date using the provided format using PHP\'s [date variables](https://www.php.net/date).',
-        hoverDescription: `Formats the date using the provided format using PHP\'s [date variables](https://www.php.net/date).
+        hoverDescription: `Formats the date using the provided format using PHP's [date variables](https://www.php.net/date).
 
 ## Formatting Options
 
@@ -103,7 +103,7 @@ See [PHP: DateTimeInterface::format](https://www.php.net/manual/en/datetime.form
         canBeParameter: true,
         isDeprecated: true,
         getDeprecatedMessage() {
-            return 'The format_localized modifier is deprecated. Alternatives, such as the iso_format modifier, should be used instead.'
+            return 'The format_localized modifier is deprecated. Alternatives, such as the iso_format modifier, should be used instead.';
         },
     },
     {

@@ -6,6 +6,6 @@ const StatamicSnippet: IMarketplaceAddon = {
     providesModifiers: [
         'snippet',
     ]
-}
+};
 
 export default StatamicSnippet;

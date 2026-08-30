@@ -71,7 +71,7 @@ const DeprecatedModifierHandler: IDiagnosticsHandler = {
 
         return issues;
     }
-}
+};
 
 function getDeprecatedMessage(modifier: IModifier): string {
     if (modifier.getDeprecatedMessage != null) {

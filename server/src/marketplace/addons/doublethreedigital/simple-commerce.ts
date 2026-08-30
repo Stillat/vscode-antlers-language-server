@@ -25,6 +25,6 @@ const SimpleCommerce: IMarketplaceAddon = {
         'sc:cart:alreadyExists',
     ],
     providesModifiers: []
-}
+};
 
 export default SimpleCommerce;

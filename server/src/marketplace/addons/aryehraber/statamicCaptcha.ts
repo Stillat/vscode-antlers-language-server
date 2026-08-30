@@ -9,6 +9,6 @@ const StatamicCaptcha: IMarketplaceAddon = {
         'captcha:sitekey',
     ],
     providesModifiers: []
-}
+};
 
 export default StatamicCaptcha;

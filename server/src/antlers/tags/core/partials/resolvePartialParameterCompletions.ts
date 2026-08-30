@@ -1,4 +1,4 @@
-import { CompletionItem, CompletionItemKind, MarkupKind } from 'vscode-languageserver';;
+import { CompletionItem, CompletionItemKind, MarkupKind } from 'vscode-languageserver';
 import { DocumentDetailsManager } from '../../../../idehelper/documentDetailsManager.js';
 import { IEnvironmentHelper } from '../../../../idehelper/parser.js';
 import ProjectManager from '../../../../projects/projectManager.js';

@@ -61,14 +61,14 @@ export class LockFileParser {
                                 typeof distInfo.url !== "undefined"
                             ) {
                                 if (distInfo.type === "path") {
-                                    (composerPath =
+                                    composerPath =
                                         laravelRoot +
                                         trimRight(thisPackage.dist.url, "/") +
-                                        "/composer.json"),
-                                        (antlersExtensionDirectory =
-                                            composerVendorDirectory +
-                                            trimRight(thisPackage.name, "/") +
-                                            "/.antlers-ls/");
+                                        "/composer.json";
+                                    antlersExtensionDirectory =
+                                        composerVendorDirectory +
+                                        trimRight(thisPackage.name, "/") +
+                                        "/.antlers-ls/";
                                 }
                             }
                         }
