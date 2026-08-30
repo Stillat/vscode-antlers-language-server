@@ -1,8 +1,7 @@
-import { ThemePath } from '../antlers/tags/core/theme/themePath.js';
 import { IProjectDetailsProvider } from './projectDetailsProvider.js';
-import { IFieldDetails, IParsedBlueprint, IProjectFields } from './structuredFieldTypes/types.js';
+import { IParsedBlueprint, IProjectFields } from './structuredFieldTypes/types.js';
 
-class ProjectManager {
+export class ProjectManager {
     public static instance: ProjectManager | null = null;
     private currentStructure: IProjectDetailsProvider | null = null;
     private isReloading = false;
@@ -26,8 +25,10 @@ class ProjectManager {
             .concat(this.structuredProject.collections)
             .concat(this.structuredProject.forms)
             .concat(this.structuredProject.general)
+            .concat(this.structuredProject.globals)
             .concat(this.structuredProject.navigations)
-            .concat(this.structuredProject.taxonomies);
+            .concat(this.structuredProject.taxonomies)
+            .concat(this.structuredProject.fieldsets);
     }
 
     getStructuredProject(): IProjectFields | null {

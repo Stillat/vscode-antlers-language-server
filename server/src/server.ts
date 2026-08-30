@@ -66,6 +66,7 @@ import { AntlersSettings } from './antlersSettings.js';
 import { debounce } from 'ts-debounce';
 import { IProjectFields } from './projects/structuredFieldTypes/types.js';
 import { notifyProjectDetails } from './protocol/projectDetailsNotification.js';
+import { buildWorkspaceSymbols } from './services/workspaceSymbols.js';
 
 const defaultSettings: AntlersSettings = {
     formatFrontMatter: false,
@@ -194,6 +195,7 @@ connection.onInitialize((params: InitializeParams) => {
             hoverProvider: {},
             definitionProvider: {},
             documentSymbolProvider: {},
+            workspaceSymbolProvider: {},
             referencesProvider: {},
             documentHighlightProvider: {},
             codeActionProvider: {},
@@ -335,6 +337,10 @@ connection.onHover((_params) => {
 
 connection.onDocumentSymbol((_params) => {
     return handleDocumentSymbolRequest(_params);
+});
+
+connection.onWorkspaceSymbol((params, token) => {
+    return buildWorkspaceSymbols(params, ProjectManager.instance, token);
 });
 
 connection.onDocumentHighlight(handleDocumentHighlight);
