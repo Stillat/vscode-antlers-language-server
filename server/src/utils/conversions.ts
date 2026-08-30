@@ -73,7 +73,7 @@ export function nodeToRange(node: AbstractNode): ls.Range {
                     character: end.character - 1,
                     line: end.line
                 }
-            }
+            };
         }
 
         return {
@@ -92,7 +92,7 @@ export function nodeToRange(node: AbstractNode): ls.Range {
                 return {
                     start: antlersPositionToVsCode(firstBranch.head.startPosition),
                     end: antlersPositionToVsCode(lastBranch.head.isClosedBy.endPosition)
-                }
+                };
             }
         }
     }

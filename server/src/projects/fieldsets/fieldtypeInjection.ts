@@ -1,4 +1,4 @@
-import { CompletionItem } from 'vscode-languageserver';;
+import { CompletionItem } from 'vscode-languageserver';
 import { Scope } from '../../antlers/scope/scope.js';
 import { AntlersNode } from '../../runtime/nodes/abstractNode.js';
 import { ISuggestionRequest } from '../../suggestions/suggestionRequest.js';

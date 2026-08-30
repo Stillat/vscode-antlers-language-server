@@ -66,7 +66,7 @@ export function sendAllDiagnostics(connection: _Connection) {
 
         for (let i = 0; i < projViews.length; i++) {
             const diagnosticsPath = decodeURIComponent(projViews[i].documentUri);
-            let diagnostics: Diagnostic[] = [];
+            const diagnostics: Diagnostic[] = [];
 
             if (sessionDocuments.hasDocument(diagnosticsPath)) {
                 const doc = sessionDocuments.getDocument(diagnosticsPath);

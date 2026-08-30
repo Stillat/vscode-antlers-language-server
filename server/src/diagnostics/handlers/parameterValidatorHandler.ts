@@ -11,6 +11,6 @@ const ParameterValidatorHandler: IDiagnosticsHandler = {
 
         return ParameterValidator.validateParameters(node);
     }
-}
+};
 
 export default ParameterValidatorHandler;

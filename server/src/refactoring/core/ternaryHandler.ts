@@ -1,4 +1,4 @@
-import { CodeAction, CodeActionKind, TextEdit } from 'vscode-languageserver';;
+import { CodeAction, CodeActionKind, TextEdit } from 'vscode-languageserver';
 import ConditionAnalyzer from '../../runtime/analyzers/conditionAnalyzer.js';
 import { ConditionPairAnalyzer } from '../../runtime/analyzers/conditionPairAnalyzer.js';
 import { TagPairAnalyzer } from '../../runtime/analyzers/tagPairAnalyzer.js';

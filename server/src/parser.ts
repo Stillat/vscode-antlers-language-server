@@ -1,3 +1,1 @@
-// Internal file to test the parser.
-
-debugger;
+// Internal scratch file reserved for testing the parser.

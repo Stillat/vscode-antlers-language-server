@@ -4,3 +4,4 @@ client/out/**
 server/node_modules/**
 server/out/**
 antlersls
+server/src/projects/structuredFieldTypes/types.ts

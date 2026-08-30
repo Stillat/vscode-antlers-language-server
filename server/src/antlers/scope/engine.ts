@@ -256,7 +256,7 @@ export class ScopeEngine {
                     const speculativeBlueprintField = this.statamicProject.findAnyBlueprintField(firstName);
 
                     if (speculativeBlueprintField != null) {
-                        let scopeV = blueprintFieldToScopeVariable(currentNode, speculativeBlueprintField);
+                        const scopeV = blueprintFieldToScopeVariable(currentNode, speculativeBlueprintField);
 
                         currentNode.scopeVariable = scopeV;
 

@@ -7,6 +7,6 @@ const AntlersLayouts: IMarketplaceAddon = {
         'layout:share'
     ],
     providesModifiers: []
-}
+};
 
 export default AntlersLayouts;

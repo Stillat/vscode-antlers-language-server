@@ -1,4 +1,4 @@
-import { CodeAction, CodeActionKind, CodeActionParams, Diagnostic, Range, TextEdit } from 'vscode-languageserver';;
+import { CodeAction, CodeActionKind, CodeActionParams, Diagnostic, Range, TextEdit } from 'vscode-languageserver';
 import { TextDocument } from 'vscode-languageserver-textdocument';
 import DiagnosticsManager from '../diagnostics/diagnosticsManager.js';
 import { documentMap, sessionDocuments } from '../languageService/documents.js';
@@ -54,7 +54,7 @@ export function handleCodeActions(params: CodeActionParams): CodeAction[] {
         actionParams: params
     };
 
-    let resolvedRefactors = RefactoringManager.getRefactors(refactorRequest);
+    const resolvedRefactors = RefactoringManager.getRefactors(refactorRequest);
 
     const errors = DiagnosticsManager.instance?.getDiagnostics(docPath);
     const handledNodes:string[] = [];
@@ -82,7 +82,7 @@ export function handleCodeActions(params: CodeActionParams): CodeAction[] {
                     const edit: TextEdit = {
                         range: error.lsRange as Range,
                         newText: refactor,
-                    }
+                    };
 
                     const refDiag:Diagnostic[] = [];
 

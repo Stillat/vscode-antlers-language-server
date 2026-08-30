@@ -8,6 +8,6 @@ const StatamicInlineAssets: IMarketplaceAddon = {
         'inline_assets:js',
     ],
     providesModifiers: []
-}
+};
 
 export default StatamicInlineAssets;

@@ -521,7 +521,7 @@ export class DocumentParser {
 
                 if (this.lastAntlersNode != null && this.lastAntlersNode instanceof PhpExecutionNode == false && (this.lastAntlersNode.isComment && !(this.lastAntlersNode instanceof CommentParserFailNode))) {
                     if (i + 1 < indexCount) {
-                        let nextAntlersStart = this.antlersStartIndex[i + 1] as number;
+                        const nextAntlersStart = this.antlersStartIndex[i + 1] as number;
 
                         if (this.lastAntlersNode.endPosition != null) {
                             if (nextAntlersStart < this.lastAntlersNode.endPosition.offset) {

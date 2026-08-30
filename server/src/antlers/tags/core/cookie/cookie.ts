@@ -1,4 +1,4 @@
-import { CompletionItem } from 'vscode-languageserver';;
+import { CompletionItem } from 'vscode-languageserver';
 import { ISuggestionRequest } from '../../../../suggestions/suggestionRequest.js';
 import { tagToCompletionItem } from '../../../documentedLabel.js';
 import { EmptyCompletionResult, exclusiveResult, IAntlersTag } from '../../../tagManager.js';
@@ -33,6 +33,6 @@ const CookieTag: IAntlersTag = {
 
         return EmptyCompletionResult;
     }
-}
+};
 
 export default CookieTag;

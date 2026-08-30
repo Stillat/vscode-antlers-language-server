@@ -19,6 +19,6 @@ const SocialLinks: IMarketplaceAddon = {
         'social:youtube:profile',
     ],
     providesModifiers: []
-}
+};
 
 export default SocialLinks;

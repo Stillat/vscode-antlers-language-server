@@ -9,6 +9,6 @@ const StatamicLivewireForms: IMarketplaceAddon = {
         'livewire:form',
     ],
     providesModifiers: []
-}
+};
 
 export default StatamicLivewireForms;

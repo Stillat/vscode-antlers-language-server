@@ -13,6 +13,6 @@ const StatamicAdvancedSeo: IMarketplaceAddon = {
 
     ],
     providesModifiers: []
-}
+};
 
 export default StatamicAdvancedSeo;

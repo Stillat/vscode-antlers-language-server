@@ -166,7 +166,7 @@ function mergeCustomModifiers(items: CompletionItem[]) {
             kind: CompletionItemKind.Function,
             label: name,
             insertText: name
-        })
+        });
     });
 }
 

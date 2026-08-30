@@ -1,4 +1,4 @@
-import { CodeAction } from 'vscode-languageserver';;
+import { CodeAction } from 'vscode-languageserver';
 import ExtractPartialHandler from './core/extractPartialHandler.js';
 import TernaryHandler from './core/ternaryHandler.js';
 import IRefactorHandler from './refactorHandler.js';

@@ -116,7 +116,7 @@ export function getBlueprintFields(fileName: string, blueprintName: string, blue
         title: '',
         filePath: '',
         type: blueprintType
-    }
+    };
     try {
         const contents = fs.readFileSync(fileName, { encoding: "utf8" }),
             document = YAML.parse(contents),

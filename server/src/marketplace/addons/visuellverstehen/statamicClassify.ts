@@ -8,6 +8,6 @@ const StatamicClassify: IMarketplaceAddon = {
     providesModifiers: [
         'classify',
     ]
-}
+};
 
 export default StatamicClassify;

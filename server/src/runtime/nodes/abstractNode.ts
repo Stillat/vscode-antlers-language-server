@@ -681,7 +681,7 @@ export class AntlersNode extends AbstractNode {
                             startPosOffset = this.startPosition.offset;
                         }
 
-                        this.contentOffset ==
+                        this.contentOffset =
                             this.parser.positionFromOffset(startPosOffset + leadOffset, 0);
                     }
 

@@ -1,4 +1,4 @@
-import { CompletionItem, CompletionItemKind } from 'vscode-languageserver';;
+import { CompletionItem, CompletionItemKind } from 'vscode-languageserver';
 import { IComposerPackage } from '../../../composer/composerPackage.js';
 import { makeTagDocWithCodeSample } from '../../../documentation/utils.js';
 import { ISuggestionRequest } from '../../../suggestions/suggestionRequest.js';

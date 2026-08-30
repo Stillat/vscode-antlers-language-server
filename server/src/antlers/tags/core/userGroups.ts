@@ -41,6 +41,6 @@ const UserGroups: IAntlersTag = {
             null
         );
     }
-}
+};
 
 export default UserGroups;

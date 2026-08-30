@@ -9,6 +9,6 @@ const AardvarkSeo: IMarketplaceAddon = {
         'aardvark-seo:footer',
     ],
     providesModifiers: []
-}
+};
 
 export default AardvarkSeo;

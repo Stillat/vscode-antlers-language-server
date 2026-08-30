@@ -8,6 +8,6 @@ const CookieByte:IMarketplaceAddon = {
         'cookie_consent',
     ],
     providesModifiers: []
-}
+};
 
 export default CookieByte;

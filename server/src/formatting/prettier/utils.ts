@@ -14,7 +14,7 @@ export function cleanOptions(options: prettier.ParserOptions): prettier.ParserOp
         "originalText",
         "astFormat",
     ].forEach((p) => {
-        // @ts-ignore
+        // @ts-expect-error -- ParserOptions also contains removable internal properties.
         delete options[p];
     });
 

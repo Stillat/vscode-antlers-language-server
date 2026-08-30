@@ -17,6 +17,6 @@ const StatamicFastSeo: IMarketplaceAddon = {
         'fast-seo:extra',
     ],
     providesModifiers: []
-}
+};
 
 export default StatamicFastSeo;

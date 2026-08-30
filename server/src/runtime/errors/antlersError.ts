@@ -1,8 +1,8 @@
 import { Md5 } from 'ts-md5';
-import { CodeAction } from 'vscode-languageserver';;
+import { CodeAction } from 'vscode-languageserver';
 import { AbstractNode } from '../nodes/abstractNode.js';
 import { Range } from '../nodes/position.js';
-import * as ls from 'vscode-languageserver';;
+import * as ls from 'vscode-languageserver';
 
 export enum ErrorLevel {
     Error = 0,

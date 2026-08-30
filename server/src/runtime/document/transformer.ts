@@ -1434,7 +1434,7 @@ export class Transformer {
             let fragmentContent = fragment.outerContent;
 
             if (targetIndent > 0) {
-                let lDiff = fragmentContent.length - fragmentContent.trimStart().length;
+                const lDiff = fragmentContent.length - fragmentContent.trimStart().length;
 
                 if (lDiff == 0 || lDiff > targetIndent) {
                     fragmentContent = IndentLevel.shiftIndentLTrim(fragmentContent, targetIndent).trimStart();
@@ -1640,7 +1640,7 @@ export class Transformer {
             } else if (node instanceof AntlersNode) {
                 if (node.isComment) {
                     if (node.content.trim().toLowerCase() == this.formatIgnoreEnd) {
-                        let preservedLines = stringResults.split("\n");
+                        const preservedLines = stringResults.split("\n");
                         if (preservedLines.length > 0) {
                             if (preservedLines[preservedLines.length - 1].trim().length == 0) {
                                 preservedLines.pop();
