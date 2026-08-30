@@ -25,13 +25,13 @@ import { IProjectDetailsProvider } from '../projectDetailsProvider.js';
 import { JsonSourceProject } from '../jsonSourceProject.js';
 import { normalizePath } from '../../utils/uris.js';
 import { replaceAllInString } from '../../utils/strings.js';
-import { sendProjectDetails } from '../../server.js';
 import { FieldSetParser, BlueprintParser, IParsedBlueprint } from '../structuredFieldTypes/types.js';
 import { EnsureFields } from '../structuredFieldTypes/ensureFields.js';
+import { ProjectManager } from '../projectManager.js';
 import { HandleableClassParser } from '../../php/handleableClassParser.js';
 import { IAntlersTag } from '../../antlers/tagManager.js';
 import { ISuggestionRequest } from '../../suggestions/suggestionRequest.js';
-import { CompletionItem, CompletionItemKind } from 'vscode-languageserver';;
+import { CompletionItem, CompletionItemKind } from 'vscode-languageserver';
 import { StringUtilities } from '../../runtime/utilities/stringUtilities.js';
 import { makeTagDoc } from '../../documentation/utils.js';
 import PackageManager from '../../marketplace/packageManager.js';
@@ -538,7 +538,9 @@ export function getProjectStructure(resourcePath: string): FileSystemStatamicPro
 
             try {
                 fsParser.parseFieldset(YAML.parse(contents), fieldsetName);
-            } catch (err) { }
+            } catch {
+                // Ignore malformed fieldsets so the rest of the project can load.
+            }
 
             if (fieldsetName != null && fieldsetName.trim().length > 0) {
                 const fields = getFieldsetFields(fieldsetPaths[i], fieldsetName);
@@ -636,7 +638,9 @@ export function getProjectStructure(resourcePath: string): FileSystemStatamicPro
 
             try {
                 bpParser.parseBlueprint(YAML.parse(contents), blueprintName, 'misc', blueprintName, miscBlueprintPaths[i]);
-            } catch (err) { }
+            } catch {
+                // Ignore malformed blueprints so the rest of the project can load.
+            }
 
             if (blueprintName != null && blueprintName.trim().length > 0) {
                 const blueprint = getBlueprintFields(
@@ -670,7 +674,9 @@ export function getProjectStructure(resourcePath: string): FileSystemStatamicPro
 
             try {
                 bpParser.parseBlueprint(YAML.parse(contents), blueprintName, 'collection', collectionName, blueprintsPaths[i]);
-            } catch (err) { }
+            } catch {
+                // Ignore malformed blueprints so the rest of the project can load.
+            }
 
             blueprints.push(blueprint);
 
@@ -733,11 +739,13 @@ export function getProjectStructure(resourcePath: string): FileSystemStatamicPro
         if (shouldProcessPath(navPaths[i])) {
             const contents = fs.readFileSync(navPaths[i]).toString();
             const navigationMenu = getNavigationMenu(navPaths[i]);
-            let blueprintName = path.basename(navPaths[i]).split(".").slice(0, -1).join(".");
+            const blueprintName = path.basename(navPaths[i]).split(".").slice(0, -1).join(".");
 
             try {
                 bpParser.parseBlueprint(YAML.parse(contents), blueprintName, 'nav', blueprintName, navPaths[i]);
-            } catch (err) { }
+            } catch {
+                // Ignore malformed blueprints so the rest of the project can load.
+            }
 
             navigationItems.set(navigationMenu.handle, navigationMenu);
         }
@@ -754,7 +762,9 @@ export function getProjectStructure(resourcePath: string): FileSystemStatamicPro
 
             try {
                 bpParser.parseBlueprint(YAML.parse(contents), globalName, 'global', globalName, globalBlueprintPaths[i]);
-            } catch (err) { }
+            } catch {
+                // Ignore malformed blueprints so the rest of the project can load.
+            }
 
             blueprints.push(blueprint);
             allBlueprintFields = allBlueprintFields.concat(blueprint.fields);
@@ -775,7 +785,9 @@ export function getProjectStructure(resourcePath: string): FileSystemStatamicPro
 
                 try {
                     bpParser.parseBlueprint(YAML.parse(contents), assetName, 'asset', assetName, assetBlueprintPaths[i]);
-                } catch (err) { }
+                } catch {
+                    // Ignore malformed blueprints so the rest of the project can load.
+                }
 
                 blueprints.push(blueprint);
                 allBlueprintFields = allBlueprintFields.concat(blueprint.fields);
@@ -807,7 +819,9 @@ export function getProjectStructure(resourcePath: string): FileSystemStatamicPro
 
             try {
                 bpParser.parseBlueprint(YAML.parse(contents), formName, 'form', formName, formBlueprintPaths[i]);
-            } catch (err) { }
+            } catch {
+                // Ignore malformed blueprints so the rest of the project can load.
+            }
 
             blueprints.push(blueprint);
             allBlueprintFields = allBlueprintFields.concat(blueprint.fields);
@@ -870,7 +884,7 @@ export function getProjectStructure(resourcePath: string): FileSystemStatamicPro
         EnsureFields.ensureNavigationFields(nav);
     });
 
-    sendProjectDetails({
+    ProjectManager.instance?.setStructuredProject({
         assets: assetBlueprints,
         collections: collectionBlueprints,
         fieldsets: fsParser.getParsedFieldsets(),

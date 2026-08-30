@@ -9,6 +9,7 @@ import {
     ApplyWorkspaceEditParams,
     createConnection,
     DidChangeConfigurationNotification,
+    DidChangeWatchedFilesNotification,
     DocumentLinkParams,
     InitializeParams,
     InitializeResult,
@@ -32,7 +33,7 @@ import {
     sendAllDiagnostics,
     validateTextDocument,
 } from "./services/antlersDiagnostics.js";
-import { formatAntlersDocument } from "./formatting/formatter.js";
+import { formatAntlersDocument, formatAntlersRange } from "./formatting/formatter.js";
 import { handleSignatureHelpRequest } from "./services/modifierMethodSignatures.js";
 import { handleDocumentHover } from "./services/antlersHover.js";
 import { handleDefinitionRequest } from "./services/antlersDefinitions.js";
@@ -64,8 +65,6 @@ import ExtractPartialHandler from './refactoring/core/extractPartialHandler.js';
 import { BeautifyDocumentFormatter } from './formatting/beautifyDocumentFormatter.js';
 import { AntlersSettings } from './antlersSettings.js';
 import { debounce } from 'ts-debounce';
-import { IProjectFields } from './projects/structuredFieldTypes/types.js';
-import { notifyProjectDetails } from './protocol/projectDetailsNotification.js';
 
 const defaultSettings: AntlersSettings = {
     formatFrontMatter: false,
@@ -101,6 +100,7 @@ let hasConfigurationCapability = false;
 let hasWorkspaceFolderCapability = false;
 let hasDiagnosticRelatedInformationCapability = false;
 let hasSemanticTokenRefreshCapability = false;
+let hasDynamicWatchedFilesCapability = false;
 
 function refreshSemanticTokens() {
     if (!hasSemanticTokenRefreshCapability) {
@@ -113,6 +113,14 @@ function refreshSemanticTokens() {
         );
     });
 }
+
+const projectWatcherGlobs = [
+    '**/resources/**/*.{yaml,yml}',
+    '**/content/**/*.{yaml,yml}',
+    '**/resources/views/**/*.{html,php}',
+    '**/app/{Tags,Modifiers,Scopes}/**/*.php',
+    '**/composer.lock'
+];
 
 // eslint-disable-next-line @typescript-eslint/no-empty-interface
 interface LockEditsParams { }
@@ -194,6 +202,11 @@ connection.onInitialize((params: InitializeParams) => {
         capabilities.workspace.semanticTokens &&
         capabilities.workspace.semanticTokens.refreshSupport
     );
+    hasDynamicWatchedFilesCapability = !!(
+        capabilities.workspace &&
+        capabilities.workspace.didChangeWatchedFiles &&
+        capabilities.workspace.didChangeWatchedFiles.dynamicRegistration
+    );
 
     const result: InitializeResult = {
         capabilities: {
@@ -204,6 +217,7 @@ connection.onInitialize((params: InitializeParams) => {
                 triggerCharacters: [":", '"', "'", "{", "/", "|", "@", ' '],
             },
             documentFormattingProvider: {},
+            documentRangeFormattingProvider: {},
             foldingRangeProvider: {},
             signatureHelpProvider: {
                 triggerCharacters: [','],
@@ -242,6 +256,16 @@ connection.onInitialized(() => {
             DidChangeConfigurationNotification.type,
             undefined
         );
+    }
+
+    if (hasDynamicWatchedFilesCapability) {
+        connection.client.register(DidChangeWatchedFilesNotification.type, {
+            watchers: projectWatcherGlobs.map((globPattern) => ({ globPattern }))
+        }).catch((error: unknown) => {
+            connection.console.warn(
+                `Unable to register Statamic project file watchers: ${String(error)}`
+            );
+        });
     }
 
     connection.workspace
@@ -348,8 +372,20 @@ const debouncedCompletionHandler = debounce(handleOnCompletion, 97);
 // when the text document first opened or when its content has changed.
 documents.onDidChangeContent(contentChangeHandler);
 
-connection.onDidChangeWatchedFiles((_change) => {
-    // Monitored files have change in VSCode
+const debouncedProjectReload = debounce(() => {
+    try {
+        reloadProjectDetails();
+    } catch (error) {
+        connection.console.error(
+            `Unable to reload Statamic project details: ${String(error)}`
+        );
+    }
+}, 350);
+
+connection.onDidChangeWatchedFiles((change) => {
+    if (change.changes.length > 0) {
+        void debouncedProjectReload();
+    }
 });
 
 connection.onHover((_params) => {
@@ -367,6 +403,7 @@ connection.onDefinition(handleDefinitionRequest);
 connection.onFoldingRanges(handleFoldingRequest);
 connection.onSignatureHelp(handleSignatureHelpRequest);
 connection.onDocumentFormatting(formatAntlersDocument);
+connection.onDocumentRangeFormatting(formatAntlersRange);
 connection.onCompletion(debouncedCompletionHandler);
 connection.onCompletionResolve(handleOnCompletionResolve);
 documents.listen(connection);
@@ -421,7 +458,7 @@ connection.onRequest(DocumentTransformRequest.type, (params) => {
 
 connection.onCodeAction(handleCodeActions);
 
-connection.onRequest(ProjectUpdateRequest.type, () => {
+function reloadProjectDetails(): null {
     ProjectManager.instance?.setDirtyState(true);
     ProjectManager.instance?.reloadDetails();
 
@@ -433,7 +470,10 @@ connection.onRequest(ProjectUpdateRequest.type, () => {
     }
 
     refreshSemanticTokens();
-});
+    return null;
+}
+
+connection.onRequest(ProjectUpdateRequest.type, reloadProjectDetails);
 
 connection.onRequest(SemanticTokenRequest.type, (params, token) => {
     const docPath = decodeURIComponent(params.textDocument.uri);
@@ -523,11 +563,6 @@ export function requestEdits(edit: WorkspaceEdit) {
     };
 
     connection.sendRequest("workspace/applyEdit", params);
-}
-
-export function sendProjectDetails(contents: IProjectFields) {
-    ProjectManager.instance?.setStructuredProject(contents);
-    notifyProjectDetails(connection, contents);
 }
 
 function analyzeStructures(document: string) {

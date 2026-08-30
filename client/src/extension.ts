@@ -1,16 +1,13 @@
 /* eslint-disable @typescript-eslint/no-namespace */
 import * as path from 'path';
-import { ExtensionContext, FileSystemWatcher, workspace } from 'vscode';
+import { ExtensionContext, workspace } from 'vscode';
 import { LanguageClient, LanguageClientOptions, ServerOptions, TransportKind } from 'vscode-languageclient/node';
 import { languages } from 'vscode';
-import { RequestType, DidOpenTextDocumentNotification, NotificationType } from 'vscode-languageclient';
-import { debounce } from 'ts-debounce';
+import { RequestType, DidOpenTextDocumentNotification } from 'vscode-languageclient';
 import { activateAntlersDebug } from './debug/activateAntlersDebug';
 import { TimingsLensProvider } from './debug/timingsLensProvider';
 import { resetTimings } from './debug/antlersDebug';
 import *  as vscode from 'vscode';
-import { ProjectExplorer } from './project/projectExplorer';
-import { IProjectFields } from './project/types';
 import { resolveHtmlBlockComment } from './utils/commentConfiguration';
 
 // eslint-disable-next-line @typescript-eslint/no-empty-interface
@@ -56,27 +53,9 @@ namespace ProjectUpdateRequest {
     export const type: RequestType<ProjectUpdateParams, null, any> = new RequestType('antlers/projectUpdate');
 }
 
-interface ProjectDetailsParams {
-    content: IProjectFields;
-}
-
-namespace ProjectUpdatedNotification {
-    export const type = new NotificationType<ProjectDetailsParams>('antlers/projectDetailsAvailable');
-}
-
 let client: LanguageClient;
-let projectWatcher: FileSystemWatcher | null = null;
-let projectExplorer:ProjectExplorer;
 let isClientReady = false;
 let htmlCommentConfiguration: vscode.Disposable | undefined;
-
-function askForProjectUpdate() {
-    if (isClientReady) {
-        client.sendRequest(ProjectUpdateRequest.type, {});
-    }
-}
-
-const debounceAskForProjectUpdate = debounce(askForProjectUpdate, 350);
 
 export async function activate(context: ExtensionContext) {
     // The server is implemented in node
@@ -98,8 +77,6 @@ export async function activate(context: ExtensionContext) {
             options: debugOptions
         }
     };
-
-    projectExplorer = new ProjectExplorer(context);
 
     // Options to control the language client
     const clientOptions: LanguageClientOptions = {
@@ -186,24 +163,11 @@ export async function activate(context: ExtensionContext) {
         resetTimings();
     });
 
-    projectWatcher = workspace.createFileSystemWatcher('**/*.{yaml,php,json}');
-
-    projectWatcher.onDidDelete(() => { debounceAskForProjectUpdate(); });
-    projectWatcher.onDidCreate(() => { debounceAskForProjectUpdate(); });
-    projectWatcher.onDidChange(() => { debounceAskForProjectUpdate(); });
-
     activateAntlersDebug(context);
 
     // Start the client. This will also launch the server
     await client.start();
     isClientReady = true;
-
-    client.onNotification(ProjectUpdatedNotification.type, (f) => {
-        if (projectExplorer != null) {
-            projectExplorer.updateStructure(f.content);
-        }
-    });
-
 }
 
 export function deactivate(): Thenable<void> | undefined {
@@ -213,8 +177,6 @@ export function deactivate(): Thenable<void> | undefined {
     if (!client) {
         return undefined;
     }
-
-    projectWatcher?.dispose();
 
     return client.stop();
 }

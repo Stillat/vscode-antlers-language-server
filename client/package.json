@@ -63,7 +63,6 @@
     "dependencies": {
         "@vscode/debugadapter": "^1.68.0",
         "@vscode/debugprotocol": "^1.68.0",
-        "await-notify": "^1.0.1",
         "chokidar": "^3.5.2",
         "file-uri-to-path": "^2.0.0",
         "js-beautify": "^1.13.13",
