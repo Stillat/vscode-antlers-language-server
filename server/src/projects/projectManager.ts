@@ -25,8 +25,10 @@ export class ProjectManager {
             .concat(this.structuredProject.collections)
             .concat(this.structuredProject.forms)
             .concat(this.structuredProject.general)
+            .concat(this.structuredProject.globals)
             .concat(this.structuredProject.navigations)
-            .concat(this.structuredProject.taxonomies);
+            .concat(this.structuredProject.taxonomies)
+            .concat(this.structuredProject.fieldsets);
     }
 
     getStructuredProject(): IProjectFields | null {
@@ -35,6 +37,7 @@ export class ProjectManager {
 
     setActiveProject(project: IProjectDetailsProvider) {
         this.currentStructure = project;
+        this.isDirtyState = false;
     }
 
     getStructure(): IProjectDetailsProvider {
@@ -63,9 +66,13 @@ export class ProjectManager {
 
         if (this.currentStructure != null) {
             this.isReloading = true;
-            this.currentStructure = this.currentStructure.reloadDetails();
-            this.isReloading = false;
-            this.isDirtyState = false;
+
+            try {
+                this.currentStructure = this.currentStructure.reloadDetails();
+                this.isDirtyState = false;
+            } finally {
+                this.isReloading = false;
+            }
         }
     }
 }
