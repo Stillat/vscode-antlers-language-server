@@ -118,9 +118,9 @@ export class AntlersDebugSession extends LoggingDebugSession {
 		response.body.supportsSteppingGranularity = false;
 
 
+		this._runtimeBridge.startSession();
 		this.sendResponse(response);
 		this.sendEvent(new InitializedEvent());
-		this._runtimeBridge.startSession();
 	}
 
 	protected configurationDoneRequest(response: DebugProtocol.ConfigurationDoneResponse, args: DebugProtocol.ConfigurationDoneArguments): void {
