@@ -9,6 +9,7 @@ import {
     ApplyWorkspaceEditParams,
     createConnection,
     DidChangeConfigurationNotification,
+    DidChangeWatchedFilesNotification,
     DocumentLinkParams,
     InitializeParams,
     InitializeResult,
@@ -32,11 +33,11 @@ import {
     sendAllDiagnostics,
     validateTextDocument,
 } from "./services/antlersDiagnostics.js";
-import { formatAntlersDocument } from "./formatting/formatter.js";
+import { formatAntlersDocument, formatAntlersRange } from "./formatting/formatter.js";
 import { handleSignatureHelpRequest } from "./services/modifierMethodSignatures.js";
 import { handleDocumentHover } from "./services/antlersHover.js";
 import { handleDefinitionRequest } from "./services/antlersDefinitions.js";
-import { newSemanticTokenProvider } from "./services/semanticTokens.js";
+import { newSemanticTokenProvider, semanticTokenLegend } from "./services/semanticTokens.js";
 import { handleDocumentSymbolRequest } from "./services/documentSymbols.js";
 import { DocumentLinkManager } from "./services/antlersLinks.js";
 import ProjectManager from './projects/projectManager.js';
@@ -64,8 +65,6 @@ import ExtractPartialHandler from './refactoring/core/extractPartialHandler.js';
 import { BeautifyDocumentFormatter } from './formatting/beautifyDocumentFormatter.js';
 import { AntlersSettings } from './antlersSettings.js';
 import { debounce } from 'ts-debounce';
-import { IProjectFields } from './projects/structuredFieldTypes/types.js';
-import { notifyProjectDetails } from './protocol/projectDetailsNotification.js';
 import { buildWorkspaceSymbols } from './services/workspaceSymbols.js';
 
 const defaultSettings: AntlersSettings = {
@@ -101,6 +100,28 @@ const documents: TextDocuments<TextDocument> = new TextDocuments(TextDocument);
 let hasConfigurationCapability = false;
 let hasWorkspaceFolderCapability = false;
 let hasDiagnosticRelatedInformationCapability = false;
+let hasSemanticTokenRefreshCapability = false;
+let hasDynamicWatchedFilesCapability = false;
+
+function refreshSemanticTokens() {
+    if (!hasSemanticTokenRefreshCapability) {
+        return;
+    }
+
+    void connection.languages.semanticTokens.refresh().catch((error: unknown) => {
+        connection.console.warn(
+            `Unable to refresh semantic tokens: ${String(error)}`
+        );
+    });
+}
+
+const projectWatcherGlobs = [
+    '**/resources/**/*.{yaml,yml}',
+    '**/content/**/*.{yaml,yml}',
+    '**/resources/views/**/*.{html,php}',
+    '**/app/{Tags,Modifiers,Scopes}/**/*.php',
+    '**/composer.lock'
+];
 
 // eslint-disable-next-line @typescript-eslint/no-empty-interface
 interface LockEditsParams { }
@@ -177,6 +198,16 @@ connection.onInitialize((params: InitializeParams) => {
         capabilities.textDocument.publishDiagnostics &&
         capabilities.textDocument.publishDiagnostics.relatedInformation
     );
+    hasSemanticTokenRefreshCapability = !!(
+        capabilities.workspace &&
+        capabilities.workspace.semanticTokens &&
+        capabilities.workspace.semanticTokens.refreshSupport
+    );
+    hasDynamicWatchedFilesCapability = !!(
+        capabilities.workspace &&
+        capabilities.workspace.didChangeWatchedFiles &&
+        capabilities.workspace.didChangeWatchedFiles.dynamicRegistration
+    );
 
     const result: InitializeResult = {
         capabilities: {
@@ -187,6 +218,7 @@ connection.onInitialize((params: InitializeParams) => {
                 triggerCharacters: [":", '"', "'", "{", "/", "|", "@", ' '],
             },
             documentFormattingProvider: {},
+            documentRangeFormattingProvider: {},
             foldingRangeProvider: {},
             signatureHelpProvider: {
                 triggerCharacters: [','],
@@ -196,6 +228,11 @@ connection.onInitialize((params: InitializeParams) => {
             definitionProvider: {},
             documentSymbolProvider: {},
             workspaceSymbolProvider: {},
+            semanticTokensProvider: {
+                legend: semanticTokenLegend,
+                full: true,
+                range: true
+            },
             referencesProvider: {},
             documentHighlightProvider: {},
             codeActionProvider: {},
@@ -221,6 +258,16 @@ connection.onInitialized(() => {
             DidChangeConfigurationNotification.type,
             undefined
         );
+    }
+
+    if (hasDynamicWatchedFilesCapability) {
+        connection.client.register(DidChangeWatchedFilesNotification.type, {
+            watchers: projectWatcherGlobs.map((globPattern) => ({ globPattern }))
+        }).catch((error: unknown) => {
+            connection.console.warn(
+                `Unable to register Statamic project file watchers: ${String(error)}`
+            );
+        });
     }
 
     connection.workspace
@@ -327,8 +374,20 @@ const debouncedCompletionHandler = debounce(handleOnCompletion, 97);
 // when the text document first opened or when its content has changed.
 documents.onDidChangeContent(contentChangeHandler);
 
-connection.onDidChangeWatchedFiles((_change) => {
-    // Monitored files have change in VSCode
+const debouncedProjectReload = debounce(() => {
+    try {
+        reloadProjectDetails();
+    } catch (error) {
+        connection.console.error(
+            `Unable to reload Statamic project details: ${String(error)}`
+        );
+    }
+}, 350);
+
+connection.onDidChangeWatchedFiles((change) => {
+    if (change.changes.length > 0) {
+        void debouncedProjectReload();
+    }
 });
 
 connection.onHover((_params) => {
@@ -350,12 +409,18 @@ connection.onDefinition(handleDefinitionRequest);
 connection.onFoldingRanges(handleFoldingRequest);
 connection.onSignatureHelp(handleSignatureHelpRequest);
 connection.onDocumentFormatting(formatAntlersDocument);
+connection.onDocumentRangeFormatting(formatAntlersRange);
 connection.onCompletion(debouncedCompletionHandler);
 connection.onCompletionResolve(handleOnCompletionResolve);
 documents.listen(connection);
 
 connection.onRequest(SemanticTokenLegendRequest.type, (token) => {
-    return newSemanticTokenProvider().legend;
+    const legend = newSemanticTokenProvider().legend;
+
+    return {
+        types: legend.tokenTypes,
+        modifiers: legend.tokenModifiers
+    };
 });
 
 connection.onRequest(ForcedFormatRequest.type, (params) => {
@@ -399,7 +464,7 @@ connection.onRequest(DocumentTransformRequest.type, (params) => {
 
 connection.onCodeAction(handleCodeActions);
 
-connection.onRequest(ProjectUpdateRequest.type, () => {
+function reloadProjectDetails(): null {
     ProjectManager.instance?.setDirtyState(true);
     ProjectManager.instance?.reloadDetails();
 
@@ -409,7 +474,12 @@ connection.onRequest(ProjectUpdateRequest.type, () => {
         sessionDocuments.setProject(currentStructure);
         InjectionManager.instance?.updateProject(currentStructure);
     }
-});
+
+    refreshSemanticTokens();
+    return null;
+}
+
+connection.onRequest(ProjectUpdateRequest.type, reloadProjectDetails);
 
 connection.onRequest(SemanticTokenRequest.type, (params, token) => {
     const docPath = decodeURIComponent(params.textDocument.uri);
@@ -421,6 +491,37 @@ connection.onRequest(SemanticTokenRequest.type, (params, token) => {
     }
 
     return null;
+});
+
+connection.languages.semanticTokens.on(async (params) => {
+    const docPath = decodeURIComponent(params.textDocument.uri);
+
+    if (!documentMap.has(docPath)) {
+        return null;
+    }
+
+    const document = documentMap.get(docPath) as TextDocument;
+
+    return {
+        data: await newSemanticTokenProvider().getSemanticTokens(document)
+    };
+});
+
+connection.languages.semanticTokens.onRange(async (params) => {
+    const docPath = decodeURIComponent(params.textDocument.uri);
+
+    if (!documentMap.has(docPath)) {
+        return null;
+    }
+
+    const document = documentMap.get(docPath) as TextDocument;
+
+    return {
+        data: await newSemanticTokenProvider().getSemanticTokens(
+            document,
+            [params.range]
+        )
+    };
 });
 
 /**
@@ -468,11 +569,6 @@ export function requestEdits(edit: WorkspaceEdit) {
     };
 
     connection.sendRequest("workspace/applyEdit", params);
-}
-
-export function sendProjectDetails(contents: IProjectFields) {
-    ProjectManager.instance?.setStructuredProject(contents);
-    notifyProjectDetails(connection, contents);
 }
 
 function analyzeStructures(document: string) {

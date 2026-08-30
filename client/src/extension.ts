@@ -1,25 +1,14 @@
 /* eslint-disable @typescript-eslint/no-namespace */
 import * as path from 'path';
-import { ExtensionContext, FileSystemWatcher, workspace } from 'vscode';
+import { ExtensionContext, workspace } from 'vscode';
 import { LanguageClient, LanguageClientOptions, ServerOptions, TransportKind } from 'vscode-languageclient/node';
-import {
-    languages, SemanticTokensLegend,
-    DocumentSemanticTokensProvider, DocumentRangeSemanticTokensProvider, SemanticTokens
-} from 'vscode';
-import { RequestType, TextDocumentIdentifier, RequestType0, Range as LspRange, DidOpenTextDocumentNotification, NotificationType } from 'vscode-languageclient';
-import { debounce } from 'ts-debounce';
+import { languages } from 'vscode';
+import { RequestType, DidOpenTextDocumentNotification } from 'vscode-languageclient';
 import { activateAntlersDebug } from './debug/activateAntlersDebug';
 import { TimingsLensProvider } from './debug/timingsLensProvider';
 import { resetTimings } from './debug/antlersDebug';
 import *  as vscode from 'vscode';
-import { ProjectExplorer } from './project/projectExplorer';
-import { IProjectFields } from './project/types';
 import { resolveHtmlBlockComment } from './utils/commentConfiguration';
-
-interface SemanticTokenParams {
-    textDocument: TextDocumentIdentifier;
-    ranges?: LspRange[];
-}
 
 // eslint-disable-next-line @typescript-eslint/no-empty-interface
 interface LockEditsParams { }
@@ -64,35 +53,9 @@ namespace ProjectUpdateRequest {
     export const type: RequestType<ProjectUpdateParams, null, any> = new RequestType('antlers/projectUpdate');
 }
 
-interface ProjectDetailsParams {
-    content: IProjectFields;
-}
-
-namespace ProjectUpdatedNotification {
-    export const type = new NotificationType<ProjectDetailsParams>('antlers/projectDetailsAvailable');
-}
-
-namespace SemanticTokenRequest {
-    export const type: RequestType<SemanticTokenParams, number[] | null, any> = new RequestType('antlers/semanticTokens');
-}
-
-namespace SemanticTokenLegendRequest {
-    export const type: RequestType0<{ types: string[]; modifiers: string[] } | null, any> = new RequestType0('antlers/semanticTokenLegend');
-}
-
 let client: LanguageClient;
-let projectWatcher: FileSystemWatcher | null = null;
-let projectExplorer:ProjectExplorer;
 let isClientReady = false;
 let htmlCommentConfiguration: vscode.Disposable | undefined;
-
-function askForProjectUpdate() {
-    if (isClientReady) {
-        client.sendRequest(ProjectUpdateRequest.type, {});
-    }
-}
-
-const debounceAskForProjectUpdate = debounce(askForProjectUpdate, 350);
 
 export async function activate(context: ExtensionContext) {
     // The server is implemented in node
@@ -114,8 +77,6 @@ export async function activate(context: ExtensionContext) {
             options: debugOptions
         }
     };
-
-    projectExplorer = new ProjectExplorer(context);
 
     // Options to control the language client
     const clientOptions: LanguageClientOptions = {
@@ -202,50 +163,11 @@ export async function activate(context: ExtensionContext) {
         resetTimings();
     });
 
-    projectWatcher = workspace.createFileSystemWatcher('**/*.{yaml,php,json}');
-
-    projectWatcher.onDidDelete(() => { debounceAskForProjectUpdate(); });
-    projectWatcher.onDidCreate(() => { debounceAskForProjectUpdate(); });
-    projectWatcher.onDidChange(() => { debounceAskForProjectUpdate(); });
-
     activateAntlersDebug(context);
 
     // Start the client. This will also launch the server
     await client.start();
     isClientReady = true;
-
-    client.onNotification(ProjectUpdatedNotification.type, (f) => {
-        if (projectExplorer != null) {
-            projectExplorer.updateStructure(f.content);
-        }
-    });
-
-    setTimeout(() => {
-        client.sendRequest(SemanticTokenLegendRequest.type).then(legend => {
-            if (legend) {
-                const provider: DocumentSemanticTokensProvider & DocumentRangeSemanticTokensProvider = {
-                    provideDocumentSemanticTokens(doc) {
-                        const params: SemanticTokenParams = {
-                            textDocument: client.code2ProtocolConverter.asTextDocumentIdentifier(doc),
-                        };
-                        return client.sendRequest(SemanticTokenRequest.type, params).then(data => {
-                            return data && new SemanticTokens(new Uint32Array(data));
-                        });
-                    },
-                    provideDocumentRangeSemanticTokens(doc, range) {
-                        const params: SemanticTokenParams = {
-                            textDocument: client.code2ProtocolConverter.asTextDocumentIdentifier(doc),
-                            ranges: [client.code2ProtocolConverter.asRange(range)]
-                        };
-                        return client.sendRequest(SemanticTokenRequest.type, params).then(data => {
-                            return data && new SemanticTokens(new Uint32Array(data));
-                        });
-                    }
-                };
-                toDispose.push(languages.registerDocumentSemanticTokensProvider(documentSelector, provider, new SemanticTokensLegend(legend.types, legend.modifiers)));
-            }
-        });
-    }, 2500);
 }
 
 export function deactivate(): Thenable<void> | undefined {
@@ -255,8 +177,6 @@ export function deactivate(): Thenable<void> | undefined {
     if (!client) {
         return undefined;
     }
-
-    projectWatcher?.dispose();
 
     return client.stop();
 }

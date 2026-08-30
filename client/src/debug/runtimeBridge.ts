@@ -35,6 +35,7 @@ export class RuntimeBridge extends EventEmitter {
 	private breakpointId = 1;
 	private _activeLock = '';
 	private _keepAliveInterval:NodeJS.Timeout|null = null;
+	private _watchers:chokdar.FSWatcher[] = [];
 	private registeredBreakpoints:Map<string, Map<number, IRuntimeBreakpoint>> = new Map();
 
 	constructor(root: string, resourceRoot: string) {
@@ -52,22 +53,61 @@ export class RuntimeBridge extends EventEmitter {
 	}
 
 	protected startKeepAlive() {
+		if (this._keepAliveInterval != null) {
+			return;
+		}
+
+		this.writeKeepAlive();
 		this._keepAliveInterval = setInterval(function () {
-			fs.writeFileSync(this._antlersDebugKeepAliveFile, (new Date()).valueOf().toString());
+			this.writeKeepAlive();
 		}.bind(this), 2000);
 	}
 
 	protected shutdownKeepAlive() {
 		if (this._keepAliveInterval) {
 			clearInterval(this._keepAliveInterval);
+			this._keepAliveInterval = null;
+		}
+
+		try {
+			if (fs.existsSync(this._antlersDebugKeepAliveFile)) {
+				fs.unlinkSync(this._antlersDebugKeepAliveFile);
+			}
+		} catch (error) {
+			console.error(error);
 		}
 	}
 
-	stopSession() {
+	private writeKeepAlive() {
+		try {
+			fs.writeFileSync(
+				this._antlersDebugKeepAliveFile,
+				(new Date()).valueOf().toString()
+			);
+		} catch (error) {
+			console.error(error);
+		}
+	}
+
+	async stopSession():Promise<void> {
 		this.shutdownKeepAlive();
+		this.releaseActiveLock();
+		resetTimings();
+
+		const watcherShutdown = this._watchers.map((watcher) => watcher.close());
+		this._watchers = [];
+		await Promise.all(watcherShutdown);
+		this.removeAllListeners();
 	}
 
 	startSession() {
+		if (!this._canBoot) {
+			throw new Error(
+				'Unable to initialize the Antlers debugger. The Statamic storage directory was not found.'
+			);
+		}
+
+		this.startWatchers();
 		this.startKeepAlive();
 	}
 
@@ -157,76 +197,77 @@ export class RuntimeBridge extends EventEmitter {
 
 	public releaseActiveLock() {
 		if (this._activeLock != '') {
-			if (fs.existsSync(this._activeLock)) {
-				fs.unlinkSync(this._activeLock);
+			try {
+				if (fs.existsSync(this._activeLock)) {
+					fs.unlinkSync(this._activeLock);
+				}
+			} finally {
+				this._activeLock = '';
 			}
 		}
 	}
 
-	private prepareDebugEnvironment() {
-		if (fs.existsSync(this._debugRoot)) {
-			if (!fs.existsSync(this._antlersDirectory)) {
-				fs.mkdirSync(this._antlersDirectory);
-				fs.mkdirSync(this._antlersDebugDirectory);
-			} else {
-				if (!fs.existsSync(this._antlersDebugDirectory)) {
-					fs.mkdirSync(this._antlersDebugDirectory);
-				}
+	private startWatchers() {
+		if (this._watchers.length > 0) {
+			return;
+		}
+		const watcherOptions:chokdar.WatchOptions = {
+			ignoreInitial: true,
+			awaitWriteFinish: {
+				stabilityThreshold: 50,
+				pollInterval: 10
 			}
+		};
 
-			if (!fs.existsSync(this._antlersDebugBreakpointRegistry)) {
-				fs.mkdirSync(this._antlersDebugBreakpointRegistry);
-			}
-
-			if (!fs.existsSync(this._antlersDebugBreakpointLocks)) {
-				fs.mkdirSync(this._antlersDebugBreakpointLocks);
-			}
-
-			const timingsFile = path.join(this._antlersDebugDirectory, 'timings');
-
-			if (fs.existsSync(timingsFile)) {
-				fs.unlinkSync(timingsFile);
-			}
-
-			chokdar.watch(this._antlersDebugDirectory).on('all', function (event, filePath) {
-				if (filePath.endsWith('timings')) {
-					if (event == 'unlink') {
-						resetTimings();
-					} else {
-						try {
-							if (fs.lstatSync(filePath).isDirectory() === false) {
-								const runtimeTimings = JSON.parse(fs.readFileSync(filePath).toString()) as TimingInterface[];
-								setTimings(runtimeTimings);
-							}
-						} catch (err) {
-							console.error(err);
+		const eventWatcher = chokdar.watch(
+			[
+				path.join(this._antlersDebugDirectory, 'timings'),
+				path.join(this._antlersDebugDirectory, 'exception')
+			],
+			watcherOptions
+		).on('all', function (event, filePath) {
+			if (filePath.endsWith('timings')) {
+				if (event == 'unlink') {
+					resetTimings();
+				} else {
+					try {
+						if (fs.lstatSync(filePath).isDirectory() === false) {
+							const runtimeTimings = JSON.parse(fs.readFileSync(filePath).toString()) as TimingInterface[];
+							setTimings(runtimeTimings);
 						}
-					}
-				} else if (filePath.endsWith('exception')) {
-					if (event != 'unlink') {
-						try {
-							if (fs.lstatSync(filePath).isDirectory() === false) {
-								const runtimeException = JSON.parse(fs.readFileSync(filePath).toString()) as IRuntimeException;
-
-								fs.unlinkSync(filePath);
-								this.sendEvent('runtimeException', runtimeException);
-							}
-						} catch (err) {
-							if (fs.existsSync(filePath)) {
-								fs.unlinkSync(filePath);
-							}
-							console.error(err);
-						}
+					} catch (err) {
+						console.error(err);
 					}
 				}
-			}.bind(this));
+			} else if (filePath.endsWith('exception')) {
+				if (event != 'unlink') {
+					try {
+						if (fs.lstatSync(filePath).isDirectory() === false) {
+							const runtimeException = JSON.parse(fs.readFileSync(filePath).toString()) as IRuntimeException;
 
-			chokdar.watch(this._antlersDebugBreakpointLocks).on('all', function (event, lockPath) {
-				if (event === 'add') {
-					const fileName = path.basename(lockPath),
-						parts = fileName.split('_');
+							fs.unlinkSync(filePath);
+							this.sendEvent('runtimeException', runtimeException);
+						}
+					} catch (err) {
+						if (fs.existsSync(filePath)) {
+							fs.unlinkSync(filePath);
+						}
+						console.error(err);
+					}
+				}
+			}
+		}.bind(this));
 
-					if (parts.length == 2) {
+		const breakpointWatcher = chokdar.watch(
+			this._antlersDebugBreakpointLocks,
+			watcherOptions
+		).on('all', function (event, lockPath) {
+			if (event === 'add') {
+				const fileName = path.basename(lockPath),
+					parts = fileName.split('_');
+
+				if (parts.length == 2) {
+					try {
 						const runtimeSlug = parts[0],
 							lineNumber = parseInt(parts[1]);
 						
@@ -243,14 +284,37 @@ export class RuntimeBridge extends EventEmitter {
 								}
 							}
 						}
+					} catch (error) {
+						// A malformed/partial lock must never leave the PHP request
+						// blocked indefinitely.
+						if (fs.existsSync(lockPath)) {
+							fs.unlinkSync(lockPath);
+						}
+						console.error(error);
 					}
 				}
-			}.bind(this));
+			}
+		}.bind(this));
 
-			return true;
+		this._watchers.push(eventWatcher, breakpointWatcher);
+	}
+
+	private prepareDebugEnvironment() {
+		if (!fs.existsSync(this._debugRoot)) {
+			return false;
 		}
 
-		return false;
+		fs.mkdirSync(this._antlersDebugDirectory, { recursive: true });
+		fs.mkdirSync(this._antlersDebugBreakpointRegistry, { recursive: true });
+		fs.mkdirSync(this._antlersDebugBreakpointLocks, { recursive: true });
+
+		const timingsFile = path.join(this._antlersDebugDirectory, 'timings');
+
+		if (fs.existsSync(timingsFile)) {
+			fs.unlinkSync(timingsFile);
+		}
+
+		return true;
 	}
 
 	private sendEvent(event: string, ... args: any[]): void {

@@ -37,6 +37,7 @@ export class ProjectManager {
 
     setActiveProject(project: IProjectDetailsProvider) {
         this.currentStructure = project;
+        this.isDirtyState = false;
     }
 
     getStructure(): IProjectDetailsProvider {
@@ -65,9 +66,13 @@ export class ProjectManager {
 
         if (this.currentStructure != null) {
             this.isReloading = true;
-            this.currentStructure = this.currentStructure.reloadDetails();
-            this.isReloading = false;
-            this.isDirtyState = false;
+
+            try {
+                this.currentStructure = this.currentStructure.reloadDetails();
+                this.isDirtyState = false;
+            } finally {
+                this.isReloading = false;
+            }
         }
     }
 }
