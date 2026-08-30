@@ -1,5 +1,5 @@
 import assert from "assert";
-import { WorkspaceSymbolParams } from "vscode-languageserver";
+import { CancellationToken, WorkspaceSymbolParams } from "vscode-languageserver";
 import { ProjectManager } from "../projects/projectManager.js";
 import { IProjectDetailsProvider } from "../projects/projectDetailsProvider.js";
 import { IProjectFields } from "../projects/structuredFieldTypes/types.js";
@@ -115,5 +115,23 @@ suite("Workspace Symbols", () => {
         const symbols = buildWorkspaceSymbols(params("HERO text"), manager);
 
         assert.deepStrictEqual(symbols.map((symbol) => symbol.name), ["hero_heading"]);
+    });
+
+    test("it honors cancellation and caps large result sets", () => {
+        const manager = new ProjectManager();
+        manager.setActiveProject({
+            getViews: () => Array.from({ length: 300 }, (_, index) => ({
+                relativeDisplayName: `views/example-${index}`,
+                templateName: `views.example-${index}`,
+                isPartial: false,
+                originalDocumentUri: `file:///project/resources/views/example-${index}.antlers.html`
+            }))
+        } as IProjectDetailsProvider);
+
+        assert.strictEqual(buildWorkspaceSymbols(params(""), manager).length, 250);
+        assert.deepStrictEqual(
+            buildWorkspaceSymbols(params(""), manager, CancellationToken.Cancelled),
+            []
+        );
     });
 });
