@@ -36,15 +36,16 @@ export function commonIndent(text: string): string {
 
 export function reindentFormattedRange(source: string, formatted: string): string {
     const indent = commonIndent(source);
+    const lineEnding = source.includes("\r\n") ? "\r\n" : "\n";
     const hadTrailingNewline = /\r?\n$/.test(source);
     const dedentedResult = formatted.trimEnd();
     let result = dedentedResult
-        .split("\n")
+        .split(/\r?\n/)
         .map((line) => line.length > 0 ? indent + line : line)
-        .join("\n");
+        .join(lineEnding);
 
     if (hadTrailingNewline) {
-        result += "\n";
+        result += lineEnding;
     }
 
     return result;

@@ -18,4 +18,14 @@ suite("Range Formatter", () => {
             "  {{ title }}"
         );
     });
+
+    test("it preserves CRLF line endings", () => {
+        const source = "    <div>\r\n        {{ title }}\r\n    </div>\r\n";
+        const formatted = "<div>\n    {{ title }}\n</div>\n";
+
+        assert.strictEqual(
+            reindentFormattedRange(source, formatted),
+            "    <div>\r\n        {{ title }}\r\n    </div>\r\n"
+        );
+    });
 });
