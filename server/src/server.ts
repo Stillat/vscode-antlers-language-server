@@ -87,6 +87,18 @@ const defaultSettings: AntlersSettings = {
 
 let globalSettings: AntlersSettings = defaultSettings;
 
+function refreshFieldTypeInlayHints() {
+    if (!hasInlayHintRefreshCapability) {
+        return;
+    }
+
+    void connection.languages.inlayHint.refresh().catch((error: unknown) => {
+        connection.console.warn(
+            `Unable to refresh field type inlay hints: ${String(error)}`
+        );
+    });
+}
+
 function updateGlobalSettings(settings: AntlersSettings) {
     const fieldTypeHintsWereEnabled =
         globalSettings.inlayHints?.showFieldTypes === true;
@@ -97,12 +109,8 @@ function updateGlobalSettings(settings: AntlersSettings) {
 
     globalSettings = settings;
 
-    if (shouldRefreshInlayHints && hasInlayHintRefreshCapability) {
-        void connection.languages.inlayHint.refresh().catch((error: unknown) => {
-            connection.console.warn(
-                `Unable to refresh field type inlay hints: ${String(error)}`
-            );
-        });
+    if (shouldRefreshInlayHints) {
+        refreshFieldTypeInlayHints();
     }
 }
 
@@ -428,6 +436,10 @@ connection.onRequest(ProjectUpdateRequest.type, () => {
 
         sessionDocuments.setProject(currentStructure);
         InjectionManager.instance?.updateProject(currentStructure);
+    }
+
+    if (getAntlersSettings().inlayHints?.showFieldTypes === true) {
+        refreshFieldTypeInlayHints();
     }
 });
 
