@@ -117,7 +117,7 @@
                         "regex",
                         "runtime"
                     ],
-                    "default": "regex",
+                    "default": "runtime",
                     "description": "The Antlers language version to use."
                 },
                 "antlersLanguageServer.formatFrontMatter": {
