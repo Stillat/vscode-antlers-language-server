@@ -2,6 +2,26 @@
 
 Bugs fixed, what's new, and more! :)
 
+## 2.8.0
+
+This release expands standards-based editor support and improves compatibility for non-VS Code language clients.
+
+### Language server and editor experience
+
+- Replaces the retired Blueprint Explorer project-detail notification and VS Code-specific broad file watcher with scoped, dynamically registered LSP file watchers. Project reloads are debounced, contained when they fail, and remain retryable. (#140)
+- Adds standard LSP range formatting while preserving surrounding indentation, LF or CRLF line endings, and existing trailing-newline behavior. (#142)
+- Exposes full-document and range semantic tokens through standard LSP requests, including project-aware token classifications and refresh support. (#143)
+- Adds project-aware workspace symbol search for Statamic views, partials, blueprints, fieldsets, globals, and fields, with cancellation and bounded results for large projects. (#144)
+- Adds optional Statamic field type inlay hints through `antlersLanguageServer.inlayHints.showFieldTypes`. The setting is disabled by default. (#145)
+- Defaults the Antlers language target to the current `runtime` implementation while keeping `regex` available for existing configurations. (#149)
+
+### Stability and project health
+
+- Hardens the VS Code debug runtime lifecycle by owning and cleaning up session resources, rejecting invalid Statamic storage paths before startup succeeds, and advertising only supported debugger capabilities. (#141)
+- Corrects parser content-offset tracking used by shared editor and formatter flows. (#148)
+- Repairs ESLint support for the ESM package, cleans the maintained TypeScript tree, and enforces linting in CI. (#146, #148)
+- Normalizes tracked text to LF and enforces consistent line endings across platforms. (#148)
+
 ## 2.7.0
 
 This is a large formatter, language support, stability, and project health release.
