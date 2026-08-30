@@ -66,6 +66,7 @@ import { AntlersSettings } from './antlersSettings.js';
 import { debounce } from 'ts-debounce';
 import { IProjectFields } from './projects/structuredFieldTypes/types.js';
 import { notifyProjectDetails } from './protocol/projectDetailsNotification.js';
+import { buildFieldTypeInlayHints } from './services/fieldTypeInlayHints.js';
 
 const defaultSettings: AntlersSettings = {
     formatFrontMatter: false,
@@ -194,6 +195,7 @@ connection.onInitialize((params: InitializeParams) => {
             hoverProvider: {},
             definitionProvider: {},
             documentSymbolProvider: {},
+            inlayHintProvider: true,
             referencesProvider: {},
             documentHighlightProvider: {},
             codeActionProvider: {},
@@ -415,6 +417,13 @@ connection.onRequest(SemanticTokenRequest.type, (params, token) => {
     }
 
     return null;
+});
+
+connection.languages.inlayHint.on((params) => {
+    return buildFieldTypeInlayHints(
+        params,
+        getAntlersSettings().inlayHints?.showFieldTypes === true
+    );
 });
 
 /**
