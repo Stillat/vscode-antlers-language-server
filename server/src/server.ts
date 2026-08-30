@@ -100,6 +100,19 @@ const documents: TextDocuments<TextDocument> = new TextDocuments(TextDocument);
 let hasConfigurationCapability = false;
 let hasWorkspaceFolderCapability = false;
 let hasDiagnosticRelatedInformationCapability = false;
+let hasSemanticTokenRefreshCapability = false;
+
+function refreshSemanticTokens() {
+    if (!hasSemanticTokenRefreshCapability) {
+        return;
+    }
+
+    void connection.languages.semanticTokens.refresh().catch((error: unknown) => {
+        connection.console.warn(
+            `Unable to refresh semantic tokens: ${String(error)}`
+        );
+    });
+}
 
 // eslint-disable-next-line @typescript-eslint/no-empty-interface
 interface LockEditsParams { }
@@ -175,6 +188,11 @@ connection.onInitialize((params: InitializeParams) => {
         capabilities.textDocument &&
         capabilities.textDocument.publishDiagnostics &&
         capabilities.textDocument.publishDiagnostics.relatedInformation
+    );
+    hasSemanticTokenRefreshCapability = !!(
+        capabilities.workspace &&
+        capabilities.workspace.semanticTokens &&
+        capabilities.workspace.semanticTokens.refreshSupport
     );
 
     const result: InitializeResult = {
@@ -413,6 +431,8 @@ connection.onRequest(ProjectUpdateRequest.type, () => {
         sessionDocuments.setProject(currentStructure);
         InjectionManager.instance?.updateProject(currentStructure);
     }
+
+    refreshSemanticTokens();
 });
 
 connection.onRequest(SemanticTokenRequest.type, (params, token) => {
