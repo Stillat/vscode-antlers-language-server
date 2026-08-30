@@ -79,13 +79,31 @@ const defaultSettings: AntlersSettings = {
     trace: { server: 'off' },
     formatterIgnoreExtensions: ['xml'],
     formatterArrayWrap: 'preserve',
-    languageVersion: 'runtime'
+    languageVersion: 'runtime',
+    inlayHints: {
+        showFieldTypes: false
+    }
 };
 
 let globalSettings: AntlersSettings = defaultSettings;
 
 function updateGlobalSettings(settings: AntlersSettings) {
+    const fieldTypeHintsWereEnabled =
+        globalSettings.inlayHints?.showFieldTypes === true;
+    const fieldTypeHintsAreEnabled =
+        settings.inlayHints?.showFieldTypes === true;
+    const shouldRefreshInlayHints =
+        fieldTypeHintsWereEnabled !== fieldTypeHintsAreEnabled;
+
     globalSettings = settings;
+
+    if (shouldRefreshInlayHints && hasInlayHintRefreshCapability) {
+        void connection.languages.inlayHint.refresh().catch((error: unknown) => {
+            connection.console.warn(
+                `Unable to refresh field type inlay hints: ${String(error)}`
+            );
+        });
+    }
 }
 
 export function getAntlersSettings() {
@@ -101,6 +119,7 @@ const documents: TextDocuments<TextDocument> = new TextDocuments(TextDocument);
 let hasConfigurationCapability = false;
 let hasWorkspaceFolderCapability = false;
 let hasDiagnosticRelatedInformationCapability = false;
+let hasInlayHintRefreshCapability = false;
 
 // eslint-disable-next-line @typescript-eslint/no-empty-interface
 interface LockEditsParams { }
@@ -176,6 +195,11 @@ connection.onInitialize((params: InitializeParams) => {
         capabilities.textDocument &&
         capabilities.textDocument.publishDiagnostics &&
         capabilities.textDocument.publishDiagnostics.relatedInformation
+    );
+    hasInlayHintRefreshCapability = !!(
+        capabilities.workspace &&
+        capabilities.workspace.inlayHint &&
+        capabilities.workspace.inlayHint.refreshSupport
     );
 
     const result: InitializeResult = {

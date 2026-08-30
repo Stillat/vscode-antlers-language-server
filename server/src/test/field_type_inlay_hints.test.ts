@@ -58,4 +58,31 @@ suite("Field Type Inlay Hints", () => {
             []
         );
     });
+
+    test("it caps each response at one hundred hints", () => {
+        const uri = "file:///field-hints-cap.antlers.html";
+        const source = Array.from({ length: 101 }, () => "{{ title }}").join(" ");
+        sessionDocuments.createOrUpdate(uri, source);
+
+        const manager = new ProjectManager();
+        manager.setActiveProject({
+            findAnyBlueprintField() {
+                return {
+                    name: "title",
+                    displayName: "Title",
+                    type: "text"
+                } as unknown as IBlueprintField;
+            }
+        } as unknown as IProjectDetailsProvider);
+
+        const hints = buildFieldTypeInlayHints({
+            textDocument: { uri },
+            range: {
+                start: { line: 0, character: 0 },
+                end: { line: 0, character: source.length }
+            }
+        }, true, manager);
+
+        assert.strictEqual(hints.length, 100);
+    });
 });

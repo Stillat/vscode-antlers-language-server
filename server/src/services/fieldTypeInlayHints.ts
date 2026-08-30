@@ -48,8 +48,11 @@ export function buildFieldTypeInlayHints(
     const hints: InlayHint[] = [];
 
     for (const node of sessionDocuments.getDocument(documentPath).getAllAntlersNodes()) {
+        if (hints.length >= MAX_FIELD_TYPE_HINTS) {
+            break;
+        }
+
         if (
-            hints.length >= MAX_FIELD_TYPE_HINTS ||
             node.name == null ||
             node.nameStartsOn == null ||
             node.isComment ||

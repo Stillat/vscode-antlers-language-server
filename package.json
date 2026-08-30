@@ -156,7 +156,7 @@
                     "description": "Controls whether authored multi-line Antlers arrays are preserved or collapsed onto one line."
                 },
                 "antlersLanguageServer.inlayHints.showFieldTypes": {
-                    "scope": "resource",
+                    "scope": "window",
                     "type": "boolean",
                     "default": false,
                     "title": "Inlay Hints: Show Field Types",
