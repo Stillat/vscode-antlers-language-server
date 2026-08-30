@@ -37,7 +37,7 @@ import { formatAntlersDocument, formatAntlersRange } from "./formatting/formatte
 import { handleSignatureHelpRequest } from "./services/modifierMethodSignatures.js";
 import { handleDocumentHover } from "./services/antlersHover.js";
 import { handleDefinitionRequest } from "./services/antlersDefinitions.js";
-import { newSemanticTokenProvider } from "./services/semanticTokens.js";
+import { newSemanticTokenProvider, semanticTokenLegend } from "./services/semanticTokens.js";
 import { handleDocumentSymbolRequest } from "./services/documentSymbols.js";
 import { DocumentLinkManager } from "./services/antlersLinks.js";
 import ProjectManager from './projects/projectManager.js';
@@ -99,7 +99,20 @@ const documents: TextDocuments<TextDocument> = new TextDocuments(TextDocument);
 let hasConfigurationCapability = false;
 let hasWorkspaceFolderCapability = false;
 let hasDiagnosticRelatedInformationCapability = false;
+let hasSemanticTokenRefreshCapability = false;
 let hasDynamicWatchedFilesCapability = false;
+
+function refreshSemanticTokens() {
+    if (!hasSemanticTokenRefreshCapability) {
+        return;
+    }
+
+    void connection.languages.semanticTokens.refresh().catch((error: unknown) => {
+        connection.console.warn(
+            `Unable to refresh semantic tokens: ${String(error)}`
+        );
+    });
+}
 
 const projectWatcherGlobs = [
     '**/resources/**/*.{yaml,yml}',
@@ -184,6 +197,11 @@ connection.onInitialize((params: InitializeParams) => {
         capabilities.textDocument.publishDiagnostics &&
         capabilities.textDocument.publishDiagnostics.relatedInformation
     );
+    hasSemanticTokenRefreshCapability = !!(
+        capabilities.workspace &&
+        capabilities.workspace.semanticTokens &&
+        capabilities.workspace.semanticTokens.refreshSupport
+    );
     hasDynamicWatchedFilesCapability = !!(
         capabilities.workspace &&
         capabilities.workspace.didChangeWatchedFiles &&
@@ -208,6 +226,11 @@ connection.onInitialize((params: InitializeParams) => {
             hoverProvider: {},
             definitionProvider: {},
             documentSymbolProvider: {},
+            semanticTokensProvider: {
+                legend: semanticTokenLegend,
+                full: true,
+                range: true
+            },
             referencesProvider: {},
             documentHighlightProvider: {},
             codeActionProvider: {},
@@ -386,7 +409,12 @@ connection.onCompletionResolve(handleOnCompletionResolve);
 documents.listen(connection);
 
 connection.onRequest(SemanticTokenLegendRequest.type, (token) => {
-    return newSemanticTokenProvider().legend;
+    const legend = newSemanticTokenProvider().legend;
+
+    return {
+        types: legend.tokenTypes,
+        modifiers: legend.tokenModifiers
+    };
 });
 
 connection.onRequest(ForcedFormatRequest.type, (params) => {
@@ -441,6 +469,7 @@ function reloadProjectDetails(): null {
         InjectionManager.instance?.updateProject(currentStructure);
     }
 
+    refreshSemanticTokens();
     return null;
 }
 
@@ -456,6 +485,37 @@ connection.onRequest(SemanticTokenRequest.type, (params, token) => {
     }
 
     return null;
+});
+
+connection.languages.semanticTokens.on(async (params) => {
+    const docPath = decodeURIComponent(params.textDocument.uri);
+
+    if (!documentMap.has(docPath)) {
+        return null;
+    }
+
+    const document = documentMap.get(docPath) as TextDocument;
+
+    return {
+        data: await newSemanticTokenProvider().getSemanticTokens(document)
+    };
+});
+
+connection.languages.semanticTokens.onRange(async (params) => {
+    const docPath = decodeURIComponent(params.textDocument.uri);
+
+    if (!documentMap.has(docPath)) {
+        return null;
+    }
+
+    const document = documentMap.get(docPath) as TextDocument;
+
+    return {
+        data: await newSemanticTokenProvider().getSemanticTokens(
+            document,
+            [params.range]
+        )
+    };
 });
 
 /**

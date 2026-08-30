@@ -65,15 +65,6 @@
                 }
             }
         ],
-        "semanticTokenScopes": [
-            {
-                "scopes": {
-                    "antlersAttribute": [
-                        "entity.other.attribute-name"
-                    ]
-                }
-            }
-        ],
         "configuration": {
             "type": "object",
             "title": "Antlers configuration",
