@@ -25,8 +25,10 @@ export class ProjectManager {
             .concat(this.structuredProject.collections)
             .concat(this.structuredProject.forms)
             .concat(this.structuredProject.general)
+            .concat(this.structuredProject.globals)
             .concat(this.structuredProject.navigations)
-            .concat(this.structuredProject.taxonomies);
+            .concat(this.structuredProject.taxonomies)
+            .concat(this.structuredProject.fieldsets);
     }
 
     getStructuredProject(): IProjectFields | null {
