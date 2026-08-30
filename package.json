@@ -29,8 +29,7 @@
         "vscode": "^1.91.0"
     },
     "activationEvents": [
-        "onLanguage:html",
-        "onView:antlers.projectExplorer"
+        "onLanguage:html"
     ],
     "type": "module",
     "main": "./client/out/extension.js",
@@ -184,19 +183,7 @@
                 ],
                 "label": "Antlers Debug"
             }
-        ],
-        "views": {
-            "explorer": [
-                {
-                    "id": "antlers.projectExplorer",
-                    "name": "Blueprint Explorer",
-                    "contextualTitle": "Statamic Blueprint Explorer",
-                    "type": "tree",
-                    "icon": "explorer.svg",
-                    "when": "resourceExtname == .html"
-                }
-            ]
-        }
+        ]
     },
     "bundleDependencies": [],
     "scripts": {

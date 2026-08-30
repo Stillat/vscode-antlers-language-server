@@ -1,8 +1,7 @@
-import { ThemePath } from '../antlers/tags/core/theme/themePath.js';
 import { IProjectDetailsProvider } from './projectDetailsProvider.js';
-import { IFieldDetails, IParsedBlueprint, IProjectFields } from './structuredFieldTypes/types.js';
+import { IParsedBlueprint, IProjectFields } from './structuredFieldTypes/types.js';
 
-class ProjectManager {
+export class ProjectManager {
     public static instance: ProjectManager | null = null;
     private currentStructure: IProjectDetailsProvider | null = null;
     private isReloading = false;
@@ -36,6 +35,7 @@ class ProjectManager {
 
     setActiveProject(project: IProjectDetailsProvider) {
         this.currentStructure = project;
+        this.isDirtyState = false;
     }
 
     getStructure(): IProjectDetailsProvider {
@@ -64,9 +64,13 @@ class ProjectManager {
 
         if (this.currentStructure != null) {
             this.isReloading = true;
-            this.currentStructure = this.currentStructure.reloadDetails();
-            this.isReloading = false;
-            this.isDirtyState = false;
+
+            try {
+                this.currentStructure = this.currentStructure.reloadDetails();
+                this.isDirtyState = false;
+            } finally {
+                this.isReloading = false;
+            }
         }
     }
 }
