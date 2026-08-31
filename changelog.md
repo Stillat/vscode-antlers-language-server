@@ -2,6 +2,11 @@
 
 Bugs fixed, what's new, and more! :)
 
+## 2.8.1
+
+- Prevents empty or whitespace-only Antlers tags from producing invalid document symbol names while preserving valid descendant symbols. (#152)
+- Filters views, blueprints, and fields with empty names from workspace symbols, preventing VS Code's `name must not be falsy` error. (#152)
+
 ## 2.8.0
 
 This release expands standards-based editor support and improves compatibility for non-VS Code language clients.
