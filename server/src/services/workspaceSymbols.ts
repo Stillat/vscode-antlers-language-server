@@ -47,7 +47,11 @@ export function buildWorkspaceSymbols(
 
     const symbols: SymbolInformation[] = [];
     const add = (symbol: SymbolInformation) => {
-        if (symbols.length < MAX_WORKSPACE_SYMBOLS) {
+        if (
+            typeof symbol.name === "string" &&
+            symbol.name.trim().length > 0 &&
+            symbols.length < MAX_WORKSPACE_SYMBOLS
+        ) {
             symbols.push(symbol);
         }
     };

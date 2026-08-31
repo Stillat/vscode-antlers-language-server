@@ -37,16 +37,12 @@ function convertNodesToSymbols(nodes: AntlersNode[]): DocumentSymbol[] {
             kind = SymbolKind.Class;
         }
 
-        const nameContent = node.getNameContent().trim(),
-            nodeContent = node.getContent().trim();
+        const displayContent = node.sourceContent;
 
-        let displayContent = nameContent + " " + nodeContent;
-
-        if (nameContent == nodeContent) {
-            displayContent = nodeContent;
+        if (displayContent.trim().length === 0) {
+            symbols.push(...children);
+            return;
         }
-
-        displayContent = node.sourceContent;
 
         if (node.name != null) {
             if (node.name.name == "partial") {
