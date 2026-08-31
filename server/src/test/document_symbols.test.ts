@@ -13,7 +13,7 @@ function flattenSymbols(symbols: DocumentSymbol[]): DocumentSymbol[] {
 suite("Document Symbols", () => {
     test("it omits empty Antlers tags from nested document symbols", () => {
         const uri = "file:///document-symbols.antlers.html";
-        const source = "{{ collection:articles }}{{ entries }}{{ if featured }}{{}}{{ title }}{{ /if }}{{ /entries }}{{ /collection:articles }}";
+        const source = "{{ collection:articles }}{{ entries }}{{ if featured }}{{}}{{ }}{{\n}}{{ title }}{{ /if }}{{ /entries }}{{ /collection:articles }}";
 
         sessionDocuments.createOrUpdate(uri, source);
 

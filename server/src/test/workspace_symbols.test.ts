@@ -134,4 +134,47 @@ suite("Workspace Symbols", () => {
             []
         );
     });
+
+    test("it omits workspace symbols with empty names", () => {
+        const manager = new ProjectManager();
+        manager.setActiveProject({
+            getViews: () => [{
+                relativeDisplayName: "",
+                templateName: "empty-view",
+                isPartial: false,
+                originalDocumentUri: "file:///project/resources/views/empty.antlers.html"
+            }]
+        } as IProjectDetailsProvider);
+        manager.setStructuredProject({
+            ...emptyProject,
+            globals: [{
+                title: "Untitled",
+                handle: "",
+                collection: "",
+                tabs: [],
+                fields: [],
+                allFields: [{
+                    required: false,
+                    type: "text",
+                    display: "Untitled",
+                    validate: [],
+                    unless: [],
+                    handle: " ",
+                    fields: [],
+                    sets: [],
+                    isLinked: false,
+                    linkedFrom: "",
+                    internalIcon: "",
+                    instructionText: "",
+                    developerDocumentation: ""
+                }],
+                type: "global",
+                fileName: "C:/project/resources/blueprints/globals/untitled.yaml"
+            }]
+        });
+
+        const symbols = buildWorkspaceSymbols(params(""), manager);
+
+        assert.deepStrictEqual(symbols, []);
+    });
 });
