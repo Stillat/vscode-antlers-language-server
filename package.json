@@ -139,11 +139,12 @@
                     "type": "string",
                     "enum": [
                         "preserve",
-                        "collapse"
+                        "collapse",
+                        "expand"
                     ],
                     "default": "preserve",
                     "title": "Formatter: Array Wrapping",
-                    "description": "Controls whether authored multi-line Antlers arrays are preserved or collapsed onto one line."
+                    "description": "Controls how Antlers arrays are wrapped: preserve keeps authored line breaks, collapse always uses one line, expand always uses one item per line."
                 },
                 "antlersLanguageServer.inlayHints.showFieldTypes": {
                     "scope": "window",

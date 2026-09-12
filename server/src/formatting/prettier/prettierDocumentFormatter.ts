@@ -4,16 +4,12 @@ import { formatAsHtml, setOptions } from './utils.js';
 import { FrontMatterFormatter } from '../frontMatterFormatter.js';
 import { ErrorPrinter } from '../../runtime/document/printers/errorPrinter.js';
 import { formatPhp } from '../phpFormatter.js';
-import { ArrayWrapStyle } from '../../runtime/document/transformOptions.js';
+import { ArrayWrapStyle, resolveArrayWrapStyle } from '../../runtime/document/transformOptions.js';
 
 function getArrayWrapStyle(options: prettier.ParserOptions): ArrayWrapStyle {
     const value = (options as unknown as Record<string, unknown>).antlersArrayWrap;
 
-    if (value === 'collapse') {
-        return 'collapse';
-    }
-
-    return 'preserve';
+    return resolveArrayWrapStyle(value as string | undefined);
 }
 
 export class PrettierDocumentFormatter extends DocumentFormatter {

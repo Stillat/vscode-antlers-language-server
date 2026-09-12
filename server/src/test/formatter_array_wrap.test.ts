@@ -292,6 +292,67 @@ after = values[2][1] }}`,
         assert.strictEqual(formatAntlers(input), formatAntlers(formatAntlers(input)));
     });
 
+    test('expand wraps arrays that were authored on one line', () => {
+        const input = `{{ ['one', 'two' => condition] | classes }}`,
+            expected = `{{ [
+    'one',
+    'two' => condition
+] | classes }}`,
+            options = formattingOptions('expand'),
+            firstPass = formatAntlers(input, options);
+
+        assert.strictEqual(firstPass, expected);
+        assert.strictEqual(formatAntlers(firstPass, options), firstPass);
+    });
+
+    test('expand wraps nested arrays at every level', () => {
+        const input = `{{ values = [['one'], ['two', ['three']]] }}`,
+            expected = `{{ values = [
+    [
+        'one'
+    ],
+    [
+        'two',
+        [
+            'three'
+        ]
+    ]
+] }}`,
+            options = formattingOptions('expand'),
+            firstPass = formatAntlers(input, options);
+
+        assert.strictEqual(firstPass, expected);
+        assert.strictEqual(formatAntlers(firstPass, options), firstPass);
+    });
+
+    test('expand uses configured tabs', () => {
+        const input = `{{ ['one', 'two'] | classes }}`,
+            expected = `{{ [
+\t'one',
+\t'two'
+] | classes }}`,
+            options = formattingOptions('expand', false),
+            firstPass = formatAntlers(input, options);
+
+        assert.strictEqual(firstPass, expected);
+        assert.strictEqual(formatAntlers(firstPass, options), firstPass);
+    });
+
+    test('expand keeps empty arrays on one line', () => {
+        const input = `{{ values = [] }}`;
+
+        assert.strictEqual(formatAntlers(input, formattingOptions('expand')), input);
+    });
+
+    test('expand leaves quoted parameter arrays alone', () => {
+        const input = `{{ tag :items="[
+    'one',
+    ['two', 'three']
+]" }}`;
+
+        assert.strictEqual(formatAntlers(input, formattingOptions('expand')), input);
+    });
+
     test('prefixed variables keep their prefix inside array literals', () => {
         const inputs = [
             `{{ [view:size, 'shrink-0', classes] | classes }}`,

@@ -77,7 +77,8 @@ export class NodePrinter {
                 if (bracket == null) { continue; }
 
                 const layout: ArrayWrapLayout = {
-                    wrap: bracket.hasItems && line > bracket.line,
+                    wrap: bracket.hasItems &&
+                        (options.arrayWrap == 'expand' || line > bracket.line),
                     itemIndent: indentUnit.repeat(bracket.depth),
                     closeIndent: indentUnit.repeat(Math.max(0, bracket.depth - 1))
                 };
@@ -119,7 +120,8 @@ export class NodePrinter {
 
                 if (bracket == null) { continue; }
 
-                const wrap = bracket.hasItems && line > bracket.line,
+                const wrap = bracket.hasItems &&
+                    (options.arrayWrap == 'expand' || line > bracket.line),
                     closeKey = NodePrinter.bracketKey(i, parts.openCount + b);
 
                 const layout: ArrayWrapLayout = {

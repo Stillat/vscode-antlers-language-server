@@ -48,7 +48,7 @@ The default Antlers formatter settings look like this when saved as JSON:
 * `insertSpaces` - Controls whether the Antlers formatter should insert spaces
 * `maxStatementsPerLine` - Suggests a maximum number of Antlers statements that should appear on a single line (i.e., `{{ test; test += 3; test += 5; }}`)
 * `tabSize` - The number of spaces to use for indentation
-* `arrayWrap` - Controls whether authored multi-line Antlers arrays are preserved or collapsed onto one line. Accepts `preserve` or `collapse` and defaults to `preserve`.
+* `arrayWrap` - Controls how Antlers arrays are wrapped. Accepts `preserve` (authored multi-line arrays keep their line breaks), `collapse` (always one line), or `expand` (always one item per line). Defaults to `preserve`.
 * `formatExtensions` - A list of file extensions that will be formatted when formatting a directory.
 
 The `htmlOptions` object may be used to set the HTML formatting options used by the Antlers formatter. These settings follow the same rules as the default [Visual Studio Code HTML Formatter](https://code.visualstudio.com/docs/languages/html#_formatting). The formatter will do its best to respect these settings, but may be unable to under certain circumstances.

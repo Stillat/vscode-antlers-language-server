@@ -8,7 +8,7 @@ import { AsyncInlineFormatter, InlineFormatter } from './inlineFormatter.js';
 import { CommentPrinter } from './printers/commentPrinter.js';
 import { IndentLevel } from './printers/indentLevel.js';
 import { NodePrinter } from './printers/nodePrinter.js';
-import { TransformOptions } from './transformOptions.js';
+import { TransformOptions , resolveArrayWrapStyle } from './transformOptions.js';
 
 interface TransformedLogicBranch {
     branch: ExecutionBranch,
@@ -164,9 +164,7 @@ export class Transformer {
     withOptions(options: TransformOptions) {
         this.options = options;
 
-        if (this.options.arrayWrap != 'collapse' && this.options.arrayWrap != 'preserve') {
-            this.options.arrayWrap = 'preserve';
-        }
+        this.options.arrayWrap = resolveArrayWrapStyle(this.options.arrayWrap);
 
         if (this.options.tabSize <= 0) {
             this.options.tabSize = 4;
@@ -1067,7 +1065,7 @@ export class Transformer {
         for (const [slug, node] of this.inlineNodes) {
             const inline = this.selfClosing(slug),
                 inlineNs = this.selfClosingNs(slug),
-                preserveArrayIndent = this.options.arrayWrap == 'preserve' && this.hasArrayLiteral(node),
+                preserveArrayIndent = this.options.arrayWrap != 'collapse' && this.hasArrayLiteral(node),
                 printed = preserveArrayIndent
                     ? this.shiftSpanNode(await this.printNodeAsync(node), inline, 0)
                     : await this.printNodeAsync(node, this.indentLevel(inline));
@@ -1148,7 +1146,7 @@ export class Transformer {
         this.inlineNodes.forEach((node: AntlersNode, slug: string) => {
             const inline = this.selfClosing(slug),
                 inlineNs = this.selfClosingNs(slug),
-                preserveArrayIndent = this.options.arrayWrap == 'preserve' && this.hasArrayLiteral(node),
+                preserveArrayIndent = this.options.arrayWrap != 'collapse' && this.hasArrayLiteral(node),
                 printed = preserveArrayIndent
                     ? this.shiftSpanNode(this.printNode(node), inline, 0)
                     : this.printNode(node, this.indentLevel(inline));

@@ -1,5 +1,6 @@
 import beautify from 'js-beautify';
 import { AntlersFormattingOptions } from './antlersFormattingOptions.js';
+import { resolveArrayWrapStyle } from '../runtime/document/transformOptions.js';
 import { DocumentFormatter } from './documentFormatter.js';
 import { FrontMatterFormatter } from './frontMatterFormatter.js';
 import { getFormatOption, getTagsFormatOption } from './htmlCompat.js';
@@ -25,7 +26,7 @@ export class BeautifyDocumentFormatter extends DocumentFormatter {
                 newlinesAfterFrontMatter: 1,
                 tabSize: options.tabSize,
                 insertSpaces: options.insertSpaces,
-                arrayWrap: options.arrayWrap == 'collapse' ? 'collapse' : 'preserve'
+                arrayWrap: resolveArrayWrapStyle(options.arrayWrap)
             });
     }
 

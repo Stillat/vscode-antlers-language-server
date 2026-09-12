@@ -50,6 +50,7 @@ Controls how array literals inside Antlers regions are printed. Defaults to `pre
 |---|---|
 | `collapse` | Array literals are always printed on a single line. |
 | `preserve` | Array literals that span multiple lines in the source document keep spanning multiple lines, one item per line. Arrays written on a single line stay on a single line. |
+| `expand` | Array literals are always printed across multiple lines, one item per line, whichever way they were written. |
 
 ```json
 {
@@ -75,6 +76,17 @@ With `preserve`, the same region keeps the line breaks it was written with:
         'font-semibold',
         'text-green',
         'underline' => is_current
+    ] | classes }}"
+>
+```
+
+With `expand`, an array written on one line is broken up as well:
+
+```html
+<span
+    class="{{ [
+        'block',
+        'font-semibold'
     ] | classes }}"
 >
 ```

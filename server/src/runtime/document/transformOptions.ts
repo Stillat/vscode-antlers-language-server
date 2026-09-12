@@ -5,7 +5,18 @@
  * preserve: Array literals that span multiple lines in the source document
  *           continue to span multiple lines, one item per line.
  */
-export type ArrayWrapStyle = 'preserve' | 'collapse';
+export type ArrayWrapStyle = 'preserve' | 'collapse' | 'expand';
+
+/**
+ * Resolves an untrusted array wrapping value, falling back to preserve.
+ */
+export function resolveArrayWrapStyle(value: string | undefined): ArrayWrapStyle {
+    if (value == 'collapse' || value == 'expand') {
+        return value;
+    }
+
+    return 'preserve';
+}
 
 export interface TransformOptions {
     tabSize: number,
