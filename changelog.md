@@ -2,6 +2,12 @@
 
 Bugs fixed, what's new, and more! :)
 
+## 2.8.2
+
+- Preserves variable prefixes in array literals, preventing values such as `view:size` from being formatted as invalid `:size` expressions. (#156)
+- Keeps separator commas with their array values and aligns wrapped operator continuations beneath their items, including when using tabs. (#157)
+- Adds the opt-in `expand` array wrapping mode across VS Code, the formatter CLI, and Prettier. Non-empty arrays expand to one item per line, including nested arrays; empty arrays remain `[]`. The default remains `preserve`. (#158)
+
 ## 2.8.1
 
 - Prevents empty or whitespace-only Antlers tags from producing invalid document symbol names while preserving valid descendant symbols. (#152)

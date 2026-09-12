@@ -1,6 +1,6 @@
 {
     "name": "antlers-language-server",
-    "version": "1.3.17",
+    "version": "1.3.18",
     "description": "The Antlers language server.",
     "main": "server.js",
     "bin": {
