@@ -287,4 +287,11 @@ suite("Syntax Grammar", () => {
         assertWithoutScope(antlers, "x-data", "meta.attribute.alpine");
         assertScope(antlers, "x-data", "entity.other.attribute-name");
     });
+
+    test("it ignores Alpine prefixes in HTML attribute values", () => {
+        const line = `<a href="https://example.com#:~:text=My%20heading">Link to heading</a>`;
+
+        assertWithoutScope(line, "#:~", "meta.attribute.alpine");
+        assertWithoutScope(line, "#:~", "meta.embedded.inline.alpinejs");
+    });
 });
