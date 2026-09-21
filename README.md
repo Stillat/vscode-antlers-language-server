@@ -8,7 +8,7 @@ This extension provides the following awesome capabilities:
 * Modifier signature suggestions
 * Intelligent suggestions based on your unique project's blueprints, collections, and more!
 * Antlers formatting
-* Support for core Statamic 3 tags, modifiers, and more!
+* Support for core Statamic tags, modifiers, and more!
 
 ## Installation
 
